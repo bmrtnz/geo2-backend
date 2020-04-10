@@ -1,4 +1,4 @@
-package fr.microtec.geo2.configuration;
+package fr.microtec.geo2.persistance.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

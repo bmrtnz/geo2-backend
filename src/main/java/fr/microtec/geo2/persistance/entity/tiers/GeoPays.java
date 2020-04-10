@@ -1,0 +1,28 @@
+package fr.microtec.geo2.persistance.entity.tiers;
+
+import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "geo_pays")
+@Entity
+public class GeoPays extends ValidableAndModifiableEntity {
+
+	@Id
+	@Column(name = "pay_code")
+	private String id;
+
+	@Column(name = "pay_desc")
+	private String description;
+
+	@Column(name = "pay_numiso")
+	private String numeroIso;
+
+}

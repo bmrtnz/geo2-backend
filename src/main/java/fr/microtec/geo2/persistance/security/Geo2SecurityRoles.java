@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.security;
 
-import fr.microtec.geo2.persistance.entity.GeoUser;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -17,16 +17,16 @@ public class Geo2SecurityRoles {
 	/**
 	 * Get geo2 roles for a user.
 	 *
-	 * @param geoUser Logged user
-	 * @return List of authorities
+	 * @param geoUtilisateur Logged user
+	 * @return List of authorities.
 	 */
-	public static List<GrantedAuthority> authoritiesFor(GeoUser geoUser) {
+	public static List<GrantedAuthority> authoritiesFor(GeoUtilisateur geoUtilisateur) {
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
-		if (geoUser.isGeoTiers()) {
+		if (geoUtilisateur.getAccessGeoTiers()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(Role.ROLE_GEO_TIERS.toString()));
 		}
-		if (geoUser.isGeoProduit()) {
+		if (geoUtilisateur.getAccessGeoProduct()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(Role.ROLE_GEO_PRODUIT.toString()));
 		}
 

@@ -5,10 +5,9 @@ import fr.microtec.geo2.configuration.authentication.ApiAuthenticationFailureHan
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationSuccessHandler;
 import fr.microtec.geo2.persistance.security.Geo2UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,6 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		//http.authorizeRequests().antMatchers("/*").permitAll();
+		http.authorizeRequests().antMatchers("/graphql").permitAll();
 		http.authorizeRequests().anyRequest().authenticated();
 		http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 

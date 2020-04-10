@@ -1,30 +1,26 @@
 package fr.microtec.geo2.persistance.security;
 
-import fr.microtec.geo2.persistance.entity.GeoUser;
-import fr.microtec.geo2.persistance.repository.GeoUserRepository;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
+import fr.microtec.geo2.persistance.repository.common.GeoUtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
  * Geo2 spring user detail implementation.
  */
-@Component
+@Service
 public class Geo2UserDetailsService implements UserDetailsService {
 
-	private GeoUserRepository userRepository;
+	private GeoUtilisateurRepository utilisateurRepository;
 
 	@Autowired
-	public Geo2UserDetailsService(GeoUserRepository userRepository) {
-		this.userRepository = userRepository;
+	public Geo2UserDetailsService(GeoUtilisateurRepository userRepository) {
+		this.utilisateurRepository = userRepository;
 	}
 
 	/**
@@ -36,32 +32,12 @@ public class Geo2UserDetailsService implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<GeoUser> geoUserOptional = this.userRepository.findByNomUtilisateur(username);
-		if (geoUserOptional.isEmpty()) {
+		Optional<GeoUtilisateur> geoUserOptional = this.utilisateurRepository.findByNomUtilisateur(username);
+		if (!geoUserOptional.isPresent()) {
 			throw new UsernameNotFoundException("Username not found");
 		}
 
-		List<GrantedAuthority> grantedAuthorities = Geo2SecurityRoles.authoritiesFor(geoUserOptional.get());
-
-		return toSpringSecurityUser(geoUserOptional.get(), grantedAuthorities);
+		return geoUserOptional.get();
 	}
 
-	/**
-	 * Map GeoUser to UserDetail spring implementation.
-	 *
-	 * @param geoUser USer in database
-	 * @param authorities Authorities of user
-	 * @return User detail implementation
-	 */
-	private User toSpringSecurityUser(GeoUser geoUser, Collection<GrantedAuthority> authorities) {
-		return new User(
-				geoUser.getNomUtilisateur(),
-				geoUser.getMotDePasse(),
-				geoUser.isValide(),
-				geoUser.isValide(),
-				geoUser.isValide(),
-				geoUser.isValide(),
-				authorities
-		);
-	}
 }
