@@ -2,6 +2,8 @@ package fr.microtec.geo2.service;
 
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
+import fr.microtec.geo2.configuration.graphql.PageFactory;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.GeoEntityGraph;
 import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
@@ -22,25 +24,33 @@ import java.util.Optional;
  * @param <T> Entity type.
  * @param <ID> Entity id type.
  */
-public abstract class GeoAbstractGraphQlService<T, ID extends Serializable> {
+public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
 	private final GeoGraphRepository<T, ID> repository;
 	private RSQLParser rsqlParser;
 
-	public GeoAbstractGraphQlService(GeoGraphRepository<T, ID> repository) {
+	public GeoAbstractGraphQLService(GeoGraphRepository<T, ID> repository) {
 		this.repository = repository;
 	}
 
-	protected Page<T> getPage(String search, ResolutionEnvironment env) {
-		return this.getPage(search, PageRequest.of(0, 10), env);
+	protected RelayPage<T> getPage(String search, int page, int offset, ResolutionEnvironment env) {
+		return this.getPage(search, PageRequest.of(page, offset), env);
 	}
 
-	protected Page<T> getPage(String search, Pageable pageable, ResolutionEnvironment env) {
-		if (search != null && !search.isBlank()) {
-			return this.repository.findAll(this.parseSearch(search), pageable, GeoEntityGraph.getEntityGraph(env));
+	protected RelayPage<T> getPage(String search, Pageable pageable, ResolutionEnvironment env) {
+		Page<T> page;
+
+		if (pageable == null) {
+			pageable = PageRequest.of(0, 20);
 		}
 
-		return this.repository.findAll(pageable, GeoEntityGraph.getEntityGraph(env));
+		if (search != null && !search.isBlank()) {
+			page = this.repository.findAll(this.parseSearch(search), pageable, GeoEntityGraph.getEntityGraph(env));
+		} else {
+			page = this.repository.findAll(pageable, GeoEntityGraph.getEntityGraph(env));
+		}
+
+		return PageFactory.fromPage(page);
 	}
 
 	/**
