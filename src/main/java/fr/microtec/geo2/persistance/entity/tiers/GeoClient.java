@@ -146,6 +146,9 @@ public class GeoClient extends ValidableAndModifiableEntity {
 	@Column(name = "compte_compta")
 	private String compteComptable;
 
+	@Column(name = "lf_ean")
+	private String lieuFonctionEAN;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lan_code")
 	private GeoPays langue;

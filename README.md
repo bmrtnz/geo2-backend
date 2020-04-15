@@ -3,8 +3,8 @@
 Geo2 api application.
 
 ## Technologies
-- Java 13
+- Java 11
 - Spring Boot 2.x
-- PostgresQL
+- PostgresQL (Oracle 9i at this time)
 - GraphQL
 

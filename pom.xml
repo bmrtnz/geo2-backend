@@ -75,6 +75,12 @@
             <artifactId>graphql-spqr-spring-boot-starter</artifactId>
             <version>${graphql-spqr.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>voyager-spring-boot-starter</artifactId>
+            <version>7.0.1</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Tools -->
         <dependency>
