@@ -22,7 +22,7 @@ public class GeoPersonneGraphQLService extends GeoAbstractGraphQLService<GeoPers
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoPersonne> getPersonnes(
+	public RelayPage<GeoPersonne> allPersonne(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

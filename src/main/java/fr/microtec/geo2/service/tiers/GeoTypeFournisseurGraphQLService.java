@@ -20,7 +20,7 @@ public class GeoTypeFournisseurGraphQLService extends GeoAbstractGraphQLService<
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTypeFournisseur> getTypesFournisseur(
+	public RelayPage<GeoTypeFournisseur> allTypeFournisseur(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

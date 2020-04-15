@@ -20,7 +20,7 @@ public class GeoBureauAchatGraphQLService extends GeoAbstractGraphQLService<GeoB
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoBureauAchat> getBureauAchats(
+	public RelayPage<GeoBureauAchat> allBureauAchat(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

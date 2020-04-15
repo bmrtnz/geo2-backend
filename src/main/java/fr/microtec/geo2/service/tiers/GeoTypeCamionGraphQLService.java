@@ -20,7 +20,7 @@ public class GeoTypeCamionGraphQLService extends GeoAbstractGraphQLService<GeoTy
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTypeCamion> getTypesCamion(
+	public RelayPage<GeoTypeCamion> allTypeCamion(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

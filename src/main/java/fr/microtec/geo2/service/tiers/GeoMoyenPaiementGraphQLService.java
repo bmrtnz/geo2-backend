@@ -22,7 +22,7 @@ public class GeoMoyenPaiementGraphQLService extends GeoAbstractGraphQLService<Ge
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoMoyenPaiement> getMoyenPaiements(
+	public RelayPage<GeoMoyenPaiement> allMoyenPaiement(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

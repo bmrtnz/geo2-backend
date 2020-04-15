@@ -20,7 +20,7 @@ public class GeoDeviseGraphQLService extends GeoAbstractGraphQLService<GeoDevise
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoDevise> getDevises(
+	public RelayPage<GeoDevise> allDevise(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

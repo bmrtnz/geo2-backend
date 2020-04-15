@@ -20,7 +20,7 @@ public class GeoTypeClientGraphQLService extends GeoAbstractGraphQLService<GeoTy
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTypeClient> getTypesClient(
+	public RelayPage<GeoTypeClient> allTypeClient(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

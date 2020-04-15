@@ -20,7 +20,7 @@ public class GeoBaseTarifGraphQLService extends GeoAbstractGraphQLService<GeoBas
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoBaseTarif> getBaseTarifs(
+	public RelayPage<GeoBaseTarif> allBaseTarif(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

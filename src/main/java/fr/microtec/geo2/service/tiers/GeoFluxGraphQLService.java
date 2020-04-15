@@ -20,7 +20,7 @@ public class GeoFluxGraphQLService extends GeoAbstractGraphQLService<GeoFlux, St
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoFlux> getFlux(
+	public RelayPage<GeoFlux> allFlux(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

@@ -20,7 +20,7 @@ public class GeoRegimeTvaGraphQLService extends GeoAbstractGraphQLService<GeoReg
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoRegimeTva> getRegimesTva(
+	public RelayPage<GeoRegimeTva> allRegimeTva(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

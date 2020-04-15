@@ -20,7 +20,7 @@ public class GeoLieuPassageAQuaiGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoLieuPassageAQuai> getLieuPassageAQuais(
+	public RelayPage<GeoLieuPassageAQuai> allLieuPassageAQuai(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

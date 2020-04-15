@@ -20,7 +20,7 @@ public class GeoCourtierGraphQLService extends GeoAbstractGraphQLService<GeoCour
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoCourtier> getCourtiers(
+	public RelayPage<GeoCourtier> allCourtier(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

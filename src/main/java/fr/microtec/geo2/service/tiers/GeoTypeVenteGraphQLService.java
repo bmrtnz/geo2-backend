@@ -20,7 +20,7 @@ public class GeoTypeVenteGraphQLService extends GeoAbstractGraphQLService<GeoTyp
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTypeVente> getTypesVente(
+	public RelayPage<GeoTypeVente> allTypeVente(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

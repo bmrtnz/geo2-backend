@@ -24,7 +24,7 @@ public class GeoTransporteurGraphQLService extends GeoAbstractGraphQLService<Geo
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTransporteur> getTransporteurs(
+	public RelayPage<GeoTransporteur> allTransporteur(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

@@ -20,7 +20,7 @@ public class GeoTypePaletteGraphQLService extends GeoAbstractGraphQLService<GeoT
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTypePalette> getTypesPalette(
+	public RelayPage<GeoTypePalette> allTypePalette(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

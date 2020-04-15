@@ -20,7 +20,7 @@ public class GeoSecteurGraphQLService extends GeoAbstractGraphQLService<GeoSecte
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoSecteur> getSecteurs(
+	public RelayPage<GeoSecteur> allSecteur(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

@@ -22,7 +22,7 @@ public class GeoTransitaireGraphQLService extends GeoAbstractGraphQLService<GeoT
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoTransitaire> getTransitaires(
+	public RelayPage<GeoTransitaire> allTransitaire(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,

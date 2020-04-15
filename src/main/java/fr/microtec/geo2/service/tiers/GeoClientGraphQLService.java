@@ -26,7 +26,7 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoClient> getClients(
+	public RelayPage<GeoClient> allClient(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "page") int page,
 			@GraphQLArgument(name = "offset") int offset,
