@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.converter;
 
 import fr.microtec.geo2.persistance.StringEnum;
+import org.springframework.core.GenericTypeResolver;
 
 import javax.persistence.AttributeConverter;
 import java.util.stream.Stream;
@@ -14,8 +15,8 @@ public abstract class AbstractStringEnumConverter<T extends Enum<T> & StringEnum
 
 	private final Class<T> enumClass;
 
-	public AbstractStringEnumConverter(Class<T> enumClass) {
-		this.enumClass = enumClass;
+	public AbstractStringEnumConverter() {
+		this.enumClass = (Class<T>) GenericTypeResolver.resolveTypeArgument(this.getClass(), AbstractStringEnumConverter.class);
 	}
 
 	@Override
