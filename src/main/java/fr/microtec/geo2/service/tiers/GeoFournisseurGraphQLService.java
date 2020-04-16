@@ -11,6 +11,9 @@ import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -31,6 +34,11 @@ public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoF
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getPage(search, page, offset, env);
+	}
+
+	@GraphQLQuery
+	public Optional<GeoFournisseur> getFournisseur(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+		return this.getOne(id, env);
 	}
 
 }
