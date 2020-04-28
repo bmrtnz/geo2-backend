@@ -33,7 +33,10 @@ public class GeoLieuPassageAQuaiGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLQuery
-	public Optional<GeoLieuPassageAQuai> getLieuPassageAQuai(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+	public Optional<GeoLieuPassageAQuai> getLieuPassageAQuai(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
 		return this.getOne(id, env);
 	}
 

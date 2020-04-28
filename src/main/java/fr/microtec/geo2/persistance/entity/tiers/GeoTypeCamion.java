@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_typtrp")
-public class GeoTypeCamion extends ValidableAndModifiableEntity {
+public class GeoTypeCamion extends ValidateAndModifiedEntity {
 
 	@Id
 	@Column(name = "ttr_code")

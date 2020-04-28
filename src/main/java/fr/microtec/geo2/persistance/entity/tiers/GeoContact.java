@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_contac")
 @Entity
-public class GeoContact extends ValidableAndModifiableEntity {
+public class GeoContact extends ValidateAndModifiedEntity {
 
 	@Id
 	@Column(name = "con_ref")

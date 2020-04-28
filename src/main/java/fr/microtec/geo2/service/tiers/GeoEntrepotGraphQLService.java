@@ -34,7 +34,10 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 	}
 
 	@GraphQLQuery
-	public Optional<GeoEntrepot> getEntrepot(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+	public Optional<GeoEntrepot> getEntrepot(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
 		return this.getOne(id, env);
 	}
 

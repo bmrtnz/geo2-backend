@@ -35,7 +35,10 @@ public class GeoContactGraphQLService extends GeoAbstractGraphQLService<GeoConta
 	}
 
 	@GraphQLQuery
-	public Optional<GeoContact> getContact(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+	public Optional<GeoContact> getContact(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
 		return this.getOne(id, env);
 	}
 

@@ -11,6 +11,8 @@ import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @GraphQLApi
 public class GeoTypeCamionGraphQLService extends GeoAbstractGraphQLService<GeoTypeCamion, String> {
@@ -27,6 +29,14 @@ public class GeoTypeCamionGraphQLService extends GeoAbstractGraphQLService<GeoTy
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getPage(search, page, offset, env);
+	}
+
+	@GraphQLQuery
+	protected Optional<GeoTypeCamion> getTypeCamion(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return super.getOne(id, env);
 	}
 
 }

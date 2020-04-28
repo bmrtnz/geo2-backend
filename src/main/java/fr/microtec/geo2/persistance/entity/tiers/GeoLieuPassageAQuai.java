@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_groupa")
 @Entity
-public class GeoLieuPassageAQuai extends ValidableAndModifiableEntity {
+public class GeoLieuPassageAQuai extends ValidateAndModifiedEntity {
 
 	@Id
 	@Column(name = "grp_code")

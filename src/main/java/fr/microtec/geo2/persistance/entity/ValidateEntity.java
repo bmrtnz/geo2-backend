@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 
 @Data
 @MappedSuperclass
-public abstract class ValidableEntity {
+public abstract class ValidateEntity {
 
 	@Column(name = "valide")
 	private Boolean valide;

@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_fourni")
 @Entity
-public class GeoFournisseur extends ValidableAndModifiableEntity {
+public class GeoFournisseur extends ValidateAndModifiedEntity {
 
 	@Id
 	@Column(name = "fou_code")
@@ -110,7 +110,7 @@ public class GeoFournisseur extends ValidableAndModifiableEntity {
 	private String compteComptable;
 
 	@Column(name = "lf_ean")
-	private String lieuFonctionEAN;
+	private String lieuFonctionEan;
 
 	@Column(name = "declarant_chep")
 	private String declarantCHEP;

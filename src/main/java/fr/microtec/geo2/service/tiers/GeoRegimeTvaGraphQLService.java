@@ -11,6 +11,8 @@ import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @GraphQLApi
 public class GeoRegimeTvaGraphQLService extends GeoAbstractGraphQLService<GeoRegimeTva, String> {
@@ -27,6 +29,14 @@ public class GeoRegimeTvaGraphQLService extends GeoAbstractGraphQLService<GeoReg
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getPage(search, page, offset, env);
+	}
+
+	@GraphQLQuery
+	protected Optional<GeoRegimeTva> getRegimeTva(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return super.getOne(id, env);
 	}
 
 }
