@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
-public abstract class ValidableAndModifiableEntity extends ValidableEntity {
+public abstract class ValidateAndModifiedEntity extends ValidateEntity {
 
 	@LastModifiedBy
 	@Column(name = "mod_user")

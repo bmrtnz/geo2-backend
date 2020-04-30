@@ -1,6 +1,6 @@
-package fr.microtec.geo2.persistance.repository.tiers;
+package fr.microtec.geo2.persistance.repository.common;
 
-import fr.microtec.geo2.persistance.entity.tiers.GeoTypeVente;
+import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
 import org.springframework.stereotype.Repository;
 

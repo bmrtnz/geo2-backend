@@ -1,9 +1,7 @@
 package fr.microtec.geo2.service.tiers;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
-import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -12,11 +10,10 @@ import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.Optional;
 
 @Service
 @Validated
@@ -38,7 +35,10 @@ public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoF
 	}
 
 	@GraphQLQuery
-	public Optional<GeoFournisseur> getFournisseur(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+	public Optional<GeoFournisseur> getFournisseur(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
 		return this.getOne(id, env);
 	}
 

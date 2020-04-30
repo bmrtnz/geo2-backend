@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
@@ -13,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_client")
 @Entity
-public class GeoClient extends ValidableAndModifiableEntity {
+public class GeoClient extends ValidateAndModifiedEntity {
 
 	@Id
 	@Column(name = "cli_ref")
@@ -147,7 +148,7 @@ public class GeoClient extends ValidableAndModifiableEntity {
 	private String compteComptable;
 
 	@Column(name = "lf_ean")
-	private String lieuFonctionEAN;
+	private String lieuFonctionEan;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lan_code")

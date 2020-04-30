@@ -33,8 +33,11 @@ public class GeoBureauAchatGraphQLService extends GeoAbstractGraphQLService<GeoB
 	}
 
 	@GraphQLQuery
-	public Optional<GeoBureauAchat> getBureauAchat(String id, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getOne(id, env);
+	protected Optional<GeoBureauAchat> getBureauAchat(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return super.getOne(id, env);
 	}
 
 }

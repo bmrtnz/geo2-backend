@@ -33,8 +33,11 @@ public class GeoBasePaiementGraphQLService extends GeoAbstractGraphQLService<Geo
 	}
 
 	@GraphQLQuery
-	public Optional<GeoBasePaiement> getBasePaiement(String id, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getOne(id, env);
+	protected Optional<GeoBasePaiement> getBasePaiement(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return super.getOne(id, env);
 	}
 
 }

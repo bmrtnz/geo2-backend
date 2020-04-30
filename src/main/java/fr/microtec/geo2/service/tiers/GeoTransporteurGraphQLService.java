@@ -34,7 +34,10 @@ public class GeoTransporteurGraphQLService extends GeoAbstractGraphQLService<Geo
 	}
 
 	@GraphQLQuery
-	public Optional<GeoTransporteur> getTransporteur(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+	public Optional<GeoTransporteur> getTransporteur(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
 		return this.getOne(id, env);
 	}
 

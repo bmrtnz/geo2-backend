@@ -36,7 +36,10 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 	}
 
 	@GraphQLQuery
-	public Optional<GeoClient> getClient(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+	public Optional<GeoClient> getClient(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
 		return this.getOne(id, env);
 	}
 

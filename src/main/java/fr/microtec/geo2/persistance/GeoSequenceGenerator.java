@@ -15,10 +15,18 @@ import java.util.Properties;
 
 /**
  * Geo sequence generator strategy.
+ *
+ * Can generate from sequence or function and apply a mask if it's needed.
+ * Exemple :
+ *  - SELECT {sequenceName}.NEXTVAL FROM dual;
+ *  - SELECT {sequenceName} FROM dual;
+ *  - SELECT TO_CHAR({sequenceName}, {mask}) FROM dual;
+ *  - SELECT TO_CHAR({sequenceName}.NEXTVAL, {mask}) FROM dual;
  */
 public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 
 	public static final String SEQUENCE_PARAM = "sequenceName";
+	public static final String IS_SEQUENCE_PARAM = "isSequence";
 	public static final String MASK_PARAM = "mask";
 
 	private static final String BASE_QUERY = "SELECT %s FROM DUAL";
@@ -33,11 +41,14 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 	@Override
 	public void configure(Type type, Properties params, ServiceRegistry serviceRegistry) throws MappingException {
 		String sequenceName = ConfigurationHelper.getString(SEQUENCE_PARAM, params);
+		boolean isSequence = ConfigurationHelper.getBoolean(IS_SEQUENCE_PARAM, params, true);
 		if (sequenceName == null || sequenceName.isBlank()) {
 			throw new HibernateException("Invalid sequence name provided");
 		}
 
-		sequenceName = String.format(BASE_SEQUENCE_NAME, sequenceName);
+		if (isSequence) {
+			sequenceName = String.format(BASE_SEQUENCE_NAME, sequenceName);
+		}
 		boolean applyMask = params.containsKey(MASK_PARAM);
 		if (applyMask) {
 			String mask = ConfigurationHelper.getString(MASK_PARAM, params);

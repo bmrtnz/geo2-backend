@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_societe")
 @Entity
-public class GeoSociete extends ValidableEntity {
+public class GeoSociete extends ValidateEntity {
 
 	@Id
 	@Column(name = "soc_code")

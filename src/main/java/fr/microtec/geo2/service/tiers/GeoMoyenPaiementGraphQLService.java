@@ -1,9 +1,7 @@
 package fr.microtec.geo2.service.tiers;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.tiers.GeoLieuPassageAQuai;
 import fr.microtec.geo2.persistance.entity.tiers.GeoMoyenPaiement;
-import fr.microtec.geo2.persistance.repository.tiers.GeoLieuPassageAQuaiRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoMoyenPaiementRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -35,8 +33,11 @@ public class GeoMoyenPaiementGraphQLService extends GeoAbstractGraphQLService<Ge
 	}
 
 	@GraphQLQuery
-	public Optional<GeoMoyenPaiement> getMoyenPaiement(String id, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getOne(id, env);
+	protected Optional<GeoMoyenPaiement> getMoyenPaiement(
+			@GraphQLArgument(name = "id") String id,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return super.getOne(id, env);
 	}
 
 }

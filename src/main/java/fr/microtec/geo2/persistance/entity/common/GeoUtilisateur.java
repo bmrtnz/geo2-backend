@@ -1,23 +1,20 @@
 package fr.microtec.geo2.persistance.entity.common;
 
-import fr.microtec.geo2.persistance.entity.ValidableAndModifiableEntity;
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.security.Geo2SecurityRoles;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Collection;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_user")
 @Entity
-public class GeoUtilisateur extends ValidableAndModifiableEntity implements UserDetails {
+public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDetails {
 
 	@Id
 	@Column(name = "nom_utilisateur")
