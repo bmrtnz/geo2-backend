@@ -39,8 +39,8 @@ public class GeoTransporteurGraphQLService extends GeoAbstractGraphQLService<Geo
 	}
 
 	@GraphQLMutation
-	public GeoTransporteur saveTransporteur(@Validated GeoTransporteur client) {
-		return this.save(client);
+	public GeoTransporteur saveTransporteur(@Validated GeoTransporteur transporteur) {
+		return this.save(transporteur);
 	}
 
 	@GraphQLMutation

@@ -11,6 +11,9 @@ import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +32,11 @@ public class GeoMoyenPaiementGraphQLService extends GeoAbstractGraphQLService<Ge
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getPage(search, page, offset, env);
+	}
+
+	@GraphQLQuery
+	public Optional<GeoMoyenPaiement> getMoyenPaiement(String id, @GraphQLEnvironment ResolutionEnvironment env) {
+		return this.getOne(id, env);
 	}
 
 }

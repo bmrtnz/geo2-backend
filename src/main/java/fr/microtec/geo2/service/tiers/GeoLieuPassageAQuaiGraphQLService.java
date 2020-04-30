@@ -6,6 +6,7 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoLieuPassageAQuaiReposito
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
@@ -13,6 +14,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 @Service
 @GraphQLApi
@@ -35,6 +37,11 @@ public class GeoLieuPassageAQuaiGraphQLService extends GeoAbstractGraphQLService
 	@GraphQLQuery
 	public Optional<GeoLieuPassageAQuai> getLieuPassageAQuai(String id, @GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getOne(id, env);
+	}
+
+	@GraphQLMutation
+	public GeoLieuPassageAQuai saveLieuPassageAQuai(@Validated GeoLieuPassageAQuai lieuPassageAQuai) {
+		return this.save(lieuPassageAQuai);
 	}
 
 }
