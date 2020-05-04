@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.repository.produits;
 
-import fr.microtec.geo2.persistance.entity.produit.GeoArticleCahierDesCharge;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticleCahierDesCharge;
 import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
 import org.springframework.stereotype.Repository;
 

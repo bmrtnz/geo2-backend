@@ -1,7 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.produit.GeoArticleNormalisation;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticleNormalisation;
 import fr.microtec.geo2.persistance.repository.produits.GeoArticleNormalisationRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;

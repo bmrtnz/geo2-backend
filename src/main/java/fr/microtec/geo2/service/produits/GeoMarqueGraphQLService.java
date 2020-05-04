@@ -1,7 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.produit.GeoMarque;
+import fr.microtec.geo2.persistance.entity.produits.GeoMarque;
 import fr.microtec.geo2.persistance.repository.produits.GeoMarqueRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;

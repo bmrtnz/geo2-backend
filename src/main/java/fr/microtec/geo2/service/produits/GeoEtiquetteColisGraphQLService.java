@@ -1,7 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.produit.GeoEtiquetteColis;
+import fr.microtec.geo2.persistance.entity.produits.GeoEtiquetteColis;
 import fr.microtec.geo2.persistance.repository.produits.GeoEtiquetteColisRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;

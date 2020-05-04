@@ -1,7 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.produit.GeoSucre;
+import fr.microtec.geo2.persistance.entity.produits.GeoSucre;
 import fr.microtec.geo2.persistance.repository.produits.GeoSucreRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
