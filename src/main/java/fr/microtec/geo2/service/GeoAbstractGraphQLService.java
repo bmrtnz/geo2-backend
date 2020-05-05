@@ -8,14 +8,21 @@ import fr.microtec.geo2.persistance.GeoEntityGraph;
 import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
 import io.leangen.graphql.execution.ResolutionEnvironment;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import java.beans.FeatureDescriptor;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -26,7 +33,10 @@ import java.util.Optional;
  */
 public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
-	private final GeoGraphRepository<T, ID> repository;
+	@PersistenceUnit
+	protected EntityManagerFactory entityManagerFactory;
+
+	protected final GeoGraphRepository<T, ID> repository;
 	private RSQLParser rsqlParser;
 
 	public GeoAbstractGraphQLService(GeoGraphRepository<T, ID> repository) {
@@ -67,10 +77,21 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	/**
 	 * Save entity.
 	 *
-	 * @param entity Entity to save.
+	 * @param data Entity data to save.
 	 * @return The saved entity.
 	 */
-	protected T save(T entity) {
+	protected T save(T data) {
+		T entity = this.repository.getOne((ID) this.entityManagerFactory.getPersistenceUnitUtil().getIdentifier(data));
+
+		BeanWrapper src = new BeanWrapperImpl(data);
+		PropertyDescriptor[] pds = src.getPropertyDescriptors();
+		String[] nullProps = Arrays.stream(pds)
+				.filter(p -> src.getPropertyValue(p.getName()) == null)
+				.map(FeatureDescriptor::getName)
+				.toArray(String[]::new);
+
+		BeanUtils.copyProperties(data, entity, nullProps);
+
 		return this.repository.save(entity);
 	}
 

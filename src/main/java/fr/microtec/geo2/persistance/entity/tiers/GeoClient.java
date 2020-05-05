@@ -4,6 +4,8 @@ import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -14,6 +16,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_client")
 @Entity
+@DynamicInsert
+@DynamicUpdate
 public class GeoClient extends ValidateAndModifiedEntity {
 
 	@Id
@@ -29,10 +33,10 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	)
 	private String id;
 
-	@Column(name = "cli_code")
+	@Column(name = "cli_code", nullable = false)
 	private String code;
 
-	@Column(name = "raisoc")
+	@Column(name = "raisoc", nullable = false)
 	private String raisonSocial;
 
 	@OneToMany(fetch = FetchType.LAZY)
@@ -40,11 +44,11 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	private List<GeoContact> contacts;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "soc_code")
+	@JoinColumn(name = "soc_code", nullable = false)
 	private GeoSociete societe;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sco_code")
+	@JoinColumn(name = "sco_code", nullable = false)
 	private GeoSecteur secteur;
 
 	//region Primary Address
@@ -57,14 +61,14 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@Column(name = "ads3")
 	private String adresse3;
 
-	@Column(name = "zip")
+	@Column(name = "zip", nullable = false)
 	private String codePostal;
 
-	@Column(name = "ville")
+	@Column(name = "ville", nullable = false)
 	private String ville;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pay_code")
+	@JoinColumn(name = "pay_code", nullable = false)
 	private GeoPays pays;
 	//endregion
 
@@ -93,21 +97,21 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	//endregion
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tvr_code")
+	@JoinColumn(name = "tvr_code", nullable = false)
 	private GeoRegimeTva regimeTva;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "inc_code")
+	@JoinColumn(name = "inc_code", nullable = false)
 	private GeoIncoterm incoterm;
 
-	@Column(name = "echnbj")
+	@Column(name = "echnbj", nullable = false)
 	private String nbJourEcheance;
 
 	@Column(name = "echle")
 	private String echeanceLe;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "mpm_code")
+	@JoinColumn(name = "mpm_code", nullable = false)
 	private GeoMoyenPaiement moyenPaiement;
 
 	@Column(name = "tvaid")
@@ -141,21 +145,21 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	private String instructionLogistique;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bpm_code")
+	@JoinColumn(name = "bpm_code", nullable = false)
 	private GeoBasePaiement basePaiement;
 
-	@Column(name = "compte_compta")
+	@Column(name = "compte_compta", nullable = false)
 	private String compteComptable;
 
 	@Column(name = "lf_ean")
 	private String lieuFonctionEan;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "lan_code")
+	@JoinColumn(name = "lan_code", nullable = false)
 	private GeoPays langue;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "dev_code")
+	@JoinColumn(name = "dev_code", nullable = false)
 	private GeoDevise devise;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -190,7 +194,7 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "gcl_code")
 	private GeoGroupeClient groupeClient;
 
-	@Column(name = "soumis_ctifl")
+	@Column(name = "soumis_ctifl", nullable = false)
 	private Boolean soumisCtifl;
 
 	@Column(name = "frais_plateforme")
