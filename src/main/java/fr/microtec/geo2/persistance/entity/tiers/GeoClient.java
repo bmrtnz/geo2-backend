@@ -238,4 +238,7 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "cli_ref_palox")
 	private GeoClient paloxRaisonSocial;
 
+	@Column(name = "delai_baf")
+	private Integer delaiBonFacturer;
+
 }

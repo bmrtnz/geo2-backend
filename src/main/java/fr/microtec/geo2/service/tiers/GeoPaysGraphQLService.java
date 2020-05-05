@@ -9,9 +9,10 @@ import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
 
 @Service
 @GraphQLApi

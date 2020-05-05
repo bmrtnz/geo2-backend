@@ -6,6 +6,7 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
@@ -39,6 +40,11 @@ public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoF
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getOne(id, env);
+	}
+
+	@GraphQLMutation
+	public GeoFournisseur saveFournisseur(@Validated GeoFournisseur fournisseur) {
+		return this.save(fournisseur);
 	}
 
 }
