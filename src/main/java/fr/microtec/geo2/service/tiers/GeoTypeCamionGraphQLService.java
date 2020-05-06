@@ -32,7 +32,7 @@ public class GeoTypeCamionGraphQLService extends GeoAbstractGraphQLService<GeoTy
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoTypeCamion> getTypeCamion(
+	public Optional<GeoTypeCamion> getTypeCamion(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

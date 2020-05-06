@@ -35,7 +35,7 @@ public class GeoSocieteGraphQLService extends GeoAbstractGraphQLService<GeoSocie
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoSociete> getSociete(
+	public Optional<GeoSociete> getSociete(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

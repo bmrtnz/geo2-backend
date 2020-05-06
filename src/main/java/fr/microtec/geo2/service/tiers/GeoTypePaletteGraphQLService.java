@@ -32,7 +32,7 @@ public class GeoTypePaletteGraphQLService extends GeoAbstractGraphQLService<GeoT
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoTypePalette> getTypePalette(
+	public Optional<GeoTypePalette> getTypePalette(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

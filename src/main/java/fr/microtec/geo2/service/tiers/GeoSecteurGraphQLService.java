@@ -33,7 +33,7 @@ public class GeoSecteurGraphQLService extends GeoAbstractGraphQLService<GeoSecte
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoSecteur> getSecteur(
+	public Optional<GeoSecteur> getSecteur(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

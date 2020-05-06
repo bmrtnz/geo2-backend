@@ -32,7 +32,7 @@ public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoM
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoModeCulture> getModeCulture(
+	public Optional<GeoModeCulture> getModeCulture(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

@@ -33,7 +33,7 @@ public class GeoRegimeTvaGraphQLService extends GeoAbstractGraphQLService<GeoReg
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoRegimeTva> getRegimeTva(
+	public Optional<GeoRegimeTva> getRegimeTva(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

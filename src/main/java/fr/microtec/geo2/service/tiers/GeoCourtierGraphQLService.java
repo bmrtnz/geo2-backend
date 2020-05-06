@@ -32,7 +32,7 @@ public class GeoCourtierGraphQLService extends GeoAbstractGraphQLService<GeoCour
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoCourtier> getCourtier(
+	public Optional<GeoCourtier> getCourtier(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

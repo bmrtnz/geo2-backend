@@ -32,7 +32,7 @@ public class GeoGenreGraphQLService extends GeoAbstractGraphQLService<GeoGenre, 
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoGenre> getGenre(
+	public Optional<GeoGenre> getGenre(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

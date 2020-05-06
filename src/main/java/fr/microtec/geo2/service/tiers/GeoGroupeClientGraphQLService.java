@@ -32,7 +32,7 @@ public class GeoGroupeClientGraphQLService extends GeoAbstractGraphQLService<Geo
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoGroupeClient> getGroupeClient(
+	public Optional<GeoGroupeClient> getGroupeClient(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
