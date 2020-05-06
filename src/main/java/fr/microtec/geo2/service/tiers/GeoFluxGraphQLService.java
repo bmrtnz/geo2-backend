@@ -32,7 +32,7 @@ public class GeoFluxGraphQLService extends GeoAbstractGraphQLService<GeoFlux, St
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoFlux> getFlux(
+	public Optional<GeoFlux> getFlux(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

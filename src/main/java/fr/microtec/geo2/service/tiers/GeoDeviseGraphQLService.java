@@ -33,7 +33,7 @@ public class GeoDeviseGraphQLService extends GeoAbstractGraphQLService<GeoDevise
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoDevise> getDevise(
+	public Optional<GeoDevise> getDevise(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

@@ -32,7 +32,7 @@ public class GeoTransitaireGraphQLService extends GeoAbstractGraphQLService<GeoT
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoTransitaire> getTransitaire(
+	public Optional<GeoTransitaire> getTransitaire(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

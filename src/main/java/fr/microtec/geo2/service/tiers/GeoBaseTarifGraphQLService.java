@@ -32,7 +32,7 @@ public class GeoBaseTarifGraphQLService extends GeoAbstractGraphQLService<GeoBas
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoBaseTarif> getBaseTarif(
+	public Optional<GeoBaseTarif> getBaseTarif(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

@@ -32,7 +32,7 @@ public class GeoTypeVenteGraphQLService extends GeoAbstractGraphQLService<GeoTyp
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoTypeVente> getTypeVente(
+	public Optional<GeoTypeVente> getTypeVente(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

@@ -33,7 +33,7 @@ public class GeoMoyenPaiementGraphQLService extends GeoAbstractGraphQLService<Ge
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoMoyenPaiement> getMoyenPaiement(
+	public Optional<GeoMoyenPaiement> getMoyenPaiement(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

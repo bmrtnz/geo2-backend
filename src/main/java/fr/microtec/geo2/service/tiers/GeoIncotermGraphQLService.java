@@ -33,7 +33,7 @@ public class GeoIncotermGraphQLService extends GeoAbstractGraphQLService<GeoInco
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoIncoterm> getIncoterm(
+	public Optional<GeoIncoterm> getIncoterm(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

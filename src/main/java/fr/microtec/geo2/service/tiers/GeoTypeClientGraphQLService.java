@@ -33,7 +33,7 @@ public class GeoTypeClientGraphQLService extends GeoAbstractGraphQLService<GeoTy
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoTypeClient> getTypeClient(
+	public Optional<GeoTypeClient> getTypeClient(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

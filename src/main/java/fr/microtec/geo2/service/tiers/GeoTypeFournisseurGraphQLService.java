@@ -33,7 +33,7 @@ public class GeoTypeFournisseurGraphQLService extends GeoAbstractGraphQLService<
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoTypeFournisseur> getTypeFournisseur(
+	public Optional<GeoTypeFournisseur> getTypeFournisseur(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
