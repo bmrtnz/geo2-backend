@@ -126,7 +126,7 @@ public class GeoFournisseur extends ValidateAndModifiedEntity {
 	private String siretAPE;
 
 	@Column(name = "ident3")
-	private String tvaCeeLibelle;
+	private String tvaId;
 
 	@Column(name = "ident4")
 	private String rcs;
