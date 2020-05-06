@@ -34,10 +34,10 @@ public class GeoTypeClientGraphQLService extends GeoAbstractGraphQLService<GeoTy
 
 	@GraphQLQuery
 	public Optional<GeoTypeClient> getTypeClient(
-			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return super.getOne(search, env);
+		return super.getOne(id, env);
 	}
 
 }
