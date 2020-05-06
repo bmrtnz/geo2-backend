@@ -39,7 +39,7 @@ public class GeoVariete extends ValidateAndModifiedEntity {
 	private Boolean publicationWeb;
 
 	@Column(name = "stock_preca")
-	private Boolean stockPreca;
+	private Boolean stockPrecalibre;
 
 	@Column(name = "perequ")
 	private Boolean prerequation;

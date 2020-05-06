@@ -92,7 +92,7 @@ public class GeoFournisseur extends ValidateAndModifiedEntity {
 	private Boolean stockActif;
 
 	@Column(name = "stock_preca")
-	private Boolean stockPreca;
+	private Boolean stockPrecalibre;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_fournisseur")
