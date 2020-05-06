@@ -3,7 +3,10 @@ package fr.microtec.geo2.persistance.entity.tiers;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 
@@ -11,6 +14,8 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_entrep")
 @Entity
+@DynamicInsert
+@DynamicUpdate
 public class GeoEntrepot extends ValidateAndModifiedEntity {
 
 	@Id
@@ -20,8 +25,8 @@ public class GeoEntrepot extends ValidateAndModifiedEntity {
 			name = "GeoEntrepotGenerator",
 			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
 			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_cen_num"),
-					@org.hibernate.annotations.Parameter(name = "mask", value = "FM099999")
+					@Parameter(name = "sequenceName", value = "seq_cen_num"),
+					@Parameter(name = "mask", value = "FM099999")
 			}
 	)
 	private String id;

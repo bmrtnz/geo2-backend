@@ -241,4 +241,11 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@Column(name = "delai_baf")
 	private Integer delaiBonFacturer;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cov_code", nullable = false)
+	private GeoConditionVente conditionVente;
+
+	@Column(name = "tyt_code", nullable = false)
+	private Character typeTiers = 'C';
+
 }

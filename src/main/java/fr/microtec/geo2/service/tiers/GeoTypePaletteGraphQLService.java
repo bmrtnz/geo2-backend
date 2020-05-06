@@ -6,9 +6,11 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoTypePaletteRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,19 +26,18 @@ public class GeoTypePaletteGraphQLService extends GeoAbstractGraphQLService<GeoT
 	@GraphQLQuery
 	public RelayPage<GeoTypePalette> allTypePalette(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "page") int page,
-			@GraphQLArgument(name = "offset") int offset,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, page, offset, env);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoTypePalette> getTypePalette(
-			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return super.getOne(search, env);
+		return super.getOne(id, env);
 	}
 
 }

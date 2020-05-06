@@ -43,10 +43,6 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		this.repository = repository;
 	}
 
-	protected RelayPage<T> getPage(String search, int page, int offset, ResolutionEnvironment env) {
-		return this.getPage(search, PageRequest.of(page, offset), env);
-	}
-
 	protected RelayPage<T> getPage(String search, Pageable pageable, ResolutionEnvironment env) {
 		Page<T> page;
 

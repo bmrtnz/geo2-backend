@@ -3,6 +3,8 @@ package fr.microtec.geo2.persistance.entity.tiers;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -12,6 +14,8 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_contac")
 @Entity
+@DynamicInsert
+@DynamicUpdate
 public class GeoContact extends ValidateAndModifiedEntity {
 
 	@Id
