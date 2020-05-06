@@ -40,8 +40,8 @@ public class GeoArticleEmballageGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLMutation
-	public GeoArticleEmballage saveArticleEmballage(@Validated GeoArticleEmballage client) {
-		return this.save(client);
+	public GeoArticleEmballage saveArticleEmballage(@Validated GeoArticleEmballage articleEmballage) {
+		return this.save(articleEmballage);
 	}
 
 	@GraphQLMutation

@@ -40,8 +40,8 @@ public class GeoArticleNormalisationGraphQLService extends GeoAbstractGraphQLSer
 	}
 
 	@GraphQLMutation
-	public GeoArticleNormalisation saveArticleNormalisation(@Validated GeoArticleNormalisation client) {
-		return this.save(client);
+	public GeoArticleNormalisation saveArticleNormalisation(@Validated GeoArticleNormalisation articleNormalisation) {
+		return this.save(articleNormalisation);
 	}
 
 	@GraphQLMutation

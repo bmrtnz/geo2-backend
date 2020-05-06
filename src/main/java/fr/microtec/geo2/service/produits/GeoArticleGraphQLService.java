@@ -40,8 +40,8 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 	}
 
 	@GraphQLMutation
-	public GeoArticle saveArticle(@Validated GeoArticle client) {
-		return this.save(client);
+	public GeoArticle saveArticle(@Validated GeoArticle article) {
+		return this.save(article);
 	}
 
 	@GraphQLMutation

@@ -40,8 +40,8 @@ public class GeoArticleMatierePremiereGraphQLService extends GeoAbstractGraphQLS
 	}
 
 	@GraphQLMutation
-	public GeoArticleMatierePremiere saveArticleMatierePremiere(@Validated GeoArticleMatierePremiere client) {
-		return this.save(client);
+	public GeoArticleMatierePremiere saveArticleMatierePremiere(@Validated GeoArticleMatierePremiere articleMatierePremiere) {
+		return this.save(articleMatierePremiere);
 	}
 
 	@GraphQLMutation

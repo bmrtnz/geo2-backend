@@ -40,8 +40,8 @@ public class GeoArticleCahierDesChargeGraphQLService extends GeoAbstractGraphQLS
 	}
 
 	@GraphQLMutation
-	public GeoArticleCahierDesCharge saveArticleCahierDesCharge(@Validated GeoArticleCahierDesCharge client) {
-		return this.save(client);
+	public GeoArticleCahierDesCharge saveArticleCahierDesCharge(@Validated GeoArticleCahierDesCharge articleCahierDesCharge) {
+		return this.save(articleCahierDesCharge);
 	}
 
 	@GraphQLMutation
