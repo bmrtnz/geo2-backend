@@ -3,6 +3,8 @@ package fr.microtec.geo2.persistance.entity.tiers;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_transp")
+@DynamicInsert
+@DynamicUpdate
 public class GeoTransporteur extends ValidateAndModifiedEntity {
 
 	@Id
