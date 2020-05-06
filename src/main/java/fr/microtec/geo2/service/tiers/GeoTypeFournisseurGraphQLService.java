@@ -34,10 +34,10 @@ public class GeoTypeFournisseurGraphQLService extends GeoAbstractGraphQLService<
 
 	@GraphQLQuery
 	public Optional<GeoTypeFournisseur> getTypeFournisseur(
-			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return super.getOne(search, env);
+		return super.getOne(id, env);
 	}
 
 }
