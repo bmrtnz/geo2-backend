@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Optional;
 
 @Service
-@Validated
+
 @GraphQLApi
 public class GeoContactGraphQLService extends GeoAbstractGraphQLService<GeoContact, String> {
 
@@ -40,7 +40,7 @@ public class GeoContactGraphQLService extends GeoAbstractGraphQLService<GeoConta
 	}
 
 	@GraphQLMutation
-	public GeoContact saveContact(@Validated GeoContact contact) {
+	public GeoContact saveContact(GeoContact contact) {
 		return this.save(contact);
 	}
 

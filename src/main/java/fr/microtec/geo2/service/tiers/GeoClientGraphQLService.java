@@ -7,7 +7,6 @@ import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

@@ -39,7 +39,7 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 	}
 
 	@GraphQLMutation
-	public GeoEntrepot saveEntrepot(@Validated GeoEntrepot entrepot) {
+	public GeoEntrepot saveEntrepot(GeoEntrepot entrepot) {
 		return this.save(entrepot);
 	}
 

@@ -39,7 +39,7 @@ public class GeoLieuPassageAQuaiGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLMutation
-	public GeoLieuPassageAQuai saveLieuPassageAQuai(@Validated GeoLieuPassageAQuai lieuPassageAQuai) {
+	public GeoLieuPassageAQuai saveLieuPassageAQuai(GeoLieuPassageAQuai lieuPassageAQuai) {
 		return this.save(lieuPassageAQuai);
 	}
 
