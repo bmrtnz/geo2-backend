@@ -6,6 +6,8 @@ import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinFormula;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
@@ -41,18 +43,18 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 	private GeoVariete variete;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "caf_code", insertable = false, updatable = false)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	private GeoCalibreFournisseur calibreFournisseur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cun_code", insertable = false, updatable = false)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(column = @JoinColumn(name = "cun_code"))
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	private GeoCalibreUnifie calibreUnifie;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ori_code", insertable = false, updatable = false)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(column = @JoinColumn(name = "ori_code"))
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	private GeoOrigine origine;
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -9,14 +9,13 @@ import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Service
-@Validated
 @GraphQLApi
-public class GeoArticleCahierDesChargeGraphQLService extends GeoAbstractGraphQLService<GeoArticleCahierDesCharge, String> {
+public class GeoArticleCahierDesChargeGraphQLService
+		extends GeoAbstractGraphQLService<GeoArticleCahierDesCharge, String> {
 
 	public GeoArticleCahierDesChargeGraphQLService(GeoArticleCahierDesChargeRepository repository) {
 		super(repository);
@@ -32,7 +31,7 @@ public class GeoArticleCahierDesChargeGraphQLService extends GeoAbstractGraphQLS
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoArticleCahierDesCharge> getArticleCahierDesCharge(
+	public Optional<GeoArticleCahierDesCharge> getArticleCahierDesCharge(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
@@ -40,7 +39,7 @@ public class GeoArticleCahierDesChargeGraphQLService extends GeoAbstractGraphQLS
 	}
 
 	@GraphQLMutation
-	public GeoArticleCahierDesCharge saveArticleCahierDesCharge(@Validated GeoArticleCahierDesCharge articleCahierDesCharge) {
+	public GeoArticleCahierDesCharge saveArticleCahierDesCharge(GeoArticleCahierDesCharge articleCahierDesCharge) {
 		return this.save(articleCahierDesCharge);
 	}
 

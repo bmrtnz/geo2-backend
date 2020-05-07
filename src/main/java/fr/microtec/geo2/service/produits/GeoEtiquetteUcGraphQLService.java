@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoEtiquetteUc;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoEtiquetteUcRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoEtiquetteUc, String> {
+public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoEtiquetteUc, GeoProduitWithEspeceId> {
 
 	public GeoEtiquetteUcGraphQLService(GeoEtiquetteUcRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoE
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoEtiquetteUc> getEtiquetteUc(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoEtiquetteUc> getEtiquetteUc(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

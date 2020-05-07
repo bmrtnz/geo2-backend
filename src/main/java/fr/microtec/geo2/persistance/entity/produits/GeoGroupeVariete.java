@@ -11,10 +11,17 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_grpvar")
+@IdClass(GeoProduitWithEspeceId.class)
 public class GeoGroupeVariete extends ValidateAndModifiedEntity {
 
-	@EmbeddedId
-	private GeoGroupeVarieteId groupeVarieteId;
+	@Id
+	@Column(name = "grv_code")
+	private String id;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "esp_code")
+	private GeoEspece espece;
 
 	@Column(name = "grv_desc")
 	private String description;

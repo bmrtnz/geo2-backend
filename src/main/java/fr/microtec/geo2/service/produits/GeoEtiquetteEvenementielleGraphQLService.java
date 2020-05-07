@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoEtiquetteEvenementielle;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoEtiquetteEvenementielleRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,8 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoEtiquetteEvenementielleGraphQLService extends GeoAbstractGraphQLService<GeoEtiquetteEvenementielle, String> {
+public class GeoEtiquetteEvenementielleGraphQLService
+		extends GeoAbstractGraphQLService<GeoEtiquetteEvenementielle, GeoProduitWithEspeceId> {
 
 	public GeoEtiquetteEvenementielleGraphQLService(GeoEtiquetteEvenementielleRepository repository) {
 		super(repository);
@@ -33,8 +35,8 @@ public class GeoEtiquetteEvenementielleGraphQLService extends GeoAbstractGraphQL
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoEtiquetteEvenementielle> getEtiquetteEvenementielle(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoEtiquetteEvenementielle> getEtiquetteEvenementielle(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

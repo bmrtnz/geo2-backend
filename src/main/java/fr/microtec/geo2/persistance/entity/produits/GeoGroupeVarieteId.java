@@ -9,11 +9,6 @@ import java.io.Serializable;
 @Embeddable
 public class GeoGroupeVarieteId implements Serializable {
 
-	@Column(name = "grv_code")
-	private String id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code")
-	private GeoEspece espece;
 
 }

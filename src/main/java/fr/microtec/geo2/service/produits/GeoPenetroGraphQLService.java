@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoPenetro;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoPenetroRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoPenetroGraphQLService extends GeoAbstractGraphQLService<GeoPenetro, String> {
+public class GeoPenetroGraphQLService extends GeoAbstractGraphQLService<GeoPenetro, GeoProduitWithEspeceId> {
 
 	public GeoPenetroGraphQLService(GeoPenetroRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoPenetroGraphQLService extends GeoAbstractGraphQLService<GeoPenet
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoPenetro> getPenetro(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoPenetro> getPenetro(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

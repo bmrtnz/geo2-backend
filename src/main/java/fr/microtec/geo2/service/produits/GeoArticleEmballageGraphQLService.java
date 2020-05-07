@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Optional;
 
 @Service
-@Validated
 @GraphQLApi
 public class GeoArticleEmballageGraphQLService extends GeoAbstractGraphQLService<GeoArticleEmballage, String> {
 
@@ -32,7 +31,7 @@ public class GeoArticleEmballageGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoArticleEmballage> getArticleEmballage(
+	public Optional<GeoArticleEmballage> getArticleEmballage(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
@@ -40,7 +39,7 @@ public class GeoArticleEmballageGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLMutation
-	public GeoArticleEmballage saveArticleEmballage(@Validated GeoArticleEmballage articleEmballage) {
+	public GeoArticleEmballage saveArticleEmballage(GeoArticleEmballage articleEmballage) {
 		return this.save(articleEmballage);
 	}
 

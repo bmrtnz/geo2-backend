@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoPreEmballage;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoPreEmballageRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoPreEmballageGraphQLService extends GeoAbstractGraphQLService<GeoPreEmballage, String> {
+public class GeoPreEmballageGraphQLService extends GeoAbstractGraphQLService<GeoPreEmballage, GeoProduitWithEspeceId> {
 
 	public GeoPreEmballageGraphQLService(GeoPreEmballageRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoPreEmballageGraphQLService extends GeoAbstractGraphQLService<Geo
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoPreEmballage> getPreEmballage(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoPreEmballage> getPreEmballage(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

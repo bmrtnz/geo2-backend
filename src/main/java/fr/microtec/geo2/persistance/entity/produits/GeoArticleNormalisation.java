@@ -3,10 +3,12 @@ package fr.microtec.geo2.persistance.entity.produits;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -50,38 +52,38 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity {
 	private GeoEspece espece;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "cam_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "cam_code"))
 	private GeoCalibreMarquage calibreMarquage;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "etf_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "etf_code"))
 	private GeoStickeur stickeur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "etc_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "etc_code"))
 	private GeoEtiquetteColis etiquetteColis;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "etp_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "etp_code"))
 	private GeoEtiquetteUc etiquetteUc;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "etv_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "etv_code"))
 	private GeoEtiquetteEvenementielle etiquetteEvenementielle;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "ids_code"))
 	private GeoIdentificationSymbolique identificationSymbolique;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "maq_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "maq_code"))
 	private GeoMarque marque;
 
 }

@@ -3,15 +3,19 @@ package fr.microtec.geo2.persistance.entity.produits;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_emballage")
+@DynamicInsert
+@DynamicUpdate
 public class GeoArticleEmballage extends ValidateCreatedAndModifiedEntity {
 
 	@Id
@@ -44,23 +48,23 @@ public class GeoArticleEmballage extends ValidateCreatedAndModifiedEntity {
 	private GeoEspece espece;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "col_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "col_code"))
 	private GeoEmballage emballage;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "cos_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "cos_code"))
 	private GeoConditionSpecial conditionSpecial;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "alv_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "alv_code"))
 	private GeoAlveole alveole;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "maq_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "maq_code"))
 	private GeoMarque marque;
 
 }

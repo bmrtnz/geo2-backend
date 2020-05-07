@@ -33,7 +33,7 @@ public class GeoVarieteGraphQLService extends GeoAbstractGraphQLService<GeoVarie
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoVariete> getVariete(
+	public Optional<GeoVariete> getVariete(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoColoration;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoColorationRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoColorationGraphQLService extends GeoAbstractGraphQLService<GeoColoration, String> {
+public class GeoColorationGraphQLService extends GeoAbstractGraphQLService<GeoColoration, GeoProduitWithEspeceId> {
 
 	public GeoColorationGraphQLService(GeoColorationRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoColorationGraphQLService extends GeoAbstractGraphQLService<GeoCo
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoColoration> getColoration(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoColoration> getColoration(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

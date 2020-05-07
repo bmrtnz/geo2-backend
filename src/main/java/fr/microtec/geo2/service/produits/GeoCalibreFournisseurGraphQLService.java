@@ -33,7 +33,7 @@ public class GeoCalibreFournisseurGraphQLService extends GeoAbstractGraphQLServi
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoCalibreFournisseur> getCalibreFournisseur(
+	public Optional<GeoCalibreFournisseur> getCalibreFournisseur(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {

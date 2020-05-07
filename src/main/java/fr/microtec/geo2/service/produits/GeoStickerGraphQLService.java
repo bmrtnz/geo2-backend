@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.entity.produits.GeoStickeur;
 import fr.microtec.geo2.persistance.repository.produits.GeoStickerRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStickeur, String> {
+public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStickeur, GeoProduitWithEspeceId> {
 
 	public GeoStickerGraphQLService(GeoStickerRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStick
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoStickeur> getStickeur(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoStickeur> getStickeur(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoCirage;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoCirageRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoCirageGraphQLService extends GeoAbstractGraphQLService<GeoCirage, String> {
+public class GeoCirageGraphQLService extends GeoAbstractGraphQLService<GeoCirage, GeoProduitWithEspeceId> {
 
 	public GeoCirageGraphQLService(GeoCirageRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoCirageGraphQLService extends GeoAbstractGraphQLService<GeoCirage
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoCirage> getCirage(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoCirage> getCirage(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

@@ -4,6 +4,8 @@ import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinFormula;
 
 import javax.persistence.*;
 
@@ -54,10 +56,9 @@ public class GeoVariete extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
 
-	// TODO Find solution for removing insertable and updatable
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code", insertable = false, updatable = false)
-	@JoinColumn(name = "grv_code", insertable = false, updatable = false)
+	@JoinColumnOrFormula(formula = @JoinFormula(value = "esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "grv_code"))
 	private GeoGroupeVariete groupe;
 
 	@ManyToOne(fetch = FetchType.LAZY)

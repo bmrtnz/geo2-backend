@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.entity.produits.GeoRangement;
 import fr.microtec.geo2.persistance.repository.produits.GeoRangementRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoRangementGraphQLService extends GeoAbstractGraphQLService<GeoRangement, String> {
+public class GeoRangementGraphQLService extends GeoAbstractGraphQLService<GeoRangement, GeoProduitWithEspeceId> {
 
 	public GeoRangementGraphQLService(GeoRangementRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoRangementGraphQLService extends GeoAbstractGraphQLService<GeoRan
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoRangement> getRangement(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoRangement> getRangement(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

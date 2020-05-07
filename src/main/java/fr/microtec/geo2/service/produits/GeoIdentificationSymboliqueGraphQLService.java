@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoIdentificationSymbolique;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoIdentificationSymboliqueRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,8 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoIdentificationSymboliqueGraphQLService extends GeoAbstractGraphQLService<GeoIdentificationSymbolique, String> {
+public class GeoIdentificationSymboliqueGraphQLService
+		extends GeoAbstractGraphQLService<GeoIdentificationSymbolique, GeoProduitWithEspeceId> {
 
 	public GeoIdentificationSymboliqueGraphQLService(GeoIdentificationSymboliqueRepository repository) {
 		super(repository);
@@ -33,8 +35,8 @@ public class GeoIdentificationSymboliqueGraphQLService extends GeoAbstractGraphQ
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoIdentificationSymbolique> getIdentificationSymbolique(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoIdentificationSymbolique> getIdentificationSymbolique(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

@@ -10,10 +10,17 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_colis")
+@IdClass(GeoProduitWithEspeceId.class)
 public class GeoEmballage extends ValidateAndModifiedEntity {
 
-	@EmbeddedId
-	private GeoEmballageId emballageId;
+	@Id
+	@Column(name = "col_code")
+	private String id;
+
+	@Id
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "esp_code")
+	private GeoEspece espece;
 
 	@Column(name = "col_ref", nullable = false, unique = true)
 	private String reference;

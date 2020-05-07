@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoCalibreMarquage;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoCalibreMarquageRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,8 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoCalibreMarquageGraphQLService extends GeoAbstractGraphQLService<GeoCalibreMarquage, String> {
+public class GeoCalibreMarquageGraphQLService
+		extends GeoAbstractGraphQLService<GeoCalibreMarquage, GeoProduitWithEspeceId> {
 
 	public GeoCalibreMarquageGraphQLService(GeoCalibreMarquageRepository repository) {
 		super(repository);
@@ -33,8 +35,8 @@ public class GeoCalibreMarquageGraphQLService extends GeoAbstractGraphQLService<
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoCalibreMarquage> getCalibreMarquage(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoCalibreMarquage> getCalibreMarquage(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

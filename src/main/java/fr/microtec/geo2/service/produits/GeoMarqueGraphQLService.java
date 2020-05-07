@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoMarque;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoMarqueRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoMarqueGraphQLService extends GeoAbstractGraphQLService<GeoMarque, String> {
+public class GeoMarqueGraphQLService extends GeoAbstractGraphQLService<GeoMarque, GeoProduitWithEspeceId> {
 
 	public GeoMarqueGraphQLService(GeoMarqueRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoMarqueGraphQLService extends GeoAbstractGraphQLService<GeoMarque
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoMarque> getMarque(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoMarque> getMarque(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

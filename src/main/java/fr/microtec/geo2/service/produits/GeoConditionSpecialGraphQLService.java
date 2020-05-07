@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoConditionSpecial;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoConditionSpecialRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,8 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoConditionSpecialGraphQLService extends GeoAbstractGraphQLService<GeoConditionSpecial, String> {
+public class GeoConditionSpecialGraphQLService
+		extends GeoAbstractGraphQLService<GeoConditionSpecial, GeoProduitWithEspeceId> {
 
 	public GeoConditionSpecialGraphQLService(GeoConditionSpecialRepository repository) {
 		super(repository);
@@ -33,8 +35,8 @@ public class GeoConditionSpecialGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoConditionSpecial> getConditionSpecial(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoConditionSpecial> getConditionSpecial(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

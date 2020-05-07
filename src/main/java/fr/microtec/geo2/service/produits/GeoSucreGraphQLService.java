@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.entity.produits.GeoSucre;
 import fr.microtec.geo2.persistance.repository.produits.GeoSucreRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoSucreGraphQLService extends GeoAbstractGraphQLService<GeoSucre, String> {
+public class GeoSucreGraphQLService extends GeoAbstractGraphQLService<GeoSucre, GeoProduitWithEspeceId> {
 
 	public GeoSucreGraphQLService(GeoSucreRepository repository) {
 		super(repository);
@@ -33,8 +34,8 @@ public class GeoSucreGraphQLService extends GeoAbstractGraphQLService<GeoSucre, 
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoSucre> getSucre(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoSucre> getSucre(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);

@@ -14,9 +14,9 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Optional;
 
 @Service
-@Validated
 @GraphQLApi
-public class GeoArticleMatierePremiereGraphQLService extends GeoAbstractGraphQLService<GeoArticleMatierePremiere, String> {
+public class GeoArticleMatierePremiereGraphQLService
+		extends GeoAbstractGraphQLService<GeoArticleMatierePremiere, String> {
 
 	public GeoArticleMatierePremiereGraphQLService(GeoArticleMatierePremiereRepository repository) {
 		super(repository);
@@ -32,7 +32,7 @@ public class GeoArticleMatierePremiereGraphQLService extends GeoAbstractGraphQLS
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoArticleMatierePremiere> getArticleMatierePremiere(
+	public Optional<GeoArticleMatierePremiere> getArticleMatierePremiere(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
@@ -40,7 +40,7 @@ public class GeoArticleMatierePremiereGraphQLService extends GeoAbstractGraphQLS
 	}
 
 	@GraphQLMutation
-	public GeoArticleMatierePremiere saveArticleMatierePremiere(@Validated GeoArticleMatierePremiere articleMatierePremiere) {
+	public GeoArticleMatierePremiere saveArticleMatierePremiere(GeoArticleMatierePremiere articleMatierePremiere) {
 		return this.save(articleMatierePremiere);
 	}
 

@@ -9,12 +9,10 @@ import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 
 @Service
-@Validated
 @GraphQLApi
 public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArticle, String> {
 
@@ -32,7 +30,7 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoArticle> getArticle(
+	public Optional<GeoArticle> getArticle(
 			@GraphQLArgument(name = "id") String id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
@@ -40,7 +38,7 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 	}
 
 	@GraphQLMutation
-	public GeoArticle saveArticle(@Validated GeoArticle article) {
+	public GeoArticle saveArticle(GeoArticle article) {
 		return this.save(article);
 	}
 

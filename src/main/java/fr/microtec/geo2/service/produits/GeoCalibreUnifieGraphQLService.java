@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.produits;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoCalibreUnifie;
+import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoCalibreUnifieRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -17,7 +18,8 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoCalibreUnifieGraphQLService extends GeoAbstractGraphQLService<GeoCalibreUnifie, String> {
+public class GeoCalibreUnifieGraphQLService
+		extends GeoAbstractGraphQLService<GeoCalibreUnifie, GeoProduitWithEspeceId> {
 
 	public GeoCalibreUnifieGraphQLService(GeoCalibreUnifieRepository repository) {
 		super(repository);
@@ -33,8 +35,8 @@ public class GeoCalibreUnifieGraphQLService extends GeoAbstractGraphQLService<Ge
 	}
 
 	@GraphQLQuery
-	protected Optional<GeoCalibreUnifie> getCalibreUnifie(
-			@GraphQLArgument(name = "id") String id,
+	public Optional<GeoCalibreUnifie> getCalibreUnifie(
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);
