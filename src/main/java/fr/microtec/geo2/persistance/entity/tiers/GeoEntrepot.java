@@ -9,6 +9,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -31,14 +33,20 @@ public class GeoEntrepot extends ValidateAndModifiedEntity {
 	)
 	private String id;
 
+	@NotNull
 	@Column(name = "cen_code")
 	private String code;
+
+	@NotNull
+	@Column(name = "tyt_code", nullable = false)
+	private Character typeTiers = 'F';
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref")
 	private GeoClient client;
 
-	@Column(name = "raisoc")
+	@NotNull
+	@Column(name = "raisoc", nullable = false)
 	private String raisonSocial;
 
 	@Column(name = "ads1")
@@ -50,18 +58,22 @@ public class GeoEntrepot extends ValidateAndModifiedEntity {
 	@Column(name = "ads3")
 	private String adresse3;
 
-	@Column(name = "zip")
+	@NotNull
+	@Column(name = "zip", nullable = false)
 	private String codePostal;
 
-	@Column(name = "ville")
+	@NotNull
+	@Column(name = "ville", nullable = false)
 	private String ville;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pay_code")
+	@JoinColumn(name = "pay_code", nullable = false)
 	private GeoPays pays;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "lan_code")
+	@JoinColumn(name = "lan_code", nullable = false)
 	private GeoPays langue;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -71,8 +83,9 @@ public class GeoEntrepot extends ValidateAndModifiedEntity {
 	@Column(name = "tvaid")
 	private String tvaCee;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tvr_code")
+	@JoinColumn(name = "tvr_code", nullable = false)
 	private GeoRegimeTva regimeTva;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -139,5 +152,10 @@ public class GeoEntrepot extends ValidateAndModifiedEntity {
 
 	@Column(name = "mention_client")
 	private String mentionClientSurFacture;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "con_tiers", referencedColumnName = "cen_code")
+	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
+	private List<GeoContact> contacts;
 
 }

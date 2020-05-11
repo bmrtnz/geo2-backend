@@ -2,14 +2,17 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
+import io.leangen.graphql.annotations.GraphQLNonNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -18,7 +21,7 @@ import java.util.List;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoClient extends ValidateAndModifiedEntity {
+public class GeoClient extends ValidateAndModifiedEntity implements Serializable {
 
 	@Id
 	@Column(name = "cli_ref")
@@ -33,20 +36,33 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	)
 	private String id;
 
-	@Column(name = "cli_code", nullable = false)
+	@NotNull
+	@Column(name = "cli_code", nullable = false, unique = true)
 	private String code;
 
+	@NotNull
+	@Column(name = "tyt_code", nullable = false)
+	private Character typeTiers = 'C';
+
+	@NotNull
 	@Column(name = "raisoc", nullable = false)
 	private String raisonSocial;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "con_tiers")
+	@JoinColumn(name = "con_tiers", referencedColumnName = "cli_code")
+	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
 	private List<GeoContact> contacts;
 
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cli_ref")
+	private List<GeoEntrepot> entrepots;
+
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "soc_code", nullable = false)
 	private GeoSociete societe;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sco_code", nullable = false)
 	private GeoSecteur secteur;
@@ -61,12 +77,15 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@Column(name = "ads3")
 	private String adresse3;
 
+	@NotNull
 	@Column(name = "zip", nullable = false)
 	private String codePostal;
 
+	@NotNull
 	@Column(name = "ville", nullable = false)
 	private String ville;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pay_code", nullable = false)
 	private GeoPays pays;
@@ -96,20 +115,24 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	private GeoPays facturationPays;
 	//endregion
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tvr_code", nullable = false)
 	private GeoRegimeTva regimeTva;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "inc_code", nullable = false)
 	private GeoIncoterm incoterm;
 
+	@NotNull
 	@Column(name = "echnbj", nullable = false)
 	private String nbJourEcheance;
 
 	@Column(name = "echle")
 	private String echeanceLe;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mpm_code", nullable = false)
 	private GeoMoyenPaiement moyenPaiement;
@@ -144,20 +167,24 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@Column(name = "instructions_logistique")
 	private String instructionLogistique;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "bpm_code", nullable = false)
 	private GeoBasePaiement basePaiement;
 
+	@NotNull
 	@Column(name = "compte_compta", nullable = false)
 	private String compteComptable;
 
 	@Column(name = "lf_ean")
 	private String lieuFonctionEan;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lan_code", nullable = false)
 	private GeoPays langue;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "dev_code", nullable = false)
 	private GeoDevise devise;
@@ -194,6 +221,7 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "gcl_code")
 	private GeoGroupeClient groupeClient;
 
+	@NotNull
 	@Column(name = "soumis_ctifl", nullable = false)
 	private Boolean soumisCtifl;
 
@@ -241,11 +269,9 @@ public class GeoClient extends ValidateAndModifiedEntity {
 	@Column(name = "delai_baf")
 	private Integer delaiBonFacturer;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cov_code", nullable = false)
 	private GeoConditionVente conditionVente;
-
-	@Column(name = "tyt_code", nullable = false)
-	private Character typeTiers = 'C';
 
 }

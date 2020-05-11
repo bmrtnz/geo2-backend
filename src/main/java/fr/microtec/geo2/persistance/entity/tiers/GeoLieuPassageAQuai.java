@@ -7,6 +7,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -20,7 +22,11 @@ public class GeoLieuPassageAQuai extends ValidateAndModifiedEntity {
 	@Column(name = "grp_code")
 	private String id;
 
-	@Column(name = "raisoc")
+	@Column(name = "tyt_code")
+	private Character typeTiers = 'G';
+
+	@NotNull
+	@Column(name = "raisoc", nullable = false)
 	private String raisonSocial;
 
 	//region Primary Address
@@ -36,7 +42,8 @@ public class GeoLieuPassageAQuai extends ValidateAndModifiedEntity {
 	@Column(name = "zip")
 	private String codePostal;
 
-	@Column(name = "ville")
+	@NotNull
+	@Column(name = "ville", nullable = false)
 	private String ville;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -75,5 +82,10 @@ public class GeoLieuPassageAQuai extends ValidateAndModifiedEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "bpm_code")
 	private GeoBasePaiement basePaiement;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "con_tiers", referencedColumnName = "grp_code")
+	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
+	private List<GeoContact> contacts;
 
 }
