@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -16,7 +17,7 @@ import java.util.List;
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class GeoLieuPassageAQuai extends ValidateAndModifiedEntity {
+public class GeoLieuPassageAQuai extends ValidateAndModifiedEntity implements Serializable {
 
 	@Id
 	@Column(name = "grp_code")

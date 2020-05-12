@@ -10,6 +10,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -18,7 +19,7 @@ import java.util.List;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoEntrepot extends ValidateAndModifiedEntity {
+public class GeoEntrepot extends ValidateAndModifiedEntity implements Serializable {
 
 	@Id
 	@Column(name = "cen_ref")

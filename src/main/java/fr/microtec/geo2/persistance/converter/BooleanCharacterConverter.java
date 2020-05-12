@@ -7,7 +7,7 @@ import javax.persistence.Converter;
  * Auto convert java boolean to O/N character in database with hibernate.
  */
 @Converter(autoApply = true)
-public class BooleanConverter implements AttributeConverter<Boolean, Character> {
+public class BooleanCharacterConverter implements AttributeConverter<Boolean, Character> {
 
 	@Override
 	public Character convertToDatabaseColumn(Boolean value) {

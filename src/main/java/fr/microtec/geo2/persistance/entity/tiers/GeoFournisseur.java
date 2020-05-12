@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoFournisseur extends ValidateAndModifiedEntity {
+public class GeoFournisseur extends ValidateAndModifiedEntity implements Serializable {
 
 	@Id
 	@Column(name = "fou_code")
@@ -165,6 +167,10 @@ public class GeoFournisseur extends ValidateAndModifiedEntity {
 
 	@Column(name = "list_exp")
 	private String listeExpediteurs;
+
+	@Convert(converter = BooleanIntegerConverter.class)
+	@Column(name = "auto_facturation")
+	private Boolean autoFacturation;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "con_tiers", referencedColumnName = "fou_code")
