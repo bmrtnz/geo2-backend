@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueFournisseur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -176,5 +177,8 @@ public class GeoFournisseur extends ValidateAndModifiedEntity implements Seriali
 	@JoinColumn(name = "con_tiers", referencedColumnName = "fou_code")
 	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
 	private List<GeoContact> contacts;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
+	private List<GeoHistoriqueFournisseur> historique;
 
 }

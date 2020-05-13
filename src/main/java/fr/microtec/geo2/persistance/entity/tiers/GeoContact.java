@@ -47,6 +47,9 @@ public class GeoContact extends ValidateAndModifiedEntity {
 	@Column(name = "con_acces1")
 	private String fluxAccess1;
 
+	@Column(name = "con_acces2")
+	private String fluxAccess2;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "soc_code")
 	private GeoSociete societe;

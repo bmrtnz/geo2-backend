@@ -1,12 +1,14 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -83,5 +85,8 @@ public class GeoArticle extends ValidateCreatedAndModifiedEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_normalisation")
 	private GeoArticleNormalisation normalisation;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+	private List<GeoHistoriqueArticle> historique;
 
 }
