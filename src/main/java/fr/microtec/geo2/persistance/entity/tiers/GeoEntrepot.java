@@ -116,6 +116,9 @@ public class GeoEntrepot extends ValidateAndModifiedEntity implements Serializab
 	@JoinColumn(name = "trp_bta_code")
 	private GeoBaseTarif baseTarifTransport;
 
+	@Column(name = "trp_pu")
+	private Float prixUnitaireTarifTransport;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_code")
 	private GeoTransitaire transitaire;
@@ -123,6 +126,9 @@ public class GeoEntrepot extends ValidateAndModifiedEntity implements Serializab
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_bta_code")
 	private GeoBaseTarif baseTarifTransit;
+
+	@Column(name = "trs_pu")
+	private Float prixUnitaireTarifTransit;
 
 	@Column(name = "instructions_seccom")
 	private String instructionSecretaireCommercial;
