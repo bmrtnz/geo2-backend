@@ -8,6 +8,8 @@ import fr.microtec.geo2.persistance.GeoEntityGraph;
 import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
 import io.leangen.graphql.execution.ResolutionEnvironment;
+import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -71,24 +73,62 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	}
 
 	/**
-	 * Save entity.
+	 * Merge entity from to entity to and return it.
+	 * Propage null from graphQL environment.
 	 *
-	 * @param data Entity data to save.
-	 * @return The saved entity.
+	 * @param from From entity data.
+	 * @param to Destination entity.
+	 * @param env GraphQL environment.
+	 * @return Merged entity data.
 	 */
-	protected T save(T data) {
-		T entity = this.repository.getOne((ID) this.entityManagerFactory.getPersistenceUnitUtil().getIdentifier(data));
-
-		BeanWrapper src = new BeanWrapperImpl(data);
+	protected T merge(T from, T to, ResolutionEnvironment env) {
+		// TODO filter null value from environment
+		BeanWrapper src = new BeanWrapperImpl(from);
 		PropertyDescriptor[] pds = src.getPropertyDescriptors();
 		String[] nullProps = Arrays.stream(pds)
 				.filter(p -> src.getPropertyValue(p.getName()) == null)
 				.map(FeatureDescriptor::getName)
 				.toArray(String[]::new);
 
-		BeanUtils.copyProperties(data, entity, nullProps);
+		BeanUtils.copyProperties(from, to, nullProps);
 
-		return this.repository.save(entity);
+		return to;
+	}
+
+	/**
+	 * Save entity.
+	 *
+	 * @param data Entity data to save.
+	 * @return The saved entity.
+	 */
+	protected T save(T data) {
+		ID id = (ID) this.getId(data);
+		boolean isNew = id == null;
+
+		if (!isNew) {
+			T entity = this.repository.getOne(id);
+
+			data = this.merge(data, entity, null);
+		}
+
+		return this.repository.save(data);
+	}
+
+	/**
+	 * Extract id value from entity.
+	 *
+	 * @param entity Entity to extract id.
+	 * @return Extracted id.
+	 */
+	protected Serializable getId(T entity) {
+		MetamodelImplementor metamodel = (MetamodelImplementor) this.entityManagerFactory.getMetamodel();
+		EntityPersister entityPersister = metamodel.entityPersister(entity.getClass());
+
+		if (entityPersister.hasIdentifierProperty()) {
+			return entityPersister.getIdentifier(entity, null);
+		}
+
+		return null;
 	}
 
 	/**

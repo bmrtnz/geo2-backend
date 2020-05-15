@@ -2,15 +2,15 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
-import io.leangen.graphql.annotations.GraphQLNonNull;
+import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -207,8 +207,9 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@JoinColumn(name = "crt_code")
 	private GeoCourtier courtier;
 
-	@Column(name = "crt_bta_code")
-	private String courtageModeCalcul;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "crt_bta_code")
+	private GeoBaseTarif courtageModeCalcul;
 
 	@Column(name = "crt_pu")
 	private Float courtageValeur;
@@ -273,5 +274,8 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cov_code", nullable = false)
 	private GeoConditionVente conditionVente;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+	private List<GeoHistoriqueClient> historique;
 
 }

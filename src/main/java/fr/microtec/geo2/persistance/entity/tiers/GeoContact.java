@@ -54,4 +54,10 @@ public class GeoContact extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "soc_code")
 	private GeoSociete societe;
 
+	@Column(name = "con_tiers")
+	private String codeTiers;
+
+	@Column(name = "con_tyt")
+	private Character typeTiers;
+
 }
