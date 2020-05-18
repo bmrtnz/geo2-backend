@@ -165,6 +165,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					return LocalDate.parse(arg, DateTimeFormatter.ISO_LOCAL_DATE);
 				} else if (type.equals(LocalDateTime.class)) {
 					return LocalDateTime.parse(arg, DATE_TIME_FORMATTER);
+				} else if (type.equals(Character.class)) {
+					return arg.charAt(0);
 				} else if (type.equals(String.class)) {
 					if (this.operator.isCaseInsensitive()) {
 						arg = arg.toUpperCase();
