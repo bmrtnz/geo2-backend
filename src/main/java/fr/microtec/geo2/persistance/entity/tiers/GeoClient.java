@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
@@ -13,6 +14,7 @@ import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -155,6 +157,7 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@Column(name = "siret")
 	private String siret;
 
+	@Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "navoir_edi")
 	private Boolean blocageAvoirEdi;
 
@@ -163,6 +166,12 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 
 	@Column(name = "ifco")
 	private String ifco;
+
+	@Column(name = "date_debut_ifco")
+	private LocalDate dateDebutIfco;
+
+	@Column(name = "nbj_litige_lim")
+	private Integer nbJourLimiteLitige;
 
 	@Column(name = "instructions_logistique")
 	private String instructionLogistique;
@@ -200,6 +209,9 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@Column(name = "enc_references")
 	private String referenceCoface;
 
+	@Column(name = "decision_coface")
+	private Boolean refusCoface;
+
 	@Column(name = "enc_assure")
 	private Integer agrement;
 
@@ -232,11 +244,9 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@Column(name = "frais_pu")
 	private Float fraisMarketing;
 
-	/*
-	// TODO : It's a sub entity (Table geo_bastar)
-	@Column(name = "frais_unite")
-	private String marketCoast;
-	*/
+	@ManyToOne
+	@JoinColumn(name = "frais_unite")
+	private GeoBaseTarif fraisMarketingModeCalcul;
 
 	@Column(name = "rem_hf_tx")
 	private Float tauxRemiseHorsFacture;
@@ -254,8 +264,14 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@Column(name = "enc_bw")
 	private Integer enCoursBlueWhale;
 
+	@Column(name = "enc_date_valid")
+	private LocalDate enCoursDateLimite;
+
 	@Column(name = "flclodet_autom")
 	private Boolean clotureAutomatique;
+
+	@Column(name = "fldet_autom")
+	private Boolean detailAutomatique;
 
 	@Column(name = "ind_frais_ramas")
 	private Boolean fraisRamasse;
@@ -263,12 +279,18 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 	@Column(name = "ind_exclu_frais_pu")
 	private Boolean fraisExcluArticlePasOrigineFrance;
 
+	@Column(name = "ind_vente_com")
+	private Boolean venteACommission;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref_palox")
 	private GeoClient paloxRaisonSocial;
 
 	@Column(name = "delai_baf")
 	private Integer delaiBonFacturer;
+
+	@Column(name = "dluo")
+	private String formatDluo;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
