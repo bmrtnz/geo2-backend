@@ -8,7 +8,6 @@ import io.leangen.graphql.util.Scalars;
 
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
