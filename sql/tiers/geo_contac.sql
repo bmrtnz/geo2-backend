@@ -7,8 +7,8 @@ create trigger GEO_CONTAC_BEF_INS
     on GEO_CONTAC
     for each row
 DECLARE
- x_num NUMBER;
- x_user  VARCHAR2(35);
+    x_num NUMBER;
+    x_user  VARCHAR2(35);
 BEGIN
     IF (:NEW.con_ref IS NULL) THEN
         -- sequence pour PK
@@ -24,7 +24,9 @@ BEGIN
     IF (:NEW.MOD_DATE IS NULL) THEN
         :NEW.mod_date := SYSDATE;
     END IF;
-    :NEW.valide := 'O';
+    IF (:NEW.valide IS NULL) THEN
+        :NEW.valide := 'O';
+    END IF;
 END;
 /
 

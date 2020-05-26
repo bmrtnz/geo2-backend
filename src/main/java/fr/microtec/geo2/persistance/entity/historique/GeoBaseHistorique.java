@@ -14,10 +14,10 @@ public class GeoBaseHistorique {
 	private String commentaire;
 
 	@Column(name = "mod_user")
-	private String modifiedBy;
+	private String userModification;
 
 	@Column(name = "mod_date")
-	private String modifiedAt;
+	private String dateModification;
 
 	@NotNull
 	@Column(name = "valide", nullable = false)
