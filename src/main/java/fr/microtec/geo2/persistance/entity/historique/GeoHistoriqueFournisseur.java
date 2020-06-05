@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_histo_fourni")
 @Entity
-public class GeoHistoriqueFournisseur extends GeoBaseHistorique {
+public class GeoHistoriqueFournisseur extends GeoBaseHistorique implements GeoHistorique {
 
 	@Id
 	@Column(name = "histo_fou_code")
