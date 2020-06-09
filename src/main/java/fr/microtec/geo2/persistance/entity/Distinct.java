@@ -10,6 +10,7 @@ import javax.persistence.Id;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Distinct {
 
