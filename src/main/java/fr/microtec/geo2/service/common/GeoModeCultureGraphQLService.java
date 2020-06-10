@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoModeCulture, String> {
+public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoModeCulture, Integer> {
 
 	public GeoModeCultureGraphQLService(GeoModeCultureRepository repository) {
 		super(repository);
@@ -34,7 +34,7 @@ public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoM
 
 	@GraphQLQuery
 	public Optional<GeoModeCulture> getModeCulture(
-			@GraphQLArgument(name = "id") String id,
+			@GraphQLArgument(name = "id") Integer id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);
