@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.common;
 
+import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoModeCulture;
 import fr.microtec.geo2.persistance.repository.common.GeoModeCultureRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
@@ -24,7 +25,7 @@ public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoM
 	}
 
 	@GraphQLQuery
-	public Page<GeoModeCulture> allModeCulture(
+	public RelayPage<GeoModeCulture> allModeCulture(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLEnvironment ResolutionEnvironment env
