@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.common;
 
+import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoModeCulture;
 import fr.microtec.geo2.persistance.repository.common.GeoModeCultureRepository;
 import fr.microtec.geo2.service.GeoAbstractGraphQLService;
@@ -17,14 +18,14 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoModeCulture, String> {
+public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoModeCulture, Integer> {
 
 	public GeoModeCultureGraphQLService(GeoModeCultureRepository repository) {
 		super(repository);
 	}
 
 	@GraphQLQuery
-	public Page<GeoModeCulture> allModeCulture(
+	public RelayPage<GeoModeCulture> allModeCulture(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLEnvironment ResolutionEnvironment env
@@ -34,7 +35,7 @@ public class GeoModeCultureGraphQLService extends GeoAbstractGraphQLService<GeoM
 
 	@GraphQLQuery
 	public Optional<GeoModeCulture> getModeCulture(
-			@GraphQLArgument(name = "id") String id,
+			@GraphQLArgument(name = "id") Integer id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);
