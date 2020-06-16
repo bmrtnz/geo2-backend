@@ -43,18 +43,18 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 	private GeoVariete variete;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
 	private GeoCalibreFournisseur calibreFournisseur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumnOrFormula(column = @JoinColumn(name = "cun_code"))
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "cun_code"))
 	private GeoCalibreUnifie calibreUnifie;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumnOrFormula(column = @JoinColumn(name = "ori_code"))
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+	@JoinColumnOrFormula(column = @JoinColumn(name = "ori_code"))
 	private GeoOrigine origine;
 
 	@ManyToOne(fetch = FetchType.LAZY)
