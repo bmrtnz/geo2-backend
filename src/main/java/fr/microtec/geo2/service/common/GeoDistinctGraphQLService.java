@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.lang.reflect.Field;
 import java.util.List;
 
 @Service
@@ -71,9 +72,12 @@ public class GeoDistinctGraphQLService {
 		CriteriaQuery<Distinct> criteriaQuery = criteriaBuilder.createQuery(Distinct.class);
 
 		final Class<?> entityClass = EntityUtils.getEntityClassFromName(inputType);
-		Root root = this.applySpecification(spec, criteriaQuery, entityClass);
-		Expression<?> requestedFieldExpr = root.get(requestedField);
-		Expression<Long> countIdExpr = criteriaBuilder.count(root.get(root.getModel().getDeclaredId(String.class)));
+		Root<?> root = this.applySpecification(spec, criteriaQuery, entityClass);
+
+		Expression<?> idExpr = root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
+		Expression<Long> countIdExpr = criteriaBuilder.count(idExpr);
+		Expression<?> requestedFieldExpr = EntityUtils.parseExpression(root, requestedField);
+		this.applyDeepJoin(root, requestedField);
 
 		criteriaQuery
 				.multiselect(requestedFieldExpr, countIdExpr)
@@ -86,6 +90,7 @@ public class GeoDistinctGraphQLService {
 			criteriaQuery.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
 		}
 
+		// Create and execute query
 		TypedQuery<Distinct> query = this.entityManager.createQuery(criteriaQuery);
 
 		if (pageable.isPaged()) {
@@ -100,6 +105,36 @@ public class GeoDistinctGraphQLService {
 				pageable,
 				() -> this.executeCountQuery(countQuery)
 		);
+	}
+
+	/**
+	 * Decompose requested field (deep field) and add needed join on root.
+	 *
+	 * @param root The query root.
+	 * @param requestedField Requested field string.
+	 */
+	private void applyDeepJoin(Root<?> root, String requestedField) {
+		Class<?> currentClass = root.getJavaType();
+		Join<?, ?> lastJoin = null;
+
+		for (String part : requestedField.split("\\.")) {
+			try {
+				Field field = currentClass.getDeclaredField(part);
+
+				if (EntityUtils.isEntity(field.getType())) {
+					currentClass = field.getType();
+					lastJoin = (lastJoin == null) ? root.join(part) : lastJoin.join(part);
+				}
+			} catch (NoSuchFieldException e) {
+				throw new RuntimeException(
+						String.format(
+								"Unable to get declared field '%s' in class '%s'.",
+								part,
+								currentClass.getSimpleName()
+						)
+				);
+			}
+		}
 	}
 
 	/**

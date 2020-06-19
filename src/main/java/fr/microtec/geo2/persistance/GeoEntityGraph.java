@@ -6,7 +6,10 @@ import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphs;
 import graphql.schema.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.util.GraphQLUtils;
+import org.springframework.util.ClassUtils;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class GeoEntityGraph {
 	 * Get entity graph from graphQL environment.
 	 *
 	 * @param env GraphQL environment.
-	 * @return Finned entity graph.
+	 * @return Found entity graph.
 	 */
 	public static EntityGraph getEntityGraph(ResolutionEnvironment env) {
 		List<SelectedField> fields = getSelectedFields(env);
@@ -42,11 +45,6 @@ public class GeoEntityGraph {
 					return isAssos;
 				})
 				.toArray(String[]::new);
-
-		System.out.println("Entity require field by graphQl");
-		fields.stream().map(SelectedField::getName).forEach(System.out::println);
-		System.out.println("Selected entity graph fields :");
-		Arrays.stream(selectFields).forEach(System.out::println);
 
 		return selectFields.length > 0 ? EntityGraphUtils.fromAttributePaths(selectFields) : EntityGraphs.empty();
 	}

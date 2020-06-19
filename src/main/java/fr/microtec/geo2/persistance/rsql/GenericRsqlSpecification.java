@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.rsql;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
+import fr.microtec.geo2.persistance.EntityUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -21,6 +22,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER;
 	static {
 		// Default value of optional time.
+		// TODO use : DateTimeFormatter.ISO_INSTANT ?
 		DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
 				.appendPattern(DATE_TIME_PATTERN)
 				.parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
@@ -99,37 +101,20 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	}
 
 	/**
-	 * Parse property to expression, support deep parsing (ex: "property.sub-property").
-	 *
+	 * Parse property to expression.
 	 * If current operator has case-insensitive condition, wrap expression to upper case function.
 	 *
 	 * @param root The root type.
+	 * @param builder The criteria builder.
 	 * @return Parsed expression.
 	 */
 	private <Y> Expression<Y> parseExpression(Root<?> root, CriteriaBuilder builder) {
-		Path<Y> path = null;
-
-		for (String part : this.property.split("\\.")) {
-			path = path != null ? path.get(part) : root.get(part);
-		}
-
-		Expression<Y> expression = path;
+		Expression<Y> expression = EntityUtils.parseExpression(root, this.property);
 		if (this.operator.isCaseInsensitive()) {
 			expression = cast(builder.upper(cast(expression)));
 		}
 
 		return expression;
-	}
-
-	/**
-	 * Cast unknown generic path type to require generic type.
-	 *
-	 * @param path The path to cast.
-	 * @param <Y> The required type.
-	 * @return Path casted with Y require type.
-	 */
-	private <Y> Path<Y> cast(Path<?> path) {
-		return (Path<Y>) path;
 	}
 
 	/**
