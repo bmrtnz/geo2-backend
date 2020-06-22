@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.rsql;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
+import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.EntityUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -109,7 +110,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	 * @return Parsed expression.
 	 */
 	private <Y> Expression<Y> parseExpression(Root<?> root, CriteriaBuilder builder) {
-		Expression<Y> expression = EntityUtils.parseExpression(root, this.property);
+		Expression<Y> expression = CriteriaUtils.toExpressionRecursively(root, this.property, false);
+
 		if (this.operator.isCaseInsensitive()) {
 			expression = cast(builder.upper(cast(expression)));
 		}

@@ -3,6 +3,7 @@ package fr.microtec.geo2.service.common;
 import cz.jirutka.rsql.parser.RSQLParser;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.EntityUtils;
 import fr.microtec.geo2.persistance.entity.Distinct;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
@@ -14,14 +15,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.lang.reflect.Field;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 @Service
@@ -48,7 +48,7 @@ public class GeoDistinctGraphQLService {
 			spec = this.rsqlParser.parse(search).accept(new GeoCustomVisitor<>());
 		}
 
-		Page<Distinct> result = this.readPage(spec, pageable, inputType, requestField);
+		Page<Distinct> result = this.readPage(spec, pageable, EntityUtils.getEntityClassFromName(inputType), requestField);
 
 		return PageFactory.fromPage(result);
 	}
@@ -60,99 +60,41 @@ public class GeoDistinctGraphQLService {
 	 *
 	 * @param spec Specification to apply.
 	 * @param pageable Pageable parameter.
-	 * @param inputType Entity class name.
+	 * @param entityClass Entity class.
 	 * @param requestedField Entity requested field.
 	 * @return Request page data.
 	 */
 	private Page<Distinct> readPage(
 			Specification<?> spec, Pageable pageable,
-			String inputType, String requestedField
+			Class<?> entityClass, String requestedField
 	) {
 		CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-		CriteriaQuery<Distinct> criteriaQuery = criteriaBuilder.createQuery(Distinct.class);
-
-		final Class<?> entityClass = EntityUtils.getEntityClassFromName(inputType);
-		Root<?> root = this.applySpecification(spec, criteriaQuery, entityClass);
-
-		Expression<?> idExpr = root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
-		Expression<Long> countIdExpr = criteriaBuilder.count(idExpr);
-		Expression<?> requestedFieldExpr = EntityUtils.parseExpression(root, requestedField);
-		this.applyDeepJoin(root, requestedField);
-
-		criteriaQuery
-				.multiselect(requestedFieldExpr, countIdExpr)
-				.groupBy(requestedFieldExpr)
-				.distinct(true);
+		CriteriaQuery<Distinct> criteriaQuery = CriteriaUtils.selectCountDistinct(
+				criteriaBuilder, entityClass, requestedField, spec
+		);
 
 		// Order
 		Sort sort = pageable.isPaged() ? pageable.getSort() : Sort.unsorted();
 		if (sort.isSorted()) {
-			criteriaQuery.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
+			criteriaQuery.orderBy(CriteriaUtils.toOrders(sort, CriteriaUtils.findRoot(criteriaQuery, entityClass), criteriaBuilder));
 		}
 
-		// Create and execute query
 		TypedQuery<Distinct> query = this.entityManager.createQuery(criteriaQuery);
 
+		// Paging
 		if (pageable.isPaged()) {
 			query.setFirstResult((int) pageable.getOffset());
 			query.setMaxResults(pageable.getPageSize());
 		}
 
-		TypedQuery<Long> countQuery = this.buildCountQuery(spec, entityClass, requestedFieldExpr);
+		CriteriaQuery<Long> countCriteriaQuery = CriteriaUtils.countFromQuery(criteriaBuilder, criteriaQuery);
+		TypedQuery<Long> countQuery = this.entityManager.createQuery(countCriteriaQuery);
 
 		return PageableExecutionUtils.getPage(
 				query.getResultList(),
 				pageable,
 				() -> this.executeCountQuery(countQuery)
 		);
-	}
-
-	/**
-	 * Decompose requested field (deep field) and add needed join on root.
-	 *
-	 * @param root The query root.
-	 * @param requestedField Requested field string.
-	 */
-	private void applyDeepJoin(Root<?> root, String requestedField) {
-		Class<?> currentClass = root.getJavaType();
-		Join<?, ?> lastJoin = null;
-
-		for (String part : requestedField.split("\\.")) {
-			try {
-				Field field = currentClass.getDeclaredField(part);
-
-				if (EntityUtils.isEntity(field.getType())) {
-					currentClass = field.getType();
-					lastJoin = (lastJoin == null) ? root.join(part) : lastJoin.join(part);
-				}
-			} catch (NoSuchFieldException e) {
-				throw new RuntimeException(
-						String.format(
-								"Unable to get declared field '%s' in class '%s'.",
-								part,
-								currentClass.getSimpleName()
-						)
-				);
-			}
-		}
-	}
-
-	/**
-	 * Build count query.
-	 *
-	 * @param spec Specification to apply.
-	 * @param entityClass Target entity class.
-	 * @param requestedFieldExpr Entity requested field expression.
-	 * @return Count query.
-	 */
-	private TypedQuery<Long> buildCountQuery(Specification<?> spec, Class<?> entityClass, Expression<?> requestedFieldExpr) {
-		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-		CriteriaQuery<Long> query = builder.createQuery(Long.class);
-
-		this.applySpecification(spec, query, entityClass);
-		query.select(builder.countDistinct(requestedFieldExpr));
-
-		return this.entityManager.createQuery(query);
 	}
 
 	/**
@@ -170,31 +112,6 @@ public class GeoDistinctGraphQLService {
 		}
 
 		return total;
-	}
-
-	/**
-	 * Apply specification to criteria query.
-	 *
-	 * @param spec Specification to apply.
-	 * @param query Criteria query.
-	 * @param entityClass Target entity class.
-	 * @return Query root.
-	 */
-	private Root<?> applySpecification(Specification<?> spec, CriteriaQuery<?> query, Class<?> entityClass) {
-		Root root = query.from(entityClass);
-
-		if (spec == null) {
-			return root;
-		}
-
-		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-		Predicate predicate = spec.toPredicate(root, query, builder);
-
-		if (predicate != null) {
-			query.where(predicate);
-		}
-
-		return root;
 	}
 
 }

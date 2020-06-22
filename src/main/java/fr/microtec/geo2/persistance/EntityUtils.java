@@ -5,14 +5,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Optional;
 
 public class EntityUtils {
 
@@ -40,48 +33,6 @@ public class EntityUtils {
 		}
 
 		throw new RuntimeException(String.format("Unable to find entity with name '%s'", className));
-	}
-
-	public static boolean isEntity(Class<?> clazz) {
-		return clazz.getAnnotation(Entity.class) != null;
-	}
-
-	/**
-	 * Get entity field database column name.
-	 *
-	 * @param entityClass Entity class.
-	 * @param field Searched field.
-	 * @return Database column name.
-	 */
-	public static String getEntityPropertyColumnName(Class<?> entityClass, String field) {
-		Optional<Field> optionalField = Arrays.stream(entityClass.getDeclaredFields())
-				.filter(f -> f.getName().equals(field))
-				.findFirst();
-
-		String columnName = optionalField.orElseThrow().getAnnotation(Column.class).name();
-
-		if (columnName.isBlank()) {
-			columnName = field;
-		}
-
-		return columnName;
-	}
-
-	/**
-	 * Parse property to expression, support deep parsing (ex: "property.sub-property").
-	 *
-	 * @param root The root type.
-	 * @param property Property string chain to parse.
-	 * @return Parsed expression.
-	 */
-	public static <Y> Expression<Y> parseExpression(Root<?> root, String property) {
-		Path<Y> path = null;
-
-		for (String part : property.split("\\.")) {
-			path = (path != null) ? path.get(part) : root.get(part);
-		}
-
-		return path;
 	}
 
 }
