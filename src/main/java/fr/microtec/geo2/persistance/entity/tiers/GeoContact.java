@@ -38,6 +38,10 @@ public class GeoContact extends ValidateAndModifiedEntity {
 	private String nom;
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "moc_code")
+	private GeoMoyenCommunication moyenCommunication;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "flu_code")
 	private GeoFlux flux;
 
