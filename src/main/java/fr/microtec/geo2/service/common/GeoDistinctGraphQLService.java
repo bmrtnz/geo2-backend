@@ -87,7 +87,7 @@ public class GeoDistinctGraphQLService {
 			query.setMaxResults(pageable.getPageSize());
 		}
 
-		CriteriaQuery<Long> countCriteriaQuery = CriteriaUtils.countFromQuery(criteriaBuilder, criteriaQuery);
+		CriteriaQuery<Long> countCriteriaQuery = CriteriaUtils.countDistinct(criteriaBuilder, entityClass, requestedField, spec);
 		TypedQuery<Long> countQuery = this.entityManager.createQuery(countCriteriaQuery);
 
 		return PageableExecutionUtils.getPage(

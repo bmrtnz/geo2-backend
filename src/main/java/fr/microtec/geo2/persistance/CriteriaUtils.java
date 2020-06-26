@@ -52,21 +52,31 @@ public class CriteriaUtils {
 	 */
 	public static CriteriaQuery<Distinct> selectCountDistinct(CriteriaBuilder cb, Class<?> entityClass, String requestedField, Specification<?> spec) {
 		CriteriaQuery<Distinct> query = cb.createQuery(Distinct.class);
-		Root<?> root = query.from(entityClass);
-
-		if (spec != null) {
-			Predicate predicate = spec.toPredicate((Root) root, query, cb);
-
-			if (predicate != null) {
-				query.where(predicate);
-			}
-		}
+		Root<?> root = applySpecification(cb, query, entityClass, spec);
 
 		Expression<?> distinctExpression = toExpressionRecursively(root, requestedField, true);
 		Expression<?> idExpression = root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
 
 		query.multiselect(distinctExpression, cb.count(idExpression)).groupBy(distinctExpression).distinct(true);
 
+		return query;
+	}
+
+	public static CriteriaQuery<Long> countDistinct(CriteriaBuilder cb, Class<?> entityClass, String requestedField, Specification<?> spec) {
+		CriteriaQuery<Long> query = cb.createQuery(Long.class);
+		Root<Long> root = (Root<Long>) applySpecification(cb, query, entityClass, spec);
+
+		Expression<?> distinctExpression = toExpressionRecursively(root, requestedField, true);
+		Expression<?> idExpression = root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
+
+		query.multiselect(cb.count(idExpression)).groupBy(distinctExpression);
+
+		return query;
+	}
+
+	private static Root<?> applySpecification(CriteriaBuilder cb, CriteriaQuery<?> query, Class<?> rootClass, Specification<?> spec) {
+		Root<?> root = query.from(rootClass);
+
 		if (spec != null) {
 			Predicate predicate = spec.toPredicate((Root) root, query, cb);
 
@@ -75,62 +85,7 @@ public class CriteriaUtils {
 			}
 		}
 
-		return query;
-	}
-
-	/**
-	 * Create count query from another query.
-	 *
-	 * @param cb Criteria builder.
-	 * @param query From criteria query.
-	 * @return Criteria count query.
-	 */
-	public static CriteriaQuery<Long> countFromQuery(CriteriaBuilder cb, CriteriaQuery<Distinct> query) {
-		CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-		copyCriteriaWithoutSelectionAndOrder(query, countQuery);
-
-		Root<?> root = query.getRoots().iterator().next();
-		Expression<Long> countExpression = query.isDistinct() ? cb.countDistinct(root.get("id")) : cb.count(root.get("id"));
-
-		return countQuery.select(countExpression);
-	}
-
-	/**
-	 * Copy criteria without selection and order.
-	 *
-	 * @param from source Criteria.
-	 * @param to destination Criteria.
-	 */
-	private static void copyCriteriaWithoutSelectionAndOrder(CriteriaQuery<?> from, CriteriaQuery<?> to) {
-		// Copy Roots
-		for (Root<?> root : from.getRoots()) {
-			Root<?> dest = to.from(root.getJavaType());
-			copyJoin(root, dest);
-		}
-
-		to.groupBy(from.getGroupList());
-		to.distinct(from.isDistinct());
-
-		if (from.getGroupRestriction() != null)
-			to.having(from.getGroupRestriction());
-
-		Predicate predicate = from.getRestriction();
-		if (predicate != null)
-			to.where(predicate);
-	}
-
-	/**
-	 * Copy joins clause.
-	 *
-	 * @param from source join.
-	 * @param to destination join.
-	 */
-	private static void copyJoin(From<?, ?> from, From<?, ?> to) {
-		for (Join<?, ?> join : from.getJoins()) {
-			Join<?, ?> toJoin = to.join(join.getAttribute().getName(), join.getJoinType());
-
-			copyJoin(join, toJoin); // Recursive copy
-		}
+		return root;
 	}
 
 	/**
