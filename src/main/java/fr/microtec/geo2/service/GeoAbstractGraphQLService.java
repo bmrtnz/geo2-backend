@@ -103,12 +103,10 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 */
 	protected T save(T data) {
 		ID id = (ID) this.getId(data);
-		boolean isNew = id == null;
+		Optional<T> optionalEntity = this.repository.findById(id);
 
-		if (!isNew) {
-			T entity = this.repository.getOne(id);
-
-			data = this.merge(data, entity, null);
+		if (optionalEntity.isPresent()) {
+			data = this.merge(data, optionalEntity.get(), null);
 		}
 
 		return this.repository.save(data);

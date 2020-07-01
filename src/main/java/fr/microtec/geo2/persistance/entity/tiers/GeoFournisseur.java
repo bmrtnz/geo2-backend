@@ -134,7 +134,10 @@ public class GeoFournisseur extends ValidateAndModifiedEntity implements Seriali
 	private String lieuFonctionEan;
 
 	@Column(name = "declarant_chep")
-	private String declarantCHEP;
+	private Boolean declarantCHEP;
+
+	@Column(name = "declarant_chep_bacs")
+	private Boolean declarantBacsCHEP;
 
 	@Column(name = "ident1")
 	private String formeJuridique;
@@ -173,10 +176,36 @@ public class GeoFournisseur extends ValidateAndModifiedEntity implements Seriali
 	@Column(name = "auto_facturation")
 	private Boolean autoFacturation;
 
+	@Column(name = "dat_cg_achsig")
+	private LocalDate dateConditionGeneraleAchatSignee;
+
+	@Column(name = "ind_modif_detail")
+	private Boolean indicateurModificationDetail;
+
+	@Deprecated // Do not use
+	@Column(name = "entrepot")
+	private Boolean entrepot;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fou_code_destockage")
+	private GeoFournisseur fournisseurDeRattachement;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cov_code")
+	private GeoConditionVente conditionVente;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "con_tiers", referencedColumnName = "fou_code")
 	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
 	private List<GeoContact> contacts;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "grp_code")
+	private GeoLieuPassageAQuai lieuPassageAQuai;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fgg_code")
+	private GeoGroupeFounisseur groupeFounisseur;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoHistoriqueFournisseur> historique;
