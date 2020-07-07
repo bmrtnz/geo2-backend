@@ -16,7 +16,7 @@ begin
         :new.cli_ref   := to_char(x_num,'FM099999');
     END IF;
 
-    -- date et user création
+    -- date et user crÃ©ation
     IF (:NEW.mod_user IS NULL) THEN
         select sys_context('USERENV','OS_USER') into x_user from dual;
         :new.mod_user := x_user;

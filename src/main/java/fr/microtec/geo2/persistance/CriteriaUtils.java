@@ -55,7 +55,7 @@ public class CriteriaUtils {
 		Root<?> root = applySpecification(cb, query, entityClass, spec);
 
 		Expression<?> distinctExpression = toExpressionRecursively(root, requestedField, true);
-		Expression<?> idExpression = root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
+		Expression<?> idExpression = getIdExpression(root);
 
 		query.multiselect(distinctExpression, cb.count(idExpression)).groupBy(distinctExpression).distinct(true);
 
@@ -72,6 +72,16 @@ public class CriteriaUtils {
 		query.multiselect(cb.count(idExpression)).groupBy(distinctExpression);
 
 		return query;
+	}
+
+	/**
+	 * Get id expression from Root.
+	 *
+	 * @param root Root.
+	 * @return Id expression.
+	 */
+	public static Expression<?> getIdExpression(Root<?> root) {
+		return root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
 	}
 
 	private static Root<?> applySpecification(CriteriaBuilder cb, CriteriaQuery<?> query, Class<?> rootClass, Specification<?> spec) {

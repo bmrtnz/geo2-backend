@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -205,9 +206,17 @@ public class GeoFournisseur extends ValidateAndModifiedEntity implements Seriali
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fgg_code")
-	private GeoGroupeFounisseur groupeFounisseur;
+	private GeoGroupeFournisseur groupeFournisseur;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoHistoriqueFournisseur> historique;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "geo_fourni_cert",
+			joinColumns = { @JoinColumn(name = "fou_code") },
+			inverseJoinColumns = { @JoinColumn(name = "k_certif") }
+	)
+	private Set<GeoCertification> certifications;
 
 }

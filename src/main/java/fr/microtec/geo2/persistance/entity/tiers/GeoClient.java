@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -299,5 +300,13 @@ public class GeoClient extends ValidateAndModifiedEntity implements Serializable
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
 	private List<GeoHistoriqueClient> historique;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "geo_client_cert",
+			joinColumns = { @JoinColumn(name = "cli_ref") },
+			inverseJoinColumns = { @JoinColumn(name = "k_certif") }
+	)
+	private Set<GeoCertification> certifications;
 
 }
