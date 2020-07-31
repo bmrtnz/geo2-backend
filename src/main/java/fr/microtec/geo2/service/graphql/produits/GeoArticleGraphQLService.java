@@ -41,18 +41,13 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 		return super.getOne(id, env);
 	}
 
-	//@GraphQLMutation
-	//public GeoArticle saveArticle(GeoArticle article) {
-		/*String id = (String) this.getId(article);
-		Optional<GeoArticle> optionalEntity = this.repository.findById(id);*/
-
-		// Update TODO : No update on article ?
-		/*if (optionalEntity.isPresent()) {
-			article = this.merge(article, optionalEntity.get(), null);
-		}*/
-
-		//return this.articleService.save(article);
-	//}
+	@GraphQLMutation
+	public GeoArticle saveArticle(
+		GeoArticle article,
+		@GraphQLArgument(name = "clone") Boolean clone
+	) {
+		return this.articleService.save(article, clone);
+	}
 
 	@GraphQLMutation
 	public void deleteArticle(String id) {

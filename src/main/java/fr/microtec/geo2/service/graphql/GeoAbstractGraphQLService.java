@@ -81,7 +81,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * @param env GraphQL environment.
 	 * @return Merged entity data.
 	 */
-	protected T merge(T from, T to, ResolutionEnvironment env) {
+	public static <T> T merge(T from, T to, ResolutionEnvironment env) {
 		// TODO filter null value from environment
 		BeanWrapper src = new BeanWrapperImpl(from);
 		PropertyDescriptor[] pds = src.getPropertyDescriptors();

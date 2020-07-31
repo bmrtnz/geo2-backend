@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
 import lombok.Data;
@@ -8,13 +9,15 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_gestion")
-public class GeoArticle extends ValidateCreatedAndModifiedEntity {
+public class GeoArticle extends ValidateCreatedAndModifiedEntity implements Duplicable<GeoArticle> {
 
 	@Id
 	@Column(name = "art_ref")
@@ -88,5 +91,28 @@ public class GeoArticle extends ValidateCreatedAndModifiedEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
 	private List<GeoHistoriqueArticle> historique;
+
+	public GeoArticle duplicate() {
+		GeoArticle clone = new GeoArticle();
+		clone.description = this.description;
+		clone.articleAssocie = this.articleAssocie;
+		clone.blueWhaleStock= this.blueWhaleStock;
+		clone.gerePar = this.gerePar;
+		clone.gtinColisBlueWhale = this.gtinColisBlueWhale;
+		clone.gtinPaletteBlueWhale = this.gtinPaletteBlueWhale;
+		clone.gtinUcBlueWhale = this.gtinUcBlueWhale;
+		clone.majWms = this.majWms;
+		clone.instructionStation = this.instructionStation;
+		clone.procat = this.procat;
+		clone.prodet = this.prodet;
+		clone.lieuFonctionEanAcheteur = this.lieuFonctionEanAcheteur;
+		clone.matierePremiere= this.matierePremiere;
+		clone.cahierDesCharge = this.cahierDesCharge;
+		clone.emballage = this.emballage;
+		clone.normalisation = this.normalisation;
+		clone.historique = new ArrayList<GeoHistoriqueArticle>(this.historique);
+		
+		return clone;
+	}
 
 }

@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_normalisation")
-public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity {
+public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity implements Duplicable<GeoArticleNormalisation> {
 
 	@Id
 	@Column(name = "ref_normalisation")
@@ -85,5 +86,25 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity {
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "maq_code"))
 	private GeoMarque marque;
+
+	public GeoArticleNormalisation duplicate() {
+		GeoArticleNormalisation clone = new GeoArticleNormalisation();
+		clone.espece = this.espece;
+		clone.calibreMarquage = this.calibreMarquage;
+		clone.stickeur = this.stickeur;
+		clone.etiquetteColis = this.etiquetteColis;
+		clone.etiquetteUc = this.etiquetteUc;
+		clone.etiquetteEvenementielle = this.etiquetteEvenementielle;
+		clone.identificationSymbolique = this.identificationSymbolique;
+		clone.marque = this.marque;
+		clone.gtinColis = this.gtinColis;
+		clone.gtinPalette = this.gtinPalette;
+		clone.gtinUc = this.gtinUc;
+		clone.descriptionCalibreClient = this.descriptionCalibreClient;
+		clone.produitMdd = this.produitMdd;
+		clone.articleClient = this.articleClient;
+		
+		return clone;
+	}
 
 }

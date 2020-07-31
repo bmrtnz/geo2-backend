@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_cdc")
-public class GeoArticleCahierDesCharge extends ValidateCreatedAndModifiedEntity {
+public class GeoArticleCahierDesCharge extends ValidateCreatedAndModifiedEntity implements Duplicable<GeoArticleCahierDesCharge> {
 
 	@Id
 	@Column(name = "ref_cdc")
@@ -68,5 +69,20 @@ public class GeoArticleCahierDesCharge extends ValidateCreatedAndModifiedEntity 
 
 	@Column(name = "ins_station")
 	private String instructionStation;
+
+	public GeoArticleCahierDesCharge duplicate() {
+		GeoArticleCahierDesCharge clone = new GeoArticleCahierDesCharge();
+		clone.espece = this.espece;
+		clone.categorie = this.categorie;
+		clone.coloration = this.coloration;
+		clone.sucre = this.sucre;
+		clone.penetro = this.penetro;
+		clone.cirage = this.cirage;
+		clone.rangement = this.rangement;
+		clone.instructionCommercial = this.instructionCommercial;
+		clone.instructionStation = this.instructionStation;
+		
+		return clone;
+	}
 
 }

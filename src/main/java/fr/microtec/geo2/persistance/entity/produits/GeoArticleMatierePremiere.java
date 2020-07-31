@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModeCulture;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_mat_prem")
-public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity {
+public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity implements Duplicable<GeoArticleMatierePremiere> {
 
 	@Id
 	@Column(name = "ref_mat_prem")
@@ -68,5 +69,19 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "typ_ref")
 	private GeoType type;
+
+	public GeoArticleMatierePremiere duplicate() {
+		GeoArticleMatierePremiere clone = new GeoArticleMatierePremiere();
+		clone.espece = this.espece;
+		clone.variete = this.variete;
+		clone.calibreFournisseur= this.calibreFournisseur;
+		clone.calibreUnifie= this.calibreUnifie;
+		clone.origine = this.origine;
+		clone.modeCulture = this.modeCulture;
+		clone.type = this.type;
+		clone.typeVente = this.typeVente;
+		
+		return clone;
+	}
 
 }
