@@ -13,6 +13,7 @@ create or replace trigger GEO_CLI_CERT_BEF_INS_UPD_DEL
     on GEO_CLIENT_CERT
     for each row
 declare
+    PRAGMA AUTONOMOUS_TRANSACTION;
     CLIREF GEO_CLIENT.CLI_REF%TYPE;
     l_text VARCHAR2(100);
 begin
@@ -23,6 +24,7 @@ begin
             l_text := l_text || ',' || cur_rec.k_certif;
         END LOOP;
     UPDATE GEO_CLIENT SET CERTIFS = LTRIM(l_text, ',') WHERE CLI_REF = CLIREF;
+    COMMIT;
 end;
 /
 
