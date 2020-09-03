@@ -11,7 +11,7 @@ declare
  x_user  varchar2(35);
 begin
     IF (:NEW.mod_user IS NULL) THEN
-        -- date et user création
+        -- date et user crï¿½ation
         select sys_context('USERENV','OS_USER') into x_user from dual;
         :new.mod_user := x_user;
     END IF;
@@ -44,3 +44,5 @@ if (:NEW.maj_wms = '0' and :OLD.maj_wms = '0') or :NEW.maj_wms = '1' then
 END IF;
 END;
 /
+
+ALTER TABLE GEO_ADMIN.GEO_FOURNI ADD PRE_SAISIE VARCHAR2(1) NULL;

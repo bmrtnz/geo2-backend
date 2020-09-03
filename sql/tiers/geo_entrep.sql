@@ -16,7 +16,7 @@ BEGIN
         :NEW.cen_ref   := TO_CHAR(x_num,'FM099999');
     END IF;
 
-    -- date et user création
+    -- date et user crï¿½ation
     IF (:NEW.mod_user IS NULL) THEN
         SELECT sys_context('USERENV','OS_USER') INTO x_user FROM dual;
         :NEW.mod_user := x_user;
@@ -28,7 +28,7 @@ BEGIN
     :NEW.valide := 'O';
     IF (:NEW.gest_code IS NOT NULL) AND (:NEW.gest_ref IS NULL) THEN
         RAISE_APPLICATION_ERROR(-20201,
-                                'vous devez saisir une référence pour les gestionnaire de palettes');
+                                'vous devez saisir une rï¿½fï¿½rence pour les gestionnaire de palettes');
     END IF;
 EXCEPTION
     WHEN OTHERS THEN
@@ -60,7 +60,7 @@ BEGIN
 
         IF (:NEW.gest_code IS NOT NULL) AND (:NEW.gest_ref IS NULL) THEN
             RAISE_APPLICATION_ERROR(-20201,
-                                    'vous devez saisir une référence pour les gestionnaire de palettes');
+                                    'vous devez saisir une rï¿½fï¿½rence pour les gestionnaire de palettes');
         END IF;
     END IF;
 EXCEPTION
@@ -70,3 +70,5 @@ EXCEPTION
 
 END;
 /
+
+ALTER TABLE GEO_ADMIN.GEO_ENTREP ADD PRE_SAISIE VARCHAR2(1) NULL;

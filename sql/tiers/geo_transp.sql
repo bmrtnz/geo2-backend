@@ -10,7 +10,7 @@ declare
  x_num number;
  x_user  varchar2(35);
 begin
-    -- date et user création
+    -- date et user crï¿½ation
     IF (:NEW.mod_user IS NULL) THEN
         select sys_context('USERENV','OS_USER') into x_user from dual;
         :new.mod_user := x_user;
@@ -43,3 +43,5 @@ BEGIN
 
 END;
 /
+
+ALTER TABLE GEO_ADMIN.GEO_TRANSP ADD PRE_SAISIE VARCHAR2(1) NULL;

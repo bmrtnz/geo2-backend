@@ -1,7 +1,7 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import lombok.Data;
@@ -24,7 +24,7 @@ import java.util.Set;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoClient extends ValidateAndModifiedEntity implements Serializable {
+public class GeoClient extends ValidateModifiedPrewrittedEntity implements Serializable {
 
 	@Id
 	@Column(name = "cli_ref")

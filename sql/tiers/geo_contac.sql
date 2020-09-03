@@ -17,7 +17,7 @@ BEGIN
     END IF;
 
     IF (:NEW.MOD_USER IS NULL) THEN
-        -- date et user création
+        -- date et user crï¿½ation
         SELECT sys_context('USERENV','OS_USER') INTO x_user FROM dual;
         :NEW.mod_user := x_user;
     END IF;
@@ -47,5 +47,4 @@ BEGIN
 END;
 /
 
-
-
+ALTER TABLE GEO_ADMIN.GEO_CONTAC ADD PRE_SAISIE VARCHAR2(1) NULL;

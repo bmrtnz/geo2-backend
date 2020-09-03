@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoEntrepot extends ValidateAndModifiedEntity implements Serializable {
+public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Serializable {
 
 	@Id
 	@Column(name = "cen_ref")

@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoContact extends ValidateAndModifiedEntity {
+public class GeoContact extends ValidateModifiedPrewrittedEntity {
 
 	@Id
 	@Column(name = "con_ref")

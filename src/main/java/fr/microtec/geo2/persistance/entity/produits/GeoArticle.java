@@ -1,7 +1,7 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
-import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_gestion")
-public class GeoArticle extends ValidateCreatedAndModifiedEntity implements Duplicable<GeoArticle> {
+public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Duplicable<GeoArticle> {
 
 	@Id
 	@Column(name = "art_ref")
