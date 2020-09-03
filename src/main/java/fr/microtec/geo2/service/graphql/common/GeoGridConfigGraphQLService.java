@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.graphql.common;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoGridConfig;
+import fr.microtec.geo2.persistance.entity.common.GeoGridConfigKey;
 import fr.microtec.geo2.persistance.repository.common.GeoGridConfigRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
-public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGridConfig, String> {
+public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGridConfig, GeoGridConfigKey> {
 
 	public GeoGridConfigGraphQLService(GeoGridConfigRepository repository) {
 		super(repository);
@@ -35,7 +36,7 @@ public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGr
 
 	@GraphQLQuery
 	public Optional<GeoGridConfig> getGridConfig(
-			@GraphQLArgument(name = "id") String id,
+			@GraphQLArgument(name = "id") GeoGridConfigKey id,
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);
@@ -47,7 +48,7 @@ public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGr
 	}
 
 	@GraphQLMutation
-	public void deleteGridConfig(String id) {
+	public void deleteGridConfig(GeoGridConfigKey id) {
 		this.delete(id);
 	}
 }
