@@ -2,7 +2,7 @@
 -- geo_entrep
 -------------------
 
-create trigger GEO_ENTREP_BEF_INS
+create or replace trigger GEO_ENTREP_BEF_INS
     before insert
     on GEO_ENTREP
     for each row
@@ -25,7 +25,6 @@ BEGIN
         :NEW.mod_date := SYSDATE;
     END IF;
 
-    :NEW.valide := 'O';
     IF (:NEW.gest_code IS NOT NULL) AND (:NEW.gest_ref IS NULL) THEN
         RAISE_APPLICATION_ERROR(-20201,
                                 'vous devez saisir une r�f�rence pour les gestionnaire de palettes');

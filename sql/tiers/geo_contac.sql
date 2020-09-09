@@ -2,7 +2,7 @@
 -- geo_contac
 -------------------
 
-create trigger GEO_CONTAC_BEF_INS
+create or replace trigger GEO_CONTAC_BEF_INS
     before insert
     on GEO_CONTAC
     for each row
@@ -23,9 +23,6 @@ BEGIN
     END IF;
     IF (:NEW.MOD_DATE IS NULL) THEN
         :NEW.mod_date := SYSDATE;
-    END IF;
-    IF (:NEW.valide IS NULL) THEN
-        :NEW.valide := 'O';
     END IF;
 END;
 /

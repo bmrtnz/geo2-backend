@@ -2,7 +2,7 @@
 -- geo_client
 -------------------
 
-create trigger GEO_CLIENT_BEF_INS
+create OR REPLACE trigger GEO_CLIENT_BEF_INS
     before insert
     on GEO_CLIENT
     for each row
@@ -23,9 +23,6 @@ begin
     END IF;
     IF (:NEW.mod_date IS NULL) THEN
         :new.mod_date := sysdate;
-    END IF;
-    IF (:NEW.valide IS NULL) THEN
-        :new.valide := 'O';
     END IF;
     IF (:NEW.libelle_ristourne IS NULL) THEN
         :new.libelle_ristourne := 'remise';

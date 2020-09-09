@@ -2,7 +2,7 @@
 -- geo_transp
 -------------------
 
-create trigger GEO_TRANSP_BEF_INS
+create or replace trigger GEO_TRANSP_BEF_INS
     before insert
     on GEO_TRANSP
     for each row
@@ -18,7 +18,6 @@ begin
     IF (:NEW.mod_date IS NULL) THEN
         :new.mod_date := sysdate;
     END IF;
-    :new.valide := 'O';
 end;
 /
 

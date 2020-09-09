@@ -110,9 +110,6 @@ begin
     if (:new.cre_date is null) then
         :new.cre_date := sysdate;
     end if;
-    if (:new.valide is null) then
-        :new.valide := 'O';
-    end if;
 end;
 /
 SHOW ERRORS;

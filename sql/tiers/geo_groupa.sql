@@ -2,7 +2,7 @@
 -- geo_groupa
 -------------------
 
-create trigger GEO_GROUPA_BEF_INS
+create or replace trigger GEO_GROUPA_BEF_INS
     before insert
     on GEO_GROUPA
     for each row
@@ -17,9 +17,6 @@ begin
     end if;
     if (:new.mod_date is null) then
         :new.mod_date := sysdate;
-    end if;
-    if (:new.valide is null) then
-        :new.valide := 'O';
     end if;
 end;
 /

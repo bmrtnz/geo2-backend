@@ -2,7 +2,7 @@
 -- geo_fourni
 -------------------
 
-create trigger GEO_FOURNI_BEF_INS
+create or replace trigger GEO_FOURNI_BEF_INS
     before insert
     on GEO_FOURNI
     for each row
@@ -19,7 +19,6 @@ begin
         :new.mod_date := sysdate;
     END IF;
 
-    :new.valide := 'O';
     :new.pref_fact := SUBSTR(:new.compte_compta,1,3);
 end;
 /
