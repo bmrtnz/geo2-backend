@@ -5,6 +5,8 @@ import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -91,6 +93,14 @@ public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Dupl
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
 	private List<GeoHistoriqueArticle> historique;
+
+	// @Formula("(" +
+	// 	"SELECT" +
+	// 	"CASE WHEN count(ART_REF) >= 1 THEN 'O' ELSE 'N' END" +
+	// 	"FROM avi_art_gestion" +
+	// 	"WHERE art_ref IN ( SELECT art_ref FROM geo_stock_art_age )" +
+	// ")")
+	// private Boolean enStock;
 
 	public GeoArticle duplicate() {
 		GeoArticle clone = new GeoArticle();

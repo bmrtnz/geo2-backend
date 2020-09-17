@@ -15,6 +15,8 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.Bindable;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.PluralAttribute;
+import javax.persistence.metamodel.Type;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;
@@ -67,7 +69,7 @@ public class CriteriaUtils {
 		Root<Long> root = (Root<Long>) applySpecification(cb, query, entityClass, spec);
 
 		Expression<?> distinctExpression = toExpressionRecursively(root, requestedField, true);
-		Expression<?> idExpression = root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
+		Expression<?> idExpression = getIdExpression(root);
 
 		query.multiselect(cb.count(idExpression)).groupBy(distinctExpression);
 
@@ -81,7 +83,16 @@ public class CriteriaUtils {
 	 * @return Id expression.
 	 */
 	public static Expression<?> getIdExpression(Root<?> root) {
-		return root.get(root.getModel().getDeclaredId(root.getModel().getIdType().getJavaType()).getName());
+		String attributeName;
+		Type<?> type = root.getModel().getIdType();
+		if(type == null){
+			attributeName = root.getModel().getIdClassAttributes().iterator().next().getName();
+		}
+		else {
+			Class<?> clazz = type.getJavaType();
+			attributeName = root.getModel().getDeclaredId(clazz).getName();
+		}
+		return root.get(attributeName);
 	}
 
 	private static Root<?> applySpecification(CriteriaBuilder cb, CriteriaQuery<?> query, Class<?> rootClass, Specification<?> spec) {

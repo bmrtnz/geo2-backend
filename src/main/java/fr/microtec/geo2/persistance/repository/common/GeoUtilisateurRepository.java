@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface GeoUtilisateurRepository extends EntityGraphJpaRepository<GeoUtilisateur, String> {
 
 	Optional<GeoUtilisateur> findByNomUtilisateur(String nomUtilisateur);
+	Optional<GeoUtilisateur> findByNomUtilisateurAndMotDePasseAndValideIsTrue(String nomUtilisateur, String motDePasse);
 
 }

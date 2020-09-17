@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueFournisseur;
+import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -218,5 +219,8 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 			inverseJoinColumns = { @JoinColumn(name = "k_certif") }
 	)
 	private Set<GeoCertification> certifications;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
+	private List<GeoStock> stocks;
 
 }

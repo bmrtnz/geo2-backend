@@ -16,11 +16,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Table(name = "geo_grid_config")
 @IdClass(GeoGridConfigKey.class)
 @Entity
