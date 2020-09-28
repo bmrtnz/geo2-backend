@@ -153,7 +153,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * @param search Search string.
 	 * @return Specification
 	 */
-	private Specification<T> parseSearch(String search) {
+	protected Specification<T> parseSearch(String search) {
 		Node rootNode = this.rsqlParser.parse(search);
 
 		return rootNode.accept(new GeoCustomVisitor<>());

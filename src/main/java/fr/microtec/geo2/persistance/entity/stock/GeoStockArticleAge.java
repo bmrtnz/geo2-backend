@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Formula;
@@ -20,6 +23,7 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
 
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.produits.GeoCalibreFournisseur;
@@ -45,6 +49,10 @@ public class GeoStockArticleAge implements Serializable {
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "art_ref")
   private GeoArticle article;
+
+  // @OneToMany(fetch = FetchType.LAZY)
+  // @JoinColumn(name = "art_ref", referencedColumnName = "art_ref", insertable=false, updatable=false)
+	// private List<GeoOrdreLigne> lignes;
 
   // @Formula("(" +
   // "(SELECT var_code FROM geo_variet WHERE geo_variet.var_code = var_code) || " + 
