@@ -1,6 +1,11 @@
 package fr.microtec.geo2.configuration;
 
+import fr.microtec.geo2.configuration.graphql.error.GeoExceptionHandler;
 import fr.microtec.geo2.configuration.graphql.LocalDateMapper;
+import graphql.GraphQL;
+import graphql.execution.AsyncExecutionStrategy;
+import graphql.execution.AsyncSerialExecutionStrategy;
+import graphql.schema.GraphQLSchema;
 import io.leangen.graphql.ExtensionProvider;
 import io.leangen.graphql.GeneratorConfiguration;
 import io.leangen.graphql.generator.mapping.SchemaTransformer;
@@ -36,6 +41,14 @@ public class GraphQLConfiguration {
 
 			return defaults;
 		};
+	}
+
+	@Bean
+	public GraphQL graphQL(GraphQLSchema schema) {
+		return GraphQL.newGraphQL(schema)
+				.queryExecutionStrategy(new AsyncExecutionStrategy(new GeoExceptionHandler()))
+				.mutationExecutionStrategy(new AsyncSerialExecutionStrategy(new GeoExceptionHandler()))
+				.build();
 	}
 
 }

@@ -12,7 +12,7 @@ public class Geo2SecurityRoles {
 	/**
 	 * Geo2 roles
 	 */
-	public enum Role { ROLE_ADMIN, ROLE_GEO_TIERS, ROLE_GEO_PRODUIT }
+	public enum Role { ROLE_ADMIN, ROLE_USER, ROLE_GEO_TIERS, ROLE_GEO_PRODUIT }
 
 	/**
 	 * Get geo2 roles for a user.
@@ -22,6 +22,7 @@ public class Geo2SecurityRoles {
 	 */
 	public static List<GrantedAuthority> authoritiesFor(GeoUtilisateur geoUtilisateur) {
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+		grantedAuthorities.add(new SimpleGrantedAuthority(Role.ROLE_USER.toString()));
 
 		if (geoUtilisateur.getAccessGeoTiers()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(Role.ROLE_GEO_TIERS.toString()));
