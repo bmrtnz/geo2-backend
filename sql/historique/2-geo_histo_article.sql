@@ -2,7 +2,7 @@
 -- geo_histo_article
 -------------------
 
-create trigger TRG_INS_HISTO_ARTICLE
+create or replace trigger TRG_INS_HISTO_ARTICLE
     before insert
     on GEO_HISTO_ARTICLE
     for each row

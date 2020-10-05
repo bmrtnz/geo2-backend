@@ -27,7 +27,7 @@ BEGIN
 END;
 /
 
-create trigger GEO_CONTAC_BEF_UPD
+create or replace trigger GEO_CONTAC_BEF_UPD
     before update
     on GEO_CONTAC
     for each row

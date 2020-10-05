@@ -21,7 +21,7 @@ begin
 end;
 /
 
-create trigger GEO_GROUPA_BEF_UPD
+create or replace trigger GEO_GROUPA_BEF_UPD
     before update
     on GEO_GROUPA
     for each row

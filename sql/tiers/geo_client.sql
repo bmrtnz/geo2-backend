@@ -2,7 +2,7 @@
 -- geo_client
 -------------------
 
-create OR REPLACE trigger GEO_CLIENT_BEF_INS
+create or replace trigger GEO_CLIENT_BEF_INS
     before insert
     on GEO_CLIENT
     for each row
@@ -30,7 +30,7 @@ begin
 end;
 /
 
-create trigger GEO_CLIENT_BEF_UPD
+create or replace trigger GEO_CLIENT_BEF_UPD
     before update
     on GEO_CLIENT
     for each row

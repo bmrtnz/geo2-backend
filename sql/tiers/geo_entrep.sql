@@ -37,7 +37,7 @@ EXCEPTION
 END;
 /
 
-create trigger GEO_ENTREP_BEF_UPD
+create or replace trigger GEO_ENTREP_BEF_UPD
     before update
     on GEO_ENTREP
     for each row

@@ -2,7 +2,7 @@
 -- geo_histo_client
 -------------------
 
-create trigger TRG_INS_HISTO_CLIENT
+create or replace trigger TRG_INS_HISTO_CLIENT
     before insert
     on GEO_HISTO_CLIENT
     for each row
@@ -21,7 +21,7 @@ BEGIN
 END;
 /
 
-create trigger TRG_UPD_HISTO_CLIENT
+create or replace trigger TRG_UPD_HISTO_CLIENT
     before update
     on GEO_HISTO_CLIENT
     for each row

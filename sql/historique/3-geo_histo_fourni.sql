@@ -2,15 +2,13 @@
 -- geo_histo_fourni
 -------------------
 
-create trigger TRG_INS_HISTO_FOURNI
+create or replace trigger TRG_INS_HISTO_FOURNI
     before insert
     on GEO_HISTO_FOURNI
     for each row
 DECLARE
     x_num NUMBER;
     x_user  VARCHAR2(35);
-
-
 BEGIN
     IF (:NEW.mod_user IS NULL) THEN
         SELECT sys_context('USERENV','OS_USER') INTO x_user FROM dual;
@@ -22,7 +20,7 @@ BEGIN
 END;
 /
 
-create trigger TRG_UPD_HISTO_FOURNI
+create or replace trigger TRG_UPD_HISTO_FOURNI
     before update
     on GEO_HISTO_FOURNI
     for each row
