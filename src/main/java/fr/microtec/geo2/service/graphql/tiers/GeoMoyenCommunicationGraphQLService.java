@@ -11,12 +11,14 @@ import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoMoyenCommunicationGraphQLService extends GeoAbstractGraphQLService<GeoMoyenCommunication, String> {
 
 	public GeoMoyenCommunicationGraphQLService(GeoMoyenCommunicationRepository repository) {

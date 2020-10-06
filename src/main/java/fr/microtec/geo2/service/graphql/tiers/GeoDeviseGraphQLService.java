@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoDeviseGraphQLService extends GeoAbstractGraphQLService<GeoDevise, String> {
 
 	public GeoDeviseGraphQLService(GeoDeviseRepository repository) {

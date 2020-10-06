@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntrepot, String> {
 
 	public GeoEntrepotGraphQLService(GeoEntrepotRepository repository) {

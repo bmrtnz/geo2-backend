@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.support.PageableExecutionUtils;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -24,8 +25,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
+
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoDistinctGraphQLService {
 
 	private final EntityManager entityManager;

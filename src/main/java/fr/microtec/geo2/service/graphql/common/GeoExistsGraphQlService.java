@@ -4,6 +4,7 @@ import fr.microtec.geo2.persistance.EntityUtils;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoExistsGraphQlService {
 
 	@PersistenceContext
