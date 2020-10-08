@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoCourtierGraphQLService extends GeoAbstractGraphQLService<GeoCourtier, String> {
 
 	public GeoCourtierGraphQLService(GeoCourtierRepository repository) {

@@ -17,6 +17,7 @@ import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.data.jpa.provider.HibernateUtils;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoLocatePageGraphQlService {
 
 	private static final String ORACLE_ROOT_LOCATE_SQL = "SELECT numrow FROM (%s) WHERE %s";

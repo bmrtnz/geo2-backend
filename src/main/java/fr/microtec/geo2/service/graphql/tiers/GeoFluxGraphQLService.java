@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoFluxGraphQLService extends GeoAbstractGraphQLService<GeoFlux, String> {
 
 	public GeoFluxGraphQLService(GeoFluxRepository repository) {

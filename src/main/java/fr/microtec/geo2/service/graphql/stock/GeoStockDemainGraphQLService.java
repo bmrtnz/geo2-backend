@@ -8,12 +8,14 @@ import io.leangen.graphql.annotations.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @GraphQLApi
+@Secured("ROLE_USER")
 public class GeoStockDemainGraphQLService extends GeoAbstractGraphQLService<GeoStockDemain, String> {
 
 	public GeoStockDemainGraphQLService(GeoStockDemainRepository stockDemainRepository) {
@@ -36,5 +38,5 @@ public class GeoStockDemainGraphQLService extends GeoAbstractGraphQLService<GeoS
 	) {
 		return this.getOne(id, env);
   }
-  
+
 }
