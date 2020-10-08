@@ -6,7 +6,6 @@ import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -120,7 +119,8 @@ public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Dupl
 		clone.cahierDesCharge = this.cahierDesCharge;
 		clone.emballage = this.emballage;
 		clone.normalisation = this.normalisation;
-		clone.historique = new ArrayList<GeoHistoriqueArticle>(this.historique);
+		if(this.historique != null)
+			clone.historique = new ArrayList<GeoHistoriqueArticle>(this.historique);
 		
 		return clone;
 	}
