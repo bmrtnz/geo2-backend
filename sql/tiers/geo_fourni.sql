@@ -11,12 +11,15 @@ declare
  x_user  varchar2(35);
 begin
     IF (:NEW.mod_user IS NULL) THEN
-        -- date et user cr�ation
+        -- date et user création
         select sys_context('USERENV','OS_USER') into x_user from dual;
         :new.mod_user := x_user;
     END IF;
     IF (:NEW.mod_date IS NULL) THEN
         :new.mod_date := sysdate;
+    END IF;
+    IF (:NEW.k_fou IS NULL) THEN
+        :new.k_fou := F_SEQ_K_FOURNI;
     END IF;
 
     :new.pref_fact := SUBSTR(:new.compte_compta,1,3);

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,8 +26,21 @@ import java.util.Set;
 public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements Serializable {
 
 	@Id
-	@Column(name = "fou_code")
+	@Column(name = "k_fou")
+	@GeneratedValue(generator = "GeoClientGenerator")
+	@GenericGenerator(
+			name = "GeoFournisseurGenerator",
+			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
+			parameters = {
+					@org.hibernate.annotations.Parameter(name = "sequenceName", value = "f_seq_k_fourni"),
+					@org.hibernate.annotations.Parameter(name = "isSequence", value = "false")
+			}
+	)
 	private String id;
+
+	@NotNull
+	@Column(name = "fou_code")
+	private String code;
 
 	@NotNull
 	@Column(name = "tyt_code", nullable = false)
