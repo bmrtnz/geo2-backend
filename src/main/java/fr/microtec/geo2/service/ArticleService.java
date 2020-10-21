@@ -50,7 +50,7 @@ public class ArticleService {
 	public GeoArticle save(GeoArticle articleChunk, Boolean clone) {
 		GeoArticle merged = new GeoArticle();
 		EntityGraph articleGraph = EntityGraphUtils
-		.fromAttributePaths("matierePremiere","emballage","cahierDesCharge","normalisation");
+		.fromAttributePaths("valide","description","blueWhaleStock","matierePremiere","emballage","cahierDesCharge","normalisation");
 		Optional<GeoArticle> article = this.articleRepository.findById(articleChunk.getId(),articleGraph);
 
 		Optional<GeoArticleMatierePremiere> mergedMatierePremiere = Optional.empty();
@@ -97,7 +97,7 @@ public class ArticleService {
 			this.entityManager.detach(article.get().getNormalisation());
 		}
 		
-		merged = GeoArticleGraphQLService.merge(article.get(), articleChunk, null);
+		merged = GeoArticleGraphQLService.merge(article.get(), articleChunk.duplicate(), null);
 		if (mergedMatierePremiere.isPresent())
 			merged.setMatierePremiere(this.fetch(this.matierePremiereRepository,mergedMatierePremiere.get()));
 		if (mergedCahierDesCharges.isPresent())
@@ -107,9 +107,17 @@ public class ArticleService {
 		if (mergedNormalisation.isPresent())
 			merged.setNormalisation(this.fetch(this.normalisationRepository,mergedNormalisation.get()));
 		
+		if (articleChunk.getValide() != null)
+			merged.setValide(articleChunk.getValide());
+		if (articleChunk.getBlueWhaleStock() != null)
+			merged.setBlueWhaleStock(articleChunk.getBlueWhaleStock());
+		if (articleChunk.getDescription() != null)
+			merged.setDescription(articleChunk.getDescription());
+			
 		if (clone) {
 			this.entityManager.detach(merged);
 			merged = merged.duplicate();
+			merged.setValide(false);
 		}
 		return this.articleRepository.save(merged);
 	}
