@@ -23,7 +23,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 	public Optional<String> getCurrentAuditor() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		return Optional.ofNullable(((GeoUtilisateur) authentication).getNomInterne());
+		return Optional.ofNullable(((GeoUtilisateur) authentication.getPrincipal()).getNomInterne());
 	}
 
 }
