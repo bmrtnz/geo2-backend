@@ -37,6 +37,21 @@ CREATE TABLE AVI_ART_MAT_PREM
 
 ALTER TABLE AVI_ART_MAT_PREM
     ADD (
+        CONSTRAINT PK_AVI_ART_MAT_PREM PRIMARY KEY (REF_MAT_PREM)
+            USING INDEX
+                TABLESPACE GEO_INDX
+                PCTFREE 10
+                INITRANS 2
+                MAXTRANS 255
+                STORAGE (
+                INITIAL 1032 K
+                MINEXTENTS 1
+                MAXEXTENTS 2147483645
+                PCTINCREASE 0
+                ));
+
+ALTER TABLE AVI_ART_MAT_PREM
+    ADD (
         CONSTRAINT FK_MAT_PREM_ESPECE FOREIGN KEY (ESP_CODE)
             REFERENCES GEO_ESPECE (ESP_CODE));
 
@@ -118,21 +133,6 @@ begin
 end;
 /
 SHOW ERRORS;
-
-ALTER TABLE AVI_ART_MAT_PREM
-    ADD (
-        CONSTRAINT PK_AVI_ART_MAT_PREM PRIMARY KEY (REF_MAT_PREM)
-            USING INDEX
-                TABLESPACE GEO_INDX
-                PCTFREE 10
-                INITRANS 2
-                MAXTRANS 255
-                STORAGE (
-                INITIAL 1032 K
-                MINEXTENTS 1
-                MAXEXTENTS 2147483645
-                PCTINCREASE 0
-                ));
 
 CREATE UNIQUE INDEX UNIQUE_ART_MAT_PREM ON AVI_ART_MAT_PREM
     (ESP_CODE, VAR_CODE, CAF_CODE, CUN_CODE, ORI_CODE, MODE_CULTURE, TYP_REF, TVT_CODE, PLU_CODE)

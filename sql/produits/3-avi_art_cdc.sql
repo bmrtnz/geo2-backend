@@ -36,6 +36,22 @@ CREATE TABLE AVI_ART_CDC
 
 ALTER TABLE AVI_ART_CDC
     ADD (
+        CONSTRAINT PK_AVI_ART_CDC PRIMARY KEY (REF_CDC)
+            USING INDEX
+                TABLESPACE GEO_INDX
+                PCTFREE 10
+                INITRANS 2
+                MAXTRANS 255
+                STORAGE (
+                INITIAL 1032 K
+                MINEXTENTS 1
+                MAXEXTENTS 2147483645
+                PCTINCREASE 0
+                )
+        );
+
+ALTER TABLE AVI_ART_CDC
+    ADD (
         CONSTRAINT FK_CDC_ESPECE FOREIGN KEY (ESP_CODE)
             REFERENCES GEO_ESPECE (ESP_CODE));
 
@@ -121,22 +137,6 @@ begin
 end;
 /
 SHOW ERRORS;
-
-ALTER TABLE AVI_ART_CDC
-    ADD (
-        CONSTRAINT PK_AVI_ART_CDC PRIMARY KEY (REF_CDC)
-            USING INDEX
-                TABLESPACE GEO_INDX
-                PCTFREE 10
-                INITRANS 2
-                MAXTRANS 255
-                STORAGE (
-                INITIAL 1032 K
-                MINEXTENTS 1
-                MAXEXTENTS 2147483645
-                PCTINCREASE 0
-                )
-        );
 
 CREATE UNIQUE INDEX UNIQUE_ART_CDC ON AVI_ART_CDC
     (ESP_CODE, CAT_CODE, CIR_CODE, CLR_CODE, PEN_CODE, RAN_CODE, SUC_CODE, INS_SECCOM, INS_STATION)
