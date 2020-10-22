@@ -203,7 +203,7 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	private Boolean entrepot;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fou_code_destockage")
+	@JoinColumn(name = "fou_code_destockage", referencedColumnName = "fou_code")
 	private GeoFournisseur fournisseurDeRattachement;
 
 	@ManyToOne(fetch = FetchType.LAZY)
