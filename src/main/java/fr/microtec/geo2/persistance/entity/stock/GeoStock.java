@@ -10,4 +10,5 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_stock")
 @Entity
-public class GeoStock extends GeoBaseStock {}
+public class GeoStock extends GeoBaseStock {
+}

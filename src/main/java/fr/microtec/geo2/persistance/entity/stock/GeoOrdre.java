@@ -25,23 +25,23 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 @Entity
 public class GeoOrdre extends ValidateAndModifiedEntity {
 
-  @Id
+	@Id
 	@Column(name = "ord_ref")
-  private String id;
+	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "soc_code")
-  private GeoSociete societe;
-  
+	private GeoSociete societe;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sco_code")
-  private GeoSecteur secteurCommercial;
-  
+	private GeoSecteur secteurCommercial;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_code")
-  private GeoClient client;
-  
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
+	private GeoClient client;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
 	private List<GeoOrdreLigne> lignes;
 
 }

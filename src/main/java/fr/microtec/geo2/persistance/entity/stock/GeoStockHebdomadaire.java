@@ -12,11 +12,11 @@ import javax.persistence.Table;
 @Entity
 public class GeoStockHebdomadaire {
 
-  @Id
-  @Column(name = "art_ref")
-  private String id;
-  
+	@Id
+	@Column(name = "art_ref")
+	private String id;
+
 	@Column(name = "qte_hebdo")
-  private Float quantiteHebdomadaire;
+	private Float quantiteHebdomadaire;
 
 }

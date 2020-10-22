@@ -23,16 +23,16 @@ import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 @Entity
 public class GeoColis extends ValidateAndModifiedEntity {
 
-  @Id
+    @Id
 	@Column(name = "col_code")
-  private String id;
+    private String id;
 
-  @Id
+    @Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
-  
+
 	@Column(name = "col_desc")
-  private String description;
+    private String description;
 
 }
