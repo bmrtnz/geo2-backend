@@ -34,14 +34,4 @@ public class GeoBaseStock extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "esp_code")
     private GeoEspece espece;
 
-    @Column(name = "mod_user")
-	private String userModification;
-
-	@Column(name = "mod_date")
-	private LocalDateTime dateModification;
-
-	@NotNull
-	@Column(name = "valide", nullable = false)
-	private Boolean valide;
-
 }
