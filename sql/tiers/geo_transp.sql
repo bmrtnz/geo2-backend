@@ -10,7 +10,7 @@ declare
  x_num number;
  x_user  varchar2(35);
 begin
-    -- date et user cr�ation
+    -- date et user création
     IF (:NEW.mod_user IS NULL) THEN
         select sys_context('USERENV','OS_USER') into x_user from dual;
         :new.mod_user := x_user;
