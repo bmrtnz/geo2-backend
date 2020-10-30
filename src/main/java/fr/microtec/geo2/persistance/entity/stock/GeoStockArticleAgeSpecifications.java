@@ -1,25 +1,78 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
+import java.util.List;
+
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 
 public class GeoStockArticleAgeSpecifications {
 
-	public static Specification<GeoStockArticleAge> byDistinctArticleInOrdreLigne() {
+	public static Specification<GeoStockArticleAge> withDistinctArticleInOrdreLigne() {
 		return (root, criteriaQuery, criteriaBuilder) -> {
 
-			// Select distinct articles
-			// criteriaQuery.select(root.get("article")).distinct(true);
+			Subquery<GeoOrdreLigne> subqueryOL = criteriaQuery.subquery(GeoOrdreLigne.class);
+			Root<GeoOrdreLigne> rootOL = subqueryOL.from(GeoOrdreLigne.class);
 
-			// Join OrdreLignes
-			Join<GeoStockArticleAge, GeoOrdreLigne> lignes = root.join("article");
-			Predicate joinLignes = criteriaBuilder.equal(root.get("article"), lignes.get("article"));
-			lignes = lignes.on(joinLignes);
+			subqueryOL.select(rootOL.get("article")).distinct(true);
 
-			return null;
-			// return root.get("article").in(lignes.get("article"));
+			return criteriaBuilder.in(root.get("article")).value(subqueryOL);
+
+		};
+	}
+
+	public static Specification<GeoStockArticleAge> withArticleInSecteurs(List<GeoSecteur> secteurs) {
+		return (root, criteriaQuery, criteriaBuilder) -> {
+
+			Subquery<GeoOrdreLigne> subqueryOL = criteriaQuery.subquery(GeoOrdreLigne.class);
+			Root<GeoOrdreLigne> rootOL = subqueryOL.from(GeoOrdreLigne.class);
+
+			subqueryOL.select(rootOL.get("article")).where(rootOL.get("ordre").get("secteurCommercial").in(secteurs));
+
+			return criteriaBuilder.in(root.get("article")).value(subqueryOL);
+		};
+	}
+
+	public static Specification<GeoStockArticleAge> withArticleInClients(List<GeoClient> clients) {
+		return (root, criteriaQuery, criteriaBuilder) -> {
+
+			Subquery<GeoOrdreLigne> subqueryOL = criteriaQuery.subquery(GeoOrdreLigne.class);
+			Root<GeoOrdreLigne> rootOL = subqueryOL.from(GeoOrdreLigne.class);
+
+			subqueryOL.select(rootOL.get("article")).where(rootOL.get("ordre").get("client").in(clients));
+
+			return criteriaBuilder.in(root.get("article")).value(subqueryOL);
+		};
+	}
+
+	public static Specification<GeoStockArticleAge> withArticleInFournisseurs(List<GeoFournisseur> fournisseurs) {
+		return (root, criteriaQuery, criteriaBuilder) -> {
+
+			Subquery<GeoStock> subqueryStock = criteriaQuery.subquery(GeoStock.class);
+			Root<GeoStock> rootStock = subqueryStock.from(GeoStock.class);
+
+			subqueryStock.select(rootStock.get("article")).where(rootStock.get("fournisseur").in(fournisseurs));
+
+			return criteriaBuilder.in(root.get("article")).value(subqueryStock);
+		};
+	}
+
+	public static Specification<GeoStockArticleAge> withArticleInSociete(GeoSociete societe) {
+		return (root, criteriaQuery, criteriaBuilder) -> {
+
+			Subquery<GeoOrdreLigne> subqueryOL = criteriaQuery.subquery(GeoOrdreLigne.class);
+			Root<GeoOrdreLigne> rootOL = subqueryOL.from(GeoOrdreLigne.class);
+
+			subqueryOL.select(rootOL.get("article"))
+					.where(criteriaBuilder.equal(rootOL.get("ordre").get("societe"), societe));
+
+			return criteriaBuilder.in(root.get("article")).value(subqueryOL);
 		};
 	}
 

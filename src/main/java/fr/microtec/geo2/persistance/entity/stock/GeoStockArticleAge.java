@@ -28,26 +28,6 @@ public class GeoStockArticleAge implements Serializable {
 	@JoinColumn(name = "art_ref")
 	private GeoArticle article;
 
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "art_ref", referencedColumnName = "art_ref", insertable=false, updatable=false)
-	// private List<GeoOrdreLigne> lignes;
-
-	// @Formula("(" +
-	// "(SELECT var_code FROM geo_variet WHERE geo_variet.var_code = var_code) || " +
-	// "' cal ' || " +
-	// "COALESCE((SELECT geo_caluni.cun_code FROM geo_caluni WHERE geo_caluni.cun_code = caf_code AND geo_caluni.esp_code = esp_code),'-') || " +
-	// "' ' ||" +
-	// "(SELECT cam_code FROM geo_calmar WHERE geo_calmar.cam_code = cam_code AND geo_calmar.esp_code = esp_code) || " +
-	// "' cat ' ||" +
-	// "(SELECT cat_code FROM geo_catego WHERE geo_catego.cat_code = cat_code AND geo_catego.esp_code = esp_code) || " +
-	// "' emb ' ||" +
-	// "(SELECT col_code FROM geo_colis WHERE geo_colis.col_code = col_code AND geo_colis.esp_code = esp_code) || " +
-	// "' ' ||" +
-	// "(SELECT ori_code FROM geo_origine WHERE geo_origine.ori_code = ori_code AND geo_origine.esp_code = esp_code) || " +
-	// "' ' ||" +
-	// "(SELECT geo_marque.maq_desc FROM geo_article INNER JOIN geo_marque ON geo_article.maq_code = geo_marque.maq_code AND geo_article.esp_code = geo_marque.esp_code WHERE geo_article.art_ref = art_ref )" +
-	// ")")
-	// private String description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
@@ -99,10 +79,6 @@ public class GeoStockArticleAge implements Serializable {
 
 	@Formula("(SELECT geo_stock_consolid.commentaire FROM geo_stock_consolid WHERE geo_stock_consolid.art_ref = art_ref)")
 	private String commentaire;
-
-	// @LastModifiedDate
-	// @Formula("(SELECT geo_stock_consolid.mod_date FROM geo_stock_consolid WHERE geo_stock_consolid.art_ref = art_ref)")
-	// private LocalDateTime dateModification;
 
 	@Formula("(SELECT geo_stock_hebdo.qte_hebdo FROM geo_stock_hebdo WHERE geo_stock_hebdo.art_ref = art_ref)")
 	private Integer quantiteHebdomadaire;

@@ -1,8 +1,5 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -16,6 +13,8 @@ import javax.validation.constraints.NotNull;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoEspece;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -24,17 +23,17 @@ public class GeoBaseStock extends ValidateAndModifiedEntity {
 
 	@Id
 	@Column(name = "sto_ref")
-    private String id;
+	private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
-    private GeoFournisseur fournisseur;
+	private GeoFournisseur fournisseur;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
-    private GeoEspece espece;
+	private GeoEspece espece;
 
-    @Column(name = "mod_user")
+	@Column(name = "mod_user")
 	private String userModification;
 
 	@Column(name = "mod_date")

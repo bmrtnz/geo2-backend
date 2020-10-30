@@ -21,6 +21,4 @@ public interface GeoStockArticleAgeRepository extends GeoGraphRepository<GeoStoc
   @Query(findDistinctArticleInOrdreLigneQuery)
   Page<GeoStockArticleAge> findByDistinctArticleInOrdreLigne(@Nullable Specification<GeoStockArticleAge> search, Pageable pageable, EntityGraph graph);
 
-  // Page<GeoStockArticleAge> findAllByArticleIn(@Nullable Specification<GeoStockArticleAge> search, Pageable pageable, EntityGraph graph);
-
 }
