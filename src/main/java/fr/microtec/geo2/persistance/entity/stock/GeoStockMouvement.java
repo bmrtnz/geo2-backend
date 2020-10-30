@@ -21,14 +21,4 @@ public class GeoStockMouvement extends ValidateAndModifiedEntity {
 	@Column(name = "sto_ref")
 	private String id;
 
-	@Column(name = "mod_user")
-	private String userModification;
-
-	@Column(name = "mod_date")
-	private LocalDateTime dateModification;
-
-	@NotNull
-	@Column(name = "valide", nullable = false)
-	private Boolean valide;
-
 }

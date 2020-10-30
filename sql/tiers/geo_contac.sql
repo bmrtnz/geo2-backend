@@ -17,7 +17,7 @@ BEGIN
     END IF;
 
     IF (:NEW.MOD_USER IS NULL) THEN
-        -- date et user cr�ation
+        -- date et user création
         SELECT sys_context('USERENV','OS_USER') INTO x_user FROM dual;
         :NEW.mod_user := x_user;
     END IF;
