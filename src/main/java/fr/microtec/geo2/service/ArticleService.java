@@ -96,7 +96,7 @@ public class ArticleService {
 			.merge(articleChunk.getNormalisation(), normalisation.get(), null));
 			this.entityManager.detach(article.get().getNormalisation());
 		}
-		
+
 		merged = GeoArticleGraphQLService.merge(article.get(), articleChunk.duplicate(), null);
 		if (mergedMatierePremiere.isPresent())
 			merged.setMatierePremiere(this.fetch(this.matierePremiereRepository,mergedMatierePremiere.get()));
@@ -106,14 +106,14 @@ public class ArticleService {
 			merged.setEmballage(this.fetch(this.emballageRepository,mergedEmballage.get()));
 		if (mergedNormalisation.isPresent())
 			merged.setNormalisation(this.fetch(this.normalisationRepository,mergedNormalisation.get()));
-		
+
 		if (articleChunk.getValide() != null)
 			merged.setValide(articleChunk.getValide());
 		if (articleChunk.getBlueWhaleStock() != null)
 			merged.setBlueWhaleStock(articleChunk.getBlueWhaleStock());
 		if (articleChunk.getDescription() != null)
 			merged.setDescription(articleChunk.getDescription());
-			
+
 		if (clone) {
 			this.entityManager.detach(merged);
 			merged = merged.duplicate();
@@ -123,7 +123,7 @@ public class ArticleService {
 	}
 
 	private <T extends Duplicable<T>> T fetch(GeoGraphRepository<T, String> repository, T entity) {
-		ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths( "id","dateCreation","dateModification","userCreation","userModification","valide" );
+		ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("id", "dateCreation", "dateModification", "userCreation", "userModification", "valide");
 		Example<T> example = Example.of(entity, matcher);
 		Optional<T> entityOptional = repository.findOne(example);
 
