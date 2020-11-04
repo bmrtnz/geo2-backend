@@ -226,13 +226,8 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoHistoriqueFournisseur> historique;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "geo_fourni_cert",
-			joinColumns = { @JoinColumn(name = "fou_code") },
-			inverseJoinColumns = { @JoinColumn(name = "k_certif") }
-	)
-	private Set<GeoCertification> certifications;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
+	private Set<GeoCertificationFournisseur> certifications;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoStock> stocks;

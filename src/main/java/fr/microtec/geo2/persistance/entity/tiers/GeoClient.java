@@ -301,12 +301,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
 	private List<GeoHistoriqueClient> historique;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "geo_client_cert",
-			joinColumns = { @JoinColumn(name = "cli_ref") },
-			inverseJoinColumns = { @JoinColumn(name = "k_certif") }
-	)
-	private Set<GeoCertification> certifications;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+	private Set<GeoCertificationClient> certifications;
+
+
 
 }
