@@ -4,9 +4,12 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Data
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "typ_tiers")
 @Table(name = "GEO_CERTIFS_TIERS")
 public class GeoCertificationTier {
 
@@ -21,7 +24,7 @@ public class GeoCertificationTier {
 					@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
 			}
 	)
-	private Integer id;
+	private BigDecimal id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "certif")

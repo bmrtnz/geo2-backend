@@ -9,14 +9,14 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Entity
+@DiscriminatorValue(GeoFournisseur.TYPE_TIERS)
 public class GeoCertificationFournisseur extends GeoCertificationTier {
 
 	@Column(name = "date_validite")
 	private LocalDate dateValidite;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "typ_tiers", referencedColumnName = "tyt_code")
-	@JoinColumn(name = "tiers", referencedColumnName = "k_fou")
+	@JoinColumn(name = "tiers", referencedColumnName = "k_fou", insertable = true)
 	private GeoFournisseur fournisseur;
 
 }

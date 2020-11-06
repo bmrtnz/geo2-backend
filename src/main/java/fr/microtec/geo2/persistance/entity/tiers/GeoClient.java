@@ -6,11 +6,12 @@ import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -25,6 +26,8 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 public class GeoClient extends ValidateModifiedPrewrittedEntity implements Serializable {
+
+	public static final String TYPE_TIERS = "C";
 
 	@Id
 	@Column(name = "cli_ref")
@@ -45,7 +48,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
 	@NotNull
 	@Column(name = "tyt_code", nullable = false)
-	private Character typeTiers = 'C';
+	private Character typeTiers = TYPE_TIERS.charAt(0);
 
 	@NotNull
 	@Column(name = "raisoc", nullable = false)
@@ -301,9 +304,18 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
 	private List<GeoHistoriqueClient> historique;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Where(clause = "typ_tiers = '" + TYPE_TIERS + "'")
 	private Set<GeoCertificationClient> certifications;
 
-
+	public void setCertifications(Set<GeoCertificationClient> certifications) {
+		if (this.certifications != null) {
+			this.certifications.clear();
+			certifications.forEach(c -> c.setClient(this));
+			this.certifications.addAll(certifications);
+		} else {
+			this.certifications = certifications;
+		}
+	}
 
 }

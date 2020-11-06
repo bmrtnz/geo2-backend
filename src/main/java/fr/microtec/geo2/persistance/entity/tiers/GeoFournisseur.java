@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,8 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements Serializable {
+
+	public static final String TYPE_TIERS = "F";
 
 	@Id
 	@Column(name = "k_fou")
@@ -44,7 +47,7 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 
 	@NotNull
 	@Column(name = "tyt_code", nullable = false)
-	private Character typeTiers = 'F';
+	private Character typeTiers = TYPE_TIERS.charAt(0);
 
 	@NotNull
 	@Column(name = "raisoc")
@@ -226,10 +229,21 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoHistoriqueFournisseur> historique;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Where(clause = "typ_tiers = '" + TYPE_TIERS + "'")
 	private Set<GeoCertificationFournisseur> certifications;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoStock> stocks;
+
+	public void setCertifications(Set<GeoCertificationFournisseur> certifications) {
+		if (this.certifications != null) {
+			this.certifications.clear();
+			certifications.forEach(c -> c.setFournisseur(this));
+			this.certifications.addAll(certifications);
+		} else {
+			this.certifications = certifications;
+		}
+	}
 
 }
