@@ -237,9 +237,10 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	private List<GeoStock> stocks;
 
 	public void setCertifications(Set<GeoCertificationFournisseur> certifications) {
+		certifications.forEach(c -> c.setFournisseur(this));
+
 		if (this.certifications != null) {
 			this.certifications.clear();
-			certifications.forEach(c -> c.setFournisseur(this));
 			this.certifications.addAll(certifications);
 		} else {
 			this.certifications = certifications;

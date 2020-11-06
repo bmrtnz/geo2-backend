@@ -309,9 +309,10 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	private Set<GeoCertificationClient> certifications;
 
 	public void setCertifications(Set<GeoCertificationClient> certifications) {
+		certifications.forEach(c -> c.setClient(this));
+
 		if (this.certifications != null) {
 			this.certifications.clear();
-			certifications.forEach(c -> c.setClient(this));
 			this.certifications.addAll(certifications);
 		} else {
 			this.certifications = certifications;
