@@ -30,7 +30,7 @@ public class GeoHistoriqueFournisseur extends GeoBaseHistorique implements GeoHi
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code", nullable = false)
+	@JoinColumn(name = "fou_code", referencedColumnName = "k_fou", nullable = false)
 	private GeoFournisseur fournisseur;
 
 }
