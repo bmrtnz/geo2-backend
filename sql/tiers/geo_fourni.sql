@@ -21,6 +21,9 @@ begin
     IF (:NEW.k_fou IS NULL) THEN
         :new.k_fou := F_SEQ_K_FOURNI;
     END IF;
+    IF (:NEW.valide IS NULL) THEN
+        :new.valide := 'O';
+    END IF;
 
     :new.pref_fact := SUBSTR(:new.compte_compta,1,3);
 end;
