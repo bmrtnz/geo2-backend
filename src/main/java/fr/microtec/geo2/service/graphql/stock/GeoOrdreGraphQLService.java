@@ -6,6 +6,7 @@ import fr.microtec.geo2.persistance.repository.stock.GeoOrdreRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
@@ -40,6 +41,16 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return super.getOne(id, env);
-  }
+	}
+	
+	@GraphQLMutation
+	public GeoOrdre saveOrdre(GeoOrdre ordre) {
+		return this.save(ordre);
+	}
+
+	@GraphQLMutation
+	public void deleteOrdre(String id) {
+		this.delete(id);
+	}
 
 }
