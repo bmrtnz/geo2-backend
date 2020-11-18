@@ -18,6 +18,9 @@ begin
     IF (:NEW.mod_date IS NULL) THEN
         :new.mod_date := sysdate;
     END IF;
+    IF (:NEW.valide IS NULL) THEN
+        :new.valide := 'O';
+    END IF;
 end;
 /
 

@@ -27,6 +27,9 @@ begin
     IF (:NEW.libelle_ristourne IS NULL) THEN
         :new.libelle_ristourne := 'remise';
     END IF;
+    IF (:NEW.valide IS NULL) THEN
+        :new.valide := 'O';
+    END IF;
 end;
 /
 
