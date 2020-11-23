@@ -26,6 +26,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -55,6 +56,10 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sco_code")
 	private GeoSecteur secteurCommercial;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trp_code")
+	private GeoTransporteur transporteur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref")
