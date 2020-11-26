@@ -49,8 +49,8 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLMutation
-	public void deleteOrdre(String id) {
-		this.delete(id);
+	public void deleteOrdre(GeoOrdre ordre) {
+		this.delete(ordre);
 	}
 
 }
