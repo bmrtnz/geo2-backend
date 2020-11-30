@@ -53,9 +53,10 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		}
 
 		if (search != null && !search.isBlank()) {
-			page = this.repository.findAll(this.parseSearch(search), pageable, GeoEntityGraph.getEntityGraph(env));
+//			page = this.repository.findDistinct(this.parseSearch(search), pageable, GeoEntityGraph.getEntityGraph(env));
+			 page = this.repository.findAll(this.parseSearch(search), pageable); //, GeoEntityGraph.getEntityGraph(env));
 		} else {
-			page = this.repository.findAll(pageable, GeoEntityGraph.getEntityGraph(env));
+			page = this.repository.findAll(pageable); //, GeoEntityGraph.getEntityGraph(env));
 		}
 
 		return PageFactory.fromPage(page);
@@ -69,7 +70,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * @return Entity optional.
 	 */
 	protected Optional<T> getOne(ID id, ResolutionEnvironment env) {
-		return this.repository.findById(id, GeoEntityGraph.getEntityGraph(env));
+		return this.repository.findById(id); //, GeoEntityGraph.getEntityGraph(env));
 	}
 
 	/**

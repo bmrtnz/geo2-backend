@@ -57,7 +57,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
     if (search != null && !search.isBlank())
       spec = spec.and(this.parseSearch(search));
 
-    page = this.stockArticleAgeRepository.findAll(spec, pageable, GeoEntityGraph.getEntityGraph(env));
+    page = this.stockArticleAgeRepository.findAll(spec, pageable); //, GeoEntityGraph.getEntityGraph(env));
 
     return PageFactory.fromPage(page);
   }

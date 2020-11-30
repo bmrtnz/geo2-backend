@@ -2,29 +2,23 @@ package fr.microtec.geo2.persistance.entity.common;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyGroup;
 
+import javax.persistence.*;
 import java.util.HashMap;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 @Data
-@EqualsAndHashCode()
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "geo_grid_config")
 @IdClass(GeoGridConfigKey.class)
 @Entity
 public class GeoGridConfig {
-	
+
 	@Id
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "utilisateur")
 	private GeoUtilisateur utilisateur;
 
@@ -32,8 +26,13 @@ public class GeoGridConfig {
 	@Column(name = "grid")
 	private String grid;
 
-  @Lob()
-	@Column(name = "config", columnDefinition="BLOB")
-	private HashMap<String,Object> config;
+	/*@ToString.Exclude
+	@EqualsAndHashCode.Exclude*/
+	// @Fetch(FetchMode.SELECT)
+	// @Basic(fetch = FetchType.LAZY)
+	/*@LazyGroup("lobs")*/
+	@Lob
+	@Column(name = "config", columnDefinition = "BLOB")
+	private HashMap<String, Object> config;
 
 }

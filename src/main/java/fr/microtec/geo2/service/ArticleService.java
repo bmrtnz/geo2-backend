@@ -51,14 +51,14 @@ public class ArticleService {
 		GeoArticle merged = new GeoArticle();
 		EntityGraph articleGraph = EntityGraphUtils
 		.fromAttributePaths("valide","description","blueWhaleStock","matierePremiere","emballage","cahierDesCharge","normalisation");
-		Optional<GeoArticle> article = this.articleRepository.findById(articleChunk.getId(),articleGraph);
+		Optional<GeoArticle> article = this.articleRepository.findById(articleChunk.getId()); //,articleGraph);
 
 		Optional<GeoArticleMatierePremiere> mergedMatierePremiere = Optional.empty();
 		if (articleChunk.getMatierePremiere() != null) {
 			EntityGraph matieresPremieresGraph = EntityGraphUtils
 			.fromAttributePaths("espece","variete","calibreFournisseur","calibreUnifie","origine","modeCulture","type","typeVente");
 			Optional<GeoArticleMatierePremiere> matierePremiere = this.matierePremiereRepository
-			.findById(article.get().getMatierePremiere().getId(),matieresPremieresGraph);
+			.findById(article.get().getMatierePremiere().getId()); //,matieresPremieresGraph);
 			mergedMatierePremiere = Optional.of(GeoArticleGraphQLService
 			.merge(articleChunk.getMatierePremiere(), matierePremiere.get(), null));
 			this.entityManager.detach(article.get().getMatierePremiere());
@@ -69,7 +69,7 @@ public class ArticleService {
 			EntityGraph cahierDesChargesGraph = EntityGraphUtils
 			.fromAttributePaths("espece","categorie","coloration","sucre","penetro","cirage","rangement");
 			Optional<GeoArticleCahierDesCharge> cahierDesCharges = this.cahierDesChargeRepository
-			.findById(article.get().getCahierDesCharge().getId(),cahierDesChargesGraph);
+			.findById(article.get().getCahierDesCharge().getId()); //,cahierDesChargesGraph);
 			mergedCahierDesCharges = Optional.of(GeoArticleGraphQLService
 			.merge(articleChunk.getCahierDesCharge(), cahierDesCharges.get(), null));
 			this.entityManager.detach(article.get().getCahierDesCharge());
@@ -80,7 +80,7 @@ public class ArticleService {
 			EntityGraph emballagesGraph = EntityGraphUtils
 			.fromAttributePaths("espece","emballage","conditionSpecial","alveole","marque");
 			Optional<GeoArticleEmballage> emballage = this.emballageRepository
-			.findById(article.get().getEmballage().getId(),emballagesGraph);
+			.findById(article.get().getEmballage().getId()); //,emballagesGraph);
 			mergedEmballage = Optional.of(GeoArticleGraphQLService
 			.merge(articleChunk.getEmballage(), emballage.get(), null));
 			this.entityManager.detach(article.get().getEmballage());
@@ -91,7 +91,7 @@ public class ArticleService {
 			EntityGraph normalisationsGraph = EntityGraphUtils
 			.fromAttributePaths("espece","calibreMarquage","stickeur","etiquetteColis","etiquetteUc","etiquetteEvenementielle","identificationSymbolique","marque");
 			Optional<GeoArticleNormalisation> normalisation = this.normalisationRepository
-			.findById(article.get().getNormalisation().getId(),normalisationsGraph);
+			.findById(article.get().getNormalisation().getId()); //,normalisationsGraph);
 			mergedNormalisation = Optional.of(GeoArticleGraphQLService
 			.merge(articleChunk.getNormalisation(), normalisation.get(), null));
 			this.entityManager.detach(article.get().getNormalisation());

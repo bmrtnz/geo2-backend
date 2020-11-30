@@ -289,12 +289,12 @@ public class CriteriaUtils {
 
 			boolean sameName = join.getAttribute().getName().equals(attribute);
 
-			if (sameName && join.getJoinType().equals(JoinType.LEFT)) {
+			if (sameName && join.getJoinType().equals(JoinType.INNER)) {
 				return join;
 			}
 		}
 
-		return from.join(attribute, JoinType.LEFT);
+		return from.join(attribute, JoinType.INNER);
 	}
 
 }

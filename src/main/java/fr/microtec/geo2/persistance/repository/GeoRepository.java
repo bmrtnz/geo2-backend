@@ -12,9 +12,12 @@ import java.io.Serializable;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface GeoGraphRepository<T, ID extends Serializable>  extends
-		//GeoRepository<T, ID>
-		JpaRepository<T, ID>, JpaSpecificationExecutor<T>
-		/*EntityGraphJpaRepository<T, ID>,
-		EntityGraphJpaSpecificationExecutor<T>*/ {
+public interface GeoRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+
+	Page<T> findAll(Specification<T> specification, Pageable pageable, EntityGraph entityGraph);
+
+	Page<T> findAll(Pageable pageable, EntityGraph entityGraph);
+
+	Optional<T> findById(ID id, EntityGraph entityGraph);
+
 }

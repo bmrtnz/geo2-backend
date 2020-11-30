@@ -3,9 +3,12 @@ package fr.microtec.geo2.persistance.rsql;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.EntityUtils;
+import org.hibernate.query.criteria.internal.path.SingularAttributePath;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,6 +53,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	@Override
 	public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 		Expression<?> expression = this.parseExpression(root, criteriaBuilder);
+
 		List<Object> args = this.castArgument(expression);
 
 		RsqlSearchOperation operator = this.operator.isNegative() || this.operator.isCaseInsensitive() ?
@@ -146,6 +150,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					return Integer.parseInt(arg);
 				} else if (type.equals(Long.class)) {
 					return Long.parseLong(arg);
+				} else if (type.equals(BigDecimal.class)) {
+					return BigDecimal.valueOf(Double.parseDouble(arg));
 				} else if (type.equals(Boolean.class)) {
 					return Boolean.parseBoolean(arg);
 				} else if (type.equals(LocalDate.class)) {
