@@ -149,6 +149,21 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	}
 
 	/**
+	 * Delete entity
+	 *
+	 * @param entity must not be {@literal null}
+	 * @return success of the operation
+	 */
+	protected boolean delete(T entity) {
+		try {
+			this.repository.delete(entity);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Parse search string with RSQL and get specification.
 	 *
 	 * @param search Search string.
