@@ -1,8 +1,5 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -27,6 +25,8 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -39,14 +39,8 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 	@Id
 	@Column(name = "ord_ref")
 	@GeneratedValue(generator = "GeoOrdreGenerator")
-	@GenericGenerator(
-			name = "GeoOrdreGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "seq_ord_num"),
-					@Parameter(name = "mask", value = "FM0999999")
-			}
-	)
+	@GenericGenerator(name = "GeoOrdreGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "seq_ord_num"), @Parameter(name = "mask", value = "FM0999999") })
 	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -68,6 +62,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
 	private List<GeoOrdreLigne> lignes;
 
+	@NotNull
 	@Column(name = "nordre")
 	private String numero;
 
