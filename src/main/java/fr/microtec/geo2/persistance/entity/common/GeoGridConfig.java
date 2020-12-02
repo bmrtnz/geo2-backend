@@ -26,11 +26,6 @@ public class GeoGridConfig {
 	@Column(name = "grid")
 	private String grid;
 
-	/*@ToString.Exclude
-	@EqualsAndHashCode.Exclude*/
-	// @Fetch(FetchMode.SELECT)
-	// @Basic(fetch = FetchType.LAZY)
-	/*@LazyGroup("lobs")*/
 	@Lob
 	@Column(name = "config", columnDefinition = "BLOB")
 	private HashMap<String, Object> config;

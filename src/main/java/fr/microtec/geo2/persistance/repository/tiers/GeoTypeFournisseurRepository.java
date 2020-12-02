@@ -1,9 +1,9 @@
 package fr.microtec.geo2.persistance.repository.tiers;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypeFournisseur;
-import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GeoTypeFournisseurRepository extends GeoGraphRepository<GeoTypeFournisseur, String> {
+public interface GeoTypeFournisseurRepository extends GeoRepository<GeoTypeFournisseur, String> {
 }

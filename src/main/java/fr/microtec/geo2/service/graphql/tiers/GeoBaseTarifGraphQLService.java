@@ -28,18 +28,16 @@ public class GeoBaseTarifGraphQLService extends GeoAbstractGraphQLService<GeoBas
 	@GraphQLQuery
 	public RelayPage<GeoBaseTarif> allBaseTarif(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoBaseTarif> getBaseTarif(
-			@GraphQLArgument(name = "id") String id,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "id") String id
 	) {
-		return super.getOne(id, env);
+		return super.getOne(id);
 	}
 
 }

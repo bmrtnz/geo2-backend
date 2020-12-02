@@ -46,7 +46,7 @@ public class GeoStockArticleAgeGraphQLService
 		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 		@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
@@ -59,7 +59,7 @@ public class GeoStockArticleAgeGraphQLService
 		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 		@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.stockService.fetchStockArticleAge(societe, secteurs, clients, fournisseurs, search, pageable, env);
+		return this.stockService.fetchStockArticleAge(societe, secteurs, clients, fournisseurs, search, pageable);
 	}
 
 	@GraphQLQuery
@@ -67,7 +67,7 @@ public class GeoStockArticleAgeGraphQLService
 		@GraphQLArgument(name = "id") GeoStockArticleAgeKey id,
 		@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return super.getOne(id, env);
+		return super.getOne(id);
 	}
 
 }

@@ -4,8 +4,7 @@ import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.GeoEntityGraph;
-import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
@@ -38,14 +37,14 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	@PersistenceUnit
 	protected EntityManagerFactory entityManagerFactory;
 
-	protected final GeoGraphRepository<T, ID> repository;
+	protected final GeoRepository<T, ID> repository;
 	private RSQLParser rsqlParser;
 
-	public GeoAbstractGraphQLService(GeoGraphRepository<T, ID> repository) {
+	public GeoAbstractGraphQLService(GeoRepository<T, ID> repository) {
 		this.repository = repository;
 	}
 
-	protected RelayPage<T> getPage(String search, Pageable pageable, ResolutionEnvironment env) {
+	protected RelayPage<T> getPage(String search, Pageable pageable) {
 		Page<T> page;
 
 		if (pageable == null) {
@@ -53,10 +52,9 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		}
 
 		if (search != null && !search.isBlank()) {
-//			page = this.repository.findDistinct(this.parseSearch(search), pageable, GeoEntityGraph.getEntityGraph(env));
-			 page = this.repository.findAll(this.parseSearch(search), pageable); //, GeoEntityGraph.getEntityGraph(env));
+			 page = this.repository.findAll(this.parseSearch(search), pageable);
 		} else {
-			page = this.repository.findAll(pageable); //, GeoEntityGraph.getEntityGraph(env));
+			page = this.repository.findAll(pageable);
 		}
 
 		return PageFactory.fromPage(page);
@@ -66,11 +64,10 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * Get one entity by this id.
 	 *
 	 * @param id Entity id value.
-	 * @param env GraphQL environment.
 	 * @return Entity optional.
 	 */
-	protected Optional<T> getOne(ID id, ResolutionEnvironment env) {
-		return this.repository.findById(id); //, GeoEntityGraph.getEntityGraph(env));
+	protected Optional<T> getOne(ID id) {
+		return this.repository.findById(id);
 	}
 
 	/**

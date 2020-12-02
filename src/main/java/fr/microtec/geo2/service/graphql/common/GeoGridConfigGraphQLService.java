@@ -30,18 +30,16 @@ public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGr
 	@GraphQLQuery
 	public RelayPage<GeoGridConfig> allGridConfig(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoGridConfig> getGridConfig(
-			@GraphQLArgument(name = "id") GeoGridConfigKey id,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "id") GeoGridConfigKey id
 	) {
-		return super.getOne(id, env);
+		return super.getOne(id);
   }
 
   @GraphQLMutation

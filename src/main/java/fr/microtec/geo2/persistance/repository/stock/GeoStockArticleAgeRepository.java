@@ -2,7 +2,7 @@ package fr.microtec.geo2.persistance.repository.stock;
 
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAgeKey;
-import fr.microtec.geo2.persistance.repository.GeoGraphRepository;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
 
@@ -14,7 +14,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface GeoStockArticleAgeRepository extends GeoGraphRepository<GeoStockArticleAge, GeoStockArticleAgeKey> {
+public interface GeoStockArticleAgeRepository extends GeoRepository<GeoStockArticleAge, GeoStockArticleAgeKey> {
 
   static final String findDistinctArticleInOrdreLigneQuery = "SELECT saa FROM #{#entityName} saa WHERE saa.article IN (SELECT DISTINCT ol.article FROM GeoOrdreLigne ol)";
 
