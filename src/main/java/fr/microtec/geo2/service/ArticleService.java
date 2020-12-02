@@ -1,25 +1,16 @@
 package fr.microtec.geo2.service;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleCahierDesCharge;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleEmballage;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleMatierePremiere;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleNormalisation;
+import fr.microtec.geo2.persistance.entity.produits.*;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 import fr.microtec.geo2.persistance.repository.produits.*;
 import fr.microtec.geo2.service.graphql.produits.GeoArticleGraphQLService;
-
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 import javax.persistence.EntityManager;
-
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraph;
-import com.cosium.spring.data.jpa.entity.graph.domain.EntityGraphUtils;
+import java.util.Optional;
 
 @Service
 public class ArticleService {
