@@ -40,7 +40,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 	@Column(name = "ord_ref")
 	@GeneratedValue(generator = "GeoOrdreGenerator")
 	@GenericGenerator(name = "GeoOrdreGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-			@Parameter(name = "sequenceName", value = "seq_ord_num"), @Parameter(name = "mask", value = "FM0999999") })
+			@Parameter(name = "sequenceName", value = "seq_ord_num"),
+			@Parameter(name = "mask", value = "FM0999999")
+		})
 	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -51,8 +53,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "sco_code")
 	private GeoSecteur secteurCommercial;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "trp_code")
+	@JoinColumn(name = "trp_code", nullable = false)
 	private GeoTransporteur transporteur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -63,7 +66,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 	private List<GeoOrdreLigne> lignes;
 
 	@NotNull
-	@Column(name = "nordre")
+	@Column(name = "nordre", nullable = false, unique = true)
 	private String numero;
 
 	@Column(name = "ref_cli")

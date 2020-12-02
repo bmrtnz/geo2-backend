@@ -1,5 +1,7 @@
 package fr.microtec.geo2.service;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.persistance.entity.stock.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.stock.GeoOrdreRepository;
+import fr.microtec.geo2.service.graphql.stock.GeoOrdreGraphQLService;
 
 @Service()
 public class OrdreService {
@@ -36,9 +39,14 @@ public class OrdreService {
   }
 
   public GeoOrdre save(GeoOrdre ordreChunk) {
-    if (ordreChunk.getId() == null)
+    if (ordreChunk.getId() == null) {
       ordreChunk.setNumero(this.fetchNumero(ordreChunk.getSociete()));
-    return this.ordreRepository.save(ordreChunk);
+      return this.ordreRepository.save(ordreChunk);
+    } else {
+      Optional<GeoOrdre> ordre = this.ordreRepository.findById(ordreChunk.getId());
+      GeoOrdre merged = GeoOrdreGraphQLService.merge(ordreChunk, ordre.get(), null);
+      return this.ordreRepository.save(merged);
+    }
   }
 
 }
