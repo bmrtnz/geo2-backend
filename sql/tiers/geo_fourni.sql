@@ -29,7 +29,7 @@ begin
 end;
 /
 
-create trigger GEO_FOURNI_BEF_UPD
+create or replace trigger GEO_FOURNI_BEF_UPD
     before update
     on GEO_FOURNI
     for each row

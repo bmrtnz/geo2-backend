@@ -25,18 +25,16 @@ public class GeoContactGraphQLService extends GeoAbstractGraphQLService<GeoConta
 	@GraphQLQuery
 	public RelayPage<GeoContact> allContact(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoContact> getContact(
-			@GraphQLArgument(name = "id") String id,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "id") String id
 	) {
-		return this.getOne(id, env);
+		return this.getOne(id);
 	}
 
 	@GraphQLMutation

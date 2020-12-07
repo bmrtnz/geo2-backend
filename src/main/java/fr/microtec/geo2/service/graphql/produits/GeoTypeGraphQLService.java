@@ -28,18 +28,16 @@ public class GeoTypeGraphQLService extends GeoAbstractGraphQLService<GeoType, St
 	@GraphQLQuery
 	public RelayPage<GeoType> allType(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoType> getType(
-			@GraphQLArgument(name = "id") String id,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "id") String id
 	) {
-		return super.getOne(id, env);
+		return super.getOne(id);
 	}
 
 }

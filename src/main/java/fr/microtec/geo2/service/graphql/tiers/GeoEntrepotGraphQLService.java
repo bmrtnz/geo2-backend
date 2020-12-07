@@ -25,18 +25,16 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 	@GraphQLQuery
 	public RelayPage<GeoEntrepot> allEntrepot(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoEntrepot> getEntrepot(
-			@GraphQLArgument(name = "id") String id,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "id") String id
 	) {
-		return this.getOne(id, env);
+		return this.getOne(id);
 	}
 
 	@GraphQLMutation

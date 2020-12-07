@@ -32,16 +32,18 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoOrdre> allOrdre(@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getPage(search, pageable, env);
+	public RelayPage<GeoOrdre> allOrdre(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+	) {
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
-	public Optional<GeoOrdre> getOrdre(@GraphQLArgument(name = "id") String id,
-			@GraphQLEnvironment ResolutionEnvironment env) {
-		return super.getOne(id, env);
+	public Optional<GeoOrdre> getOrdre(
+			@GraphQLArgument(name = "id") String id
+	) {
+		return super.getOne(id);
 	}
 
 	@GraphQLMutation

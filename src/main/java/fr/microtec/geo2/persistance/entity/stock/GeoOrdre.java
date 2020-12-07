@@ -14,10 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
@@ -59,8 +56,8 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@JoinColumn(name = "trp_code", nullable = false)
 	private GeoTransporteur transporteur;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cli_ref")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "cli_ref", nullable = false)
 	private GeoClient client;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")

@@ -28,18 +28,14 @@ public class GeoBasePaiementGraphQLService extends GeoAbstractGraphQLService<Geo
 	@GraphQLQuery
 	public RelayPage<GeoBasePaiement> allBasePaiement(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.getPage(search, pageable, env);
+		return this.getPage(search, pageable);
 	}
 
 	@GraphQLQuery
-	public Optional<GeoBasePaiement> getBasePaiement(
-			@GraphQLArgument(name = "id") String id,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return super.getOne(id, env);
+	public Optional<GeoBasePaiement> getBasePaiement(@GraphQLArgument(name = "id") String id) {
+		return super.getOne(id);
 	}
 
 }

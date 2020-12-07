@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
