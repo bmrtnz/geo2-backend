@@ -50,6 +50,11 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLMutation
+	public GeoOrdre cloneOrdre(GeoOrdre ordre) {
+		return this.ordreService.clone(ordre);
+	}
+
+	@GraphQLMutation
 	public void deleteOrdre(GeoOrdre ordre) {
 		this.delete(ordre);
 	}

@@ -49,4 +49,10 @@ public class OrdreService {
     }
   }
 
+  public GeoOrdre clone(GeoOrdre chunk) {
+    GeoOrdre original = this.ordreRepository.getOne(chunk.getId());
+    GeoOrdre clone = original.duplicate();
+    return this.save(clone);
+  }
+
 }

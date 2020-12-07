@@ -19,6 +19,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
@@ -34,7 +35,7 @@ import lombok.EqualsAndHashCode;
 @DynamicInsert
 @DynamicUpdate
 @Entity
-public class GeoOrdre extends ValidateAndModifiedEntity {
+public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<GeoOrdre> {
 
 	@Id
 	@Column(name = "ord_ref")
@@ -106,5 +107,18 @@ public class GeoOrdre extends ValidateAndModifiedEntity {
 
 	@Column(name = "instructions_logistique")
 	private String instructionsLogistiques;
+
+	public GeoOrdre duplicate() {
+		GeoOrdre clone = new GeoOrdre();
+		clone.societe = this.societe;
+		clone.secteurCommercial = this.secteurCommercial;
+		clone.transporteur = this.transporteur;
+		clone.client = this.client;
+		clone.referenceClient = this.referenceClient;
+		clone.assistante = this.assistante;
+		clone.commercial = this.commercial;
+		
+		return clone;
+	}
 
 }
