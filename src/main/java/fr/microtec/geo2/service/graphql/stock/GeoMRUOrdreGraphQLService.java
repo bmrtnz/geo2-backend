@@ -7,8 +7,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.stock.GeoStock;
-import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
+import fr.microtec.geo2.persistance.entity.stock.GeoMRUOrdre;
+import fr.microtec.geo2.persistance.entity.stock.GeoMRUOrdreKey;
+import fr.microtec.geo2.persistance.repository.stock.GeoMRUOrdreRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLNonNull;
@@ -18,14 +19,14 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, String> {
+public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUOrdreKey> {
 
-	public GeoStockGraphQLService(GeoStockRepository stockRepository) {
-		super(stockRepository);
+  public GeoMRUOrdreGraphQLService(GeoMRUOrdreRepository repository) {
+		super(repository);
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoStock> allStock(
+	public RelayPage<GeoMRUOrdre> allMRUOrdre(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
@@ -33,10 +34,10 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
 	}
 
 	@GraphQLQuery
-	public Optional<GeoStock> getStock(
-			@GraphQLArgument(name = "id") String id
+	public Optional<GeoMRUOrdre> getMRUOrdre(
+			@GraphQLArgument(name = "id") GeoMRUOrdreKey id
 	) {
-		return this.getOne(id);
+		return super.getOne(id);
   }
 
 }

@@ -28,7 +28,6 @@ public class GeoStockArticleAge implements Serializable {
 	@JoinColumn(name = "art_ref")
 	private GeoArticle article;
 
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
