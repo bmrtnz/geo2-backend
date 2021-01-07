@@ -150,6 +150,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					return Integer.parseInt(arg);
 				} else if (type.equals(Long.class)) {
 					return Long.parseLong(arg);
+				} else if (type.equals(Float.class)) {
+					return Float.parseFloat(arg);
 				} else if (type.equals(BigDecimal.class)) {
 					return BigDecimal.valueOf(Double.parseDouble(arg));
 				} else if (type.equals(Boolean.class)) {
