@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.stock;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,7 +29,7 @@ public class GeoMRUEntrepot extends ModifiedEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nom_utilisateur")
   private GeoUtilisateur utilisateur;
-  
+
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cen_ref")
 	private GeoEntrepot entrepot;

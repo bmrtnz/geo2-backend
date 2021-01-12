@@ -7,7 +7,7 @@ import lombok.Getter;
 public enum GeoModeLivraison implements StringEnum {
 	DIRECT("D"),
 	CROSS_DOCK("X"),
-	SORTIE_STOCK("ST");
+	SORTIE_STOCK("S");
 
 	private String key;
 

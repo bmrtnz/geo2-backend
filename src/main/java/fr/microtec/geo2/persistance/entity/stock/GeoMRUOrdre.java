@@ -1,12 +1,18 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -19,30 +25,27 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_mru_ordre")
-@IdClass(GeoMRUOrdreKey.class)
 @Entity
 public class GeoMRUOrdre extends ModifiedEntity {
 
   @Id
+  @NotNull
+	@Column(name = "nordre", nullable = false, unique = true)
+  private String numero;
+
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
   private GeoOrdre ordre;
   
-  @Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nom_utilisateur")
   private GeoUtilisateur utilisateur;
   
-  @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cen_code")
-	private GeoMRUEntrepot entrepot;
+  @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+  private List<GeoMRUEntrepot> mruEntrepots;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "soc_code")
   private GeoSociete societe;
-
-  @NotNull
-	@Column(name = "nordre", nullable = false, unique = true)
-  private String numero;
   
 }
