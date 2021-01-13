@@ -25,27 +25,28 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_mru_ordre")
+@IdClass(GeoMRUOrdreKey.class)
 @Entity
 public class GeoMRUOrdre extends ModifiedEntity {
-
+  
   @Id
-  @NotNull
-	@Column(name = "nordre", nullable = false, unique = true)
-  private String numero;
-
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
   private GeoOrdre ordre;
   
+  @Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nom_utilisateur")
   private GeoUtilisateur utilisateur;
   
-  @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
-  private List<GeoMRUEntrepot> mruEntrepots;
+  // @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
+  // private List<GeoMRUEntrepot> mruEntrepots;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "soc_code")
   private GeoSociete societe;
   
+  @Column(name = "nordre")
+  private String numero;
+
 }
