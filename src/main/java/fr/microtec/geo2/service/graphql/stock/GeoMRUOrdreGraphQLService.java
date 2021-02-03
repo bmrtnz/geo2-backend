@@ -10,6 +10,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.stock.GeoMRUOrdre;
 import fr.microtec.geo2.persistance.entity.stock.GeoMRUOrdreKey;
 import fr.microtec.geo2.persistance.repository.stock.GeoMRUOrdreRepository;
+import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLNonNull;
@@ -21,8 +22,14 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUOrdreKey> {
 
-  public GeoMRUOrdreGraphQLService(GeoMRUOrdreRepository repository) {
+	private final OrdreService ordreService;
+
+  public GeoMRUOrdreGraphQLService(
+		GeoMRUOrdreRepository repository,
+		OrdreService ordreService
+	) {
 		super(repository);
+		this.ordreService = ordreService;
 	}
 
 	@GraphQLQuery
@@ -31,6 +38,14 @@ public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUO
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
 		return this.getPage(search, pageable);
+	}
+
+	@GraphQLQuery
+	public RelayPage<GeoMRUOrdre> allGroupedMRUOrdre(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+	) {
+		return this.ordreService.fetchGroupedMRUOrdre(search, pageable);
 	}
 
 	@GraphQLQuery
