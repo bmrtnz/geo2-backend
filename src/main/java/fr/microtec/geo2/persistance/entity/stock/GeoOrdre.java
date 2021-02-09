@@ -71,11 +71,11 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private String referenceClient;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "per_codeass")
+	@JoinColumn(name = "per_codecom")
 	private GeoPersonne assistante;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "per_codecom")
+	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
 
 	@Column(name = "depdatp")
@@ -114,7 +114,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 		clone.referenceClient = this.referenceClient;
 		clone.assistante = this.assistante;
 		clone.commercial = this.commercial;
-		
+
 		return clone;
 	}
 
