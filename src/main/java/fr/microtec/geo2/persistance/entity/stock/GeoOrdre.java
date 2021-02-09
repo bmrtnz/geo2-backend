@@ -38,9 +38,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "ord_ref")
 	@GeneratedValue(generator = "GeoOrdreGenerator")
 	@GenericGenerator(name = "GeoOrdreGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-			@Parameter(name = "sequenceName", value = "seq_ord_num"),
-			@Parameter(name = "mask", value = "FM0999999")
-		})
+		@Parameter(name = "sequenceName", value = "seq_ord_num"),
+		@Parameter(name = "mask", value = "FM0999999")
+	})
 	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
