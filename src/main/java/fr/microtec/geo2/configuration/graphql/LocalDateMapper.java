@@ -23,10 +23,17 @@ public class LocalDateMapper extends CachingMapper<GraphQLScalarType, GraphQLSca
 	static {
 		Map<Type, GraphQLScalarType> map = new HashMap<>();
 
-		map.put(LocalDate.class, Scalars.temporalScalar(LocalDate.class, "LocalDate", "a local date",
-				s -> LocalDate.parse(s, DateTimeFormatter.ISO_DATE_TIME), i -> i.atZone(ZoneOffset.UTC).toLocalDate()));
-		map.put(LocalDateTime.class, Scalars.temporalScalar(LocalDateTime.class, "LocalDateTime", "a local date time",
-				s -> LocalDateTime.parse(s, DateTimeFormatter.ISO_DATE_TIME), i -> i.atZone(ZoneOffset.UTC).toLocalDateTime()));
+		map.put(LocalDate.class, Scalars.temporalScalar(
+			LocalDate.class, "LocalDate", "a local date",
+			s -> LocalDate.parse(s, DateTimeFormatter.ISO_DATE),
+			i -> i.atZone(ZoneOffset.UTC).toLocalDate()
+		));
+		
+		map.put(LocalDateTime.class, Scalars.temporalScalar(
+			LocalDateTime.class, "LocalDateTime", "a local date time",
+			s -> LocalDateTime.parse(s, DateTimeFormatter.ISO_DATE_TIME),
+			i -> i.atZone(ZoneOffset.UTC).toLocalDateTime()
+		));
 
 		MAPPING = Collections.unmodifiableMap(map);
 	}
