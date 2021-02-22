@@ -105,6 +105,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "instructions_logistique")
 	private String instructionsLogistiques;
 
+	@Column(name = "fac_num")
+	private String numeroFacture;
+
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
 		clone.societe = this.societe;
