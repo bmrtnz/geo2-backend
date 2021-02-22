@@ -46,7 +46,9 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 		GeoArticle article,
 		@GraphQLArgument(name = "clone") Boolean clone
 	) {
-		return this.articleService.save(article, clone);
+		GeoArticle saved = this.articleService.save(article, clone);
+		((GeoArticleRepository)this.repository).syncArticle(saved.getId());
+		return saved;
 	}
 
 	@GraphQLMutation
