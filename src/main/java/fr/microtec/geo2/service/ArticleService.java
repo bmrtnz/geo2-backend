@@ -10,6 +10,8 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -106,9 +108,13 @@ public class ArticleService {
 	private <T extends Duplicable<T>> T fetch(GeoRepository<T, String> repository, T entity) {
 		ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("id", "dateCreation", "dateModification", "userCreation", "userModification", "valide");
 		Example<T> example = Example.of(entity, matcher);
-		Optional<T> entityOptional = repository.findOne(example);
+		List<T> entitiesFound = repository.findAll(example);
 
-		return entityOptional.orElseGet(() -> repository.save(entity.duplicate()));
+		if(entitiesFound.isEmpty())
+			return repository.save(entity.duplicate());
+
+		return entitiesFound.get(0);
+		// return entitiesFound.orElseGet(() -> repository.save(entity.duplicate()));
 	}
 
 }

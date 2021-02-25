@@ -126,23 +126,21 @@ END;
 
 ALTER TABLE GEO_ADMIN.AVI_ART_GESTION ADD PRE_SAISIE VARCHAR2(1) NULL;
 ALTER TABLE GEO_ADMIN.AVI_ART_GESTION ADD SYNC_STAMP DATE;
-ALTER TABLE GEO_ADMIN.AVI_ART_GESTION ADD SYNC_REF VARCHAR2(6);
-ALTER TABLE GEO_ADMIN.AVI_ART_GESTION ADD CONSTRAINT FK_GEO_ARTICLE FOREIGN KEY (SYNC_REF) REFERENCES GEO_ADMIN.GEO_ARTICLE(ART_REF);
 
 CREATE OR REPLACE PROCEDURE GEO_ADMIN.sync_article (avi_art_ref in varchar2)
 IS
-	geo_art_ref VARCHAR2(6);
+	geo_art_found NUMBER;
 BEGIN
 	
-	SELECT SYNC_REF
-	INTO geo_art_ref
-	FROM AVI_ART_GESTION
+	-- Search GEO_ARTICLE.ART_REF
+	SELECT COUNT(*)
+	INTO geo_art_found
+	FROM GEO_ARTICLE
 	WHERE ART_REF = avi_art_ref;
 
 	-- Initial sync (with required fields)
-	IF geo_art_ref IS NULL
+	IF geo_art_found = 0
 	THEN
-		SELECT TO_CHAR(SEQ_ART_NUM.nextval, 'FM000000') INTO geo_art_ref FROM DUAL;
 		INSERT INTO GEO_ARTICLE (
 			ART_REF,
 			AUTEUR_DDE,
@@ -157,7 +155,7 @@ BEGIN
 			ETF_CODE,
 			CAF_CODE
 		)  SELECT
-			geo_art_ref,
+			avi_art_ref,
 			'---', -- AUTEUR_DDE
 			aac.ESP_CODE,
 			aac.CAT_CODE,
@@ -180,7 +178,7 @@ BEGIN
 	-- Update sync (with all fields)
 	UPDATE GEO_ARTICLE
 	SET
-		AUTEUR_DDE = '---',
+		--AUTEUR_DDE = COALESCE(),
 		-- Cahier des charges
 		ESP_CODE = (SELECT ESP_CODE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_CDC aac ON aag.ref_cdc = aac.ref_cdc WHERE aag.ART_REF = avi_art_ref),
 		CAT_CODE = (SELECT CAT_CODE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_CDC aac ON aag.ref_cdc = aac.ref_cdc WHERE aag.ART_REF = avi_art_ref),
@@ -219,7 +217,7 @@ BEGIN
 		GTIN_COLIS = (SELECT GTIN_COLIS FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		GTIN_PALETTE = (SELECT GTIN_PALETTE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		PDE_CLIART = (SELECT PDE_CLIART FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
-		CAF_CODE = '---',
+		--CAF_CODE = '---',
 		COM_CLIENT = (SELECT COM_CLIENT FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		IDS_CODE = (SELECT IDS_CODE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		MDD = (SELECT MDD FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
@@ -230,11 +228,11 @@ BEGIN
 		REF_NORMALISATION = (SELECT aan.REF_NORMALISATION FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		ART_ALPHA = (SELECT ART_ALPHA FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
 		BWSTOCK = (SELECT BWSTOCK FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref)
-	WHERE ART_REF = geo_art_ref;
+	WHERE ART_REF = avi_art_ref;
 	
     -- Mark original as synced
 	UPDATE AVI_ART_GESTION
-	SET SYNC_STAMP = (SELECT CURRENT_DATE FROM DUAL), SYNC_REF = geo_art_ref
+	SET SYNC_STAMP = (SELECT CURRENT_DATE FROM DUAL)
 	WHERE ART_REF = avi_art_ref;
 	
 	COMMIT;
