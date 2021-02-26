@@ -178,7 +178,6 @@ BEGIN
 	-- Update sync (with all fields)
 	UPDATE GEO_ARTICLE
 	SET
-		--AUTEUR_DDE = COALESCE(),
 		-- Cahier des charges
 		ESP_CODE = (SELECT ESP_CODE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_CDC aac ON aag.ref_cdc = aac.ref_cdc WHERE aag.ART_REF = avi_art_ref),
 		CAT_CODE = (SELECT CAT_CODE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_CDC aac ON aag.ref_cdc = aac.ref_cdc WHERE aag.ART_REF = avi_art_ref),
@@ -217,7 +216,6 @@ BEGIN
 		GTIN_COLIS = (SELECT GTIN_COLIS FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		GTIN_PALETTE = (SELECT GTIN_PALETTE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		PDE_CLIART = (SELECT PDE_CLIART FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
-		--CAF_CODE = '---',
 		COM_CLIENT = (SELECT COM_CLIENT FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		IDS_CODE = (SELECT IDS_CODE FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		MDD = (SELECT MDD FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
@@ -227,7 +225,8 @@ BEGIN
 		REF_MAT_PREM = (SELECT aam.REF_MAT_PREM FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_MAT_PREM aam ON aag.ref_mat_prem = aam.ref_mat_prem WHERE aag.ART_REF = avi_art_ref),
 		REF_NORMALISATION = (SELECT aan.REF_NORMALISATION FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		ART_ALPHA = (SELECT ART_ALPHA FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
-		BWSTOCK = (SELECT BWSTOCK FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref)
+		BWSTOCK = (SELECT BWSTOCK FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
+		VALIDE = (SELECT VALIDE FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref)
 	WHERE ART_REF = avi_art_ref;
 	
     -- Mark original as synced
