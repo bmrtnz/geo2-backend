@@ -80,6 +80,7 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 		clone.modeCulture = this.modeCulture;
 		clone.type = this.type;
 		clone.typeVente = this.typeVente;
+		clone.codePlu = this.codePlu;
 		
 		return clone;
 	}
