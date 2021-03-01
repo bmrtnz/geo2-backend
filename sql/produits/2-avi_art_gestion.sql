@@ -153,7 +153,9 @@ BEGIN
 			CUN_CODE,
 			CAM_CODE,
 			ETF_CODE,
-			CAF_CODE
+			CAF_CODE,
+			CRE_DATE,
+			CRE_USER
 		)  SELECT
 			avi_art_ref,
 			'---', -- AUTEUR_DDE
@@ -166,7 +168,9 @@ BEGIN
 			aam.CUN_CODE,
 			aan.CAM_CODE,
 			aan.ETF_CODE,
-			'---' -- CAF_CODE (calibre fournisseur)
+			'---', -- CAF_CODE (calibre fournisseur)
+			aam.CRE_DATE,
+			aam.CRE_USER
 		FROM AVI_ART_GESTION aag
 		LEFT JOIN AVI_ART_CDC aac ON aag.ref_cdc = aac.ref_cdc
 		LEFT JOIN AVI_ART_EMBALLAGE aae ON aag.ref_emballage = aae.ref_emballage
@@ -226,7 +230,9 @@ BEGIN
 		REF_NORMALISATION = (SELECT aan.REF_NORMALISATION FROM AVI_ART_GESTION aag LEFT JOIN AVI_ART_NORMALISATION aan ON aag.ref_normalisation = aan.ref_normalisation WHERE aag.ART_REF = avi_art_ref),
 		ART_ALPHA = (SELECT ART_ALPHA FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
 		BWSTOCK = (SELECT BWSTOCK FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
-		VALIDE = (SELECT VALIDE FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref)
+		VALIDE = (SELECT VALIDE FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
+		MOD_DATE = (SELECT MOD_DATE FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref),
+		MOD_USER = (SELECT MOD_USER FROM AVI_ART_GESTION WHERE ART_REF = avi_art_ref)
 	WHERE ART_REF = avi_art_ref;
 	
     -- Mark original as synced
