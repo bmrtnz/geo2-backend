@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.common;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.security.Geo2SecurityRoles;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,6 +38,13 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 
 	@Column(name = "geo_ordre")
 	private Boolean accessGeoOrdre;
+
+	@Column(name = "flag_limiter_secteur")
+	private Boolean limitationSecteur;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sco_code")
+	private GeoSecteur secteurCommercial;
 
 	@Override
 	public String getUsername() {

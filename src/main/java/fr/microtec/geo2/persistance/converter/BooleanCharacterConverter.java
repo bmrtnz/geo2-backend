@@ -24,6 +24,6 @@ public class BooleanCharacterConverter implements AttributeConverter<Boolean, Ch
 			return null;
 		}
 
-		return character == 'O';
+		return character == 'O' || character == '1';
 	}
 }
