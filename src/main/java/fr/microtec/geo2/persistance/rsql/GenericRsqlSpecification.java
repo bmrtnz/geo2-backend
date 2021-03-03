@@ -1,14 +1,6 @@
 package fr.microtec.geo2.persistance.rsql;
 
-import cz.jirutka.rsql.parser.ast.ComparisonOperator;
-import fr.microtec.geo2.persistance.CriteriaUtils;
-import fr.microtec.geo2.persistance.EntityUtils;
-import org.hibernate.query.criteria.internal.path.SingularAttributePath;
-import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +8,17 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import cz.jirutka.rsql.parser.ast.ComparisonOperator;
+import fr.microtec.geo2.persistance.CriteriaUtils;
 
 /**
  * Generic specification for Rsql query.
@@ -68,16 +71,28 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				predicate = criteriaBuilder.notEqual(expression, args.get(0));
 				break;
 			case GREATER_THAN:
-				predicate = criteriaBuilder.greaterThan(cast(expression), args.get(0).toString());
+				if (expression.getJavaType().equals(LocalDate.class))
+					predicate = criteriaBuilder.greaterThan(cast(expression), parseToLocalDate(args.get(0)));
+				else
+					predicate = criteriaBuilder.greaterThan(cast(expression), args.get(0).toString());
 				break;
 			case GREATER_THAN_OR_EQUALS:
-				predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), args.get(0).toString());
+				if (expression.getJavaType().equals(LocalDate.class))
+					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), parseToLocalDate(args.get(0)));
+				else
+					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), args.get(0).toString());
 				break;
 			case LESS_THAN:
-				predicate = criteriaBuilder.lessThan(cast(expression), args.get(0).toString());
+				if (expression.getJavaType().equals(LocalDate.class))
+					predicate = criteriaBuilder.lessThan(cast(expression), parseToLocalDate(args.get(0)));
+				else
+					predicate = criteriaBuilder.lessThan(cast(expression), args.get(0).toString());
 				break;
 			case LESS_THAN_OR_EQUAL:
-				predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), args.get(0).toString());
+				if (expression.getJavaType().equals(LocalDate.class))
+					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), parseToLocalDate(args.get(0)));
+				else
+					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), args.get(0).toString());
 				break;
 			case IN:
 				predicate = expression.in(args);
@@ -92,7 +107,10 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				predicate = criteriaBuilder.like(cast(expression), args.get(0).toString());
 				break;
 			case BETWEEN:
-				predicate = criteriaBuilder.between(cast(expression), args.get(0).toString(), args.get(1).toString());
+				if (expression.getJavaType().equals(LocalDate.class))
+					predicate = criteriaBuilder.between(cast(expression), parseToLocalDate(args.get(0)), parseToLocalDate(args.get(1)));
+				else
+					predicate = criteriaBuilder.between(cast(expression), args.get(0).toString(), args.get(1).toString());
 				break;
 			default:
 				throw new RsqlException(String.format("Unimplemented RSQL operator '%s'", this.operator));
@@ -157,7 +175,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				} else if (type.equals(Boolean.class)) {
 					return Boolean.parseBoolean(arg);
 				} else if (type.equals(LocalDate.class)) {
-					return LocalDate.parse(arg, DateTimeFormatter.ISO_LOCAL_DATE);
+					return parseToLocalDate(arg);
 				} else if (type.equals(LocalDateTime.class)) {
 					return LocalDateTime.parse(arg, DATE_TIME_FORMATTER);
 				} else if (type.equals(Character.class)) {
@@ -175,5 +193,15 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				throw new RsqlException("Error in value parsing", e);
 			}
 		}).collect(Collectors.toList());
+	}
+
+	/**
+	 * Parse Object to ISO LocalDate
+	 * 
+	 * @param o Object argument
+	 * @return ISO LocalDate
+	 */
+	private static LocalDate parseToLocalDate(Object o) {
+		return LocalDate.parse(o.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
 	}
 }

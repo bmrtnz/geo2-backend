@@ -308,6 +308,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Where(clause = "typ_tiers = '" + TYPE_TIERS + "'")
 	private Set<GeoCertificationClient> certifications;
 
+	@Column(name = "ind_usint")
+	private Boolean usageInterne;
+
 	public void setCertifications(Set<GeoCertificationClient> certifications) {
 		certifications.forEach(c -> c.setClient(this));
 
