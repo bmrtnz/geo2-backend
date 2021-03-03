@@ -19,6 +19,7 @@ import org.hibernate.annotations.*;
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
@@ -77,6 +78,10 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cen_ref")
+	private GeoEntrepot entrepot;
 
 	@Column(name = "depdatp")
 	private LocalDate dateDepartPrevue;
