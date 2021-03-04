@@ -46,4 +46,7 @@ public class GeoBureauAchat extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "dev_code")
 	private GeoDevise devise;
 
+	@Column(name = "email_interlo_bw")
+	private String emailInterlocuteurBW;
+
 }

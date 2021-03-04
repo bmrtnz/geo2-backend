@@ -64,6 +64,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
 	private List<GeoOrdreLigne> lignes;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
+	private List<GeoOrdreLogistique> logistiques;
+
 	@NotNull
 	@Column(name = "nordre", nullable = false, unique = true)
 	private String numero;

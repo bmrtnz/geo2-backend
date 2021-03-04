@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.stock;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,5 +25,9 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+	private GeoFournisseur fournisseur;
 
 }
