@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
+import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
 	private GeoFournisseur fournisseur;
 
+	@Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "flag_exped_fournni")
 	private Boolean expedieStation;
 
