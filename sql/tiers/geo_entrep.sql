@@ -27,6 +27,9 @@ BEGIN
     IF (:NEW.valide IS NULL) THEN
         :new.valide := 'O';
     END IF;
+    IF (::NEW.ind_bloc_factu_edi IS NULL) THEN
+        :NEW.ind_bloc_factu_edi := 'N';
+    END IF;
 
     IF (:NEW.gest_code IS NOT NULL) AND (:NEW.gest_ref IS NULL) THEN
         RAISE_APPLICATION_ERROR(-20201,
