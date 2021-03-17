@@ -30,7 +30,7 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 
 	@Id
 	@Column(name = "k_fou")
-	@GeneratedValue(generator = "GeoClientGenerator")
+	@GeneratedValue(generator = "GeoFournisseurGenerator")
 	@GenericGenerator(
 			name = "GeoFournisseurGenerator",
 			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
