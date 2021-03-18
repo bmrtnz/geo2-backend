@@ -19,6 +19,8 @@
         <oracle-jdbc.version>11.2.0.4</oracle-jdbc.version>
         <graphql-spqr.version>0.0.5-SNAPSHOT</graphql-spqr.version>
         <rsql.version>2.1.0</rsql.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
