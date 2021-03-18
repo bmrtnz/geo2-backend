@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.stock.GeoMRUOrdre;
-import fr.microtec.geo2.persistance.entity.stock.GeoMRUOrdreKey;
-import fr.microtec.geo2.persistance.entity.stock.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
-import fr.microtec.geo2.persistance.repository.stock.GeoMRUOrdreRepository;
-import fr.microtec.geo2.persistance.repository.stock.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoMRUOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import fr.microtec.geo2.service.graphql.stock.GeoOrdreGraphQLService;
+import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUOrdreKey> {

@@ -1,8 +1,8 @@
-package fr.microtec.geo2.service.graphql.stock;
+package fr.microtec.geo2.service.graphql.ordres;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.stock.GeoOrdreLigne;
-import fr.microtec.geo2.persistance.repository.stock.GeoOrdreLigneRepository;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;

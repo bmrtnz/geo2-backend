@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.stock;
+package fr.microtec.geo2.persistance.entity.ordres;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;

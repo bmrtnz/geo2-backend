@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.converter;
 
-import fr.microtec.geo2.persistance.entity.stock.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
 import fr.microtec.geo2.persistance.entity.tiers.GeoNatureStation;
 

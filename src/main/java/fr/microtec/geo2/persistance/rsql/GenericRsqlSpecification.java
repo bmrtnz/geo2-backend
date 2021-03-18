@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import fr.microtec.geo2.persistance.CriteriaUtils;
-import fr.microtec.geo2.persistance.entity.stock.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 
 /**
  * Generic specification for Rsql query.

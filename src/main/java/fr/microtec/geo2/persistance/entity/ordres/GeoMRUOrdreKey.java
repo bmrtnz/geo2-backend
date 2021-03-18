@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.stock;
+package fr.microtec.geo2.persistance.entity.ordres;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
