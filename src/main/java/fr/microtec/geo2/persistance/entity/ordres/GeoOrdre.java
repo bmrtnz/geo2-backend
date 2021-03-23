@@ -129,6 +129,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "ordreOrigine")
 	private GeoLitige litige;
 
+	@Column(name = "code_chargement")
+	private String codeChargement;
+
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
 		clone.societe = this.societe;

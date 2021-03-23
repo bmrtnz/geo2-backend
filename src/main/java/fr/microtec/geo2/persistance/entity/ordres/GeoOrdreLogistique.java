@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -33,5 +34,12 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity {
 
 	@Column(name = "datdep_fou_p")
 	private LocalDate dateDepartPrevueFournisseur;
+
+	@Column(name = "datdep_grp_p")
+	private LocalDate dateDepartPrevueGroupage;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "grp_code")
+	private GeoGroupage groupage;
 
 }
