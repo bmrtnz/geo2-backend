@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -124,6 +125,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "facture_avoir")
 	private GeoFactureAvoir factureAvoir;
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "ordreOrigine")
+	private GeoLitige litige;
 
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();

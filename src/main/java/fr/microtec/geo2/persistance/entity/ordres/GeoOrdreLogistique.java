@@ -28,7 +28,6 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
 	private GeoFournisseur fournisseur;
 
-	@Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "flag_exped_fournni")
 	private Boolean expedieStation;
 
