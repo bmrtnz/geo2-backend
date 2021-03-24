@@ -1,7 +1,7 @@
-package fr.microtec.geo2.persistance.repository.stock;
+package fr.microtec.geo2.persistance.repository.ordres;
 
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
-import fr.microtec.geo2.persistance.entity.stock.GeoOrdreLigne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 import java.util.List;

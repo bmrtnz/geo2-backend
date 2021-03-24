@@ -1,4 +1,4 @@
-package fr.microtec.geo2.service.graphql.stock;
+package fr.microtec.geo2.service.graphql.ordres;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.stock.GeoOrdre;
-import fr.microtec.geo2.persistance.repository.stock.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
