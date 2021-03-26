@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -59,4 +60,11 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 		this.delete(ordre);
 	}
 
+	@GraphQLMutation
+	public RelayPage<GeoOrdre> saveAllOrdre(
+		List<GeoOrdre> allOrdre,
+		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+	) {
+		return this.ordreService.save(allOrdre, pageable);
+	}
 }
