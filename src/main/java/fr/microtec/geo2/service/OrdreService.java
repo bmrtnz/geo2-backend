@@ -74,7 +74,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     }
   }
 
-  public RelayPage<GeoOrdre> save(List<GeoOrdre> ordresChunk, Pageable pageable) {
+  public List<GeoOrdre> save(List<GeoOrdre> ordresChunk) {
     Stream<GeoOrdre> mappedOrdres = ordresChunk.stream()
     .map(chunk -> {
       if (chunk.getId() == null) {
@@ -85,10 +85,12 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
       return GeoOrdreGraphQLService.merge(chunk, ordre.get(), null);
     });
 
-    if (pageable == null) pageable = PageRequest.of(0, 20);
-    List<GeoOrdre> result = this.ordreRepository.saveAll(mappedOrdres.collect(Collectors.toList()));
-    Page<GeoOrdre> page = new PageImpl<GeoOrdre>( result, pageable, result.size());
-    return PageFactory.fromPage(page);
+    return this.ordreRepository.saveAll(mappedOrdres.collect(Collectors.toList()));
+
+    // if (pageable == null) pageable = PageRequest.of(0, 20);
+    // List<GeoOrdre> result = this.ordreRepository.saveAll(mappedOrdres.collect(Collectors.toList()));
+    // Page<GeoOrdre> page = new PageImpl<GeoOrdre>( result, pageable, result.size());
+    // return PageFactory.fromPage(page);
   }
 
   public GeoOrdre clone(GeoOrdre chunk) {

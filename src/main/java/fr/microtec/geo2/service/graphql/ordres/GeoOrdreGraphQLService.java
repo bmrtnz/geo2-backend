@@ -61,10 +61,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLMutation
-	public RelayPage<GeoOrdre> saveAllOrdre(
-		List<GeoOrdre> allOrdre,
-		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
-	) {
-		return this.ordreService.save(allOrdre, pageable);
+	public List<GeoOrdre> saveAllOrdre(List<GeoOrdre> allOrdre) {
+		return this.ordreService.save(allOrdre);
 	}
 }
