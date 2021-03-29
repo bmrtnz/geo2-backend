@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "geo_mru_ordre")
 @IdClass(GeoMRUOrdreKey.class)
 @Entity
-public class GeoMRUOrdre extends ModifiedEntity {
+public class GeoMRUOrdre extends ModifiedEntity implements Serializable {
   
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
@@ -32,9 +34,6 @@ public class GeoMRUOrdre extends ModifiedEntity {
 	@JoinColumn(name = "nom_utilisateur")
   private GeoUtilisateur utilisateur;
   
-  // @OneToMany(mappedBy = "id",fetch = FetchType.LAZY)
-  // private List<GeoMRUEntrepot> mruEntrepots;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "soc_code")
   private GeoSociete societe;

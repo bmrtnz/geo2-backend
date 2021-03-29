@@ -1,7 +1,11 @@
 package fr.microtec.geo2.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,6 +16,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.configuration.graphql.RelayPageImpl;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -68,13 +74,32 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     }
   }
 
+  public List<GeoOrdre> save(List<GeoOrdre> ordresChunk) {
+    Stream<GeoOrdre> mappedOrdres = ordresChunk.stream()
+    .map(chunk -> {
+      if (chunk.getId() == null) {
+        chunk.setNumero(this.fetchNumero(chunk.getSociete()));
+        return chunk;
+      }
+      Optional<GeoOrdre> ordre = this.ordreRepository.findById(chunk.getId());
+      return GeoOrdreGraphQLService.merge(chunk, ordre.get(), null);
+    });
+
+    return this.ordreRepository.saveAll(mappedOrdres.collect(Collectors.toList()));
+
+    // if (pageable == null) pageable = PageRequest.of(0, 20);
+    // List<GeoOrdre> result = this.ordreRepository.saveAll(mappedOrdres.collect(Collectors.toList()));
+    // Page<GeoOrdre> page = new PageImpl<GeoOrdre>( result, pageable, result.size());
+    // return PageFactory.fromPage(page);
+  }
+
   public GeoOrdre clone(GeoOrdre chunk) {
     GeoOrdre original = this.ordreRepository.getOne(chunk.getId());
     GeoOrdre clone = original.duplicate();
     return this.save(clone);
   }
 
-  public Specification<GeoMRUOrdre> groupedByNumero() {
+  private Specification<GeoMRUOrdre> groupedByNumero() {
 		return (root, criteriaQuery, criteriaBuilder) -> {
 
       Subquery<GeoMRUOrdre> subquery = criteriaQuery.subquery(GeoMRUOrdre.class);
