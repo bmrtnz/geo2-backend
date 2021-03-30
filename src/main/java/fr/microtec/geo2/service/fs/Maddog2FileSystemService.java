@@ -1,12 +1,14 @@
 package fr.microtec.geo2.service.fs;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 /**
  * This service is used for access to maddog2 NAS file system.
  */
 @Service
+@Secured("ROLE_USER")
 public class Maddog2FileSystemService extends FileSystemService {
 
 	/**
@@ -33,6 +35,7 @@ public class Maddog2FileSystemService extends FileSystemService {
 	}
 
 	public Maddog2FileSystemService(@Value("${geo2.maddog2.path}") String basePath) {
+		super();
 		this.basePath = basePath;
 	}
 
