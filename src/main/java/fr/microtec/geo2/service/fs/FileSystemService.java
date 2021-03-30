@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This service is used for access to file system.
@@ -36,7 +37,9 @@ public class FileSystemService {
 			return Collections.emptyList();
 		}
 
-		return Files.list(path).collect(Collectors.toList());
+		try (Stream<Path> stream = Files.list(path)) {
+			return stream.collect(Collectors.toList());
+		}
 	}
 
 	/**
@@ -125,7 +128,7 @@ public class FileSystemService {
 	 */
 	@SneakyThrows
 	public Path createDirectory(String path, String name) {
-		return Files.createDirectory(this._getBasePath(path).resolve(name));
+		return Files.createDirectories(this._getBasePath(path).resolve(name));
 	}
 
 	/**
@@ -173,9 +176,11 @@ public class FileSystemService {
 		BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
 
 		if (attributes.isDirectory()) {
-			boolean hasSubDirectory = Files.list(path).anyMatch(child -> child.toFile().isDirectory());
+			try (Stream<Path> stream = Files.list(path)) {
+				boolean hasSubDirectory = stream.anyMatch(child -> child.toFile().isDirectory());
 
-			return new FileSystemFolder(path.getFileName().toString(), attributes.isDirectory(), hasSubDirectory);
+				return new FileSystemFolder(path.getFileName().toString(), attributes.isDirectory(), hasSubDirectory);
+			}
 		}
 
 		return new FileSystemFile(path.getFileName().toString(), false, attributes.size(), attributes.lastModifiedTime().toInstant());
