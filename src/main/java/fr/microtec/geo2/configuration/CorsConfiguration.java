@@ -1,5 +1,8 @@
 package fr.microtec.geo2.configuration;
 
+import org.apache.tomcat.util.http.Rfc6265CookieProcessor;
+import org.apache.tomcat.util.http.SameSiteCookies;
+import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,6 +23,15 @@ public class CorsConfiguration {
 						.allowedOrigins("http://localhost:4200")
 						.allowCredentials(true);
 			}
+		};
+	}
+
+	@Bean
+	public TomcatContextCustomizer sameSiteCookiesConfig() {
+		return context -> {
+				final Rfc6265CookieProcessor cookieProcessor = new Rfc6265CookieProcessor();
+				cookieProcessor.setSameSiteCookies(SameSiteCookies.NONE.getValue());
+				context.setCookieProcessor(cookieProcessor);
 		};
 	}
 
