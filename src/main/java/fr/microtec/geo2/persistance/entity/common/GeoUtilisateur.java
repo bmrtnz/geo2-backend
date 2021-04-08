@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.common;
 
+import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.security.Geo2SecurityRoles;
@@ -39,6 +40,7 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(name = "geo_ordre")
 	private Boolean accessGeoOrdre;
 
+	@Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "flag_limiter_secteur")
 	private Boolean limitationSecteur;
 

@@ -1,6 +1,5 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
