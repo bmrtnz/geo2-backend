@@ -22,4 +22,7 @@ public class GeoSecteur extends ValidateAndModifiedEntity {
 	@Column(name = "sco_desc")
 	private String description;
 
+	@Column(name = "soc_liste")
+	private String societes;
+
 }
