@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
 
 /**
  * Generic specification for Rsql query.
@@ -187,8 +188,12 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					}
 
 					return arg;
-				} else if (type.equals(GeoFactureAvoir.class)) {
+				}
+				// TODO Make enums generic
+				else if (type.equals(GeoFactureAvoir.class)) {
 					return GeoFactureAvoir.findByAbbr(arg);
+				} else if (type.equals(GeoRole.class)) {
+					return GeoRole.findByAbbr(arg);
 				} else {
 					throw new RsqlException(String.format("Unknown type '%s' for parsing", type.getSimpleName()));
 				}

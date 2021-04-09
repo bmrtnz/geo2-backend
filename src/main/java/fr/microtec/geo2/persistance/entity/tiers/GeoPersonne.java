@@ -37,4 +37,7 @@ public class GeoPersonne extends ValidateAndModifiedEntity {
 	@Column(name = "per_email")
 	private String email;
 
+	@Column(name = "per_role")
+	private GeoRole role;
+
 }
