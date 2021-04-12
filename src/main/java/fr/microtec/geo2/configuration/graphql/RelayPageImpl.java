@@ -1,11 +1,16 @@
 package fr.microtec.geo2.configuration.graphql;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Pageable;
+
 import graphql.relay.Edge;
 import graphql.relay.PageInfo;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.relay.CursorProvider;
 import io.leangen.graphql.execution.relay.generic.GenericPage;
-
-import java.util.List;
 
 public class RelayPageImpl<T> extends GenericPage<T> implements RelayPage<T> {
 
@@ -26,5 +31,14 @@ public class RelayPageImpl<T> extends GenericPage<T> implements RelayPage<T> {
 
 	@Override
 	@GraphQLQuery
-	public long getTotalPage() { return this.totalPage; }
+	public long getTotalPage() {
+		return this.totalPage;
+	}
+
+	public RelayPage<T> mapNodes(Function<T, T> mapper, Pageable pageable) {
+		CursorProvider<T> cursorProvider = PageFactory.offsetBasedCursorProvider(pageable.getOffset());
+		List<T> nodes = this.getEdges().stream().map(edge -> edge.getNode()).map(mapper).collect(Collectors.toList());
+		List<Edge<T>> edges = PageFactory.createEdges(nodes, cursorProvider);
+		return new RelayPageImpl<>(edges, this.getPageInfo(), this.totalCount, this.totalPage);
+	}
 }
