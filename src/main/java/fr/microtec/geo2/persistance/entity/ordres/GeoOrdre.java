@@ -19,6 +19,7 @@ import org.hibernate.annotations.*;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
@@ -131,6 +132,10 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "code_chargement")
 	private String codeChargement;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cam_code")
+	private GeoCampagne campagne;
 
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
