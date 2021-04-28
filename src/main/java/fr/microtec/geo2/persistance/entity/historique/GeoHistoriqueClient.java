@@ -1,13 +1,22 @@
 package fr.microtec.geo2.persistance.entity.historique;
 
-import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -29,6 +38,7 @@ public class GeoHistoriqueClient extends GeoBaseHistorique implements GeoHistori
 	private String id;
 
 	@NotNull
+	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref", nullable = false)
 	private GeoClient client;

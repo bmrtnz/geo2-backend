@@ -1,8 +1,5 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +12,8 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoEspece;
 import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -23,16 +22,19 @@ import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 @Entity
 public class GeoColis extends ValidateAndModifiedEntity {
 
-    @Id
+	@Id
 	@Column(name = "col_code")
-    private String id;
+	private String id;
 
-    @Id
+	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
 
 	@Column(name = "col_desc")
-    private String description;
+	private String description;
+
+	@Column(name = "col_tare")
+	private Double tare;
 
 }

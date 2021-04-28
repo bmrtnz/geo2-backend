@@ -15,11 +15,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
+import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
@@ -136,6 +140,112 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cam_code")
 	private GeoCampagne campagne;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trp_bta_code")
+	private GeoBaseTarif baseTarifTransport;
+	
+	@Column(name = "trp_pu")
+	private Float prixUnitaireTarifTransport;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trs_bta_code")
+	private GeoBaseTarif baseTarifTransit;
+
+	@Column(name = "trs_pu")
+	private Float prixUnitaireTarifTransit;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "crt_bta_code")
+	private GeoBaseTarif baseTarifCourtage;
+	
+	@Column(name = "crt_pu")
+	private Float prixUnitaireTarifCourtage;
+	
+	@Column(name = "remsf_tx")
+	private Float tauxRemiseFacture;
+	
+	@Column(name = "remhf_tx")
+	private Float tauxRemiseHorsFacture;
+	
+	@Column(name = "dev_tx")
+	private Double tauxDevise;
+	
+	@Column(name = "frais_pu")
+	private Double fraisPrixUnitaire;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "frais_unite")
+	private GeoBaseTarif fraisUnite;
+
+	@Column(name = "frais_plateforme")
+	private Float fraisPlateforme;
+
+	@Column(name = "totpal")
+	private Float totalPalette;
+
+	@Column(name = "totcol")
+	private Float totalColis;
+
+	@Column(name = "totpdsnet")
+	private Float totalPoidsNet;
+
+	@Column(name = "totpdsbrut")
+	private Float totalPoidsBrut;
+
+	@Column(name = "totvte")
+	private Float totalVente;
+
+	@Column(name = "totrem")
+	private Float totalRemise;
+
+	@Column(name = "totres")
+	private Float totalRestitue;
+
+	@Column(name = "totfrd")
+	private Double totalFraisMarketing;
+
+	@Column(name = "totach")
+	private Double totalAchat;
+
+	@Column(name = "totmob")
+	private Float totalObjectifMarge;
+
+	@Column(name = "tottrp")
+	private Float totalTransport;
+
+	@Column(name = "tottrs")
+	private Float totalTransit;
+
+	@Column(name = "totcrt")
+	private Float totalCourtage;
+
+	@Column(name = "totfad")
+	private Float totalFraisAdditionnels;
+
+	@Column(name = "totfrais_plateforme")
+	private Float totalFraisPlateforme;
+
+	@Column(name = "tot_cde_nb_pal")
+	private Float totalNombrePalettesCommandees;
+
+	@Column(name = "tot_exp_nb_pal")
+	private Float totalNombrePalettesExpediees;
+
+	@Column(name = "pal_nb_sol")
+	private Float nombrePalettesAuSol;
+
+	@Column(name = "pal_nb_PB100X120")
+	private Float nombrePalettes100x120;
+
+	@Column(name = "pal_nb_PB80X120")
+	private Float nombrePalettes80x120;
+
+	@Column(name = "pal_nb_PB60X80")
+	private Float nombrePalettes60X80;
+
+	// @Transient
+	// public Double marge;
 
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
