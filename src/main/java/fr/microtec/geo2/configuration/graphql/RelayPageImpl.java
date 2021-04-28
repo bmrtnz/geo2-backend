@@ -2,6 +2,7 @@ package fr.microtec.geo2.configuration.graphql;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,20 @@ public class RelayPageImpl<T> extends GenericPage<T> implements RelayPage<T> {
 
 	public RelayPage<T> mapNodes(Function<T, T> mapper, Pageable pageable) {
 		CursorProvider<T> cursorProvider = PageFactory.offsetBasedCursorProvider(pageable.getOffset());
-		List<T> nodes = this.getEdges().stream().map(edge -> edge.getNode()).map(mapper).collect(Collectors.toList());
+		List<T> nodes = this.getEdges().stream()
+		.map(edge -> edge.getNode())
+		.map(mapper)
+		.collect(Collectors.toList());
+		List<Edge<T>> edges = PageFactory.createEdges(nodes, cursorProvider);
+		return new RelayPageImpl<>(edges, this.getPageInfo(), this.totalCount, this.totalPage);
+	}
+
+	public RelayPage<T> filterNodes(Predicate<? super T> predicate, Pageable pageable) {
+		CursorProvider<T> cursorProvider = PageFactory.offsetBasedCursorProvider(pageable.getOffset());
+		List<T> nodes = this.getEdges().stream()
+		.map(edge -> edge.getNode())
+		.filter(predicate)
+		.collect(Collectors.toList());
 		List<Edge<T>> edges = PageFactory.createEdges(nodes, cursorProvider);
 		return new RelayPageImpl<>(edges, this.getPageInfo(), this.totalCount, this.totalPage);
 	}

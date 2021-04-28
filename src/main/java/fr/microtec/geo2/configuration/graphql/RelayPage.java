@@ -1,6 +1,7 @@
 package fr.microtec.geo2.configuration.graphql;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.springframework.data.domain.Pageable;
 
@@ -16,5 +17,7 @@ public interface RelayPage<T> extends Page<T> {
 	long getTotalPage();
 
 	RelayPage<T> mapNodes(Function<T, T> mapper, Pageable pageable);
+
+	RelayPage<T> filterNodes(Predicate<? super T> predicate, Pageable pageable);
 
 }
