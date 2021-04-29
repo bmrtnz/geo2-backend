@@ -4,9 +4,13 @@ import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.configuration.graphql.RelayPageImpl;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
+import graphql.relay.Edge;
 import io.leangen.graphql.execution.ResolutionEnvironment;
+import io.leangen.graphql.execution.relay.CursorProvider;
+
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.BeanUtils;
@@ -23,8 +27,12 @@ import javax.persistence.PersistenceUnit;
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Abstract Geo graphQl service.
@@ -58,6 +66,29 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		}
 
 		return PageFactory.fromPage(page);
+	}
+
+	protected RelayPage<T> getPageFiltered(Predicate<? super T> predicate, Pageable pageable, String search) {
+		RelayPage<T> initialPage = this.getPage(search, pageable);
+		List<T> allNodes = recursiveFilter(search,pageable,new ArrayList<>(),predicate);
+		CursorProvider<T> cursorProvider = PageFactory
+		.offsetBasedCursorProvider(pageable.getOffset());
+		List<Edge<T>> edges = PageFactory.createEdges(allNodes, cursorProvider);
+		return new RelayPageImpl<>(edges, initialPage.getPageInfo(), initialPage.getTotalCount(), initialPage.getTotalPage());
+	}
+
+	private List<T> recursiveFilter(String search, Pageable pageable, List<T> acumulatedNodes, Predicate<? super T> predicate){
+		RelayPage<T> page = this.getPage(search, pageable);
+		List<T> nodes = page
+		.getEdges()
+		.stream()
+		.map(edge -> edge.getNode())
+		.filter(predicate)
+		.collect(Collectors.toList());
+		acumulatedNodes.addAll(nodes);
+		if(acumulatedNodes.size() < pageable.getPageSize() && page.getPageInfo().isHasNextPage())
+			return recursiveFilter(search,PageRequest.of(pageable.getPageNumber() + 1, pageable.getPageSize()),new ArrayList<>(),predicate);
+		return acumulatedNodes;
 	}
 
 	/**

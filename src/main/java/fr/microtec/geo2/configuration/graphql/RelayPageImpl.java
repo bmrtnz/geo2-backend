@@ -47,12 +47,15 @@ public class RelayPageImpl<T> extends GenericPage<T> implements RelayPage<T> {
 	}
 
 	public RelayPage<T> filterNodes(Predicate<? super T> predicate, Pageable pageable) {
-		CursorProvider<T> cursorProvider = PageFactory.offsetBasedCursorProvider(pageable.getOffset());
+		CursorProvider<T> cursorProvider = PageFactory
+		.offsetBasedCursorProvider(pageable.getOffset());
 		List<T> nodes = this.getEdges().stream()
 		.map(edge -> edge.getNode())
 		.filter(predicate)
 		.collect(Collectors.toList());
+
 		List<Edge<T>> edges = PageFactory.createEdges(nodes, cursorProvider);
 		return new RelayPageImpl<>(edges, this.getPageInfo(), this.totalCount, this.totalPage);
 	}
+	
 }

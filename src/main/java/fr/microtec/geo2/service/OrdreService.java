@@ -152,7 +152,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
    * @param ordreChunk
    * @return True if OK, false in case of error
    */
-  public Boolean fetchCalculMarge(GeoOrdre ordreChunk) {
+  public Boolean filterCalculMarge(GeoOrdre ordreChunk) {
     try {
       this.calculMarge(ordreChunk.getId());
     } catch (Exception e) {

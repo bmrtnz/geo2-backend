@@ -244,9 +244,6 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "pal_nb_PB60X80")
 	private Float nombrePalettes60X80;
 
-	// @Transient
-	// public Double marge;
-
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
 		clone.societe = this.societe;

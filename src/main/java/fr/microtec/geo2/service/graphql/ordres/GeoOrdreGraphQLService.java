@@ -2,11 +2,15 @@ package fr.microtec.geo2.service.graphql.ordres;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
@@ -43,9 +47,25 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		RelayPage<GeoOrdre> page = this.getPage(search, pageable);
-		return page
-		.filterNodes(node -> this.ordreService.fetchCalculMarge(node),pageable);
+		List<GeoOrdre> list;
+	
+		if (search != null && !search.isBlank()) {
+			list = this.repository.findAll(this.parseSearch(search));
+		} else {
+			list = this.repository.findAll();
+		}
+
+		list = list.stream()
+		.filter(node -> this.ordreService.filterCalculMarge(node))
+		.collect(Collectors.toList());
+
+		int total = list.size();
+		int start = (int)pageable.getOffset();
+		int end = (int)Math.min(start + pageable.getPageSize(), total);
+		if (start <= end) list = list.subList(start, end);
+
+		Page<GeoOrdre> page = new PageImpl<>(list, pageable, total);
+		return PageFactory.fromPage(page);
 	}
 
 	@GraphQLQuery
