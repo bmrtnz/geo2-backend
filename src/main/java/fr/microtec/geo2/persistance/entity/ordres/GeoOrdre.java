@@ -12,7 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
+import javax.persistence.PostUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -243,6 +246,16 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "pal_nb_PB60X80")
 	private Float nombrePalettes60X80;
+
+	@Transient
+	private Float pourcentageMargeBrut;
+
+	@PostLoad
+	@PostUpdate
+	public void postUpdate(){
+			this.pourcentageMargeBrut = this.totalVente > 0 ?
+				(float)(this.totalVente - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalCourtage - this.totalFraisAdditionnels) / this.totalVente : 0f;
+	}
 
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
