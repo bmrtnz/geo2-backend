@@ -248,7 +248,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private Float nombrePalettes60X80;
 
 	@Transient
-	private Float pourcentageMargeBrut;
+	private Float pourcentageMargeBrutTest;
 
 	@PostLoad
 	@PostUpdate
