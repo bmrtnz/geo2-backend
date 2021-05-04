@@ -22,4 +22,6 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
   List<GeoOrdreLigneCumul> findByOrdre(GeoOrdre ordre);
   @Query("SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed(SUM(ol.nombrePalettesExpediees) as nombrePalettesExpediees, SUM(ol.nombrePalettesCommandees) as nombrePalettesCommandees, ol.fournisseur as fournisseur, ol.logistique as logistique) FROM #{#entityName} ol WHERE ol.ordre = :ordre GROUP BY ol.ordre, ol.fournisseur")
   List<GeoOrdreLigneSummed> getSummedLignesByOrdreGroupByFournisseur(GeoOrdre ordre);
+  Long countByOrdre(GeoOrdre ordre);
+  Long countByOrdreAndGratuitIsTrue(GeoOrdre ordre);
 }

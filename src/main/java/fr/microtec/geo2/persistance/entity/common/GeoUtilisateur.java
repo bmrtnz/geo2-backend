@@ -40,6 +40,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(name = "geo_ordre")
 	private Boolean accessGeoOrdre;
 
+	@Column(name = "geo_facture")
+	private Boolean accessGeoFacture;
+
 	@Column
 	private String perimetre;
 

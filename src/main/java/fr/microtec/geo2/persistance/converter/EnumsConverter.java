@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.converter;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
 import fr.microtec.geo2.persistance.entity.tiers.GeoNatureStation;
 import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
@@ -20,6 +21,10 @@ class GeoNatureStationConverter extends AbstractStringEnumConverter<GeoNatureSta
 
 @Converter(autoApply = true)
 class GeoFactureAvoirConverter extends AbstractStringEnumConverter<GeoFactureAvoir> {
+}
+
+@Converter(autoApply = true)
+class GeoOrdreTypeConverter extends AbstractStringEnumConverter<GeoOrdreType> {
 }
 
 @Converter(autoApply = true)

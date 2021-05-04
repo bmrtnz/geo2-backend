@@ -1,7 +1,10 @@
 package fr.microtec.geo2.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,11 +24,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoGenre;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
@@ -34,12 +40,16 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.ordres.GeoMRUOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreFraisRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
 
@@ -54,6 +64,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
   private final GeoOrdreLigneRepository ordreLigneRepository;
   private final GeoOrdreLogistiqueRepository ordreLogistiqueRepository;
   private final GeoOrdreFraisRepository ordreFraisRepository;
+  private final GeoEnvoisRepository envoisRepository;
+  private final GeoFluxRepository fluxRepository;
   private static final Logger logger = LoggerFactory.getLogger(OrdreService.class);
 
   public OrdreService(
@@ -61,7 +73,9 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     GeoMRUOrdreRepository mruOrdreRepository,
     GeoOrdreLigneRepository ordreLigneRepository,
     GeoOrdreLogistiqueRepository ordreLogistiqueRepository,
-    GeoOrdreFraisRepository ordreFraisRepository
+    GeoOrdreFraisRepository ordreFraisRepository,
+    GeoEnvoisRepository envoisRepository,
+    GeoFluxRepository fluxRepository
   ) {
     super(mruOrdreRepository);
     this.ordreRepository = ordreRepository;
@@ -69,6 +83,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     this.ordreLigneRepository = ordreLigneRepository;
     this.ordreLogistiqueRepository = ordreLogistiqueRepository;
     this.ordreFraisRepository = ordreFraisRepository;
+    this.envoisRepository = envoisRepository;
+    this.fluxRepository = fluxRepository;
   }
 
   private String fetchNumero(GeoSociete societe) {
@@ -148,7 +164,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
   }
 
   /**
-   * Call `calculMarge` and check errors
+   * Call `calculMarge` and catch errors
    * @param ordreChunk
    * @return True if OK, false in case of error
    */
@@ -162,12 +178,17 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     return true;
   }
 
+  /**
+   * Ordre calcul marge
+   * @param ordreID
+   * @throws RuntimeException
+   */
   public void calculMarge(String ordreID) {
 
     Optional<GeoOrdre> foundOrdre = this.ordreRepository.findById(ordreID);
     if(!foundOrdre.isPresent())
       throw new RuntimeException("ordre inconnu");
-    
+
     GeoOrdre ordre = foundOrdre.get();
 		GeoFactureAvoir factureAvoir;
 
@@ -619,7 +640,12 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
 
 	}
 
-  private void calculQuantite(String ordreID, String ordreLigneID) {
+  /**
+   * Calculate quantite, poids-net, expedition
+   * @param ordreID
+   * @param ordreLigneID
+   */
+  public void calculQuantite(String ordreID, String ordreLigneID) {
     GeoOrdreLigne ligne = this.ordreLigneRepository.getOne(ordreLigneID);
 
     Float nombreColisCommandes = ligne.getNombreColisCommandes();
@@ -792,5 +818,110 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
       lc.setNombrePalettesAuSolExpediees(lc.getNombrePalettesAuSolExpediees() * .5);
       return lc;
     });
+  }
+
+  /**
+   * Call `calculMarge` and catch errors
+   * @param ordreChunk
+   * @return True if OK, false in case of error
+   */
+  public Boolean filterVerifOrdreWarning(GeoOrdre ordreChunk) {
+    try {
+      this.verifOrdreWarning(ordreChunk.getId());
+    } catch (Exception e) {
+      OrdreService.logger.info("Ordre verif: " + "( Ordre ID " + ordreChunk.getId() + " ) " + e.getMessage());
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Check ordre validity
+   * @param ordreID
+   */
+  public void verifOrdreWarning(String ordreID) {
+
+    List<String> messages = new ArrayList<String>();
+    SecurityContext sc = SecurityContextHolder.getContext();
+		GeoUtilisateur user = (GeoUtilisateur)sc.getAuthentication().getPrincipal();
+    Optional<GeoOrdre> ordre = this.ordreRepository.findById(ordreID);
+    if(!ordre.isPresent())
+      throw new RuntimeException("ordre inconnu");
+
+    this.ordreLigneRepository.countByOrdre(ordre.get());
+    this.ordreLigneRepository.countByOrdreAndGratuitIsTrue(ordre.get());
+
+    // ajuste montant maxi ligne en fonction de la devise de la société
+    Integer maxMontantLigne = 1;
+    if(ordre.get().getSociete().getDevise().getId() == "EUR")
+      maxMontantLigne	= 30000;
+    if(ordre.get().getSociete().getDevise().getId() == "GBP")
+      maxMontantLigne	= 50000;
+    
+    String controlReferenceClient = Optional
+    .ofNullable(ordre.get().getEntrepot().getControlReferenceClient())
+    .orElse(ordre.get().getClient().getControlReferenceClient());
+    
+    if(ordre.get().getClient().getUsageInterne())
+      messages.add("(A) %%% le client est à usage interne pas de facturation");
+      
+    if(ordre.get().getClient().getFraisRamasse() && ordre.get().getTotalFraisAdditionnels() == 0f)
+      messages.add("(T) il n'y a pas de frais de ramasse");
+      
+    if(ordre.get().getVenteACommission())
+      messages.add("(P) c'est une  vente à la commission");
+
+    // verif statut bon à facturer OK	
+    GeoFlux fluxOrdre = this.fluxRepository.getOne("ORDRE");
+    if(ordre.get().getBonAFacturer())
+      messages.add("(A) %%% l'ordre est déja bon à facturer");
+    else if(this.envoisRepository.countByOrdreAndFlux(ordre.get(), fluxOrdre) == 0)
+      messages.add("(A) Aucune confirmation n'a été effectuée");
+      
+    // Vérifi si le transporteur est valide
+    if(ordre.get().getTransporteur().getId() == "-")
+      messages.add("(T) %%% Transporteur à préciser");
+
+    // verif ordre pere bon à facturer si avoir
+    if(ordre.get().getFactureAvoir() == GeoFactureAvoir.AVOIR && ordre.get().getOrdrePere().getId() != ""){
+      Optional<GeoOrdre> ordrePere = this.ordreRepository
+      .findByIdAndMatchingOrdrePere(ordre.get().getId());
+      if(ordrePere.isPresent() && !ordrePere.get().getBonAFacturer())
+        messages.add("(A) %%%  vous devez clotûrer l'ordre " + Optional.ofNullable(ordre.get().getNumero()).orElse("d'origine") + " avant de clotûrer l'avoir correspondant");
+    }
+
+    // Autorisation ORDRE de régulation
+    GeoOrdreType[] typesRegulation = {GeoOrdreType.REG,GeoOrdreType.RPR,GeoOrdreType.RPO};
+    Boolean typeOK = Arrays.asList(typesRegulation).contains(ordre.get().getType());
+    if(!user.getAccessGeoFacture() && typeOK)
+      messages.add("(A) %%% Seul ADV peut mettre BAF les ordres de régulation");
+      
+    // date de livraison vide  ?
+    if(ordre.get().getDateLivraisonPrevue() == null)
+      messages.add("(D) %%% la date de livraison est obligatoire");
+
+    // date de départ vide  ?
+    Boolean oldDate = ordre.get().getDateDepartPrevue().equals(LocalDate.ofYearDay(1900,1));
+    if(ordre.get().getDateDepartPrevue() == null || oldDate)
+      messages.add("(D) %%% la date de départ est obligatoire");
+      
+    if(ordre.get().getDateDepartPrevue().compareTo(ordre.get().getDateLivraisonPrevue()) < 0)
+      messages.add("(D) %%% la date de départ (" + ordre.get().getDateDepartPrevue().format(DateTimeFormatter.BASIC_ISO_DATE) + ") est incohérente par rapport à la  date de livraison  (" + ordre.get().getDateLivraisonPrevue().format(DateTimeFormatter.BASIC_ISO_DATE) + ")");
+      
+    // le code incoterm est nécessaire à la facturation
+    if(ordre.get().getIncoterm() == null)
+      messages.add("(T) %%% le code incoterm est obligatoire");
+    
+    // coût du transport selon procédure ? que dans le cas des factures pas des avoirs
+    if(
+      ordre.get().getTransporteur().getId() != "CLIENT" &&
+      ordre.get().getTotalTransport() == 0 &&
+      ordre.get().getIncoterm().getRenduDepart() != 'D' &&
+      ordre.get().getFactureAvoir() == GeoFactureAvoir.FACTURE &&
+      this.ordreLigneRepository.countByOrdre(ordre.get()) != this.ordreLigneRepository.countByOrdreAndGratuitIsTrue(ordre.get()) &&
+      ordre.get().getSociete().getId() != "BUK"
+    )
+      messages.add("(T) %%% le coût prévisionnel du transport est obligatoire pour l' incoterm " + ordre.get().getIncoterm().getId());
+
   }
 }

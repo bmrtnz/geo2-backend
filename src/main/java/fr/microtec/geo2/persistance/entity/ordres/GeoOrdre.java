@@ -29,6 +29,7 @@ import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
+import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
@@ -246,6 +247,17 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "pal_nb_PB60X80")
 	private Float nombrePalettes60X80;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "inc_code")
+	private GeoIncoterm incoterm;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ord_ref_pere")
+	private GeoOrdre ordrePere;
+
+	@Column(name = "typ_ordre", nullable = false)
+	private GeoOrdreType type;
 
 	@Transient
 	private Float pourcentageMargeBrut;

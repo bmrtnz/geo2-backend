@@ -38,4 +38,8 @@ public class GeoSociete extends ValidateEntity {
 	@JoinColumn(name = "pay_code")
 	private GeoPays pays;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dev_code")
+	private GeoDevise devise;
+
 }

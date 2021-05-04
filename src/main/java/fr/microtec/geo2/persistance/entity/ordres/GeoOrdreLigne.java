@@ -142,4 +142,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
 
+	@Column(name = "ind_gratuit")
+	private Boolean gratuit;
+
 }
