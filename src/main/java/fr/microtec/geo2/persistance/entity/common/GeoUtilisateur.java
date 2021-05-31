@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -53,6 +54,10 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sco_code")
 	private GeoSecteur secteurCommercial;
+
+	@Lob
+	@Column(name = "config_tuiles_ordres", columnDefinition = "BLOB")
+	private HashMap<String, Object> configTuilesOrdres;
 
 	@Override
 	public String getUsername() {
