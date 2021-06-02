@@ -1,12 +1,17 @@
 package fr.microtec.geo2.service.graphql.common;
 
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
+import fr.microtec.geo2.persistance.repository.common.GeoUtilisateurRepository;
+import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import io.leangen.graphql.spqr.spring.autoconfigure.DefaultGlobalContext;
+
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,11 +28,15 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 @Service
 @GraphQLApi
-public class GeoUtilisateurGraphQLService {
+public class GeoUtilisateurGraphQLService extends GeoAbstractGraphQLService<GeoUtilisateur, String> {
 
 	private final AuthenticationManager authManager;
 
-	public GeoUtilisateurGraphQLService(AuthenticationManager authManager) {
+	public GeoUtilisateurGraphQLService(
+		GeoUtilisateurRepository utilisateurRepository,
+		AuthenticationManager authManager
+	) {
+		super(utilisateurRepository);
 		this.authManager = authManager;
 	}
 
@@ -52,5 +61,11 @@ public class GeoUtilisateurGraphQLService {
 		session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
 		return (GeoUtilisateur) auth.getPrincipal();
+	}
+
+	@GraphQLMutation
+	@Secured("ROLE_USER")
+	public GeoUtilisateur saveUtilisateur(GeoUtilisateur utilisateur) {
+		return this.save(utilisateur);
 	}
 }
