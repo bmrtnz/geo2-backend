@@ -66,6 +66,12 @@ public class GeoUtilisateurGraphQLService extends GeoAbstractGraphQLService<GeoU
 	@GraphQLMutation
 	@Secured("ROLE_USER")
 	public GeoUtilisateur saveUtilisateur(GeoUtilisateur utilisateur) {
+		SecurityContext sc = SecurityContextHolder.getContext();
+		GeoUtilisateur currentUser = (GeoUtilisateur)sc.getAuthentication().getPrincipal();
+		if(utilisateur.getNomUtilisateur() == null)
+			throw new SecurityException("User creation is not permitted, entity key needed");
+		if(!currentUser.getNomUtilisateur().equals(utilisateur.getNomUtilisateur()))
+			throw new SecurityException("Can't mutate another user");
 		return this.save(utilisateur);
 	}
 }
