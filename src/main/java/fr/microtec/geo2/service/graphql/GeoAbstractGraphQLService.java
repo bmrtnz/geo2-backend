@@ -27,6 +27,7 @@ import javax.persistence.PersistenceUnit;
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -114,12 +115,18 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		// TODO filter null value from environment
 		BeanWrapper src = new BeanWrapperImpl(from);
 		PropertyDescriptor[] pds = src.getPropertyDescriptors();
-		String[] nullProps = Arrays.stream(pds)
-				.filter(p -> src.getPropertyValue(p.getName()) == null)
+		String[] ignoredProps = Arrays.stream(pds)
+				.filter(p -> {
+					try {
+						return src.getPropertyValue(p.getName()) == null;
+					} catch(Exception ex) {
+						return true;
+					}
+				})
 				.map(FeatureDescriptor::getName)
 				.toArray(String[]::new);
 
-		BeanUtils.copyProperties(from, to, nullProps);
+		BeanUtils.copyProperties(from, to, ignoredProps);
 
 		return to;
 	}
