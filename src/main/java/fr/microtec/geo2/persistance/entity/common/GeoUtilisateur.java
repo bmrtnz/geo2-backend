@@ -20,39 +20,39 @@ import java.util.HashMap;
 public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDetails {
 
 	@Id
-	@Column(name = "nom_utilisateur")
+	@Column(name = "nom_utilisateur", insertable = false, updatable = false)
 	private String nomUtilisateur;
 
-	@Column
+	@Column(insertable = false, updatable = false)
 	private String email;
 
-	@Column(name = "mot_de_passe")
+	@Column(name = "mot_de_passe", insertable = false, updatable = false)
 	private String motDePasse;
 
-	@Column(name = "nom_interne")
+	@Column(name = "nom_interne", insertable = false, updatable = false)
 	private String nomInterne;
 
-	@Column(name = "geo_tiers")
+	@Column(name = "geo_tiers", insertable = false, updatable = false)
 	private Boolean accessGeoTiers;
 
-	@Column(name = "geo_produit")
+	@Column(name = "geo_produit", insertable = false, updatable = false)
 	private Boolean accessGeoProduct;
 
-	@Column(name = "geo_ordre")
+	@Column(name = "geo_ordre", insertable = false, updatable = false)
 	private Boolean accessGeoOrdre;
 
-	@Column(name = "geo_facture")
+	@Column(name = "geo_facture", insertable = false, updatable = false)
 	private Boolean accessGeoFacture;
 
-	@Column
+	@Column(insertable = false, updatable = false)
 	private String perimetre;
 
 	@Convert(converter = BooleanIntegerConverter.class)
-	@Column(name = "flag_limiter_secteur")
+	@Column(name = "flag_limiter_secteur", insertable = false, updatable = false)
 	private Boolean limitationSecteur;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sco_code")
+	@JoinColumn(name = "sco_code", insertable = false, updatable = false)
 	private GeoSecteur secteurCommercial;
 
 	@Lob
