@@ -248,6 +248,10 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoStock> stocks;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ident_fou")
+	private GeoIdentifiantFournisseur identifiant;
+
 	public void setCertifications(Set<GeoCertificationFournisseur> certifications) {
 		certifications.forEach(c -> c.setFournisseur(this));
 
