@@ -26,14 +26,24 @@ import org.hibernate.annotations.Parameter;
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
+import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
+import fr.microtec.geo2.persistance.entity.tiers.GeoBasePaiement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoConditionVente;
+import fr.microtec.geo2.persistance.entity.tiers.GeoCourtier;
+import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
+import fr.microtec.geo2.persistance.entity.tiers.GeoMoyenPaiement;
+import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
+import fr.microtec.geo2.persistance.entity.tiers.GeoRegimeTva;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransitaire;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTypeCamion;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -81,6 +91,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "nordre", nullable = false, unique = true)
 	private String numero;
 
+	@Column(name = "nordre_pere")
+	private String numeroPere;
+
 	@Column(name = "ref_cli")
 	private String referenceClient;
 
@@ -91,6 +104,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
+
+	@JoinColumn(name = "cen_code")
+	private String codeAlphaEntrepot;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cen_ref")
@@ -117,6 +133,21 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "flfac")
 	private Boolean facture;
 
+	@Column(name = "flbagqp")
+	private Boolean bonAGenererDansQualifelPlus;
+
+	@Column(name = "flgenqp")
+	private Boolean genereDansQualifelPlus;
+
+	@Column(name = "fbagudc")
+	private Boolean bonAGenererUDC;
+
+	@Column(name = "flgenudc")
+	private Boolean genereUDC;
+
+	@Column(name = "invoic")
+	private Boolean factureEDIFACT;
+
 	@Column(name = "invoic_demat")
 	private Boolean factureEDI;
 
@@ -131,6 +162,15 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "version_ordre")
 	private String version;
+	
+	@Column(name = "version_ordre_date")
+	private LocalDate versionDate;
+	
+	@Column(name = "version_detail")
+	private String versionDetail;
+
+	@Column(name = "version_detail_date")
+	private LocalDate versionDetailDate;
 
 	@Column(name = "facture_avoir")
 	private GeoFactureAvoir factureAvoir;
@@ -153,11 +193,22 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private Float prixUnitaireTarifTransport;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trs_code")
+	private GeoTransitaire transitaire;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_bta_code")
 	private GeoBaseTarif baseTarifTransit;
 
 	@Column(name = "trs_pu")
 	private Float prixUnitaireTarifTransit;
+
+	@Column(name = "trs_ville")
+	private String villeDeTransit;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "crt_code")
+	private GeoCourtier courtier;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "crt_bta_code")
@@ -252,12 +303,128 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@JoinColumn(name = "inc_code")
 	private GeoIncoterm incoterm;
 
+	@Column(name = "inc_lieu")
+	private String incotermLieu;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref_pere")
 	private GeoOrdre ordrePere;
 
 	@Column(name = "typ_ordre", nullable = false)
 	private GeoOrdreType type;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pay_code")
+	private GeoPays pays;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dev_code")
+	private GeoDevise devise;
+
+	@Column(name = "ref_document")
+	private String referenceDocument;
+
+	@Column(name = "ref_logistique")
+	private String referenceLogistique;
+
+	@Column(name = "credat")
+	private LocalDate dateCreation;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tvt_code")
+	private GeoTypeVente typeVente;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tvr_code", nullable = false)
+	private GeoRegimeTva regimeTva;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "mpm_code", nullable = false)
+	private GeoMoyenPaiement moyenPaiement;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bpm_code")
+	private GeoBasePaiement basePaiement;
+
+	@Column(name = "ent_echle")
+	private String echeanceLe;
+
+	@Column(name = "ent_echnbj")
+	private String echeanceNombreDeJours;
+
+	@Column(name = "ent_factcom")
+	private String commentairesFacture;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cov_code")
+	private GeoConditionVente conditionVente;
+
+	@Column(name = "trp_prix_visible")
+	private Boolean prixTransportVisible;
+
+	@Column(name = "trs_prix_visible")
+	private Boolean prixTransitVisible;
+
+	@Column(name = "crt_prix_visible")
+	private Boolean prixCourtageVisible;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ttr_code")
+	private GeoTypeCamion typeTransport;
+
+	@Column(name = "lib_dlv")
+	private String libelleDLV;
+
+	@Column(name = "frais_desc")
+	private String commentairesFrais;
+
+	@Column(name = "datfac")
+	private LocalDate dateFacture;
+
+	@Column(name = "flag_public")
+	private Boolean flagPublication;
+
+	@Column(name = "rem_sf_tx_mdd")
+	private Float remiseSurFactureMDDTaux;
+
+	@Column(name = "comm_interne")
+	private String commentaireUsageInterne;
+
+	@Column(name = "comment_tva")
+	private String commentaireTVA;
+
+	@Column(name = "etd_date")
+	private LocalDate ETDDate;
+
+	@Column(name = "eta_date")
+	private LocalDate ETADate;
+
+	@Column(name = "etd_location")
+	private String ETDLocation;
+
+	@Column(name = "eta_location")
+	private String ETALocation;
+
+	@Column(name = "trp_dev_code")
+	private String transporteurDEVCode;
+
+	@Column(name = "trp_dev_pu")
+	private Double transporteurDEVPrixUnitaire;
+
+	@Column(name = "trp_dev_taux")
+	private Float transporteurDEVTaux;
+
+	@Column(name = "file_cmr")
+	private String fileCMR;
+
+	@Column(name = "ref_eta")
+	private String IDPortTypeA;
+
+	@Column(name = "ref_etd")
+	private String IDPortTypeD;
+
+	@Column(name = "list_nordre_comp")
+	private String listeOrdresComplementaires;
 
 	@Transient
 	private Float pourcentageMargeBrut;
