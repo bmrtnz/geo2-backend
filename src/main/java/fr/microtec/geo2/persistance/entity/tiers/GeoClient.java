@@ -168,6 +168,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "ind_comm_debloq")
 	private Boolean debloquerEnvoieJour;
 
+	@Column(name = "ind_modif_detail")
+	private Boolean modificationDetail;
+
 	@Column(name = "ifco")
 	private String ifco;
 

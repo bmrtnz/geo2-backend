@@ -38,6 +38,9 @@ public class GeoArticleEmballage extends ValidateCreatedAndModifiedEntity implem
 	@Column(name = "uc_pdnet_garanti")
 	private Float poidsNetGaranti;
 
+	@Column(name = "pdnet_client")
+	private Float poidsNetClient;
+
 	@Column(name = "col_prepese")
 	private Boolean prepese;
 
