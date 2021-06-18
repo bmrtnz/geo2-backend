@@ -21,6 +21,8 @@ import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
+import fr.microtec.geo2.persistance.entity.ordres.GeoStatus;
+import fr.microtec.geo2.persistance.entity.ordres.GeoStatusGEO;
 import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
 
 /**
@@ -197,6 +199,10 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					return GeoRole.findByAbbr(arg);
 				} else if (type.equals(GeoOrdreType.class)) {
 					return GeoOrdreType.findByAbbr(arg);
+				} else if (type.equals(GeoStatusGEO.class)) {
+					return GeoStatusGEO.findByAbbr(arg);
+				} else if (type.equals(GeoStatus.class)) {
+					return GeoStatus.findByAbbr(arg);
 				} else {
 					throw new RsqlException(String.format("Unknown type '%s' for parsing", type.getSimpleName()));
 				}

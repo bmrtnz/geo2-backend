@@ -145,8 +145,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "flgenudc")
 	private Boolean genereUDC;
 
-	@Column(name = "ref_edi_ordre")
-	private Integer referenceEDI;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_edi_ordre")
+	private GeoEDIOrdre ordreEDI;
 
 	@Column(name = "invoic")
 	private Boolean factureEDIFACT;
@@ -431,6 +432,15 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "list_nordre_regul")
 	private String listeOrdresRegularisations;
+
+	@Column(name = "ind_pres_spec")
+	private String presentationSUP;
+
+	@Column(name = "trp_bac_code")
+	private String bassinTransporteur;
+
+	@Column(name = "ind_exclu_frais_pu")
+	private Boolean exclusionFraisPU;
 
 	@Transient
 	private Float pourcentageMargeBrut;
