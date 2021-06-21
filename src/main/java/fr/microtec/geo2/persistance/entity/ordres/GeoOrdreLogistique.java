@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -42,11 +45,26 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@Column(name = "flag_exped_fournni")
 	private Boolean expedieStation;
 
+	@Column(name = "flag_exped_groupa")
+	private Boolean expedieLieuGroupage;
+
+	@Column(name = "locus_trace")
+	private String locusTrace;
+
 	@Column(name = "datdep_fou_p")
 	private LocalDate dateDepartPrevueFournisseur;
 
+	@Column(name = "datdep_fou_r")
+	private LocalDate dateDepartReelleFournisseur;
+	
 	@Column(name = "datdep_grp_p")
 	private LocalDate dateDepartPrevueGroupage;
+
+	@Column(name = "datdep_grp_r")
+	private LocalDate dateDepartReelleGroupage;
+
+	@Column(name = "datliv_grp")
+	private LocalDate dateLivraisonLieuGroupage;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "grp_code")
@@ -72,5 +90,59 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 
 	@Column(name = "tot_exp_nb_pal")
 	private Float totalPalettesExpediees;
+
+	@Column(name = "instructions")
+	private String instructions;
+
+	@Column(name = "fou_ref_doc")
+	private String fournisseurReferenceDOC;
+
+	@Column(name = "ref_logistique")
+	private String referenceLogistique;
+
+	@Column(name = "ref_document")
+	private String referenceDocument;
+
+	@Column(name = "typ_grp")
+	private Character typeLieuGroupageArrivee;
+
+	@Column(name = "typ_fou")
+	private Character typeLieuDepart;
+
+	@Column(name = "incot_fourn")
+	private String incotermFournisseur;
+
+	@Column(name = "plomb")
+	private String numeroPlomb;
+
+	@Column(name = "immatriculation")
+	private String numeroImmatriculation;
+
+	@Column(name = "detecteur_temp")
+	private String detecteurTemperature;
+
+	@Column(name = "certif_controle")
+	private String certificatControle;
+
+	@Column(name = "certif_phyto")
+	private String certificatPhytosanitaire;
+
+	@Column(name = "bill_of_lading")
+	private String billOfLading;
+
+	@Column(name = "container")
+	private String numeroContainer;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trp_code")
+	private GeoTransporteur transporteurGroupage;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "soc_code")
+	private GeoSociete societe;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sco_code")
+	private GeoSecteur secteurCommercial;
 
 }
