@@ -10,16 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_envois")
 @Entity
-public class GeoEnvois extends ModifiedEntity {
+public class GeoEnvois {
   
   @Id
 	@Column(name = "env_code")
