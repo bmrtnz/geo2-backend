@@ -130,6 +130,9 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 
 	@Column(name = "totfad")
 	private Float totalFraisAdditionnels;
+
+	@Column(name = "totfrais_plateforme")
+	private Float totalFraisPlateforme;
 	
 	@Column(name = "var_ristourne")
 	private Boolean ristourne;
@@ -262,6 +265,9 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 
 	@Column(name = "cert_origine")
 	private String origineCertification;
+
+	@Column(name = "pde_ref")
+	private String referenceProdet;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordreLigne")
 	private List<GeoTracabiliteLigne> tracabiliteLignes;
