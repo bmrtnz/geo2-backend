@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,11 +26,22 @@ public class GeoOrdreFrais extends ValidateAndModifiedEntity {
 	@Column(name = "fra_desc")
 	private String description;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fra_code")
+	private GeoFrais frais;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dev_code")
+	private GeoDevise devise;
+
 	@Column(name = "montant")
 	private Float montant;
 
 	@Column(name = "dev_tx")
 	private Float deviseTaxe;
+
+	@Column(name = "trp_code_plus")
+	private String codePlus;
 
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
