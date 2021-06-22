@@ -11,7 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinFormula;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;

@@ -49,7 +49,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private Boolean expedieLieuGroupage;
 
 	@Column(name = "locus_trace")
-	private String locusTrace;
+		private String locusTrace;
 
 	@Column(name = "datdep_fou_p")
 	private LocalDate dateDepartPrevueFournisseur;
