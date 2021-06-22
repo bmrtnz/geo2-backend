@@ -1,7 +1,5 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -9,7 +7,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
@@ -19,29 +16,30 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "geo_traca_detail_pal")
+@Table(name = "geo_traca_ligne")
 @Entity
-public class GeoTracabiliteDetailPalette extends ValidateAndModifiedEntity {
+public class GeoTracabiliteLigne extends ValidateAndModifiedEntity {
 
 	@Id
-	@Column(name = "ref_traca")
+	@Column(name = "ref_traca_ligne")
 	private Integer id;
 
-	@Column(name = "pds_net")
-	private Float poidsNet;
+	@Column(name = "arbo_code")
+	private String arboCode;
 
-	@Column(name = "pds_brut")
-	private Float poidsBrut;
+	@Column(name = "nb_colis")
+	private Integer nombreColis;
 
   @Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "pal_sol")
 	private Boolean paletteAuSol;
 
   @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ord_ref")
-	private GeoOrdre ordre;
+	@JoinColumn(name = "orl_ref")
+	private GeoOrdreLigne ordreLigne;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tracabiliteDetailPalette")
-	private List<GeoTracabiliteLigne> tracabiliteLignes;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_traca")
+	private GeoTracabiliteDetailPalette tracabiliteDetailPalette;
 
 }
