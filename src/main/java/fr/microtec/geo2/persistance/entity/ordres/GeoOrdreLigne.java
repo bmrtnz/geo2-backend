@@ -269,6 +269,9 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@Column(name = "pde_ref")
 	private String referenceProdet;
 
+	@Column(name = "nb_cqphotos")
+	private Double nombrePhotosCQ;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordreLigne")
 	private List<GeoTracabiliteLigne> tracabiliteLignes;
 

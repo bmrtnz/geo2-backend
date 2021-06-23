@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import fr.microtec.geo2.persistance.CriteriaUtils;
+import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatus;
@@ -203,6 +204,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					return GeoStatusGEO.findByAbbr(arg);
 				} else if (type.equals(GeoStatus.class)) {
 					return GeoStatus.findByAbbr(arg);
+				} else if (type.equals(GeoCahierDesCharges.class)) {
+					return GeoCahierDesCharges.findByAbbr(arg);
 				} else {
 					throw new RsqlException(String.format("Unknown type '%s' for parsing", type.getSimpleName()));
 				}
