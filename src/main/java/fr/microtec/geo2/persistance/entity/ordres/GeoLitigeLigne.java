@@ -29,4 +29,16 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 	@Column(name = "res_comment")
 	private String commentaireResponsable;
 
+	@Column(name = "cli_pu")
+	private Float clientPrixUnitaire;
+	
+	@Column(name = "cli_qte")
+	private Double clientQuantite;
+
+	@Column(name = "res_dev_pu")
+	private Double devisePrixUnitaire;
+
+	@Column(name = "res_dev_taux")
+	private Double deviseTaux;
+
 }

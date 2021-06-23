@@ -108,4 +108,7 @@ public class GeoLitige extends ValidateAndModifiedEntity {
   @Column(name = "num_version")
 	private Integer numeroVersion;
 
+  @Column(name = "tot_mont_rist_sf")
+	private Float totalMontantRistourne;
+
 }
