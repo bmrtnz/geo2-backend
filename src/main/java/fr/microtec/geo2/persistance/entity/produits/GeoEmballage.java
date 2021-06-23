@@ -59,22 +59,22 @@ public class GeoEmballage extends ValidateAndModifiedEntity {
 	private Float tare;
 
 	@Column(name = "col_xb")
-	private Integer xb;
+	private Float xb;
 
 	@Column(name = "col_xh")
-	private Integer xh;
+	private Float xh;
 
 	@Column(name = "col_yb")
-	private Integer yb;
+	private Float yb;
 
 	@Column(name = "col_yh")
-	private Integer yh;
+	private Float yh;
 
 	@Column(name = "col_zb")
-	private Integer zb;
+	private Float zb;
 
 	@Column(name = "col_zh")
-	private Integer zh;
+	private Float zh;
 
 	@Column(name = "embadif_col_art")
 	private String codeEmbadif;

@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.JoinColumnOrFormula;
@@ -274,5 +276,25 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordreLigne")
 	private List<GeoTracabiliteLigne> tracabiliteLignes;
+
+	@Transient
+	private Float nombreColisPaletteByDimensions;
+
+	@PostLoad
+	public void postLoad(){
+		Character dimensions = this.getTypePalette().getDimensions();
+		Float xb = this.getArticle().getEmballage().getEmballage().getXb();
+		Float yb = this.getArticle().getEmballage().getEmballage().getYb();
+		Float zb = this.getArticle().getEmballage().getEmballage().getZb();
+		Float xh = this.getArticle().getEmballage().getEmballage().getXh();
+		Float yh = this.getArticle().getEmballage().getEmballage().getYh();
+		Float zh = this.getArticle().getEmballage().getEmballage().getZh();
+		if(dimensions == '1')
+			this.nombreColisPaletteByDimensions = xb * xh;
+		else if(dimensions == '8')
+			this.nombreColisPaletteByDimensions = yb * yh;
+		else if(dimensions == '6')
+			this.nombreColisPaletteByDimensions = zb * zh;
+	}
 
 }
