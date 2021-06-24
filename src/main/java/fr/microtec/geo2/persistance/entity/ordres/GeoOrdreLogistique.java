@@ -137,12 +137,4 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@JoinColumn(name = "trp_code")
 	private GeoTransporteur transporteurGroupage;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "soc_code")
-	private GeoSociete societe;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sco_code")
-	private GeoSecteur secteurCommercial;
-
 }
