@@ -16,8 +16,6 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
-import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
-import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

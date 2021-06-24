@@ -39,6 +39,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
@@ -160,6 +161,12 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
 
     page = this.mruOrdreRepository.findAll(spec, pageable);
 
+    return PageFactory.fromPage(page);
+  }
+
+  public RelayPage<GeoOrdreLigneTotauxDetail> fetchTotauxDetail(String ordreID,Pageable pageable) {
+    GeoOrdre ordre = this.ordreRepository.getOne(ordreID);
+    Page<GeoOrdreLigneTotauxDetail> page = this.ordreLigneRepository.getTotauxDetail(ordre,pageable);
     return PageFactory.fromPage(page);
   }
 
@@ -399,7 +406,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
 
     // Update logistiques
     List<GeoOrdreLigneSummed> summedLignes =  this.ordreLigneRepository
-    .getSummedLignesByOrdreGroupByFournisseur(ordre);
+    .getSummedPalettesByOrdreGroupByFournisseur(ordre);
     for(GeoOrdreLigneSummed summedLigne : summedLignes) {
       GeoOrdreLogistique logistique = summedLigne.getLogistique();
       logistique.setTotalPalettesCommandees(summedLigne.getNombrePalettesCommandees().floatValue());

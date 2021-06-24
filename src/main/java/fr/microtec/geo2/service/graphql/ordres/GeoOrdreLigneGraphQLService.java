@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
+import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLNonNull;
@@ -20,8 +22,14 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
 
-	public GeoOrdreLigneGraphQLService(GeoOrdreLigneRepository repository) {
+	private final OrdreService ordreService;
+
+	public GeoOrdreLigneGraphQLService(
+		GeoOrdreLigneRepository repository,
+		OrdreService ordreService
+	) {
 		super(repository);
+		this.ordreService = ordreService;
 	}
 
 	@GraphQLQuery
@@ -30,6 +38,14 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
 		return this.getPage(search, pageable);
+	}
+
+	@GraphQLQuery
+	public RelayPage<GeoOrdreLigneTotauxDetail> allOrdreLigneTotauxDetail(
+			@GraphQLArgument(name = "ordre") @GraphQLNonNull String ordre,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+	) {
+		return this.ordreService.fetchTotauxDetail(ordre,pageable);
 	}
 
 	@GraphQLQuery
