@@ -33,6 +33,8 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoGenre;
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
+import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -44,6 +46,8 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeLigneRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoMRUOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreFraisRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
@@ -67,6 +71,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
   private final GeoOrdreFraisRepository ordreFraisRepository;
   private final GeoEnvoisRepository envoisRepository;
   private final GeoFluxRepository fluxRepository;
+  private final GeoLitigeRepository litigeRepository;
+  private final GeoLitigeLigneRepository litigeLigneRepository;
   private static final Logger logger = LoggerFactory.getLogger(OrdreService.class);
 
   public OrdreService(
@@ -76,6 +82,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     GeoOrdreLogistiqueRepository ordreLogistiqueRepository,
     GeoOrdreFraisRepository ordreFraisRepository,
     GeoEnvoisRepository envoisRepository,
+    GeoLitigeRepository litigeRepository,
+    GeoLitigeLigneRepository litigeLigneRepository,
     GeoFluxRepository fluxRepository
   ) {
     super(mruOrdreRepository);
@@ -86,6 +94,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     this.ordreFraisRepository = ordreFraisRepository;
     this.envoisRepository = envoisRepository;
     this.fluxRepository = fluxRepository;
+    this.litigeRepository = litigeRepository;
+    this.litigeLigneRepository = litigeLigneRepository;
   }
 
   private String fetchNumero(GeoSociete societe) {
@@ -164,9 +174,15 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     return PageFactory.fromPage(page);
   }
 
-  public RelayPage<GeoOrdreLigneTotauxDetail> fetchTotauxDetail(String ordreID,Pageable pageable) {
+  public RelayPage<GeoOrdreLigneTotauxDetail> fetchOrdreLignesTotauxDetail(String ordreID,Pageable pageable) {
     GeoOrdre ordre = this.ordreRepository.getOne(ordreID);
     Page<GeoOrdreLigneTotauxDetail> page = this.ordreLigneRepository.getTotauxDetail(ordre,pageable);
+    return PageFactory.fromPage(page);
+  }
+
+  public RelayPage<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID,Pageable pageable) {
+    GeoLitige litige = this.litigeRepository.getOne(litigeID);
+    Page<GeoLitigeLigneTotaux> page = this.litigeLigneRepository.getTotaux(litige,pageable);
     return PageFactory.fromPage(page);
   }
 

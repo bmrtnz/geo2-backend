@@ -45,7 +45,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 			@GraphQLArgument(name = "ordre") @GraphQLNonNull String ordre,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
-		return this.ordreService.fetchTotauxDetail(ordre,pageable);
+		return this.ordreService.fetchOrdreLignesTotauxDetail(ordre,pageable);
 	}
 
 	@GraphQLQuery

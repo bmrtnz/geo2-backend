@@ -2,7 +2,9 @@ package fr.microtec.geo2.service.graphql.ordres;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeLigneRepository;
+import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLNonNull;
@@ -19,8 +21,14 @@ import java.util.Optional;
 @Secured("ROLE_USER")
 public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoLitigeLigne, String> {
 
-	public GeoLitigeLigneGraphQLService(GeoLitigeLigneRepository repository) {
+	private final OrdreService ordreService;
+
+	public GeoLitigeLigneGraphQLService(
+		GeoLitigeLigneRepository repository,
+		OrdreService ordreService
+	) {
 		super(repository);
+		this.ordreService = ordreService;
 	}
 
 	@GraphQLQuery
@@ -29,6 +37,14 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
 	) {
 		return this.getPage(search, pageable);
+	}
+
+	@GraphQLQuery
+	public RelayPage<GeoLitigeLigneTotaux> allLitigeLigneTotaux(
+			@GraphQLArgument(name = "litige") @GraphQLNonNull String litige,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+	) {
+		return this.ordreService.fetchLitigeLignesTotaux(litige,pageable);
 	}
 
 	@GraphQLQuery
