@@ -171,6 +171,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "ind_modif_detail")
 	private Boolean modificationDetail;
 
+	@Column(name = "ind_gest_colis_manquant")
+	private Boolean colisManquant;
+
 	@Column(name = "ifco")
 	private String ifco;
 
