@@ -40,11 +40,10 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoLitigeLigneTotaux> allLitigeLigneTotaux(
-			@GraphQLArgument(name = "litige") @GraphQLNonNull String litige,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+	public Optional<GeoLitigeLigneTotaux> getLitigeLigneTotaux(
+			@GraphQLArgument(name = "litige") @GraphQLNonNull String litige
 	) {
-		return this.ordreService.fetchLitigeLignesTotaux(litige,pageable);
+		return this.ordreService.fetchLitigeLignesTotaux(litige);
 	}
 
 	@GraphQLQuery

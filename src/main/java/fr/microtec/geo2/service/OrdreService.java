@@ -180,10 +180,9 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     return PageFactory.fromPage(page);
   }
 
-  public RelayPage<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID,Pageable pageable) {
+  public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {
     GeoLitige litige = this.litigeRepository.getOne(litigeID);
-    Page<GeoLitigeLigneTotaux> page = this.litigeLigneRepository.getTotaux(litige,pageable);
-    return PageFactory.fromPage(page);
+    return this.litigeLigneRepository.getTotaux(litige);
   }
 
   /**

@@ -5,6 +5,8 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -32,5 +34,5 @@ public interface GeoLitigeLigneRepository extends GeoRepository<GeoLitigeLigne, 
     "ll.litige.totalMontantRistourne," +
     "(ll.litige.totalMontantRistourne * ll.litige.ordreOrigine.tauxDevise)"
   )
-  Page<GeoLitigeLigneTotaux> getTotaux(GeoLitige litige,Pageable pageable);
+  Optional<GeoLitigeLigneTotaux> getTotaux(GeoLitige litige);
 }
