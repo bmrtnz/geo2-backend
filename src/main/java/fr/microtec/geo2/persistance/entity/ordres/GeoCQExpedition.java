@@ -7,6 +7,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -20,18 +21,16 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_cqexp")
 @Entity
-public class GeoCQExpedition extends ModifiedEntity {
+public class GeoCQExpedition extends ModifiedEntity implements Serializable {
 
-  @EmbeddedId
-  private GeoCQExpeditionPK id;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "orl_ref")
-  private GeoOrdreLigne ordreLigne;
-
+  @Id
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cql_ref", insertable = false, updatable = false)
   private GeoCQLigne ligne;
+  
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "orl_ref")
+  private GeoOrdreLigne ordreLigne;
 
   @Column(name = "ok_type_pal")
   private Integer typePaletteOK;
@@ -83,13 +82,5 @@ public class GeoCQExpedition extends ModifiedEntity {
 
   @Column(name = "ok_homo_col")
   private Integer homogeneiteColisOK;
-
-}
-
-@Embeddable
-final class GeoCQExpeditionPK implements Serializable {
-
-  @Column(name = "cql_ref")
-  private String id;
 
 }
