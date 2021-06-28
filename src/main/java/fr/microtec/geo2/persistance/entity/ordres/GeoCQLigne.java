@@ -155,13 +155,13 @@ public class GeoCQLigne extends ModifiedEntity {
 	public void postLoad() {
 		this.isEXP = -2;
 		if (id == null)
-			this.isEXP = expedition.getTypePaletteOK() * expedition.getEtatPaletteOK() * expedition.getPCFOK()
-					* expedition.getTypeColisOK() * expedition.getNombreColisOK() * expedition.getFichePaletteOK()
-					* expedition.getEtiquetteColisOK() * expedition.getLisibiliteEtiquetteColisOK()
-					* expedition.getTypeBoxEndLabelOK() * expedition.getLisibiliteBoxEndLabelOK() * expedition.getTypeSacOK()
-					* expedition.getVarieteOK() * expedition.getNombreFruitsOK() * expedition.getTypeEtiquetteSacOK()
-					* expedition.getLisibiliteEtiquetteOK() * expedition.getNombreUCColisOK()
-					* expedition.getHomogeneiteColisOK();
+			this.isEXP = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
+					&& expedition.getTypeColisOK() && expedition.getNombreColisOK() && expedition.getFichePaletteOK()
+					&& expedition.getEtiquetteColisOK() && expedition.getLisibiliteEtiquetteColisOK()
+					&& expedition.getTypeBoxEndLabelOK() && expedition.getLisibiliteBoxEndLabelOK() && expedition.getTypeSacOK()
+					&& expedition.getVarieteOK() && expedition.getNombreFruitsOK() && expedition.getTypeEtiquetteSacOK()
+					&& expedition.getLisibiliteEtiquetteOK() && expedition.getNombreUCColisOK()
+					&& expedition.getHomogeneiteColisOK() ? 1 : 0;
 	}
 
 }

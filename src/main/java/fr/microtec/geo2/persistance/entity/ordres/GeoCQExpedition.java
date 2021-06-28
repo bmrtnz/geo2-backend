@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,55 +34,72 @@ public class GeoCQExpedition extends ModifiedEntity implements Serializable {
   @JoinColumn(name = "orl_ref")
   private GeoOrdreLigne ordreLigne;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_type_pal")
-  private Integer typePaletteOK;
+  private Boolean typePaletteOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_etat_pal")
-  private Integer etatPaletteOK;
+  private Boolean etatPaletteOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_pal_pcf")
-  private Integer PCFOK;
+  private Boolean PCFOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_type_col")
-  private Integer typeColisOK;
+  private Boolean typeColisOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_nbr_col")
-  private Integer nombreColisOK;
+  private Boolean nombreColisOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_fiche_pal")
-  private Integer fichePaletteOK;
+  private Boolean fichePaletteOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_etiq_col")
-  private Integer etiquetteColisOK;
+  private Boolean etiquetteColisOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_lis_etiq_c")
-  private Integer lisibiliteEtiquetteColisOK;
+  private Boolean lisibiliteEtiquetteColisOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_type_bel")
-  private Integer typeBoxEndLabelOK;
+  private Boolean typeBoxEndLabelOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_lis_bel")
-  private Integer lisibiliteBoxEndLabelOK;
+  private Boolean lisibiliteBoxEndLabelOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_type_sac")
-  private Integer typeSacOK;
+  private Boolean typeSacOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_variete")
-  private Integer varieteOK;
+  private Boolean varieteOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_nbr_fruit")
-  private Integer nombreFruitsOK;
+  private Boolean nombreFruitsOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_type_etiq_sac")
-  private Integer typeEtiquetteSacOK;
+  private Boolean typeEtiquetteSacOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_lis_etiq_sac")
-  private Integer lisibiliteEtiquetteOK;
+  private Boolean lisibiliteEtiquetteOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_nbr_uc_col")
-  private Integer nombreUCColisOK;
+  private Boolean nombreUCColisOK;
 
+  @Convert(converter = BooleanIntegerConverter.class)
   @Column(name = "ok_homo_col")
-  private Integer homogeneiteColisOK;
+  private Boolean homogeneiteColisOK;
 
 }
