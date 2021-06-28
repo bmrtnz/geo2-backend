@@ -451,8 +451,8 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@PostLoad
 	@PostUpdate
 	public void postUpdate(){
-			this.pourcentageMargeBrut = this.totalVente > 0 ?
-				(float)(this.totalVente - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalCourtage - this.totalFraisAdditionnels) / this.totalVente : 0f;
+			// this.pourcentageMargeBrut = this.totalVente > 0 ?
+			// 	(float)(this.totalVente - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalCourtage - this.totalFraisAdditionnels) / this.totalVente : 0f;
 	}
 
 	public GeoOrdre duplicate() {
