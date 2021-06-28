@@ -55,7 +55,7 @@ public class GeoCQExpedition extends ModifiedEntity {
   private Integer etiquetteColisOK;
 
   @Column(name = "ok_lis_etiq_c")
-  private Integer lisibilitéEtiquetteColisOK;
+  private Integer lisibiliteEtiquetteColisOK;
 
   @Column(name = "ok_type_bel")
   private Integer typeBoxEndLabelOK;
