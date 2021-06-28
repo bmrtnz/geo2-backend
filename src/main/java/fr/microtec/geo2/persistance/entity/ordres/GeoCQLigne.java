@@ -8,7 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
@@ -20,14 +23,20 @@ import lombok.EqualsAndHashCode;
 @Table(name = "geo_cqligne")
 @Entity
 public class GeoCQLigne extends ModifiedEntity {
-  
-  @Id
+
+	@Id
 	@Column(name = "cql_ref")
 	private String id;
-  
-  @ManyToOne(fetch = FetchType.LAZY)
+
+	@Column(name = "cqc_ref")
+	private String referenceCQC;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orl_ref")
 	private GeoOrdreLigne ordreLigne;
+
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "ligne")
+	private GeoCQExpedition expedition;
 
 	@Column(name = "col_nbf")
 	private Float nombreFruitsTheoriqueParColis;
@@ -131,12 +140,28 @@ public class GeoCQLigne extends ModifiedEntity {
 	@Column(name = "nb_colis_controle")
 	private Float nombreColisControles;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pal_code")
 	private GeoTypePalette typePalette;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
+
+	@Transient
+	private Integer isEXP;
+
+	@PostLoad
+	public void postLoad() {
+		this.isEXP = -2;
+		if (id == null)
+			this.isEXP = expedition.getTypePaletteOK() * expedition.getEtatPaletteOK() * expedition.getPCFOK()
+					* expedition.getTypeColisOK() * expedition.getNombreColisOK() * expedition.getFichePaletteOK()
+					* expedition.getEtiquetteColisOK() * expedition.getLisibilitéEtiquetteColisOK()
+					* expedition.getTypeBoxEndLabelOK() * expedition.getLisibiliteBoxEndLabelOK() * expedition.getTypeSacOK()
+					* expedition.getVarieteOK() * expedition.getNombreFruitsOK() * expedition.getTypeEtiquetteSacOK()
+					* expedition.getLisibiliteEtiquetteOK() * expedition.getNombreUCColisOK()
+					* expedition.getHomogeneiteColisOK();
+	}
 
 }

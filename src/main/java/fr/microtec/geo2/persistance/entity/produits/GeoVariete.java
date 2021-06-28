@@ -25,6 +25,9 @@ public class GeoVariete extends ValidateAndModifiedEntity {
 	@Column(name = "var_ctifl")
 	private Boolean soumisCtifl;
 
+	@Column(name = "ind_modif_detail")
+	private Boolean modificationDetail;
+
 	@Column(name = "var_ristourne")
 	private Boolean soumisRistourne;
 
