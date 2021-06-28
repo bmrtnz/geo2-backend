@@ -14,11 +14,11 @@ import org.springframework.stereotype.Repository;
 public interface GeoLitigeLigneRepository extends GeoRepository<GeoLitigeLigne, String> {
   @Query(
     "SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux("+
-      "SUM(ll.clientPrixUnitaire * ll.clientQuantite * ll.litige.ordreOrigine.tauxDevise) as reclamationClientTaux,"+
-      "SUM(ll.clientPrixUnitaire * ll.clientQuantite) as reclamationClient,"+
-      "SUM(ll.devisePrixUnitaire * ll.responsableQuantite * ll.deviseTaux) as deviseTotalTaux,"+
-      "SUM(ll.devisePrixUnitaire * ll.responsableQuantite) as deviseTotal,"+
-      "(ll.litige.totalMontantRistourne * ll.litige.ordreOrigine.tauxDevise) as ristourne,"+
+      "SUM(ll.clientPrixUnitaire * ll.clientQuantite) as avoirClient,"+
+      "SUM(ll.clientPrixUnitaire * ll.clientQuantite * ll.litige.ordreOrigine.tauxDevise) as avoirClientTaux,"+
+      "SUM(ll.devisePrixUnitaire * ll.responsableQuantite) as avoirFournisseur,"+
+      "SUM(ll.devisePrixUnitaire * ll.responsableQuantite * ll.deviseTaux) as avoirFournisseurTaux,"+
+      "(ll.litige.totalMontantRistourne * ll.litige.ordreOrigine.tauxDevise) as ristourneTaux,"+
       "ll.litige.fraisAnnexes,"+
       "ll.litige.totalMontantRistourne,"+
       "ll.litige.ordreOrigine.devise"+
