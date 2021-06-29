@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "geo_campag")
+@Table(name = "geo_typtie")
 public class GeoTypeTiers extends ValidateAndModifiedEntity {
 
   @Id
