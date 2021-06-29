@@ -7,6 +7,7 @@ import lombok.Getter;
 public enum GeoOrdreType implements StringEnum {
 	COM("COM"),
 	ORD("ORD"),
+	ORI("ORI"),
 	REF("REF"),
 	REG("REG"),
 	REP("REP"),
