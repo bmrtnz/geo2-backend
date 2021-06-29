@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import lombok.Data;
 
@@ -44,9 +45,6 @@ public class GeoEnvois {
 	@JoinColumn(name = "flu_code")
 	private GeoFlux flux;
 
-	@Column(name = "tyt_code")
-  private Character typeTiers;
-
 	@Column(name = "tie_code")
   private String codeTiers;
 
@@ -77,5 +75,9 @@ public class GeoEnvois {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "moc_code")
 	private GeoMoyenCommunication moyenCommunication;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tyt_code")
+	private GeoTypeTiers typeTiers;
 
 }
