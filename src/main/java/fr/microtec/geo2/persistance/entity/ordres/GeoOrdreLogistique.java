@@ -126,7 +126,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private String certificatPhytosanitaire;
 
 	@Column(name = "bill_of_lading")
-	private String billOfLading;
+	private String billOfLanding;
 
 	@Column(name = "container")
 	private String numeroContainer;
