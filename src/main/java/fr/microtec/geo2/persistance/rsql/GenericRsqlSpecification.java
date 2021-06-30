@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,19 +28,6 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
  * Generic specification for Rsql query.
  */
 public class GenericRsqlSpecification<T> implements Specification<T> {
-
-	private static final String DATE_TIME_PATTERN = "yyyy-MM-dd['T'HH:mm:ss]"; // ISO 8601 with optional time
-	private static final DateTimeFormatter DATE_TIME_FORMATTER;
-	static {
-		// Default value of optional time.
-		// TODO use : DateTimeFormatter.ISO_INSTANT ?
-		DATE_TIME_FORMATTER = new DateTimeFormatterBuilder()
-				.appendPattern(DATE_TIME_PATTERN)
-				.parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-				.parseDefaulting(ChronoField.MINUTE_OF_DAY, 0)
-				.parseDefaulting(ChronoField.SECOND_OF_DAY, 0)
-				.toFormatter();
-	}
 
 	private final String property;
 	private final RsqlSearchOperation operator;
