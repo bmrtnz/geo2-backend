@@ -1,6 +1,8 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -112,10 +114,10 @@ public class GeoCQLigne extends ModifiedEntity {
 	private Boolean evalue;
 
 	@Column(name = "fin_date")
-	private LocalDate dateFinControle;
+	private LocalDateTime dateFinControle;
 
 	@Column(name = "off_date")
-	private LocalDate dateDerniereSaisieOffline;
+	private LocalDateTime dateDerniereSaisieOffline;
 
 	@Column(name = "off_user")
 	private String utilisateurDerniereSaisieOffline;
@@ -151,10 +153,18 @@ public class GeoCQLigne extends ModifiedEntity {
 	private GeoOrdre ordre;
 
 	@Transient
+	private String description;
+
+	@Transient
 	private Integer isExp;
 
 	@PostLoad
 	public void postLoad() {
+
+		// description
+		this.description = this.articleDescriptionAbrege + " par " + this.utilisateurDerniereSaisieOffline + " " + this.dateDerniereSaisieOffline.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+
+		// isExp
 		this.isExp = -2;
 		if (id == null)
 			this.isExp = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
