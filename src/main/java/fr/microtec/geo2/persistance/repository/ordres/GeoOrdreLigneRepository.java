@@ -36,7 +36,10 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
       "SUM(ol.poidsNetExpedie) as totalPoidsNetExpedie,"+
       "SUM(ol.poidsBrutExpedie) as totalPoidsBrutExpedie,"+
       "ol.fournisseur as fournisseur,"+
-      "ol.logistique as logistique"+
+      "ol.logistique.nombrePalettesAuSol as nombrePalettesAuSol,"+
+      "ol.logistique.nombrePalettes100x120 as nombrePalettes100x120,"+
+      "ol.logistique.nombrePalettes80x120 as nombrePalettes80x120,"+
+      "ol.logistique.nombrePalettes60X80 as nombrePalettes60X80"+
     ") "+
     "FROM #{#entityName} ol " + 
     "WHERE ol.ordre = :ordre "+
@@ -46,7 +49,8 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
     "ol.logistique.nombrePalettesAuSol," +
     "ol.logistique.nombrePalettes100x120," +
     "ol.logistique.nombrePalettes80x120," +
-    "ol.logistique.nombrePalettes60X80"
+    "ol.logistique.nombrePalettes60X80 " +
+    "ORDER BY ol.fournisseur"
   )
   Page<GeoOrdreLigneTotauxDetail> getTotauxDetail(GeoOrdre ordre,Pageable pageable);
 
