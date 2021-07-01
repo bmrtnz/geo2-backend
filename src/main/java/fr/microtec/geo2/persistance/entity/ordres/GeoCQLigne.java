@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -80,10 +81,10 @@ public class GeoCQLigne extends ModifiedEntity {
 	@Column(name = "nok_autrecli")
 	private Boolean nonConformeAutreClient;
 
-	@Column(name = "nok_derog_intern")
+	@Column(name = "nok_derog_interne")
 	private Boolean nonConformeDerogationInterne;
 
-	@Column(name = "nok_derog_intern_nom")
+	@Column(name = "nok_derog_interne_nom")
 	private String nomResponsableDerogationInterne;
 
 	@Column(name = "nok_cause")
@@ -101,7 +102,7 @@ public class GeoCQLigne extends ModifiedEntity {
 	@Column(name = "pal_code_reel")
 	private String codePaletteEffectif;
 
-	@Column(name = "cq_commntaires")
+	@Column(name = "cq_commentaires")
 	private String commentairesControleur;
 
 	@Column(name = "nok_client_ok")
@@ -128,8 +129,9 @@ public class GeoCQLigne extends ModifiedEntity {
 	@Column(name = "ccw_code")
 	private GeoCahierDesCharges cahierDesCharges;
 
-	@Column(name = "fou_code")
-	private String fournisseurCode;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+	private GeoFournisseur fournisseur;
 
 	@Column(name = "ordre_desc")
 	private String ordreDescription;
@@ -149,13 +151,13 @@ public class GeoCQLigne extends ModifiedEntity {
 	private GeoOrdre ordre;
 
 	@Transient
-	private Integer isEXP;
+	private Integer isExp;
 
 	@PostLoad
 	public void postLoad() {
-		this.isEXP = -2;
+		this.isExp = -2;
 		if (id == null)
-			this.isEXP = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
+			this.isExp = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
 					&& expedition.getTypeColisOK() && expedition.getNombreColisOK() && expedition.getFichePaletteOK()
 					&& expedition.getEtiquetteColisOK() && expedition.getLisibiliteEtiquetteColisOK()
 					&& expedition.getTypeBoxEndLabelOK() && expedition.getLisibiliteBoxEndLabelOK() && expedition.getTypeSacOK()

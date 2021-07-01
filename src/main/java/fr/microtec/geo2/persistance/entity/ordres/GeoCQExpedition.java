@@ -24,6 +24,9 @@ import lombok.EqualsAndHashCode;
 public class GeoCQExpedition extends ModifiedEntity implements Serializable {
 
   @Id
+  @Column(name = "cql_ref")
+  private String id;
+
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cql_ref", insertable = false, updatable = false)
   private GeoCQLigne ligne;
@@ -89,7 +92,7 @@ public class GeoCQExpedition extends ModifiedEntity implements Serializable {
   private Boolean typeEtiquetteSacOK;
 
   @Convert(converter = BooleanIntegerConverter.class)
-  @Column(name = "ok_lis_etiq_sac")
+  @Column(name = "ok_lis_etiq_s")
   private Boolean lisibiliteEtiquetteOK;
 
   @Convert(converter = BooleanIntegerConverter.class)
