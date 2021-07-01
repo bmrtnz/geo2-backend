@@ -16,5 +16,8 @@ public class GeoOrdreLigneTotauxDetail implements Serializable {
   Double totalPoidsNetExpedie;
   Double totalPoidsBrutExpedie;
   GeoFournisseur fournisseur;
-  GeoOrdreLogistique logistique;
+	Float nombrePalettesAuSol;
+	Float nombrePalettes100x120;
+	Float nombrePalettes80x120;
+	Float nombrePalettes60X80;
 }
