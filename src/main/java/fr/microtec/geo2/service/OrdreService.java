@@ -175,8 +175,11 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
   }
 
   public RelayPage<GeoOrdreLigneTotauxDetail> fetchOrdreLignesTotauxDetail(String ordreID,Pageable pageable) {
+    // reset sorting
+    Pageable pageableUnsorted = PageRequest
+    .of(pageable.getPageNumber(), pageable.getPageSize());
     GeoOrdre ordre = this.ordreRepository.getOne(ordreID);
-    Page<GeoOrdreLigneTotauxDetail> page = this.ordreLigneRepository.getTotauxDetail(ordre,pageable);
+    Page<GeoOrdreLigneTotauxDetail> page = this.ordreLigneRepository.getTotauxDetail(ordre,pageableUnsorted);
     return PageFactory.fromPage(page);
   }
 
