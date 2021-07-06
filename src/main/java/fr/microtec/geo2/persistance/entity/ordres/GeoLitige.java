@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_litige")
 @Entity
-public class GeoLitige extends ValidateAndModifiedEntity {
+public class GeoLitige extends ValidateAndModifiedEntity implements Serializable {
   
   @Id
 	@Column(name = "lit_ref")
