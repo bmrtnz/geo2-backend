@@ -283,18 +283,26 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@PostLoad
 	public void postLoad(){
 		Character dimensions = this.getTypePalette().getDimensions();
-		Float xb = this.getArticle().getEmballage().getEmballage().getXb();
-		Float yb = this.getArticle().getEmballage().getEmballage().getYb();
-		Float zb = this.getArticle().getEmballage().getEmballage().getZb();
-		Float xh = this.getArticle().getEmballage().getEmballage().getXh();
-		Float yh = this.getArticle().getEmballage().getEmballage().getYh();
-		Float zh = this.getArticle().getEmballage().getEmballage().getZh();
-		if(dimensions == '1')
-			this.nombreColisPaletteByDimensions = xb * xh;
-		else if(dimensions == '8')
-			this.nombreColisPaletteByDimensions = yb * yh;
-		else if(dimensions == '6')
-			this.nombreColisPaletteByDimensions = zb * zh;
+
+		if (
+			this.getArticle() != null &&
+			this.getArticle().getEmballage() != null &&
+			this.getArticle().getEmballage().getEmballage() != null
+		) {
+			Float xb = this.getArticle().getEmballage().getEmballage().getXb();
+			Float yb = this.getArticle().getEmballage().getEmballage().getYb();
+			Float zb = this.getArticle().getEmballage().getEmballage().getZb();
+			Float xh = this.getArticle().getEmballage().getEmballage().getXh();
+			Float yh = this.getArticle().getEmballage().getEmballage().getYh();
+			Float zh = this.getArticle().getEmballage().getEmballage().getZh();
+
+			if(dimensions == '1')
+				this.nombreColisPaletteByDimensions = xb * xh;
+			else if(dimensions == '8')
+				this.nombreColisPaletteByDimensions = yb * yh;
+			else if(dimensions == '6')
+				this.nombreColisPaletteByDimensions = zb * zh;
+		}
 	}
 
 }
