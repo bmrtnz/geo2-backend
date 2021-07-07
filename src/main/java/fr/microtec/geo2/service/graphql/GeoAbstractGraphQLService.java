@@ -1,18 +1,23 @@
 package fr.microtec.geo2.service.graphql;
 
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
-import fr.microtec.geo2.configuration.graphql.PageFactory;
-import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.configuration.graphql.RelayPageImpl;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
-import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
-import graphql.relay.Edge;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.execution.relay.CursorProvider;
+import java.beans.FeatureDescriptor;
+import java.beans.PropertyDescriptor;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.entity.EntityPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -22,18 +27,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import java.beans.FeatureDescriptor;
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
+import fr.microtec.geo2.configuration.graphql.PageFactory;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.configuration.graphql.RelayPageImpl;
+import fr.microtec.geo2.configuration.graphql.Summary;
+import fr.microtec.geo2.configuration.graphql.SummaryType;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
+import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
+import graphql.relay.Edge;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import io.leangen.graphql.execution.relay.CursorProvider;
 
 /**
  * Abstract Geo graphQl service.
@@ -48,6 +53,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
 	protected final GeoRepository<T, ID> repository;
 	private RSQLParser rsqlParser;
+	private static final Logger logger = LoggerFactory.getLogger(GeoAbstractGraphQLService.class);
 
 	public GeoAbstractGraphQLService(GeoRepository<T, ID> repository) {
 		this.repository = repository;
@@ -213,6 +219,53 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	@Autowired
 	public final void setRSQLParser(RSQLParser rsqlParser) {
 		this.rsqlParser = rsqlParser;
+	}
+
+	/**
+	 * Calcul aggregations from entities list
+	 * @param source Entities list
+	 * @param summaries Requested aggregations
+	 * @return Computed summaries
+	 */
+	public static <T> List<Double> summarize(List<T> source, List<Summary> summaries) {
+    return summaries.stream()
+    .map(s -> {
+      return source.stream()
+      .filter(entity -> {
+        Class<?> clazz = entity.getClass(); // ? Generic to Handle projections
+				String getter = "get" + s.getSelector().substring(0, 1).toUpperCase() + s.getSelector().substring(1);
+        try {
+          clazz.getMethod(getter);
+          return true;
+        } catch(Exception e) {
+					GeoAbstractGraphQLService.logger.info("Summarize operation error, continuing" + e.getMessage());
+          return false;
+        }
+      })
+      .map(entity -> {
+        Class<?> clazz = entity.getClass(); // ? Generic to Handle projections
+				String getter = "get" + s.getSelector().substring(0, 1).toUpperCase() + s.getSelector().substring(1);
+        try {
+					Method method = clazz.getMethod(getter);
+					Object value = method.invoke(entity);
+					if (value.getClass().equals(Integer.class)) {
+						return Double.valueOf((Integer)value);
+					} else if (value.getClass().equals(Float.class)) {
+						return Double.valueOf((Float)value);
+					} else {
+						return (Double) value;
+					}
+        } catch(Exception e) {
+          throw new RuntimeException(e);
+        }
+      })
+      .reduce(0d, (subtotal, element) -> {
+				if(s.getSummaryType() == SummaryType.SUM)
+					return subtotal + element;
+				else throw new RuntimeException("Summary type not implemented: " + s.getSummaryType());
+			});
+    })
+    .collect(Collectors.toList());
 	}
 
 }
