@@ -102,9 +102,6 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 	@Column(name = "ind_env_inc")
 	private Boolean envoisIncident;
 
-	@Column(name = "propr_code")
-	private String proprietaireMarchandiseCode;
-
 	@Column(name = "ord_ref_replace")
 	private String ordreReferenceRemplacement;
 
