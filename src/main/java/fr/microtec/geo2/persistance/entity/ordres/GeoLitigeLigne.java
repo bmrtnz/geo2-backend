@@ -79,7 +79,7 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 	private Float responsablePrixUnitaire;
 
 	@Column(name = "res_bta_code")
-	private Float responsableUniteFactureCode;
+	private String responsableUniteFactureCode;
 
 	@Column(name = "res_qte")
 	private Double responsableQuantite;
