@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,6 +27,9 @@ public class GeoTracabiliteDetailPalette extends ValidateAndModifiedEntity {
 	@Id
 	@Column(name = "ref_traca")
 	private Integer id;
+
+	@Column(name = "sscc")
+	private String SSCC;
 
 	@Column(name = "pds_net")
 	private Float poidsNet;
@@ -40,6 +44,10 @@ public class GeoTracabiliteDetailPalette extends ValidateAndModifiedEntity {
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pal_code")
+	private GeoTypePalette typePalette;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tracabiliteDetailPalette")
 	private List<GeoTracabiliteLigne> tracabiliteLignes;

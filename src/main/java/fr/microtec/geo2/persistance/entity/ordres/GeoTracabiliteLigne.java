@@ -30,10 +30,6 @@ public class GeoTracabiliteLigne extends ValidateAndModifiedEntity {
 	@Column(name = "nb_colis")
 	private Integer nombreColis;
 
-  @Convert(converter = BooleanIntegerConverter.class)
-	@Column(name = "pal_sol")
-	private Boolean paletteAuSol;
-
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orl_ref")
 	private GeoOrdreLigne ordreLigne;
