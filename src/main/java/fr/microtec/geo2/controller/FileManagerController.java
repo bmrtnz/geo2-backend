@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +108,17 @@ public class FileManagerController {
 	}
 
 	/**
+	 * Download etiquette file.
+	 */
+	@GetMapping("/etiquette/{filename}")
+	@ResponseBody
+	public HttpEntity<FileSystemResource> getEtiquette(@PathVariable String filename) {
+		Path downloadFile = this.fileSystemService.getEtiquette(filename, true);
+
+		return buildDownload(downloadFile.getFileName().toString(), downloadFile, false);
+	}
+
+	/**
 	 * Download files command.
 	 */
 	@PostMapping("/execute/download")
@@ -140,9 +149,28 @@ public class FileManagerController {
 
 		}
 
+		return buildDownload(filename, downloadFile, true);
+	}
+
+	/**
+	 * Build HttpResponse with file to download and correct file name in header.
+	 *
+	 * @param filename The name of file to download.
+	 * @param downloadFile The path of file to download.
+	 * @return HttpEntity with file to download.
+	 */
+	static HttpEntity<FileSystemResource> buildDownload(String filename, Path downloadFile, boolean forceDownload) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDisposition(ContentDisposition.builder("attachment").filename(filename).build());
+
+		try {
+			headers.setContentType(MediaType.parseMediaType(Files.probeContentType(downloadFile)));
+		} catch (IOException e) {
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		}
+
+		if (forceDownload) {
+			headers.setContentDisposition(ContentDisposition.builder("attachment").filename(filename).build());
+		}
 
 		return new HttpEntity<>(new FileSystemResource(downloadFile), headers);
 	}
