@@ -41,7 +41,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
@@ -57,6 +56,8 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
+
+// TODO Separate services for each different entities (extending from GeoAbstractGraphQLService)
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUOrdreKey> {
@@ -171,15 +172,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
 
     page = this.mruOrdreRepository.findAll(spec, pageable);
 
-    return PageFactory.fromPage(page);
-  }
-
-  public RelayPage<GeoOrdreLigneTotauxDetail> fetchOrdreLignesTotauxDetail(String ordreID,Pageable pageable) {
-    // reset sorting
-    Pageable pageableUnsorted = PageRequest
-    .of(pageable.getPageNumber(), pageable.getPageSize());
-    GeoOrdre ordre = this.ordreRepository.getOne(ordreID);
-    Page<GeoOrdreLigneTotauxDetail> page = this.ordreLigneRepository.getTotauxDetail(ordre,pageableUnsorted);
     return PageFactory.fromPage(page);
   }
 

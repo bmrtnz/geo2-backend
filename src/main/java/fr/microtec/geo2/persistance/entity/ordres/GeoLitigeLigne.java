@@ -30,6 +30,14 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "orl_ref")
 	private GeoOrdreLigne ordreLigne;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "lca_code")
+	private GeoLitigeCause cause;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "lcq_code")
+	private GeoLitigeConsequence consequence;
+
 	@Column(name = "res_comment")
 	private String commentaireResponsable;
 
@@ -79,7 +87,7 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 	private Float responsablePrixUnitaire;
 
 	@Column(name = "res_bta_code")
-	private Float responsableUniteFactureCode;
+	private String responsableUniteFactureCode;
 
 	@Column(name = "res_qte")
 	private Double responsableQuantite;
@@ -90,10 +98,10 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 	@Column(name = "tie_code")
 	private String tiersCode;
 	
-	@Column(name = "lca_code")
+	@Column(name = "lca_code", insertable = false, updatable = false)
 	private String causeLitigeCode;
 
-	@Column(name = "lcq_code")
+	@Column(name = "lcq_code", insertable = false, updatable = false)
 	private String consequenceLitigeCode;
 
 	@Column(name = "fl_encours")
@@ -101,9 +109,6 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 
 	@Column(name = "ind_env_inc")
 	private Boolean envoisIncident;
-
-	@Column(name = "propr_code")
-	private String proprietaireMarchandiseCode;
 
 	@Column(name = "ord_ref_replace")
 	private String ordreReferenceRemplacement;

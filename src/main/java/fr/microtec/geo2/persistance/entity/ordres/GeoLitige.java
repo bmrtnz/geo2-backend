@@ -50,7 +50,7 @@ public class GeoLitige extends ValidateAndModifiedEntity implements Serializable
 	private Float fraisAnnexes;
 
   @Column(name = "lit_frais_comment")
-	private Float fraisAnnexesCommentaires;
+	private String fraisAnnexesCommentaires;
 
   @Column(name = "lca_code")
 	private String causeLitigeCode;

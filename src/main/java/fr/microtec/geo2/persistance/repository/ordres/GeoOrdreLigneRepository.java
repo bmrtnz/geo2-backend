@@ -17,6 +17,29 @@ import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
 public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, String> {
+
+  String totauxDetailQuery = "SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail("+
+    "SUM(ol.nombrePalettesExpediees) as totalNombrePalettesExpediees,"+
+    "SUM(ol.nombreColisExpedies) as totalNombreColisExpedies,"+
+    "SUM(ol.poidsNetExpedie) as totalPoidsNetExpedie,"+
+    "SUM(ol.poidsBrutExpedie) as totalPoidsBrutExpedie,"+
+    "ol.fournisseur as fournisseur,"+
+    "ol.logistique.nombrePalettesAuSol as nombrePalettesAuSol,"+
+    "ol.logistique.nombrePalettes100x120 as nombrePalettes100x120,"+
+    "ol.logistique.nombrePalettes80x120 as nombrePalettes80x120,"+
+    "ol.logistique.nombrePalettes60X80 as nombrePalettes60X80"+
+  ") "+
+  "FROM #{#entityName} ol " + 
+  "WHERE ol.ordre = :ordre "+
+  "GROUP BY " +
+  "ol.fournisseur," +
+  "ol.ordre," +
+  "ol.logistique.nombrePalettesAuSol," +
+  "ol.logistique.nombrePalettes100x120," +
+  "ol.logistique.nombrePalettes80x120," +
+  "ol.logistique.nombrePalettes60X80 " +
+  "ORDER BY ol.fournisseur";
+
   @Query("SELECT DISTINCT ol.article FROM #{#entityName} ol")
   List<GeoArticle> findDistinctArticle();
 
@@ -29,30 +52,11 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
   @Query("SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed(SUM(ol.nombrePalettesExpediees) as nombrePalettesExpediees, SUM(ol.nombrePalettesCommandees) as nombrePalettesCommandees, ol.fournisseur as fournisseur, ol.logistique as logistique) FROM #{#entityName} ol WHERE ol.ordre = :ordre GROUP BY ol.ordre, ol.fournisseur")
   List<GeoOrdreLigneSummed> getSummedPalettesByOrdreGroupByFournisseur(GeoOrdre ordre);
 
-  @Query(
-    "SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail("+
-      "SUM(ol.nombrePalettesExpediees) as totalNombrePalettesExpediees,"+
-      "SUM(ol.nombreColisExpedies) as totalNombreColisExpedies,"+
-      "SUM(ol.poidsNetExpedie) as totalPoidsNetExpedie,"+
-      "SUM(ol.poidsBrutExpedie) as totalPoidsBrutExpedie,"+
-      "ol.fournisseur as fournisseur,"+
-      "ol.logistique.nombrePalettesAuSol as nombrePalettesAuSol,"+
-      "ol.logistique.nombrePalettes100x120 as nombrePalettes100x120,"+
-      "ol.logistique.nombrePalettes80x120 as nombrePalettes80x120,"+
-      "ol.logistique.nombrePalettes60X80 as nombrePalettes60X80"+
-    ") "+
-    "FROM #{#entityName} ol " + 
-    "WHERE ol.ordre = :ordre "+
-    "GROUP BY " +
-    "ol.fournisseur," +
-    "ol.ordre," +
-    "ol.logistique.nombrePalettesAuSol," +
-    "ol.logistique.nombrePalettes100x120," +
-    "ol.logistique.nombrePalettes80x120," +
-    "ol.logistique.nombrePalettes60X80 " +
-    "ORDER BY ol.fournisseur"
-  )
+  @Query(totauxDetailQuery)
   Page<GeoOrdreLigneTotauxDetail> getTotauxDetail(GeoOrdre ordre,Pageable pageable);
+
+  @Query(totauxDetailQuery)
+  List<GeoOrdreLigneTotauxDetail> getTotauxDetailList(GeoOrdre ordre,Pageable pageable);
 
   Long countByOrdre(GeoOrdre ordre);
   Long countByOrdreAndGratuitIsTrue(GeoOrdre ordre);
