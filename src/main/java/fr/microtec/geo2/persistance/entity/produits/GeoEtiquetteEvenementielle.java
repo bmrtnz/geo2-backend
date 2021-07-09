@@ -1,6 +1,9 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.etiquette.EtiquetteAuditingListener;
+import fr.microtec.geo2.persistance.entity.etiquette.GeoAsEtiquette;
+import fr.microtec.geo2.persistance.entity.etiquette.GeoEtiquette;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +14,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "geo_etievt")
 @IdClass(GeoProduitWithEspeceId.class)
-public class GeoEtiquetteEvenementielle extends ValidateAndModifiedEntity {
+@EntityListeners(EtiquetteAuditingListener.class)
+public class GeoEtiquetteEvenementielle extends ValidateAndModifiedEntity implements GeoAsEtiquette {
 
 	@Id
 	@Column(name = "etv_code")
@@ -27,6 +31,14 @@ public class GeoEtiquetteEvenementielle extends ValidateAndModifiedEntity {
 
 	@Column(name = "etv_libvte")
 	private String descriptionClient;
+
+	@Transient
+	private GeoEtiquette etiquette;
+
+	@Override
+	public String getEtiquettePrefix() {
+		return GeoAsEtiquette.ETIQUETTE_EVENEMENT;
+	}
 
 	// TODO field : clf_code
 

@@ -8,6 +8,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,21 +25,27 @@ public class FileSystemService {
 	/**
 	 * List relative given String path.
 	 */
+	public List<Path> list(String path, PathMatcher matcher) {
+		return this.list(this._getBasePath(path), matcher);
+	}
+
 	public List<Path> list(String path) {
-		return this.list(this._getBasePath(path));
+		return this.list(this._getBasePath(path), null);
 	}
 
 	/**
 	 * List absolute given Path path.
 	 */
 	@SneakyThrows
-	public List<Path> list(Path path) {
+	public List<Path> list(Path path, PathMatcher matcher) {
 		if (!Files.exists(path)) {
 			return Collections.emptyList();
 		}
 
 		try (Stream<Path> stream = Files.list(path)) {
-			return stream.collect(Collectors.toList());
+			return stream
+					.filter(matcher != null ? matcher::matches : f -> true)
+					.collect(Collectors.toList());
 		}
 	}
 
