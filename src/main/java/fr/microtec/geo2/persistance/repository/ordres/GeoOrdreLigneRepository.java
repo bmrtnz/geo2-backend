@@ -56,7 +56,7 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
   Page<GeoOrdreLigneTotauxDetail> getTotauxDetail(GeoOrdre ordre,Pageable pageable);
 
   @Query(totauxDetailQuery)
-  List<GeoOrdreLigneTotauxDetail> getTotauxDetailList(GeoOrdre ordre,Pageable pageable);
+  List<GeoOrdreLigneTotauxDetail> getTotauxDetailList(GeoOrdre ordre);
 
   Long countByOrdre(GeoOrdre ordre);
   Long countByOrdreAndGratuitIsTrue(GeoOrdre ordre);
