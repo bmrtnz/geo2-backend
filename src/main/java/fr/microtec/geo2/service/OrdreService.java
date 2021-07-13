@@ -358,7 +358,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     Optional<Float> cumulFrais = this.ordreFraisRepository
     .findByOrdre(ordre)
     .stream()
-    .map( f -> f.getMontant() * f.getDeviseTaxe())
+    .map( f -> f.getMontant() * f.getDeviseTaux())
     .reduce((acm, crt) -> acm += crt);
     if(cumulFrais.isPresent()) {
       totalFraisAdditionnels = cumulFrais.get().doubleValue();

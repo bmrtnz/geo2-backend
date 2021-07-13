@@ -248,13 +248,12 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
         try {
 					Method method = clazz.getMethod(getter);
 					Object value = method.invoke(entity);
-					if (value.getClass().equals(Integer.class)) {
+					if(value == null) return 0d;
+					if (value.getClass().equals(Integer.class))
 						return Double.valueOf((Integer)value);
-					} else if (value.getClass().equals(Float.class)) {
+					if (value.getClass().equals(Float.class))
 						return Double.valueOf((Float)value);
-					} else {
-						return (Double) value;
-					}
+					return (Double) value;
         } catch(Exception e) {
           throw new RuntimeException(e);
         }
@@ -262,7 +261,8 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
       .reduce(0d, (subtotal, element) -> {
 				if(s.getSummaryType() == SummaryType.SUM)
 					return subtotal + element;
-				else throw new RuntimeException("Summary type not implemented: " + s.getSummaryType());
+				else return null;
+				// else throw new RuntimeException("Summary type not implemented: " + s.getSummaryType());
 			});
     })
     .collect(Collectors.toList());

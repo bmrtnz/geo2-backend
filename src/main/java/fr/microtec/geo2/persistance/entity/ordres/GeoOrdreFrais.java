@@ -6,7 +6,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
@@ -38,7 +40,7 @@ public class GeoOrdreFrais extends ValidateAndModifiedEntity {
 	private Float montant;
 
 	@Column(name = "dev_tx")
-	private Float deviseTaxe;
+	private Float deviseTaux;
 
 	@Column(name = "trp_code_plus")
 	private String codePlus;
@@ -46,5 +48,15 @@ public class GeoOrdreFrais extends ValidateAndModifiedEntity {
   @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
+
+	@Transient
+	private Float montantTotal;
+
+	@PostLoad
+	public void postLoad(){
+
+		this.montantTotal = this.montant * this.deviseTaux;
+
+	}
 
 }
