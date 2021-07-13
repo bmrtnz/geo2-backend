@@ -44,6 +44,15 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 	}
 
 	@GraphQLQuery
+	public SummarisedRelayPage<GeoOrdreLigne> allOrdreLigneSummarised(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLArgument(name = "summary") List<Summary> summary
+	) {
+		return this.ordreLigneService.fetchAllSummarized(search, pageable, summary);
+	}
+
+	@GraphQLQuery
 	public SummarisedRelayPage<GeoOrdreLigneTotauxDetail> allOrdreLigneTotauxDetail(
 			@GraphQLArgument(name = "ordre") @GraphQLNonNull String ordre,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
