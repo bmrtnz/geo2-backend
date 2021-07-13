@@ -2,6 +2,7 @@ package fr.microtec.geo2.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.microtec.geo2.persistance.StringEnum;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Data;
 import org.springframework.core.convert.converter.Converter;
@@ -42,7 +43,7 @@ public class FileManagerController {
 	 */
 	@PostMapping("/execute/{command}")
 	public Object execute(
-			@PathVariable FS_COMMAND command,
+			@PathVariable FsCommand command,
 			@RequestBody Map<String, String> body
 	) {
 		Object result = null;
@@ -108,17 +109,6 @@ public class FileManagerController {
 	}
 
 	/**
-	 * Download etiquette file.
-	 */
-	@GetMapping("/etiquette/{filename}")
-	@ResponseBody
-	public HttpEntity<FileSystemResource> getEtiquette(@PathVariable String filename) {
-		Path downloadFile = this.fileSystemService.getEtiquette(filename, true);
-
-		return buildDownload(downloadFile.getFileName().toString(), downloadFile, false);
-	}
-
-	/**
 	 * Download files command.
 	 */
 	@PostMapping("/execute/download")
@@ -152,6 +142,19 @@ public class FileManagerController {
 		return buildDownload(filename, downloadFile, true);
 	}
 
+
+
+	/**
+	 * Download etiquette file.
+	 */
+	@GetMapping("/{type}/{filename}")
+	@ResponseBody
+	public HttpEntity<FileSystemResource> getDocument(@PathVariable FsDocumentType type, @PathVariable String filename) {
+		Path downloadFile = this.fileSystemService.getDocument(type.getPath(), filename);
+
+		return buildDownload(downloadFile.getFileName().toString(), downloadFile, false);
+	}
+
 	/**
 	 * Build HttpResponse with file to download and correct file name in header.
 	 *
@@ -173,40 +176,6 @@ public class FileManagerController {
 		}
 
 		return new HttpEntity<>(new FileSystemResource(downloadFile), headers);
-	}
-
-	/**
-	 * File System command can be executed by this controller.
-	 */
-	private enum FS_COMMAND {
-		LIST("list"), RENAME("rename"), CREATE_DIR("createDir"), COPY("copy"),
-		DELETE("delete"), MOVE("move"), UPLOAD("upload"), ABORT_UPLOAD("abort"),
-		DOWNLOAD("download");
-
-		private final String name;
-		FS_COMMAND(String name) { this.name = name; }
-
-		public static FS_COMMAND fromName(String name) {
-			for (FS_COMMAND cmd : FS_COMMAND.values()) {
-				if (cmd.name.equals(name)) {
-					return cmd;
-				}
-			}
-
-			throw new IllegalArgumentException();
-		}
-	}
-
-	/**
-	 * Converter for FS_COMMAND.
-	 */
-	@Component
-	static class StringToEnumConverter implements Converter<String, FS_COMMAND> {
-
-		@Override
-		public FS_COMMAND convert(String s) {
-			return FS_COMMAND.fromName(s);
-		}
 	}
 
 	/**

@@ -1,24 +1,22 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
+import fr.microtec.geo2.persistance.entity.etiquette.DocumentAuditingListener;
+import fr.microtec.geo2.persistance.entity.etiquette.GeoAsDocument;
+import fr.microtec.geo2.persistance.entity.etiquette.GeoDocument;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Data
 @Table(name = "geo_envois")
 @Entity
-public class GeoEnvois {
-  
+@EntityListeners(DocumentAuditingListener.class)
+public class GeoEnvois implements GeoAsDocument {
+
   @Id
 	@Column(name = "env_code")
 	private String id;
@@ -80,4 +78,17 @@ public class GeoEnvois {
 	@JoinColumn(name = "tyt_code")
 	private GeoTypeTiers typeTiers;
 
+	@Transient
+	private GeoDocument document;
+
+	@Override
+	public String getDocumentName() {
+		// return "JF7034.pdf";
+
+		if (this.getNomFichier().matches(Maddog2FileSystemService.HAVE_EXTENSION_REGEX)) {
+			return this.getNomFichier();
+		}
+
+		return String.format("%s.pdf", this.getNomFichier());
+	}
 }

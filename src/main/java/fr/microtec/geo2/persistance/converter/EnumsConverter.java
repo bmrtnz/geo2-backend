@@ -1,5 +1,8 @@
 package fr.microtec.geo2.persistance.converter;
 
+import fr.microtec.geo2.controller.FileManagerController;
+import fr.microtec.geo2.controller.FsCommand;
+import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.persistance.entity.logistique.GeoPortType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
@@ -9,6 +12,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoStatusGEO;
 import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
 import fr.microtec.geo2.persistance.entity.tiers.GeoNatureStation;
 import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Converter;
 
@@ -48,4 +52,14 @@ class GeoStatusConverter extends AbstractStringEnumConverter<GeoStatus> {
 
 @Converter(autoApply = true)
 class GeoCahierDesChargesConverter extends AbstractStringEnumConverter<GeoCahierDesCharges> {
+}
+
+@Component
+@Converter(autoApply = true)
+class FsCommandConverter extends AbstractStringEnumConverter<FsCommand> {
+}
+
+@Component
+@Converter(autoApply = true)
+class FsDocumentTypeConverter extends AbstractStringEnumConverter<FsDocumentType> {
 }

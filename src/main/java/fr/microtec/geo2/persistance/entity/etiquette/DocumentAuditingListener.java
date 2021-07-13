@@ -9,12 +9,12 @@ import javax.persistence.PostLoad;
 import java.nio.file.Path;
 
 /**
- * Auditeur permettant de charger l'objet GeoEtiquette sur les entités écoutés.
+ * Auditeur permettant de charger l'objet GeoDocument sur les entités écoutés.
  *
- * Définie sur l'entité écouté si elle possède un fichier étiquette associé.
+ * Définie sur l'entité écouté si elle possède un fichier document associé.
  */
 @Configurable
-public class EtiquetteAuditingListener {
+public class DocumentAuditingListener {
 
 	private ObjectFactory<Maddog2FileSystemService> fileSystemServiceFactory;
 
@@ -25,21 +25,21 @@ public class EtiquetteAuditingListener {
 
 	@PostLoad
 	public void afterLoad(Object entity) {
-		if (entity instanceof GeoAsEtiquette) {
-			GeoAsEtiquette entityWithEtiquette = (GeoAsEtiquette) entity;
-			GeoEtiquette etiquette = new GeoEtiquette();
+		if (entity instanceof GeoAsDocument) {
+			GeoAsDocument entityWithEtiquette = (GeoAsDocument) entity;
+			GeoDocument document = new GeoDocument();
 
 			Maddog2FileSystemService fileSystemService = this.fileSystemServiceFactory.getObject();
 			try {
-				Path doc = fileSystemService.getEtiquette(entityWithEtiquette.getEtiquetteName(), false);
+				Path doc = entityWithEtiquette.getDocumentWithMaddogService(fileSystemService);
 
-				etiquette.setIsPresent(true);
-				etiquette.setFilename(doc.getFileName().toString());
+				document.setIsPresent(true);
+				document.setFilename(doc.getFileName().toString());
 			} catch (Exception e) {
-				etiquette.setIsPresent(false);
+				document.setIsPresent(false);
 			}
 
-			entityWithEtiquette.setEtiquette(etiquette);
+			entityWithEtiquette.setDocument(document);
 		}
 	}
 }

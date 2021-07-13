@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.converter;
 
 import fr.microtec.geo2.persistance.StringEnum;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.convert.converter.Converter;
 
 import javax.persistence.AttributeConverter;
 import java.util.stream.Stream;
@@ -11,7 +12,7 @@ import java.util.stream.Stream;
  *
  * @param <T>
  */
-public abstract class AbstractStringEnumConverter<T extends Enum<T> & StringEnum> implements AttributeConverter<T, String> {
+public abstract class AbstractStringEnumConverter<T extends Enum<T> & StringEnum> implements AttributeConverter<T, String>, Converter<String, T> {
 
 	private final Class<T> enumClass;
 
@@ -40,4 +41,8 @@ public abstract class AbstractStringEnumConverter<T extends Enum<T> & StringEnum
 				.orElseThrow(() -> new IllegalArgumentException(String.format("No enum value (%s) found in %s", value, this.enumClass.getSimpleName())));
 	}
 
+	@Override
+	public T convert(String s) {
+		return this.convertToEntityAttribute(s);
+	}
 }

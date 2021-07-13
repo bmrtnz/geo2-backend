@@ -1,11 +1,14 @@
 package fr.microtec.geo2.persistance.entity.etiquette;
 
 import fr.microtec.geo2.persistance.entity.produits.*;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+
+import java.nio.file.Path;
 
 /**
  * Interface a rajouter sur les entités qui peuvent avoir une étiquette de rattacher.
  */
-public interface GeoAsEtiquette {
+public interface GeoAsEtiquette extends GeoAsDocument {
 
 	String ETIQUETTE_STICKER    = "ETIFRU";
 	String ETIQUETTE_CLIENT     = "ETICOL";
@@ -16,16 +19,18 @@ public interface GeoAsEtiquette {
 	String getId();
 	GeoEspece getEspece();
 
-	// Getter / Setter pour ajouter l'objet etiquette sur les entités.
-	void setEtiquette(GeoEtiquette etiquette);
-	GeoEtiquette getEtiquette();
-
 	// Permet de récupérer le prefix d'étiquette
 	String getEtiquettePrefix();
 
+	@Override
+	default Maddog2FileSystemService.PATH_KEY getDocumentPathKey() {
+		return Maddog2FileSystemService.PATH_KEY.GEO_IMG;
+	}
+
 	// Construit le nom de l'étiquette
-	default String getEtiquetteName() {
+	default String getDocumentName() {
+		// return "ETICOL_POMME_ALDIVL";
 		return String.format("%s_%s_%s", this.getEtiquettePrefix(), this.getEspece().getId(), this.getId());
-	};
+	}
 
 }

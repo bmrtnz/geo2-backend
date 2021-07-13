@@ -1,9 +1,9 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import fr.microtec.geo2.persistance.entity.etiquette.EtiquetteAuditingListener;
+import fr.microtec.geo2.persistance.entity.etiquette.DocumentAuditingListener;
 import fr.microtec.geo2.persistance.entity.etiquette.GeoAsEtiquette;
-import fr.microtec.geo2.persistance.entity.etiquette.GeoEtiquette;
+import fr.microtec.geo2.persistance.entity.etiquette.GeoDocument;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "geo_etifru")
 @IdClass(GeoProduitWithEspeceId.class)
-@EntityListeners(EtiquetteAuditingListener.class)
+@EntityListeners(DocumentAuditingListener.class)
 public class GeoStickeur extends ValidateAndModifiedEntity implements GeoAsEtiquette {
 
 	@Id
@@ -33,7 +33,7 @@ public class GeoStickeur extends ValidateAndModifiedEntity implements GeoAsEtiqu
 	private String descriptionClient;
 
 	@Transient
-	private GeoEtiquette etiquette;
+	private GeoDocument document;
 
 	@Override
 	public String getEtiquettePrefix() {

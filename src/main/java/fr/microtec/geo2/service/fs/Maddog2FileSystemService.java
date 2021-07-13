@@ -16,6 +16,8 @@ import java.util.List;
 @Secured("ROLE_USER")
 public class Maddog2FileSystemService extends FileSystemService {
 
+	public static final String HAVE_EXTENSION_REGEX = "[^\\\\]*\\.(\\w+)$";
+
 	/**
 	 * PATH_KEY use by client, it's use to order files.
 	 */
@@ -26,7 +28,8 @@ public class Maddog2FileSystemService extends FileSystemService {
 		LIEUX_PASSAGE_A_QUAI("/Geo2_doc/tiers/lieuxpassageaquai/"),
 		ARTICLES("/Geo2_doc/articles/"),
 		ORDRES("/Geo2_doc/ordres/"),
-		GEO_IMG("/geo_img/");
+		GEO_IMG("/geo_img/"),
+		GEO_DOC("/geo_doc/");
 
 		private String path;
 		PATH_KEY(String basePath) { this.path = basePath; }
@@ -55,10 +58,12 @@ public class Maddog2FileSystemService extends FileSystemService {
 	/**
 	 * Get Path of label file from given name, with extension or not.
 	 */
-	public Path getEtiquette(String filename, boolean withExtension) {
+	public Path getDocument(PATH_KEY pathKey, String filename) {
+		boolean withExtension = filename.matches(HAVE_EXTENSION_REGEX);
+
 		// Filename do not contains extensions because can be pdf or jpg
 		String globPattern = "glob:**/" + filename + (withExtension ? "" : ".{pdf,jpg}");
-		List<Path> files = this.list(PATH_KEY.GEO_IMG.path, FileSystems.getDefault().getPathMatcher(globPattern));
+		List<Path> files = this.list(pathKey.path, FileSystems.getDefault().getPathMatcher(globPattern));
 		Path downloadFile;
 
 		// If as multiple file, pdf is priority
