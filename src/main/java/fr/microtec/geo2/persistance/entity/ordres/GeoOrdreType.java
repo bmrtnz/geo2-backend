@@ -11,9 +11,12 @@ public enum GeoOrdreType implements StringEnum {
 	REF("REF"),
 	REG("REG"),
 	REP("REP"),
+	RGP("RGP"),
 	RPF("RPF"),
+	RPO("RPO"),
 	RPR("RPR"),
-	RPO("RPO");
+	UNK("UNK"),
+	UKT("UKT");
 
 	private String key;
 
