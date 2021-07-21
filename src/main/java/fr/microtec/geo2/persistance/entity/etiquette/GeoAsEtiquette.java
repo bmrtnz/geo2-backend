@@ -22,15 +22,14 @@ public interface GeoAsEtiquette extends GeoAsDocument {
 	// Permet de récupérer le prefix d'étiquette
 	String getEtiquettePrefix();
 
-	@Override
-	default Maddog2FileSystemService.PATH_KEY getDocumentPathKey() {
-		return Maddog2FileSystemService.PATH_KEY.GEO_IMG;
-	}
-
 	// Construit le nom de l'étiquette
 	default String getDocumentName() {
 		// return "ETICOL_POMME_ALDIVL";
 		return String.format("%s_%s_%s", this.getEtiquettePrefix(), this.getEspece().getId(), this.getId());
+	}
+
+	default Path getDocumentWithMaddogService(Maddog2FileSystemService fileSystemService) {
+		return fileSystemService.getEtiquette(this.getDocumentName());
 	}
 
 }

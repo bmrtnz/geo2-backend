@@ -17,7 +17,7 @@ public interface GeoAsDocument {
 	}
 
 	default Path getDocumentWithMaddogService(Maddog2FileSystemService fileSystemService) {
-		return fileSystemService.getDocument(this.getDocumentPathKey(), this.getDocumentName());
+		return fileSystemService.getDocument(this.getDocumentPathKey(), this.getDocumentName(), false);
 	}
 
 }

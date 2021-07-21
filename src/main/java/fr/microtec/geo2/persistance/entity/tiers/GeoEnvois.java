@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import fr.microtec.geo2.common.StringUtils;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import fr.microtec.geo2.persistance.entity.etiquette.DocumentAuditingListener;
 import fr.microtec.geo2.persistance.entity.etiquette.GeoAsDocument;
@@ -9,6 +10,7 @@ import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 @Data
@@ -85,10 +87,21 @@ public class GeoEnvois implements GeoAsDocument {
 	public String getDocumentName() {
 		// return "JF7034.pdf";
 
-		if (this.getNomFichier().matches(Maddog2FileSystemService.HAVE_EXTENSION_REGEX)) {
-			return this.getNomFichier();
+		String filename = this.getNomFichier();
+		Path path = Path.of("");
+
+		// If do not end with extension (exemple : .pdf)
+		if (!this.getNomFichier().matches(Maddog2FileSystemService.HAVE_EXTENSION_REGEX)) {
+			filename = this.getNomFichier() + ".pdf";
 		}
 
-		return String.format("%s.pdf", this.getNomFichier());
+		// If date envoie, file is in subpath
+		if (this.getDateEnvoi() != null) {
+			path = path
+					.resolve(Integer.toString(this.getDateEnvoi().getYear()))
+					.resolve(StringUtils.padLeft(Integer.toString(this.getDateEnvoi().getMonthValue()), "0", 2));
+		}
+
+		return path.resolve(filename).toString();
 	}
 }

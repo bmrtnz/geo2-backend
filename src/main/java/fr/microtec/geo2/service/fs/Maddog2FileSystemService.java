@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Secured("ROLE_USER")
 public class Maddog2FileSystemService extends FileSystemService {
 
-	public static final String HAVE_EXTENSION_REGEX = "[^\\\\]*\\.(\\w+)$";
+	public static final String HAVE_EXTENSION_REGEX = ".*\\.(\\w+)$";
 
 	/**
 	 * PATH_KEY use by client, it's use to order files.
@@ -56,14 +57,28 @@ public class Maddog2FileSystemService extends FileSystemService {
 	}
 
 	/**
+	 * Get path of document from given path in pathKey.
+	 * Download args :
+	 *  true : get full path for access to file
+	 *  false: get relative path for download via FileManagerController
+	 */
+	public Path getDocument(PATH_KEY pathKey, String path, boolean download) {
+		Path file = this._getBasePath(pathKey.path).resolve(path);
+
+		if (!Files.exists(file)) {
+			throw new FileSystemNotFoundException();
+		}
+
+		return download ? file : Path.of(path);
+	}
+
+	/**
 	 * Get Path of label file from given name, with extension or not.
 	 */
-	public Path getDocument(PATH_KEY pathKey, String filename) {
+	public Path getEtiquette(String filename) {
 		boolean withExtension = filename.matches(HAVE_EXTENSION_REGEX);
-
-		// Filename do not contains extensions because can be pdf or jpg
 		String globPattern = "glob:**/" + filename + (withExtension ? "" : ".{pdf,jpg}");
-		List<Path> files = this.list(pathKey.path, FileSystems.getDefault().getPathMatcher(globPattern));
+		List<Path> files = this.list(PATH_KEY.GEO_IMG.path, FileSystems.getDefault().getPathMatcher(globPattern));
 		Path downloadFile;
 
 		// If as multiple file, pdf is priority

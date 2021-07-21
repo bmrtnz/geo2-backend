@@ -7,16 +7,15 @@ import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Data;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +149,16 @@ public class FileManagerController {
 	@GetMapping("/{type}/{filename}")
 	@ResponseBody
 	public HttpEntity<FileSystemResource> getDocument(@PathVariable FsDocumentType type, @PathVariable String filename) {
-		Path downloadFile = this.fileSystemService.getDocument(type.getPath(), filename);
+		filename = new String(Base64.getDecoder().decode(filename));
+		Path downloadFile;
+
+		if (FsDocumentType.ETIQUETTE.equals(type)) {
+			downloadFile = this.fileSystemService.getEtiquette(filename);
+		} else if (FsDocumentType.DOCUMENT.equals(type)) {
+			downloadFile = this.fileSystemService.getDocument(type.getPath(), filename, true);
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
 
 		return buildDownload(downloadFile.getFileName().toString(), downloadFile, false);
 	}

@@ -9,6 +9,7 @@ import lombok.Data;
 public class GeoDocument {
 
 	private Boolean isPresent;
-	private String filename;
+	private String uri;
+	private String type;
 
 }
