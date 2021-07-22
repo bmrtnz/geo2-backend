@@ -317,6 +317,18 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "ind_usint")
 	private Boolean usageInterne;
 
+	@Column(name = "palox_gratuit")
+	private Boolean paloxGratuit;
+
+	@Column(name = "consigne_palox")
+	private Boolean consignePalox;
+
+	@Column(name = "releve_factures")
+	private Boolean releveFactures;
+
+	@Column(name = "id_fiscal")
+	private String identifiantFiscal;
+
 	public void setCertifications(Set<GeoCertificationClient> certifications) {
 		certifications.forEach(c -> c.setClient(this));
 
