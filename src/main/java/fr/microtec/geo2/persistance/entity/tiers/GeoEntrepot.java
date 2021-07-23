@@ -172,6 +172,9 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Ser
 	@Column(name = "mention_client")
 	private String mentionClientSurFacture;
 
+	@Column(name = "decl_transit")
+	private Boolean declarationTransit;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "con_tiers", referencedColumnName = "cen_code")
 	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
