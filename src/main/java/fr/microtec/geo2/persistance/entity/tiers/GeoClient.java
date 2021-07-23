@@ -317,13 +317,13 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "ind_usint")
 	private Boolean usageInterne;
 
-	@Column(name = "palox_gratuit")
+	@Column(name = "ind_palox_gratuit")
 	private Boolean paloxGratuit;
 
-	@Column(name = "consigne_palox")
+	@Column(name = "ind_cons_palox")
 	private Boolean consignePalox;
 
-	@Column(name = "releve_factures")
+	@Column(name = "releve_fac")
 	private Boolean releveFactures;
 
 	@Column(name = "id_fiscal")
