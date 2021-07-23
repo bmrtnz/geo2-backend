@@ -11,7 +11,7 @@ DECLARE
     x_user  VARCHAR2(35);
 BEGIN
     -- sequence pou PK
-    IF :NEW.cen_ref IS NULL THEN
+    IF (:NEW.cen_ref IS NULL) THEN
         SELECT seq_cen_num.NEXTVAL INTO x_num FROM dual;
         :NEW.cen_ref   := TO_CHAR(x_num,'FM099999');
     END IF;
@@ -27,7 +27,7 @@ BEGIN
     IF (:NEW.valide IS NULL) THEN
         :new.valide := 'O';
     END IF;
-    IF (::NEW.ind_bloc_factu_edi IS NULL) THEN
+    IF (:NEW.ind_bloc_factu_edi IS NULL) THEN
         :NEW.ind_bloc_factu_edi := 'N';
     END IF;
 
