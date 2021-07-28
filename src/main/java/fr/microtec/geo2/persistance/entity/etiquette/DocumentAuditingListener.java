@@ -2,15 +2,14 @@ package fr.microtec.geo2.persistance.entity.etiquette;
 
 import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.PostLoad;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
@@ -21,6 +20,7 @@ import java.util.Base64;
  * Définie sur l'entité écouté si elle possède un fichier document associé.
  */
 @Configurable
+@Slf4j
 public class DocumentAuditingListener {
 
 	private ObjectFactory<Maddog2FileSystemService> fileSystemServiceFactory;
@@ -59,8 +59,14 @@ public class DocumentAuditingListener {
 				document.setType(isImg ? "img" : "iframe");
 			} catch (Exception e) {
 				document.setIsPresent(false);
-				System.out.println(entityWithDocument.getDocumentName() + " Not found");
 			}
+
+			log.info(
+					"Search {} '{}' : {}",
+					isEtiquette ? "etiquette" : "document",
+					entityWithDocument.getDocumentName(),
+					document.getIsPresent() ? "Found" : "Not Found"
+			);
 
 			entityWithDocument.setDocument(document);
 		}
