@@ -474,7 +474,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
 	private Set<GeoCommentaireOrdre> commentairesOrdre;
 
-	public Integer getCommentaireOrdreCount() {
+	public Integer getCommentairesOrdreCount() {
 		return this.getCommentairesOrdre().size();
 	}
 
