@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,10 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
@@ -169,10 +167,10 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Column(name = "version_ordre")
 	private String version;
-	
+
 	@Column(name = "version_ordre_date")
 	private LocalDate versionDate;
-	
+
 	@Column(name = "version_detail")
 	private String versionDetail;
 
@@ -191,18 +189,18 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cam_code")
 	private GeoCampagne campagne;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trp_bta_code")
 	private GeoBaseTarif baseTarifTransport;
-	
+
 	@Column(name = "trp_pu")
 	private Float prixUnitaireTarifTransport;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_code")
 	private GeoTransitaire transitaire;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_bta_code")
 	private GeoBaseTarif baseTarifTransit;
@@ -220,22 +218,22 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "crt_bta_code")
 	private GeoBaseTarif baseTarifCourtage;
-	
+
 	@Column(name = "crt_pu")
 	private Float prixUnitaireTarifCourtage;
-	
+
 	@Column(name = "remsf_tx")
 	private Float tauxRemiseFacture;
-	
+
 	@Column(name = "remhf_tx")
 	private Float tauxRemiseHorsFacture;
-	
+
 	@Column(name = "dev_tx")
 	private Double tauxDevise;
-	
+
 	@Column(name = "frais_pu")
 	private Double fraisPrixUnitaire;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "frais_unite")
 	private GeoBaseTarif fraisUnite;
@@ -466,6 +464,34 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 		clone.commercial = this.commercial;
 
 		return clone;
+	}
+
+	/**
+	 * Permet de connaitre le nombre de commentaire associés a cette ordre via un count.
+	 * @see GeoOrdre.getCommentaireOrdreCount()
+	 */
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
+	private Set<GeoCommentaireOrdre> commentairesOrdre;
+
+	public Integer getCommentaireOrdreCount() {
+		return this.getCommentairesOrdre().size();
+	}
+
+	/**
+	 * Permet de connaitre le nombre de CSLignes associées a cette ordre via un count.
+	 * @see GeoOrdre.getCqLitigeCount()
+	 */
+	@LazyCollection(LazyCollectionOption.EXTRA)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
+	private Set<GeoCQLigne> cqLignes;
+
+	public Integer getCqLignesCount() {
+		return this.getCqLignes().size();
+	}
+
+	public Boolean getHasLitige() {
+		return this.getLitige() != null;
 	}
 
 }
