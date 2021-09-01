@@ -32,6 +32,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	private final String property;
 	private final RsqlSearchOperation operator;
 	private final List<String> arguments;
+	private static final String ISO8601_PATTERN = "yyyy-MM-dd['T'HH[:mm[:ss[.SSS'Z']]]]"; // ISO 8601 with optional time
 
 	public GenericRsqlSpecification(String property, ComparisonOperator operator, List<String> arguments) {
 		this.property = property;
@@ -225,6 +226,7 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	 * @return ISO LocalDateTime
 	 */
 	private static LocalDateTime parseToLocalDateTime(Object o) {
-		return LocalDateTime.parse(o.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		return LocalDateTime
+		.parse(o.toString(), DateTimeFormatter.ofPattern(ISO8601_PATTERN));
 	}
 }
