@@ -1,7 +1,6 @@
 package fr.microtec.geo2.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,31 +11,21 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import fr.microtec.geo2.configuration.graphql.PageFactory;
-import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoGenre;
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
-import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
-import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
@@ -47,7 +36,6 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeRepository;
-import fr.microtec.geo2.persistance.repository.ordres.GeoMRUOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreFraisRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
@@ -60,13 +48,12 @@ import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
 // TODO Separate services for each different entities (extending from GeoAbstractGraphQLService)
 
 @Service()
-public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUOrdreKey> {
+public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
   @PersistenceContext
   private EntityManager entityManager;
 
   private final GeoOrdreRepository ordreRepository;
-  private final GeoMRUOrdreRepository mruOrdreRepository;
   private final GeoOrdreLigneRepository ordreLigneRepository;
   private final GeoOrdreLogistiqueRepository ordreLogistiqueRepository;
   private final GeoOrdreFraisRepository ordreFraisRepository;
@@ -78,7 +65,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
 
   public OrdreService(
     GeoOrdreRepository ordreRepository,
-    GeoMRUOrdreRepository mruOrdreRepository,
     GeoOrdreLigneRepository ordreLigneRepository,
     GeoOrdreLogistiqueRepository ordreLogistiqueRepository,
     GeoOrdreFraisRepository ordreFraisRepository,
@@ -87,9 +73,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     GeoLitigeLigneRepository litigeLigneRepository,
     GeoFluxRepository fluxRepository
   ) {
-    super(mruOrdreRepository);
+    super(ordreRepository);
     this.ordreRepository = ordreRepository;
-    this.mruOrdreRepository = mruOrdreRepository;
     this.ordreLigneRepository = ordreLigneRepository;
     this.ordreLogistiqueRepository = ordreLogistiqueRepository;
     this.ordreFraisRepository = ordreFraisRepository;
@@ -140,39 +125,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoMRUO
     GeoOrdre original = this.ordreRepository.getOne(chunk.getId());
     GeoOrdre clone = original.duplicate();
     return this.save(clone);
-  }
-
-  private Specification<GeoMRUOrdre> groupedByNumero() {
-		return (root, criteriaQuery, criteriaBuilder) -> {
-
-      Subquery<GeoMRUOrdre> subquery = criteriaQuery.subquery(GeoMRUOrdre.class);
-      Root<GeoMRUOrdre> r = subquery.from(GeoMRUOrdre.class);
-
-      subquery.select(r.get("numero"))
-      .having(criteriaBuilder.lessThanOrEqualTo(
-        criteriaBuilder.greatest(root.<LocalDateTime>get("dateModification")),
-        LocalDateTime.now()
-      ))
-      .groupBy(r.get("numero"))
-      .distinct(true);
-
-      return criteriaBuilder.in(root.get("numero")).value(subquery);
-		};
-  }
-  
-  public RelayPage<GeoMRUOrdre> fetchGroupedMRUOrdre(String search, Pageable pageable) {
-    Page<GeoMRUOrdre> page;
-
-    if (pageable == null)
-      pageable = PageRequest.of(0, 20);
-    
-    Specification<GeoMRUOrdre> spec = this
-    .groupedByNumero()
-    .and(this.parseSearch(search));
-
-    page = this.mruOrdreRepository.findAll(spec, pageable);
-
-    return PageFactory.fromPage(page);
   }
 
   public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {
