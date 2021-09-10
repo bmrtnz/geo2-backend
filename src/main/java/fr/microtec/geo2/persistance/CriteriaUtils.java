@@ -95,7 +95,7 @@ public class CriteriaUtils {
 		return root.get(attributeName);
 	}
 
-	private static Root<?> applySpecification(CriteriaBuilder cb, CriteriaQuery<?> query, Class<?> rootClass, Specification<?> spec) {
+	public static Root<?> applySpecification(CriteriaBuilder cb, CriteriaQuery<?> query, Class<?> rootClass, Specification<?> spec) {
 		Root<?> root = query.from(rootClass);
 
 		if (spec != null) {

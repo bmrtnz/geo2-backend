@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
@@ -49,6 +51,10 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@Column(name = "locus_trace")
 		private String locusTrace;
 
+	@Column(name = "datdep_fou_p_yyyymmdd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyymmdd")
+	private LocalDate dateDepartPrevueFournisseurS;
+	
 	@Column(name = "datdep_fou_p")
 	private LocalDate dateDepartPrevueFournisseur;
 

@@ -1,11 +1,9 @@
 package fr.microtec.geo2.persistance.entity;
 
-import lombok.Data;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
-
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+
+import lombok.Data;
 
 @Data
 @MappedSuperclass
