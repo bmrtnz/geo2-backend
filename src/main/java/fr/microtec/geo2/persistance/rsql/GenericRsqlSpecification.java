@@ -109,6 +109,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 			case BETWEEN:
 				if (expression.getJavaType().equals(LocalDate.class))
 					predicate = criteriaBuilder.between(cast(expression), parseToLocalDate(args.get(0)), parseToLocalDate(args.get(1)));
+				else if (expression.getJavaType().equals(LocalDateTime.class))
+					predicate = criteriaBuilder.between(cast(expression), parseToLocalDateTime(args.get(0)), parseToLocalDateTime(args.get(1)));
 				else
 					predicate = criteriaBuilder.between(cast(expression), args.get(0).toString(), args.get(1).toString());
 				break;
