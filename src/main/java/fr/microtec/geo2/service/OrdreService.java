@@ -5,12 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
@@ -18,30 +14,17 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.query.criteria.internal.path.SingularAttributePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import fr.microtec.geo2.configuration.graphql.PageFactory;
-import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.common.GeoGenre;
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
@@ -53,7 +36,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreSuiviDeparts;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
@@ -67,14 +49,6 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
-import graphql.schema.DataFetcher;
-import graphql.schema.DataFetchingEnvironment;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLObjectType;
-import graphql.schema.GraphQLOutputType;
-import graphql.schema.GraphQLScalarType;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.metadata.strategy.value.jackson.JacksonValueMapper;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -156,103 +130,31 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     return this.save(clone);
   }
         
-  private <T> List<T> mapFieldsFromGraphQL(Map<String, GraphQLFieldDefinition> definitions, Root<?> root) {
-    return (List<T>) definitions.keySet().stream()
-    .filter(key -> definitions.get(key).getType() instanceof GraphQLScalarType)
-    .filter(field -> field.startsWith("edges/node/"))
-    .map(key -> key.split("^edges/node/")[1].replace("/", "."))
-    .map(field -> CriteriaUtils.toExpressionRecursively(root, field, true))
-    .collect(Collectors.toList());
+
+  public Float fetchSommeColisCommandes(GeoOrdre ordre) {
+    return this
+    .fetchSum(ordre, "logistiques.lignes.nombreColisCommandes")
+    .floatValue();
   }
 
-  private CriteriaQuery<Object[]> fetchSuiviDeparts(Map<String, GraphQLFieldDefinition> definitions, CriteriaQuery<Object[]> query, Root<?> root) {
+  public Float fetchSommeColisExpedies(GeoOrdre ordre) {
+    return this
+    .fetchSum(ordre, "logistiques.lignes.nombreColisExpedies")
+    .floatValue();
+  }
+
+  public Number fetchSum(GeoOrdre ordre, String path){
     CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<Number> criteriaQuery = criteriaBuilder.createQuery(Number.class);
+    Root<GeoOrdre> root = criteriaQuery.from(GeoOrdre.class);
 
-    List<Expression<?>> groupBy = this.mapFieldsFromGraphQL(definitions, root);
-    query.groupBy(groupBy);
-    
-    List<Selection<?>> select = this.mapFieldsFromGraphQL(definitions, root);
-    select.add(criteriaBuilder.sum(CriteriaUtils.toExpressionRecursively(root, "logistiques.lignes.nombreColisCommandes", false)).alias("sommeColisCommandes"));
-    select.add(criteriaBuilder.sum(CriteriaUtils.toExpressionRecursively(root, "logistiques.lignes.nombreColisExpedies", false)).alias("sommeColisExpedies"));
-		query.multiselect(select);
+		criteriaQuery.select(criteriaBuilder.sum(CriteriaUtils.toExpressionRecursively(root, path, false)));
+    criteriaQuery.where(criteriaBuilder.equal(root.get("id"), ordre.getId()));
 
-		return query;
+		TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
+    return q.getSingleResult();
   }
 
-  public RelayPage<GeoOrdre> getSuiviDeparts(
-    String search,
-    Pageable pageable,
-    ResolutionEnvironment env
-  ) {
-    Map<String, GraphQLFieldDefinition> definitions = env.dataFetchingEnvironment.getSelectionSet().getDefinitions();
-    CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-		CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
-		Root<?> root = CriteriaUtils.applySpecification(criteriaBuilder, criteriaQuery, GeoOrdre.class, this.parseSearch(search));
-    criteriaQuery = this.fetchSuiviDeparts(definitions, criteriaQuery, root);
-
-    // Order
-		Sort sort = pageable.isPaged() ? pageable.getSort() : Sort.unsorted();
-		if (sort.isSorted()) {
-			criteriaQuery.orderBy(CriteriaUtils.toOrders(sort, root, this.entityManager.getCriteriaBuilder()));
-		}
-
-    TypedQuery<Object[]> q = this.entityManager.createQuery(criteriaQuery);
-
-		// Paging
-		if (pageable.isPaged()) {
-			q.setFirstResult((int) pageable.getOffset());
-			q.setMaxResults(pageable.getPageSize());
-		}
-
-    // new JacksonValueMapper(new ObjectMapper());
-    // env.valueMapper.fromInput(graphQLInput, sourceType);
-    // DataFetcher osddf = new DataFetcher() {
-    //   @Override
-    //   public Object get(DataFetchingEnvironment env) {
-
-    //     List<String> fieldsName = (ArrayList<String>)definitions.keySet().stream()
-    //     .filter(key -> definitions.get(key).getType() instanceof GraphQLScalarType)
-    //     .filter(field -> field.startsWith("edges/node/"))
-    //     .map(key -> key.split("^edges/node/")[1].replace("/", "."))
-    //     .collect(Collectors.toList());
-
-    //     return (List<Map<String, Object>>) q
-    //     .getResultList()
-    //     .stream()
-    //     .map( rawEntity ->
-    //       IntStream
-    //       .range(0, fieldsName.size())
-    //       .boxed()
-    //       .filter(i -> rawEntity[i] != null)
-    //       .collect(Collectors.toMap(i -> fieldsName.get(i), i -> rawEntity[i]))
-    //     ).collect(Collectors.toList());
-    //   }
-    // };
-
-    List<String> fieldsName = (ArrayList<String>)definitions.keySet().stream()
-    .filter(key -> definitions.get(key).getType() instanceof GraphQLScalarType)
-    .filter(field -> field.startsWith("edges/node/"))
-    .map(key -> key.split("^edges/node/")[1].replace("/", "."))
-    .collect(Collectors.toList());
-    ObjectMapper mapper = new ObjectMapper();
-    Page<GeoOrdre> page = PageableExecutionUtils.getPage(
-      q.getResultList()
-      .stream()
-      .map( rawEntity -> {
-        Map<String, Object> map = IntStream
-        .range(0, fieldsName.size())
-        .boxed()
-        .filter(i -> rawEntity[i] != null)
-        .collect(Collectors.toMap(i -> fieldsName.get(i), i -> rawEntity[i]));
-        return mapper.convertValue(map, GeoOrdre.class);
-      }).collect(Collectors.toList()),
-      pageable,
-      () -> 50L
-      // () -> this.executeCountQuery(countQuery)
-		);
-
-    return PageFactory.fromPage(page);
-  }
 
   public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {
     GeoLitige litige = this.litigeRepository.getOne(litigeID);

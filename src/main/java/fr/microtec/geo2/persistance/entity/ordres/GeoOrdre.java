@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
@@ -20,8 +18,6 @@ import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.jpa.repository.*;
 
 import org.hibernate.annotations.*;
 
@@ -450,11 +446,6 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Transient
 	private Float pourcentageMargeBrut;
 
-	@Transient
-  private double sommeColisCommandes;
-
-  @Transient
-  private double sommeColisExpedies;
 
 	@PostLoad
 	@PostUpdate
