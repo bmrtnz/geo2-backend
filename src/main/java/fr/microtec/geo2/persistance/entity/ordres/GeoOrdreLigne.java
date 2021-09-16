@@ -292,9 +292,11 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@PostLoad
 	public void postLoad(){
 
-		this.margeBrute = (Double)(this.totalVenteBrut - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalTransit - this.totalCourtage - this.totalFraisAdditionnels);
-		this.pourcentageMargeBrute = this.totalVenteBrut != 0d ? this.margeBrute / this.totalVenteBrut : 0d;
-		this.pourcentageMargeNette = this.totalVenteBrut != 0d ? (this.margeBrute - this.totalObjectifMarge) / this.totalVenteBrut : 0d;
+		try {
+			this.margeBrute = (Double)(this.totalVenteBrut - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalTransit - this.totalCourtage - this.totalFraisAdditionnels);
+			this.pourcentageMargeBrute = this.totalVenteBrut != 0d ? this.margeBrute / this.totalVenteBrut : 0d;
+			this.pourcentageMargeNette = this.totalVenteBrut != 0d ? (this.margeBrute - this.totalObjectifMarge) / this.totalVenteBrut : 0d;
+		} catch (Exception e) {}
 
 		Character dimensions = this.getTypePalette().getDimensions();
 
