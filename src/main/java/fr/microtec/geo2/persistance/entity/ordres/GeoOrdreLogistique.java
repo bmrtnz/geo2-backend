@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -136,5 +138,20 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trp_code")
 	private GeoTransporteur transporteurGroupage;
+
+	@Transient
+	private String okStation;
+
+	@PostLoad
+	public void postLoad(){
+		if(this.dateDepartReelleFournisseur == null) {
+			if(this.expedieStation && this.totalPalettesExpediees == 0 && this.nombrePalettesAuSol == 0 && this.nombrePalettes100x120 == 0 && this.nombrePalettes80x120 == 0 && this.nombrePalettes60X80 == 0)
+				this.okStation = "clôturé à zéro";
+			else if(this.expedieStation)
+				this.okStation = "OK";
+			else
+				this.okStation = "non clôturé";
+		}
+	}
 
 }
