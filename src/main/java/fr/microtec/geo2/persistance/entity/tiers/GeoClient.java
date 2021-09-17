@@ -15,7 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -307,6 +309,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "enc_actuel")
 	private Float enCoursActuel;
 
+	@Column(name = "enc_douteux")
+	private Float enCoursDouteux;
+
 	@Column(name = "enc_date_valid")
 	private LocalDate enCoursDateLimite;
 
@@ -361,6 +366,19 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
 	@Column(name = "id_fiscal")
 	private String identifiantFiscal;
+
+	@Transient
+	private Float autorise;
+
+	@Transient
+	private Float depassement;
+
+	@PostLoad
+	public void postLoad(){
+		this.autorise = this.agrement + this.enCoursTemporaire + this.enCoursBlueWhale;
+		Float depassement = this.enCoursActuel - this.autorise;
+		this.depassement = depassement > 0 ? depassement : 0f;
+	}
 
 	public void setCertifications(Set<GeoCertificationClient> certifications) {
 		certifications.forEach(c -> c.setClient(this));
