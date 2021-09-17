@@ -1,23 +1,35 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Where;
+
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -223,7 +235,25 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	private Boolean refusCoface;
 
 	@Column(name = "enc_assure")
-	private Integer agrement;
+	private Float agrement;
+
+	@Column(name = "enc_0")
+	private Float enCoursNonEchu;
+
+	@Column(name = "enc_1")
+	private Float enCours1a30;
+
+	@Column(name = "enc_2")
+	private Float enCours31a60;
+
+	@Column(name = "enc_3")
+	private Float enCours61a90;
+
+	@Column(name = "enc_4")
+	private Float enCours90Plus;
+
+	@Column(name = "alerte_coface")
+	private Float alerteCoface;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "crt_code")
@@ -269,10 +299,13 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	private GeoTypeVente typeVente;
 
 	@Column(name = "enc_depasse")
-	private Integer enCoursTemporaire;
+	private Float enCoursTemporaire;
 
 	@Column(name = "enc_bw")
-	private Integer enCoursBlueWhale;
+	private Float enCoursBlueWhale;
+
+	@Column(name = "enc_actuel")
+	private Float enCoursActuel;
 
 	@Column(name = "enc_date_valid")
 	private LocalDate enCoursDateLimite;
