@@ -1,11 +1,17 @@
 package fr.microtec.geo2.persistance.entity.common;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
+
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,5 +30,9 @@ public class GeoTypeTiers extends ValidateAndModifiedEntity {
 
   @Column(name = "resp_litige")
   private Boolean responsableLitige;
+
+  @OneToMany(mappedBy = "typeTiers")
+  @Where(clause = "typ_tiers = '" + GeoClient.TYPE_TIERS + "'")
+	private List<GeoClient> clients;
 
 }
