@@ -22,7 +22,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_histo_client")
 @Entity
-public class GeoHistoriqueClient extends GeoBaseHistorique implements GeoHistorique {
+public class GeoHistoriqueClient extends GeoBaseHistorique {
 
 	@Id
 	@Column(name = "histo_cli_ref")
