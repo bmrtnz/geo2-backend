@@ -101,6 +101,7 @@ public class ArticleService {
 			this.entityManager.detach(merged);
 			merged = merged.duplicate();
 			merged.setValide(false);
+			merged.setPreSaisie(true);
 		}
 		return this.articleRepository.save(merged);
 	}
