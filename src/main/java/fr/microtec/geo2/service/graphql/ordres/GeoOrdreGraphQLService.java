@@ -98,6 +98,14 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 		return super.getOne(id);
 	}
 
+	@GraphQLQuery
+	public Optional<GeoOrdre> getOrdreByNumeroAndSociete(
+			@GraphQLArgument(name = "numero") String numero,
+			@GraphQLArgument(name = "societe") String societeID
+	) {
+		return this.ordreService.getByNumeroAndSociete(numero, societeID);
+	}
+
 	@GraphQLMutation
 	public GeoOrdre saveOrdre(GeoOrdre ordre) {
 		return this.ordreService.save(ordre);

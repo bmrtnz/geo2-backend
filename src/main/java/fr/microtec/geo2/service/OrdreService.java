@@ -56,6 +56,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueReposito
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
 
@@ -73,6 +74,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   private final GeoFluxRepository fluxRepository;
   private final GeoLitigeRepository litigeRepository;
   private final GeoLitigeLigneRepository litigeLigneRepository;
+  private final GeoSocieteRepository societeRepository;
   private static final Logger logger = LoggerFactory.getLogger(OrdreService.class);
 
   public OrdreService(
@@ -83,7 +85,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     GeoEnvoisRepository envoisRepository,
     GeoLitigeRepository litigeRepository,
     GeoLitigeLigneRepository litigeLigneRepository,
-    GeoFluxRepository fluxRepository
+    GeoFluxRepository fluxRepository,
+    GeoSocieteRepository societeRepository
   ) {
     super(ordreRepository);
     this.ordreRepository = ordreRepository;
@@ -94,6 +97,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     this.fluxRepository = fluxRepository;
     this.litigeRepository = litigeRepository;
     this.litigeLigneRepository = litigeLigneRepository;
+    this.societeRepository = societeRepository;
   }
 
   private String fetchNumero(GeoSociete societe) {
@@ -200,6 +204,11 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {
     GeoLitige litige = this.litigeRepository.getOne(litigeID);
     return this.litigeLigneRepository.getTotaux(litige);
+  }
+
+  public Optional<GeoOrdre> getByNumeroAndSociete(String numero, String societeID) {
+    GeoSociete societe = this.societeRepository.getOne(societeID);
+    return this.ordreRepository.findByNumeroAndSociete(numero, societe);
   }
 
   /**
