@@ -25,6 +25,7 @@ import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
+import fr.microtec.geo2.persistance.entity.logistique.GeoPort;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBasePaiement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
@@ -422,11 +423,13 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "file_cmr")
 	private String fileCMR;
 
-	@Column(name = "ref_eta")
-	private String IDPortTypeA;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_eta")
+	private GeoPort PortTypeA;
 
-	@Column(name = "ref_etd")
-	private String IDPortTypeD;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ref_etd")
+	private GeoPort PortTypeD;
 
 	@Column(name = "list_nordre_comp")
 	private String listeOrdresComplementaires;
