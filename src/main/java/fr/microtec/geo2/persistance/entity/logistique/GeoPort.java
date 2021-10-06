@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.logistique;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "geo_port")
 public class GeoPort extends ModifiedEntity {
-    @Id
+	@Id
 	@Column(name = "por_id")
 	private String id;
 
@@ -28,16 +29,12 @@ public class GeoPort extends ModifiedEntity {
 	@Column(name = "por_type")
 	private GeoPortType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pay_code")
-    private GeoPays pays;
+	@Column(name = "tyt_code")
+	private Character typeTiers;
 
-    @Column(name = "tyt_code")
-    private Character typeTiers;
+	@Column(name = "por_valide")
+	private Boolean valide;
 
-    @Column(name = "por_valide")
- 	private Boolean valide;
-
-    @Column(name = "unlocode")
+	@Column(name = "unlocode")
 	private String universalLocationCode;
 }
