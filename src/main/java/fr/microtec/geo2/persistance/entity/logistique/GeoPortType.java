@@ -13,4 +13,11 @@ public enum GeoPortType implements StringEnum {
 	GeoPortType(String key) {
 		this.key = key;
 	}
+
+	public static GeoPortType findByAbbr(String abbr){
+    for(GeoPortType v : values())
+        if( v.key.equals(abbr))
+          return v;
+    return null;
+	}
 }
