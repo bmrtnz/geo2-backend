@@ -62,6 +62,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(name = "config_tuiles_ordres", columnDefinition = "BLOB")
 	private HashMap<String, Object> configTuilesOrdres;
 
+	@Column(name = "config_tabs_ordres")
+	private String configTabsOrdres;
+
 	@Override
 	public String getUsername() {
 		return this.getNomUtilisateur();
