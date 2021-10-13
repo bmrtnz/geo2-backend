@@ -390,6 +390,10 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "flag_public")
 	private Boolean flagPublication;
 
+	@NotNull
+	@Column(name = "flannul", nullable = false)
+	private Boolean flagAnnule;
+
 	@Column(name = "rem_sf_tx_mdd")
 	private Float remiseSurFactureMDDTaux;
 
@@ -446,15 +450,25 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "ind_exclu_frais_pu")
 	private Boolean exclusionFraisPU;
 
+	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) > 0 THEN 'N' ELSE 'O' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF)")
+	private Boolean expedieAuComplet;
+
 	@Transient
 	private Float pourcentageMargeBrut;
 
+	@Transient
+	private GeoOrdreStatut statut;
 
 	@PostLoad
 	@PostUpdate
-	public void postUpdate(){
-			// this.pourcentageMargeBrut = this.totalVente > 0 ?
-			// 	(float)(this.totalVente - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalCourtage - this.totalFraisAdditionnels) / this.totalVente : 0f;
+	public void postLoadUpdate(){
+		this.setStatut(GeoOrdreStatut.NON_CONFIRME);
+		if (this.getFlagPublication()) this.setStatut(GeoOrdreStatut.CONFIRME);
+		if (!this.getTracabiliteDetailPalettes().isEmpty()) this.setStatut(GeoOrdreStatut.EN_PREPARATION);
+		if (this.getExpedieAuComplet()) this.setStatut(GeoOrdreStatut.EXPEDIE);
+		if (this.getBonAFacturer()) this.setStatut(GeoOrdreStatut.A_FACTURER);
+		if (this.getFacture()) this.setStatut(GeoOrdreStatut.FACTURE);
+		if (this.getFlagAnnule()) this.setStatut(GeoOrdreStatut.ANNULE);
 	}
 
 	public GeoOrdre duplicate() {

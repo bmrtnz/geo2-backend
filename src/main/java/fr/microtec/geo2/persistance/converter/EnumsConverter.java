@@ -6,6 +6,7 @@ import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.persistance.entity.logistique.GeoPortType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatus;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatusGEO;
@@ -48,6 +49,10 @@ class GeoStatusGEOConverter extends AbstractStringEnumConverter<GeoStatusGEO> {
 
 @Converter(autoApply = true)
 class GeoStatusConverter extends AbstractStringEnumConverter<GeoStatus> {
+}
+
+@Converter(autoApply = true)
+class GeoOrdreStatutConverter extends AbstractStringEnumConverter<GeoOrdreStatut> {
 }
 
 @Converter(autoApply = true)

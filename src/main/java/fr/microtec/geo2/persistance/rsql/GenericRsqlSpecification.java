@@ -20,6 +20,7 @@ import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.logistique.GeoPortType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatus;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatusGEO;
@@ -205,6 +206,8 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					return GeoCahierDesCharges.findByAbbr(arg);
 				} else if (type.equals(GeoPortType.class)) {
 					return GeoPortType.findByAbbr(arg);
+				} else if (type.equals(GeoOrdreStatut.class)) {
+					return GeoOrdreStatut.findByAbbr(arg);
 				} else {
 					throw new RsqlException(String.format("Unknown type '%s' for parsing", type.getSimpleName()));
 				}
