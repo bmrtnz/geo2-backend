@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoStockConsolideGraphQLService extends GeoAbstractGraphQLService<GeoStockConsolide, String> {
 
 	public GeoStockConsolideGraphQLService(GeoStockConsolideRepository repository) {
-		super(repository);
+		super(repository, GeoStockConsolide.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoStockConsolide> allStockConsolide(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

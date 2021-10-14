@@ -29,7 +29,7 @@ public class MRUOrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoM
   private final GeoMRUOrdreRepository mruOrdreRepository;
 
   public MRUOrdreService(GeoMRUOrdreRepository mruOrdreRepository) {
-    super(mruOrdreRepository);
+    super(mruOrdreRepository, GeoMRUOrdre.class);
     this.mruOrdreRepository = mruOrdreRepository;
   }
 

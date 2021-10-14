@@ -20,15 +20,17 @@ public class GeoArticleMatierePremiereGraphQLService
 		extends GeoAbstractGraphQLService<GeoArticleMatierePremiere, String> {
 
 	public GeoArticleMatierePremiereGraphQLService(GeoArticleMatierePremiereRepository repository) {
-		super(repository);
+		super(repository, GeoArticleMatierePremiere.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoArticleMatierePremiere> allArticleMatierePremiere(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

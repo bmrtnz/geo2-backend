@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.leangen.graphql.annotations.*;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +18,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import io.leangen.graphql.annotations.GraphQLArgument;
-import io.leangen.graphql.annotations.GraphQLContext;
-import io.leangen.graphql.annotations.GraphQLMutation;
-import io.leangen.graphql.annotations.GraphQLNonNull;
-import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
@@ -31,16 +28,17 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	private final OrdreService ordreService;
 
 	public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService) {
-		super(repository);
+		super(repository, GeoOrdre.class);
 		this.ordreService = ordreService;
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoOrdre> allOrdre(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
@@ -61,6 +59,12 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	@GraphQLQuery
 	public Float sommeColisExpedies(@GraphQLContext GeoOrdre ordre) {
 		return this.ordreService.fetchSommeColisExpedies(ordre);
+	}
+
+	@GraphQLQuery
+	public long nombreOrdreNonCloture(@GraphQLArgument(name = "search") String search)
+	{
+		return this.ordreService.fetchNombreOrdreNonCloture(search);
 	}
 
 	@GraphQLQuery

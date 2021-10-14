@@ -11,12 +11,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.criteria.*;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.Bindable;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.PluralAttribute;
-import javax.persistence.metamodel.Type;
-
+import javax.persistence.metamodel.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;

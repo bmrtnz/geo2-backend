@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoOrigineGraphQLService extends GeoAbstractGraphQLService<GeoOrigine, GeoProduitWithEspeceId> {
 
 	public GeoOrigineGraphQLService(GeoOrigineRepository repository) {
-		super(repository);
+		super(repository, GeoOrigine.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoOrigine> allOrigine(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

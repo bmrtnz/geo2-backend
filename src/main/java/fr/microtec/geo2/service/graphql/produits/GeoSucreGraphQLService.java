@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoSucreGraphQLService extends GeoAbstractGraphQLService<GeoSucre, GeoProduitWithEspeceId> {
 
 	public GeoSucreGraphQLService(GeoSucreRepository repository) {
-		super(repository);
+		super(repository, GeoSucre.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoSucre> allSucre(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

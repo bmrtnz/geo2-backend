@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoStockHebdomadaireGraphQLService extends GeoAbstractGraphQLService<GeoStockHebdomadaire, String> {
 
 	public GeoStockHebdomadaireGraphQLService(GeoStockHebdomadaireRepository repository) {
-		super(repository);
+		super(repository, GeoStockHebdomadaire.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoStockHebdomadaire> allStockHebdomadaire(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

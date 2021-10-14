@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoColisGraphQLService extends GeoAbstractGraphQLService<GeoColis, String> {
 
 	public GeoColisGraphQLService(GeoColisRepository repository) {
-		super(repository);
+		super(repository, GeoColis.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoColis> allColis(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

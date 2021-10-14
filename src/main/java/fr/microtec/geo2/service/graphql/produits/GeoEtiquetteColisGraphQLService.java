@@ -24,15 +24,16 @@ public class GeoEtiquetteColisGraphQLService
 		extends GeoAbstractGraphQLService<GeoEtiquetteColis, GeoProduitWithEspeceId> {
 
 	public GeoEtiquetteColisGraphQLService(GeoEtiquetteColisRepository repository) {
-		super(repository);
+		super(repository, GeoEtiquetteColis.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoEtiquetteColis> allEtiquetteColis(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

@@ -19,15 +19,17 @@ import java.util.Optional;
 public class GeoArticleEmballageGraphQLService extends GeoAbstractGraphQLService<GeoArticleEmballage, String> {
 
 	public GeoArticleEmballageGraphQLService(GeoArticleEmballageRepository repository) {
-		super(repository);
+		super(repository, GeoArticleEmballage.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoArticleEmballage> allArticleEmballage(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

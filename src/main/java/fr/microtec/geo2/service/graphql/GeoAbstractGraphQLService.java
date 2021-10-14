@@ -1,19 +1,15 @@
 package fr.microtec.geo2.service.graphql;
 
-import java.beans.FeatureDescriptor;
-import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
+import fr.microtec.geo2.configuration.graphql.*;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
+import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
+import graphql.relay.Edge;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import io.leangen.graphql.execution.relay.CursorProvider;
+import lombok.val;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.slf4j.Logger;
@@ -26,19 +22,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
-import fr.microtec.geo2.configuration.graphql.PageFactory;
-import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.configuration.graphql.RelayPageImpl;
-import fr.microtec.geo2.configuration.graphql.Summary;
-import fr.microtec.geo2.configuration.graphql.SummaryType;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
-import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
-import graphql.relay.Edge;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.execution.relay.CursorProvider;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import java.beans.FeatureDescriptor;
+import java.beans.PropertyDescriptor;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Abstract Geo graphQl service.
@@ -52,40 +49,53 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	protected EntityManagerFactory entityManagerFactory;
 
 	protected final GeoRepository<T, ID> repository;
-	private RSQLParser rsqlParser;
+	protected RSQLParser rsqlParser;
 	private static final Logger logger = LoggerFactory.getLogger(GeoAbstractGraphQLService.class);
+	private final Class<T> clazz;
 
-	public GeoAbstractGraphQLService(GeoRepository<T, ID> repository) {
+	public GeoAbstractGraphQLService(GeoRepository<T, ID> repository, final Class<T> clazz) {
 		this.repository = repository;
+		this.clazz = clazz;
 	}
 
-	protected RelayPage<T> getPage(String search, Pageable pageable) {
-		Page<T> page;
+	protected RelayPage<T> getPage(final String search, Pageable pageable, final ResolutionEnvironment env)
+	{
+		pageable = (pageable == null) ? PageRequest.of(0, 20) : pageable;
 
-		if (pageable == null) {
-			pageable = PageRequest.of(0, 20);
-		}
-
-		if (search != null && !search.isBlank()) {
-			 page = this.repository.findAll(this.parseSearch(search), pageable);
-		} else {
-			page = this.repository.findAll(pageable);
-		}
+		val tSpecification = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
+		val page = this.repository.findAllWithPagination(tSpecification, pageable, this.clazz, this.parseSelect(env));
 
 		return PageFactory.fromPage(page);
 	}
 
-	protected RelayPage<T> getPageFiltered(Predicate<? super T> predicate, Pageable pageable, String search) {
-		RelayPage<T> initialPage = this.getPage(search, pageable);
-		List<T> allNodes = recursiveFilter(search,pageable,new ArrayList<>(),predicate);
+	private List<String> parseSelect(final ResolutionEnvironment env)
+	{
+		return this.parseSelect(env, "edges/node/**");
+	}
+
+	private List<String> parseSelect(final ResolutionEnvironment env, final String search)
+	{
+		List<String> result = new ArrayList<>();
+
+		env.dataFetchingEnvironment
+			.getSelectionSet()
+			.getFields(search)
+			.forEach(s -> result.add(s.getQualifiedName().replace("edges/node/", "").replace("/", ".")));
+
+		return result;
+	}
+
+	protected RelayPage<T> getPageFiltered(Predicate<? super T> predicate, Pageable pageable, String search, ResolutionEnvironment env) {
+		RelayPage<T> initialPage = this.getPage(search, pageable, env);
+		List<T> allNodes = recursiveFilter(search,pageable,new ArrayList<>(),predicate, env);
 		CursorProvider<T> cursorProvider = PageFactory
 		.offsetBasedCursorProvider(pageable.getOffset());
 		List<Edge<T>> edges = PageFactory.createEdges(allNodes, cursorProvider);
 		return new RelayPageImpl<>(edges, initialPage.getPageInfo(), initialPage.getTotalCount(), initialPage.getTotalPage());
 	}
 
-	private List<T> recursiveFilter(String search, Pageable pageable, List<T> acumulatedNodes, Predicate<? super T> predicate){
-		RelayPage<T> page = this.getPage(search, pageable);
+	private List<T> recursiveFilter(String search, Pageable pageable, List<T> acumulatedNodes, Predicate<? super T> predicate, ResolutionEnvironment env){
+		RelayPage<T> page = this.getPage(search, pageable, env);
 		List<T> nodes = page
 		.getEdges()
 		.stream()
@@ -94,7 +104,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		.collect(Collectors.toList());
 		acumulatedNodes.addAll(nodes);
 		if(acumulatedNodes.size() < pageable.getPageSize() && page.getPageInfo().isHasNextPage())
-			return recursiveFilter(search,PageRequest.of(pageable.getPageNumber() + 1, pageable.getPageSize()),new ArrayList<>(),predicate);
+			return recursiveFilter(search,PageRequest.of(pageable.getPageNumber() + 1, pageable.getPageSize()),new ArrayList<>(),predicate, env);
 		return acumulatedNodes;
 	}
 

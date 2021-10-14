@@ -36,7 +36,7 @@ public class GeoStockArticleAgeGraphQLService
 		GeoStockArticleAgeRepository repository,
 		StockService stockService
 	) {
-		super(repository);
+		super(repository, GeoStockArticleAge.class);
 		this.stockService = stockService;
 	}
 
@@ -46,7 +46,7 @@ public class GeoStockArticleAgeGraphQLService
 		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 		@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

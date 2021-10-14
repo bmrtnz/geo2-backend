@@ -20,15 +20,16 @@ public class GeoArticleCahierDesChargeGraphQLService
 		extends GeoAbstractGraphQLService<GeoArticleCahierDesCharge, String> {
 
 	public GeoArticleCahierDesChargeGraphQLService(GeoArticleCahierDesChargeRepository repository) {
-		super(repository);
+		super(repository, GeoArticleCahierDesCharge.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoArticleCahierDesCharge> allArticleCahierDesCharge(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

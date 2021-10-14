@@ -2,6 +2,8 @@ package fr.microtec.geo2.service.graphql.common;
 
 import java.util.Optional;
 
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -21,15 +23,16 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoCampagneGraphQLService extends GeoAbstractGraphQLService<GeoCampagne, String> {
 
 	public GeoCampagneGraphQLService(GeoCampagneRepository repository) {
-		super(repository);
+		super(repository, GeoCampagne.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoCampagne> allCampagne(
 		@GraphQLArgument(name = "search") String search,
-		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+		@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

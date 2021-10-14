@@ -19,15 +19,16 @@ import java.util.Optional;
 public class GeoLieuPassageAQuaiGraphQLService extends GeoAbstractGraphQLService<GeoLieuPassageAQuai, String> {
 
 	public GeoLieuPassageAQuaiGraphQLService(GeoLieuPassageAQuaiRepository repository) {
-		super(repository);
+		super(repository, GeoLieuPassageAQuai.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoLieuPassageAQuai> allLieuPassageAQuai(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

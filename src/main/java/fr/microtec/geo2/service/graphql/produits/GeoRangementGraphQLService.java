@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoRangementGraphQLService extends GeoAbstractGraphQLService<GeoRangement, GeoProduitWithEspeceId> {
 
 	public GeoRangementGraphQLService(GeoRangementRepository repository) {
-		super(repository);
+		super(repository, GeoRangement.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoRangement> allRangement(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

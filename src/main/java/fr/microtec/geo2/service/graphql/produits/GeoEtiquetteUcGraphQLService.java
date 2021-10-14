@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoEtiquetteUc, GeoProduitWithEspeceId> {
 
 	public GeoEtiquetteUcGraphQLService(GeoEtiquetteUcRepository repository) {
-		super(repository);
+		super(repository, GeoEtiquetteUc.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoEtiquetteUc> allEtiquetteUc(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

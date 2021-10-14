@@ -36,7 +36,7 @@ public class GeoUtilisateurGraphQLService extends GeoAbstractGraphQLService<GeoU
 		GeoUtilisateurRepository utilisateurRepository,
 		AuthenticationManager authManager
 	) {
-		super(utilisateurRepository);
+		super(utilisateurRepository, GeoUtilisateur.class);
 		this.authManager = authManager;
 	}
 

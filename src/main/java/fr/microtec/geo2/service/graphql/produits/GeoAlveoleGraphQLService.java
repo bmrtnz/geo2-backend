@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoAlveoleGraphQLService extends GeoAbstractGraphQLService<GeoAlveole, GeoProduitWithEspeceId> {
 
 	public GeoAlveoleGraphQLService(GeoAlveoleRepository repository) {
-		super(repository);
+		super(repository, GeoAlveole.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoAlveole> allAlveole(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

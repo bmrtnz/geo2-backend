@@ -14,7 +14,7 @@ public class GeoHistoriqueFournisseurGraphQLService
 		extends GeoAbstractGraphQLService<GeoHistoriqueFournisseur, String> {
 
 	public GeoHistoriqueFournisseurGraphQLService(GeoHistoriqueFournisseurRepository repository) {
-		super(repository);
+		super(repository, GeoHistoriqueFournisseur.class);
 	}
 
 	@GraphQLMutation

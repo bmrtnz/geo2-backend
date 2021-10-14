@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStickeur, GeoProduitWithEspeceId> {
 
 	public GeoStickerGraphQLService(GeoStickerRepository repository) {
-		super(repository);
+		super(repository, GeoStickeur.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoStickeur> allStickeur(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

@@ -24,15 +24,16 @@ public class GeoCalibreMarquageGraphQLService
 		extends GeoAbstractGraphQLService<GeoCalibreMarquage, GeoProduitWithEspeceId> {
 
 	public GeoCalibreMarquageGraphQLService(GeoCalibreMarquageRepository repository) {
-		super(repository);
+		super(repository, GeoCalibreMarquage.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoCalibreMarquage> allCalibreMarquage(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
