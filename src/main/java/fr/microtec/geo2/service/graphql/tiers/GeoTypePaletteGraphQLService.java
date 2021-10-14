@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoTypePaletteGraphQLService extends GeoAbstractGraphQLService<GeoTypePalette, String> {
 
 	public GeoTypePaletteGraphQLService(GeoTypePaletteRepository repository) {
-		super(repository);
+		super(repository, GeoTypePalette.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoTypePalette> allTypePalette(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

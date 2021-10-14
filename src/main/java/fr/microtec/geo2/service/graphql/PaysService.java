@@ -28,7 +28,7 @@ public class PaysService extends GeoAbstractGraphQLService<GeoPays, String> {
   public PaysService(
     GeoPaysRepository paysRepository
   ) {
-    super(paysRepository);
+    super(paysRepository, GeoPays.class);
   }
 
   public Number fetchSum(GeoPays pays, String fieldPath){

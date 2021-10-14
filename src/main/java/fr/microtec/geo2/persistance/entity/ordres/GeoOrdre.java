@@ -1,26 +1,5 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.PostUpdate;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.*;
-
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
@@ -45,6 +24,16 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypeCamion;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)

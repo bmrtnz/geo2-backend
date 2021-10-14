@@ -13,7 +13,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoHistoriqueArticleGraphQLService extends GeoAbstractGraphQLService<GeoHistoriqueArticle, String> {
 
 	public GeoHistoriqueArticleGraphQLService(GeoHistoriqueArticleRepository repository) {
-		super(repository);
+		super(repository, GeoHistoriqueArticle.class);
 	}
 
 	@GraphQLMutation

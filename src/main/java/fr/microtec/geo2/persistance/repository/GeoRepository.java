@@ -8,5 +8,5 @@ import java.io.Serializable;
 
 @NoRepositoryBean
 public interface GeoRepository<T, ID extends Serializable>
-		extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+		extends JpaRepository<T, ID>, JpaSpecificationExecutor<T>, CustomRepository<T> {
 }

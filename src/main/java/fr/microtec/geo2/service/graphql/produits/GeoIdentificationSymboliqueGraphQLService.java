@@ -24,15 +24,16 @@ public class GeoIdentificationSymboliqueGraphQLService
 		extends GeoAbstractGraphQLService<GeoIdentificationSymbolique, GeoProduitWithEspeceId> {
 
 	public GeoIdentificationSymboliqueGraphQLService(GeoIdentificationSymboliqueRepository repository) {
-		super(repository);
+		super(repository, GeoIdentificationSymbolique.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoIdentificationSymbolique> allIdentificationSymbolique(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

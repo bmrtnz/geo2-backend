@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoCertificationGraphQLService extends GeoAbstractGraphQLService<GeoCertification, Integer> {
 
 	public GeoCertificationGraphQLService(GeoCertificationRepository certificationRepository) {
-		super(certificationRepository);
+		super(certificationRepository, GeoCertification.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoCertification> allCertification(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

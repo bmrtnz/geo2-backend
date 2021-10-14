@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoFluxGraphQLService extends GeoAbstractGraphQLService<GeoFlux, String> {
 
 	public GeoFluxGraphQLService(GeoFluxRepository repository) {
-		super(repository);
+		super(repository, GeoFlux.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoFlux> allFlux(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

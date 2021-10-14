@@ -2,6 +2,8 @@ package fr.microtec.geo2.service.graphql.logistique;
 
 import java.util.Optional;
 
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -22,15 +24,16 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoPortGraphQLService  extends GeoAbstractGraphQLService<GeoPort, String> {
 
 	public GeoPortGraphQLService(GeoPortRepository repository) {
-		super(repository);
+		super(repository, GeoPort.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoPort> allPort(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

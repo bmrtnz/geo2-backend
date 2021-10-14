@@ -299,25 +299,29 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 		} catch (Exception e) {}
 
 		Character dimensions = this.getTypePalette().getDimensions();
+		this.nombreColisPaletteByDimensions = 0f;
 
 		if (
 			this.getArticle() != null &&
 			this.getArticle().getEmballage() != null &&
 			this.getArticle().getEmballage().getEmballage() != null
 		) {
-			Float xb = this.getArticle().getEmballage().getEmballage().getXb();
-			Float yb = this.getArticle().getEmballage().getEmballage().getYb();
-			Float zb = this.getArticle().getEmballage().getEmballage().getZb();
-			Float xh = this.getArticle().getEmballage().getEmballage().getXh();
-			Float yh = this.getArticle().getEmballage().getEmballage().getYh();
-			Float zh = this.getArticle().getEmballage().getEmballage().getZh();
 
-			if(dimensions == '1')
-				this.nombreColisPaletteByDimensions = xb * xh;
-			else if(dimensions == '8')
-				this.nombreColisPaletteByDimensions = yb * yh;
-			else if(dimensions == '6')
-				this.nombreColisPaletteByDimensions = zb * zh;
+			if(dimensions == '1') {
+				Float xb = this.getArticle().getEmballage().getEmballage().getXb();
+				Float xh = this.getArticle().getEmballage().getEmballage().getXh();
+				if(xb != null && xh != null) this.nombreColisPaletteByDimensions = xb * xh;
+			}
+			else if(dimensions == '8') {
+				Float yb = this.getArticle().getEmballage().getEmballage().getYb();
+				Float yh = this.getArticle().getEmballage().getEmballage().getYh();
+				if(yb != null && yh != null) this.nombreColisPaletteByDimensions = yb * yh;
+			}
+			else if(dimensions == '6') {
+				Float zb = this.getArticle().getEmballage().getEmballage().getZb();
+				Float zh = this.getArticle().getEmballage().getEmballage().getZh();
+				if(zb != null && zh != null) this.nombreColisPaletteByDimensions = zb * zh;
+			}
 		}
 	}
 

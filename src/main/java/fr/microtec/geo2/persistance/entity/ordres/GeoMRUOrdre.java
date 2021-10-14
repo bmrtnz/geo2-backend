@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,6 +31,10 @@ public class GeoMRUOrdre extends ModifiedEntity implements Serializable {
     @JoinColumn(name = "soc_code")
     private GeoSociete societe;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CEN_CODE")
+    private GeoEntrepot entrepot;
+
     @Column(name = "nordre")
     private String numero;
 
@@ -38,4 +43,8 @@ public class GeoMRUOrdre extends ModifiedEntity implements Serializable {
 
     @Column(name = "soc_code", insertable = false, updatable = false)
     private String socCode;
+
+    @Column(name = "CEN_CODE", insertable = false, updatable = false)
+    private String cenCode;
+
 }

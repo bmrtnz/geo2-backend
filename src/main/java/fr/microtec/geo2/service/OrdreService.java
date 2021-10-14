@@ -59,6 +59,7 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
+import org.springframework.util.StringUtils;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -88,7 +89,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     GeoFluxRepository fluxRepository,
     GeoSocieteRepository societeRepository
   ) {
-    super(ordreRepository);
+    super(ordreRepository, GeoOrdre.class);
     this.ordreRepository = ordreRepository;
     this.ordreLigneRepository = ordreLigneRepository;
     this.ordreLogistiqueRepository = ordreLogistiqueRepository;
@@ -971,5 +972,21 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     )
       messages.add("(T) %%% le coût prévisionnel du transport est obligatoire pour l' incoterm " + ordre.get().getIncoterm().getId());
 
+  }
+
+  /**
+   * Return the number of order not closed
+   * @param search the search string
+   * @return The number of order not closed
+   */
+  public long fetchNombreOrdreNonCloture(final String search) {
+
+    Specification<GeoOrdre> spec = null;
+
+    if(StringUtils.hasText(search)) {
+      spec = Specification.where(this.parseSearch(search));
+    }
+
+    return this.repository.count(spec);
   }
 }

@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoCalibreFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoCalibreFournisseur, String> {
 
 	public GeoCalibreFournisseurGraphQLService(GeoCalibreFournisseurRepository repository) {
-		super(repository);
+		super(repository, GeoCalibreFournisseur.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoCalibreFournisseur> allCalibreFournisseur(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

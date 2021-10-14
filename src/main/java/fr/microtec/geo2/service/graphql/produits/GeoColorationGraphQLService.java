@@ -23,15 +23,16 @@ import java.util.Optional;
 public class GeoColorationGraphQLService extends GeoAbstractGraphQLService<GeoColoration, GeoProduitWithEspeceId> {
 
 	public GeoColorationGraphQLService(GeoColorationRepository repository) {
-		super(repository);
+		super(repository, GeoColoration.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoColoration> allColoration(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

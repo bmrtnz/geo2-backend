@@ -22,15 +22,16 @@ import java.util.Optional;
 public class GeoTypeClientGraphQLService extends GeoAbstractGraphQLService<GeoTypeClient, String> {
 
 	public GeoTypeClientGraphQLService(GeoTypeClientRepository repository) {
-		super(repository);
+		super(repository, GeoTypeClient.class);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoTypeClient> allTypeClient(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery

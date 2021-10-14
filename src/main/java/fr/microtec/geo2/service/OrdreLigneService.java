@@ -28,7 +28,7 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     GeoOrdreRepository ordreRepository,
     GeoOrdreLigneRepository ordreLigneRepository
   ) {
-    super(ordreLigneRepository);
+    super(ordreLigneRepository, GeoOrdreLigne.class);
     this.ordreRepository = ordreRepository;
     this.ordreLigneRepository = ordreLigneRepository;
   }

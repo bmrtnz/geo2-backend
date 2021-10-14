@@ -26,7 +26,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
   private final GeoStockArticleAgeRepository stockArticleAgeRepository;
 
   public StockService(GeoStockArticleAgeRepository stockArticleAgeRepository) {
-    super(stockArticleAgeRepository);
+    super(stockArticleAgeRepository, GeoStockArticleAge.class);
     this.stockArticleAgeRepository = stockArticleAgeRepository;
   }
 

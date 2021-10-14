@@ -3,6 +3,8 @@ package fr.microtec.geo2.service.graphql.ordres;
 import java.util.List;
 import java.util.Optional;
 
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -31,16 +33,17 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 		GeoOrdreLigneRepository repository,
 		OrdreLigneService ordreLigneService
 	) {
-		super(repository);
+		super(repository, GeoOrdreLigne.class);
 		this.ordreLigneService = ordreLigneService;
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoOrdreLigne> allOrdreLigne(
 			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.getPage(search, pageable);
+		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
