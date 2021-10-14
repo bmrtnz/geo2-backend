@@ -63,7 +63,7 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	private HashMap<String, Object> configTuilesOrdres;
 
 	@Lob
-	@Column(name = "config_tabs_ordres", columnDefinition = "CLOB")
+	@Column(name = "config_tabs_ordres", columnDefinition = "BLOB")
 	private HashMap<String, Object> configTabsOrdres;
 
 	@Override
