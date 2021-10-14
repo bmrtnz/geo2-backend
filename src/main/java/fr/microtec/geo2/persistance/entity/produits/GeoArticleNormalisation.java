@@ -33,11 +33,17 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity im
 	@Column(name = "gtin_colis")
 	private String gtinColis;
 
+	@Column(name = "gtin_colis_BW")
+	private String gtinColisBlueWhale;
+
 	@Column(name = "gtin_palette")
 	private String gtinPalette;
 
 	@Column(name = "gtin_uc")
 	private String gtinUc;
+
+	@Column(name = "gtin_uc_bw")
+	private String gtinUcBlueWhale;
 
 	@Column(name = "com_client")
 	private String descriptionCalibreClient;
