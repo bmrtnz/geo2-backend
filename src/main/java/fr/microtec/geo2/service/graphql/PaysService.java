@@ -43,8 +43,9 @@ public class PaysService extends GeoAbstractGraphQLService<GeoPays, String> {
       criteriaBuilder.equal(root.get("valide"), true)
     ));
 
-		TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
-    return q.getSingleResult();
+    TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
+    final Number singleResult = q.getSingleResult();
+    return (singleResult == null) ? 0 : singleResult;
   }
 
   public RelayPage<GeoPays> fetchDistinctPays(String search, Pageable pageable) {

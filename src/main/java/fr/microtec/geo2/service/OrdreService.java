@@ -166,7 +166,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     criteriaQuery.where(criteriaBuilder.equal(root.get("id"), ordre.getId()));
 
 		TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
-    return q.getSingleResult();
+    final Number singleResult = q.getSingleResult();
+    return (singleResult == null) ? 0 : singleResult;
   }
 
   public RelayPage<GeoOrdre> fetchOrdreSuiviDeparts(String search, Pageable pageable, Boolean onlyColisDiff) {
