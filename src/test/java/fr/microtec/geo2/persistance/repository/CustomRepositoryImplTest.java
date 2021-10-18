@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository;
 
+import fr.microtec.geo2.Geo2Application;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 import lombok.val;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@ContextConfiguration(classes = Geo2Application.class)
 @EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
 class CustomRepositoryImplTest
 {

@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,11 +27,6 @@ class CustomUtilsTest
         val criteriaBuilder = entityManager.getCriteriaBuilder();
         val query = criteriaBuilder.createQuery(GeoClient.class);
         return query.from(GeoClient.class);
-    }
-
-    private EntityGraph<GeoClient> getEntityGraph()
-    {
-        return entityManager.createEntityGraph(GeoClient.class);
     }
 
     @Test
@@ -64,8 +59,9 @@ class CustomUtilsTest
     @Test
     public void getSelectionWithManyToManyRelation()
     {
+        // OneToMany or ManyToMany cannot be load.
         List<Selection<?>> selections = CustomUtils.getSelections(List.of("id", "adresse1", "societe.pays.clients.adresse1"), this.getRoot());
 
-        assertEquals(3, selections.size());
+        assertEquals(2, selections.size());
     }
 }
