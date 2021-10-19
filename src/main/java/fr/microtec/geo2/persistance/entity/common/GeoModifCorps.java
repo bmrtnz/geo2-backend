@@ -1,6 +1,5 @@
 package fr.microtec.geo2.persistance.entity.common;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -33,7 +32,7 @@ public class GeoModifCorps {
 					@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
 			}
 	)
-	private BigDecimal id;
+	private Integer id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "modif")
