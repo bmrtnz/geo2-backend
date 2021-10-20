@@ -43,7 +43,7 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModif, 
 		return super.getOne(id);
   }
 
-  	@GraphQLMutation
+  @GraphQLMutation
 	public GeoModif saveModif(GeoModif Modif) {
 		return this.save(Modif);
 	}
