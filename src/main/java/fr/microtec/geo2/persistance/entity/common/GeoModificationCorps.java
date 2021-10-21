@@ -19,7 +19,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "geo_modif_corps")
-public class GeoModifCorps {
+public class GeoModificationCorps {
 
 	@Id
 	@Column(name = "k_modif_corps")
@@ -36,7 +36,7 @@ public class GeoModifCorps {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "modif")
-  private GeoModif modification;
+  private GeoModification modification;
 
 	@Column(name = "chemin")
 	private String chemin;

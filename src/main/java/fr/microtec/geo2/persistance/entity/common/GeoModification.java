@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "geo_modif")
-public class GeoModif {
+public class GeoModification {
 
 	@Id
 	@Column(name = "k_modif")
@@ -37,7 +37,7 @@ public class GeoModif {
 	private Integer id;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modification")
-	private List<GeoModifCorps> corps;
+	private List<GeoModificationCorps> corps;
 
 	@Column(name = "entite")
 	private String entite;

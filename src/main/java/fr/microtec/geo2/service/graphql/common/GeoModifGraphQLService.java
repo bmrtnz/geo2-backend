@@ -7,7 +7,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.common.GeoModif;
+import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.repository.common.GeoModifRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -21,14 +21,14 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModif, Integer> {
+public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModification, Integer> {
 
 	public GeoModifGraphQLService(GeoModifRepository repository) {
-		super(repository, GeoModif.class);
+		super(repository, GeoModification.class);
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoModif> allModification(
+	public RelayPage<GeoModification> allModification(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLEnvironment ResolutionEnvironment env
@@ -37,14 +37,14 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModif, 
 	}
 
 	@GraphQLQuery
-	public Optional<GeoModif> getModification(
+	public Optional<GeoModification> getModification(
 			@GraphQLArgument(name = "id") Integer id
 	) {
 		return super.getOne(id);
   }
 
   @GraphQLMutation
-	public GeoModif saveModification(GeoModif Modif) {
+	public GeoModification saveModification(GeoModification Modif) {
 		return this.save(Modif);
 	}
 
