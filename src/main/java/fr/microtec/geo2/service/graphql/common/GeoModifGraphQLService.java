@@ -44,8 +44,8 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModific
   }
 
   @GraphQLMutation
-	public GeoModification saveModification(GeoModification Modif) {
-		return this.save(Modif);
+	public GeoModification saveModification(GeoModification modification) {
+		return this.save(modification);
 	}
 
 }
