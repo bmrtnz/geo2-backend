@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -35,20 +36,24 @@ public class GeoModificationCorps {
 	)
 	private BigDecimal id;
 
+	@NotNull
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "modif")
+  @JoinColumn(name = "modif", nullable = false)
   private GeoModification modification;
 
-	@Column(name = "chemin")
+	@NotNull
+	@Column(name = "chemin", nullable = false)
 	private String chemin;
 
 	@Column(name = "traduction_key")
 	private String traductionKey;
 
-	@Column(name = "valeur_actuelle")
+	@NotNull
+	@Column(name = "valeur_actuelle", nullable = false)
 	private String valeurActuelle;
 
-	@Column(name = "valeur_demandee")
+	@NotNull
+	@Column(name = "valeur_demandee", nullable = false)
 	private String valeurDemandee;
 
 	@Column(name = "affichage_actuel")

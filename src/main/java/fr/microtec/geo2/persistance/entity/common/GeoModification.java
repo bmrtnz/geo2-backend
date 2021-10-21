@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -40,17 +41,21 @@ public class GeoModification {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modification")
 	private List<GeoModificationCorps> corps;
 
-	@Column(name = "entite")
+	@NotNull
+	@Column(name = "entite", nullable = false)
 	private String entite;
 
-	@Column(name = "entite_key")
+	@NotNull
+	@Column(name = "entite_key", nullable = false)
 	private String entiteID;
 
-	@Column(name = "statut")
+	@NotNull
+	@Column(name = "statut", nullable = false)
 	private Boolean statut = false;
 
+	@NotNull
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "utilisateur")
+  @JoinColumn(name = "utilisateur", nullable = false)
   private GeoUtilisateur initiateur;
 
   @LastModifiedDate
