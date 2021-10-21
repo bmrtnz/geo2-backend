@@ -28,7 +28,7 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModif, 
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoModif> allModif(
+	public RelayPage<GeoModif> allModification(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLEnvironment ResolutionEnvironment env
@@ -37,14 +37,14 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModif, 
 	}
 
 	@GraphQLQuery
-	public Optional<GeoModif> getModif(
+	public Optional<GeoModif> getModification(
 			@GraphQLArgument(name = "id") Integer id
 	) {
 		return super.getOne(id);
   }
 
   @GraphQLMutation
-	public GeoModif saveModif(GeoModif Modif) {
+	public GeoModif saveModification(GeoModif Modif) {
 		return this.save(Modif);
 	}
 
