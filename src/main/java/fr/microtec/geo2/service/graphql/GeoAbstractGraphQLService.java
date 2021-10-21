@@ -85,6 +85,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		return result;
 	}
 
+	/** @deprecated Wrong implementation, need to be reimplemented by using queries/predicates */
 	protected RelayPage<T> getPageFiltered(Predicate<? super T> predicate, Pageable pageable, String search, ResolutionEnvironment env) {
 		RelayPage<T> initialPage = this.getPage(search, pageable, env);
 		List<T> allNodes = recursiveFilter(search,pageable,new ArrayList<>(),predicate, env);
@@ -94,6 +95,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		return new RelayPageImpl<>(edges, initialPage.getPageInfo(), initialPage.getTotalCount(), initialPage.getTotalPage());
 	}
 
+	/** @deprecated Wrong implementation, need to be reimplemented by using queries/predicates */
 	private List<T> recursiveFilter(String search, Pageable pageable, List<T> acumulatedNodes, Predicate<? super T> predicate, ResolutionEnvironment env){
 		RelayPage<T> page = this.getPage(search, pageable, env);
 		List<T> nodes = page
@@ -233,6 +235,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
 	/**
 	 * Calcul aggregations from entities list
+	 * @deprecated Wrong implementation, need to be reimplemented by using queries/predicates
 	 * @param source Entities list
 	 * @param summaries Requested aggregations
 	 * @return Computed summaries
