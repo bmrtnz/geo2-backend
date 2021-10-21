@@ -47,7 +47,7 @@ public class GeoModification {
 	private String entiteID;
 
 	@Column(name = "statut")
-	private Boolean statut;
+	private Boolean statut = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "utilisateur")
