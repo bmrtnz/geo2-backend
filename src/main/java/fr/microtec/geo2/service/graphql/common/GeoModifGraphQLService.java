@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.repository.common.GeoModifRepository;
+import fr.microtec.geo2.service.ModificationService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -23,8 +24,14 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModification, Integer> {
 
-	public GeoModifGraphQLService(GeoModifRepository repository) {
+	private final ModificationService modificationService;
+
+	public GeoModifGraphQLService(
+		GeoModifRepository repository,
+		ModificationService modificationService
+	) {
 		super(repository, GeoModification.class);
+		this.modificationService = modificationService;
 	}
 
 	@GraphQLQuery
@@ -45,7 +52,7 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModific
 
   @GraphQLMutation
 	public GeoModification saveModification(GeoModification modification) {
-		return this.save(modification);
+		return this.modificationService.save(modification);
 	}
 
 }
