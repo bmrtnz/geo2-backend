@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.common;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -22,7 +23,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModification, Integer> {
+public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModification, BigDecimal> {
 
 	private final ModificationService modificationService;
 
@@ -45,7 +46,7 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModific
 
 	@GraphQLQuery
 	public Optional<GeoModification> getModification(
-			@GraphQLArgument(name = "id") Integer id
+			@GraphQLArgument(name = "id") BigDecimal id
 	) {
 		return super.getOne(id);
   }
