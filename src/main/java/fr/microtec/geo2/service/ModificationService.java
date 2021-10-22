@@ -40,19 +40,20 @@ public class ModificationService {
 
     merged = this.modificationRepository.save(merged);
 
-    for (GeoModificationCorps corps : allCorps) {
-      GeoModificationCorps mergedCorps = new GeoModificationCorps();
-      if(corps.getId() != null) {
-        GeoModificationCorps originalCorps = this
-        .modificationCorpsRepository
-        .findById(corps.getId()).get();
-        GeoAbstractGraphQLService.merge(originalCorps, mergedCorps, null);
+    if (allCorps != null && !allCorps.isEmpty())
+      for (GeoModificationCorps corps : allCorps) {
+        GeoModificationCorps mergedCorps = new GeoModificationCorps();
+        if(corps.getId() != null) {
+          GeoModificationCorps originalCorps = this
+          .modificationCorpsRepository
+          .findById(corps.getId()).get();
+          GeoAbstractGraphQLService.merge(originalCorps, mergedCorps, null);
+        }
+        GeoAbstractGraphQLService.merge(corps, mergedCorps, null);
+        if (mergedCorps.getModification() == null)
+          mergedCorps.setModification(merged);
+        corps = this.modificationCorpsRepository.save(mergedCorps);
       }
-      GeoAbstractGraphQLService.merge(corps, mergedCorps, null);
-      if (mergedCorps.getModification() == null)
-        mergedCorps.setModification(merged);
-      corps = this.modificationCorpsRepository.save(mergedCorps);
-    }
       
     return merged;
 	}
