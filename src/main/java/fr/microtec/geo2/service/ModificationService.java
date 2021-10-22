@@ -1,8 +1,6 @@
 package fr.microtec.geo2.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -26,24 +24,37 @@ public class ModificationService {
 		this.modificationCorpsRepository = matierePremiereRepository;
 	}
 
-	public GeoModification save(GeoModification modifChunk) {
+	public GeoModification save(GeoModification chunk) {
 
-    GeoModification modif = new GeoModification();
+    List<GeoModificationCorps> allCorps = chunk.getCorps();
+    GeoModification merged = new GeoModification();
 
-    if(modifChunk.getId() != null)
-      modif = this
-      .modificationRepository
-      .getOne(modifChunk.getId());
-
-    modif = GeoAbstractGraphQLService.merge(modif, modifChunk, null);
-    modif = this.modificationRepository.save(modif);
-
-    for (GeoModificationCorps corps : modif.getCorps()) {
-      if (corps.getModification() == null) corps.setModification(modif);
-      corps = this.modificationCorpsRepository.save(corps);
+    // push actual data
+    if(chunk.getId() != null) {
+      GeoModification original = this.modificationRepository
+      .findById(chunk.getId()).get();
+      GeoAbstractGraphQLService.merge(original, merged, null);
     }
 
-		return modif;
+    GeoAbstractGraphQLService.merge(chunk, merged, null);
+
+    merged = this.modificationRepository.save(merged);
+
+    for (GeoModificationCorps corps : allCorps) {
+      GeoModificationCorps mergedCorps = new GeoModificationCorps();
+      if(corps.getId() != null) {
+        GeoModificationCorps originalCorps = this
+        .modificationCorpsRepository
+        .findById(corps.getId()).get();
+        GeoAbstractGraphQLService.merge(originalCorps, mergedCorps, null);
+      }
+      GeoAbstractGraphQLService.merge(corps, mergedCorps, null);
+      if (mergedCorps.getModification() == null)
+        mergedCorps.setModification(merged);
+      corps = this.modificationCorpsRepository.save(mergedCorps);
+    }
+      
+    return merged;
 	}
 
 }
