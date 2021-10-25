@@ -68,6 +68,14 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		return PageFactory.fromPage(page);
 	}
 
+	protected List<T> getAll(final String search)
+	{
+		val tSpecification = (StringUtils.hasText(search)) ?
+			this.parseSearch(search) : null;
+
+		return this.repository.findAll(tSpecification);
+	}
+
 	private List<String> parseSelect(final ResolutionEnvironment env)
 	{
 		return this.parseSelect(env, "edges/node/**");
@@ -84,6 +92,21 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
 		return result;
 	}
+
+	/**
+   * Return the number of entities matching search
+   * @param search RSQL filter
+   */
+  public long count(final String search) {
+
+    Specification<T> spec = null;
+
+    if(StringUtils.hasText(search)) {
+      spec = Specification.where(this.parseSearch(search));
+    }
+
+    return this.repository.count(spec);
+  }
 
 	/** @deprecated Wrong implementation, need to be reimplemented by using queries/predicates */
 	protected RelayPage<T> getPageFiltered(Predicate<? super T> predicate, Pageable pageable, String search, ResolutionEnvironment env) {
