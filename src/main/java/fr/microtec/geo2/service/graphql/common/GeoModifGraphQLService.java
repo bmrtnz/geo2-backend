@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.graphql.common;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,14 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModific
 			@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getPage(search, pageable, env);
+	}
+
+	@GraphQLQuery
+	public List<GeoModification> listModification(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return this.getAll(search);
 	}
 
 	@GraphQLQuery
