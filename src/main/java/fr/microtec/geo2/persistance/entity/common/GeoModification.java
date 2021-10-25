@@ -20,6 +20,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoLieuPassageAQuai;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import lombok.Data;
 
 @Data
@@ -64,5 +69,25 @@ public class GeoModification {
   @LastModifiedDate
 	@Column(name = "mod_date")
 	private LocalDateTime dateModification;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entite_key", referencedColumnName = "cli_ref", insertable = false, updatable = false)
+	private GeoClient client;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entite_key", referencedColumnName = "k_fou", insertable = false, updatable = false)
+	private GeoFournisseur fournisseur;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entite_key", referencedColumnName = "trp_code", insertable = false, updatable = false)
+	private GeoTransporteur transporteur;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entite_key", referencedColumnName = "grp_code", insertable = false, updatable = false)
+	private GeoLieuPassageAQuai lieuPassageAQuai;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entite_key", referencedColumnName = "cen_ref", insertable = false, updatable = false)
+	private GeoEntrepot entrepot;
 
 }

@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +19,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Where;
 
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -179,5 +182,9 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Ser
 	@JoinColumn(name = "con_tiers", referencedColumnName = "cen_code")
 	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
 	private List<GeoContact> contacts;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entrepot")
+	@Where(clause = "entite = 'Entrepot'")
+	private Set<GeoModification> modifications;
 
 }

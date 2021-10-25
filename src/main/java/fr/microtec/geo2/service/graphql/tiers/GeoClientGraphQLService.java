@@ -47,4 +47,11 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 	public void deleteClient(String id) {
 		this.delete(id);
 	}
+
+	@GraphQLQuery
+	public long countClient(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
 }

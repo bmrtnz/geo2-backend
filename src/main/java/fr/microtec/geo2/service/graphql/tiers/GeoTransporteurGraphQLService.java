@@ -48,4 +48,11 @@ public class GeoTransporteurGraphQLService extends GeoAbstractGraphQLService<Geo
 		this.delete(id);
 	}
 
+	@GraphQLQuery
+	public long countTransporteur(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
+
 }

@@ -48,4 +48,11 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 		this.delete(id);
 	}
 
+	@GraphQLQuery
+	public long countEntrepot(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
+
 }

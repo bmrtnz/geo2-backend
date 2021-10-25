@@ -56,4 +56,11 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 	public void deleteArticle(String id) {
 		this.delete(id);
 	}
+
+	@GraphQLQuery
+	public long countArticle(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
 }

@@ -1,15 +1,18 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -99,5 +102,9 @@ public class GeoTransporteur extends ValidateModifiedPrewrittedEntity implements
 	@JoinColumn(name = "con_tiers", referencedColumnName = "trp_code")
 	@JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
 	private List<GeoContact> contacts;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "transporteur")
+	@Where(clause = "entite = 'Transporteur'")
+	private Set<GeoModification> modifications;
 
 }

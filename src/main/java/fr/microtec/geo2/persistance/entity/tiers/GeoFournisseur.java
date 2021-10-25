@@ -25,6 +25,7 @@ import org.hibernate.annotations.Where;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueFournisseur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import lombok.Data;
@@ -251,6 +252,10 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ident_fou")
 	private GeoIdentifiantFournisseur identifiant;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
+	@Where(clause = "entite = 'Fournisseur'")
+	private Set<GeoModification> modifications;
 
 	public void setCertifications(Set<GeoCertificationFournisseur> certifications) {
 		certifications.forEach(c -> c.setFournisseur(this));

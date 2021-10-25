@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import lombok.Data;
@@ -352,6 +353,10 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
 	@Column(name = "id_fiscal")
 	private String identifiantFiscal;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+	@Where(clause = "entite = 'Client'")
+	private Set<GeoModification> modifications;
 
 	@Transient
 	private Float autorise;

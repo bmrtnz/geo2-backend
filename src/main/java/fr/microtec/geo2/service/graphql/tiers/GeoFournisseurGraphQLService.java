@@ -43,4 +43,11 @@ public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoF
 		return this.save(fournisseur);
 	}
 
+	@GraphQLQuery
+	public long countFournisseur(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
+
 }

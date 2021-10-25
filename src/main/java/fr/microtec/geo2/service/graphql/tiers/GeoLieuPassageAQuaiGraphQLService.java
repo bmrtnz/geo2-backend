@@ -43,4 +43,11 @@ public class GeoLieuPassageAQuaiGraphQLService extends GeoAbstractGraphQLService
 		return this.save(lieuPassageAQuai);
 	}
 
+	@GraphQLQuery
+	public long countLieuPassageAQuai(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
+
 }
