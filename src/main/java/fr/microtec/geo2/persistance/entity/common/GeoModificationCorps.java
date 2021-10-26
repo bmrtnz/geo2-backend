@@ -51,12 +51,10 @@ public class GeoModificationCorps {
 	@Column(name = "traduction_key")
 	private String traductionKey;
 
-	@NotNull
-	@Column(name = "valeur_actuelle", nullable = false)
+	@Column(name = "valeur_actuelle")
 	private String valeurActuelle;
 
-	@NotNull
-	@Column(name = "valeur_demandee", nullable = false)
+	@Column(name = "valeur_demandee")
 	private String valeurDemandee;
 
 	@Column(name = "affichage_actuel")
