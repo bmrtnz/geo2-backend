@@ -92,6 +92,8 @@ public class ArticleService {
 
 		if (articleChunk.getValide() != null)
 			merged.setValide(articleChunk.getValide());
+		if (articleChunk.getPreSaisie() != null)
+			merged.setPreSaisie(articleChunk.getPreSaisie());
 		if (articleChunk.getBlueWhaleStock() != null)
 			merged.setBlueWhaleStock(articleChunk.getBlueWhaleStock());
 		if (articleChunk.getDescription() != null)
