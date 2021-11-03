@@ -53,6 +53,13 @@ public class GeoPaysGraphQLService extends GeoAbstractGraphQLService<GeoPays, St
 	) {
 		return super.getOne(id);
 	}
+	
+	@GraphQLQuery
+	public long countPays(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
 
 	@GraphQLQuery
 	public Float clientsSommeAgrement(@GraphQLContext GeoPays pays) {

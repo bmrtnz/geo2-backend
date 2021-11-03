@@ -129,4 +129,11 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	public List<GeoOrdre> saveAllOrdre(List<GeoOrdre> allOrdre) {
 		return this.ordreService.save(allOrdre);
 	}
+
+	@GraphQLQuery
+	public long countOrdre(
+		@GraphQLArgument(name = "search") String search
+	) {
+		return this.count(search);
+	}
 }
