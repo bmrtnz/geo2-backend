@@ -414,14 +414,14 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
       acm.setNombrePalettesAuSol(acm.getNombrePalettesAuSol() + crt.getNombrePalettesAuSol());
       acm.setNombrePalettes100x120(acm.getNombrePalettes100x120() + crt.getNombrePalettes100x120());
       acm.setNombrePalettes80x120(acm.getNombrePalettes80x120() + crt.getNombrePalettes80x120());
-      acm.setNombrePalettes60X80(acm.getNombrePalettes60X80() + crt.getNombrePalettes60X80());
+      acm.setNombrePalettes60x80(acm.getNombrePalettes60x80() + crt.getNombrePalettes60x80());
       return acm;
     });
 
     nombrePalettesAuSol = cumulLogistique.get().getNombrePalettesAuSol();
     nombrePalettes100x120 = cumulLogistique.get().getNombrePalettes100x120();
     nombrePalettes80x120 = cumulLogistique.get().getNombrePalettes80x120();
-    nombrePalettes60x80 = cumulLogistique.get().getNombrePalettes60X80();
+    nombrePalettes60x80 = cumulLogistique.get().getNombrePalettes60x80();
 
     // Update ordre
     ordre.setFactureAvoir(factureAvoir);
@@ -443,7 +443,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     ordre.setTotalNombrePalettesExpediees(cumulLignes.get().getNombrePalettesExpediees());
     ordre.setNombrePalettesAuSol(nombrePalettesAuSol);
     ordre.setNombrePalettes100x120(nombrePalettes100x120);
-    ordre.setNombrePalettes60X80(nombrePalettes60x80);
+    ordre.setNombrePalettes60x80(nombrePalettes60x80);
     ordre.setNombrePalettes80x120(nombrePalettes80x120);
     this.ordreRepository.save(ordre);
 

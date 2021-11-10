@@ -27,7 +27,7 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
     "ol.logistique.nombrePalettesAuSol as nombrePalettesAuSol,"+
     "ol.logistique.nombrePalettes100x120 as nombrePalettes100x120,"+
     "ol.logistique.nombrePalettes80x120 as nombrePalettes80x120,"+
-    "ol.logistique.nombrePalettes60X80 as nombrePalettes60X80"+
+    "ol.logistique.nombrePalettes60x80 as nombrePalettes60x80"+
   ") "+
   "FROM #{#entityName} ol " + 
   "WHERE ol.ordre = :ordre "+
@@ -37,7 +37,7 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
   "ol.logistique.nombrePalettesAuSol," +
   "ol.logistique.nombrePalettes100x120," +
   "ol.logistique.nombrePalettes80x120," +
-  "ol.logistique.nombrePalettes60X80 " +
+  "ol.logistique.nombrePalettes60x80 " +
   "ORDER BY ol.fournisseur";
 
   @Query("SELECT DISTINCT ol.article FROM #{#entityName} ol")

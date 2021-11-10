@@ -85,7 +85,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private Float nombrePalettes80x120;
 
 	@Column(name = "pal_nb_PB60X80")
-	private Float nombrePalettes60X80;
+	private Float nombrePalettes60x80;
 
 	@Column(name = "tot_cde_nb_pal")
 	private Float totalPalettesCommandees;
@@ -145,7 +145,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@PostLoad
 	public void postLoad(){
 		if(this.dateDepartReelleFournisseur == null) {
-			if(this.expedieStation && this.totalPalettesExpediees == 0 && this.nombrePalettesAuSol == 0 && this.nombrePalettes100x120 == 0 && this.nombrePalettes80x120 == 0 && this.nombrePalettes60X80 == 0)
+			if(this.expedieStation && this.totalPalettesExpediees == 0 && this.nombrePalettesAuSol == 0 && this.nombrePalettes100x120 == 0 && this.nombrePalettes80x120 == 0 && this.nombrePalettes60x80 == 0)
 				this.okStation = "clôturé à zéro";
 			else if(this.expedieStation)
 				this.okStation = "OK";

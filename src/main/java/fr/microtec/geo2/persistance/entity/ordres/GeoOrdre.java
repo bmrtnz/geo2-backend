@@ -292,7 +292,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private Float nombrePalettes80x120;
 
 	@Column(name = "pal_nb_PB60X80")
-	private Float nombrePalettes60X80;
+	private Float nombrePalettes60x80;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "inc_code")
@@ -451,6 +451,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@PostLoad
 	@PostUpdate
 	public void postLoadUpdate(){
+		this.statut = GeoOrdreStatut.NON_CONFIRME;
 		this.setStatut(GeoOrdreStatut.NON_CONFIRME);
 		if (this.getFlagPublication()) this.setStatut(GeoOrdreStatut.CONFIRME);
 		if (!this.getTracabiliteDetailPalettes().isEmpty()) this.setStatut(GeoOrdreStatut.EN_PREPARATION);

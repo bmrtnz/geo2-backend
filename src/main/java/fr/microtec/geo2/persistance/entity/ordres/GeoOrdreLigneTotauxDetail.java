@@ -19,5 +19,5 @@ public class GeoOrdreLigneTotauxDetail implements Serializable {
 	Float nombrePalettesAuSol;
 	Float nombrePalettes100x120;
 	Float nombrePalettes80x120;
-	Float nombrePalettes60X80;
+	Float nombrePalettes60x80;
 }
