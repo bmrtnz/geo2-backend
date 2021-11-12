@@ -1,8 +1,24 @@
 package fr.microtec.geo2.persistance.repository;
 
-import fr.microtec.geo2.common.CustomUtils;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
+import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
+
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.PostLoad;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,14 +28,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
-import javax.persistence.*;
-import javax.persistence.criteria.*;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
+import fr.microtec.geo2.common.CustomUtils;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements CustomRepository<T>
@@ -125,6 +136,11 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     private void setData(final Object newClass, final String alias, final Tuple tuple)
     {
         this.setData(newClass, alias, tuple, "");
+        try {
+            this.handlePostLoadEvent(newClass);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            log.error(e.getMessage());
+        }
     }
 
     /**
@@ -220,5 +236,17 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         }
 
         return root;
+    }
+
+    /**
+     * Execute les methodes associées à l'annotation @PostLoad
+     * @param newClass Une instance de l’objet qui sera utilisé pour binder les résultats du Tuple hibernate.
+     */
+    private void handlePostLoadEvent(final Object newClass) throws IllegalAccessException, IllegalArgumentException,
+    InvocationTargetException {
+        Method[] methods = newClass.getClass().getDeclaredMethods();
+        for(Method method : methods)
+            if(method.isAnnotationPresent(PostLoad.class))
+                method.invoke(newClass);
     }
 }
