@@ -240,7 +240,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
     /**
      * Execute les methodes associées à l'annotation @PostLoad
-     * @param newClass Une instance de l’objet qui sera utilisé pour binder les résultats du Tuple hibernate.
+     * @param newClass Une instance de l’objet après remplissage des données
      */
     private void handlePostLoadEvent(final Object newClass) throws IllegalAccessException, IllegalArgumentException,
     InvocationTargetException {
