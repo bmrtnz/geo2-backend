@@ -123,7 +123,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     public Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final List<String> fields)
     {
         val list = this.findAllWithPaginations(specs, pageable, clazz, fields);
-        val total = this.count(specs);
+        val total = list.size();
         return new PageImpl<>(list, pageable, total);
     }
 
