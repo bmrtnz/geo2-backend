@@ -1,4 +1,4 @@
-package fr.microtec.geo2.service.graphql;
+package fr.microtec.geo2.service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +18,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
 import fr.microtec.geo2.persistance.repository.tiers.GeoPaysRepository;
+import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 
 @Service
 public class PaysService extends GeoAbstractGraphQLService<GeoPays, String> {

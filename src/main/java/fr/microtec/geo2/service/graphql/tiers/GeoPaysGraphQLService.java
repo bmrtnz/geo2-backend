@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
 import fr.microtec.geo2.persistance.repository.tiers.GeoPaysRepository;
+import fr.microtec.geo2.service.PaysService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import fr.microtec.geo2.service.graphql.PaysService;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
