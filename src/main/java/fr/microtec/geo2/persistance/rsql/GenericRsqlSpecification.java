@@ -66,33 +66,33 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				break;
 			case GREATER_THAN:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.greaterThan(cast(expression), parseToLocalDate(args.get(0)));
+					predicate = criteriaBuilder.greaterThan(cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.greaterThan(cast(expression), parseToLocalDateTime(args.get(0)));
+					predicate = criteriaBuilder.greaterThan(cast(expression), (LocalDateTime)args.get(0));
 				else
 					predicate = criteriaBuilder.greaterThan(cast(expression), args.get(0).toString());
 				break;
 			case GREATER_THAN_OR_EQUALS:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), parseToLocalDate(args.get(0)));
+					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), parseToLocalDateTime(args.get(0)));
+					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), (LocalDateTime)args.get(0));
 				else
 					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), args.get(0).toString());
 				break;
 			case LESS_THAN:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.lessThan(cast(expression), parseToLocalDate(args.get(0)));
+					predicate = criteriaBuilder.lessThan(cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.lessThan(cast(expression), parseToLocalDateTime(args.get(0)));
+					predicate = criteriaBuilder.lessThan(cast(expression), (LocalDateTime)args.get(0));
 				else
 					predicate = criteriaBuilder.lessThan(cast(expression), args.get(0).toString());
 				break;
 			case LESS_THAN_OR_EQUAL:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), parseToLocalDate(args.get(0)));
+					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), parseToLocalDateTime(args.get(0)));
+					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), (LocalDateTime)args.get(0));
 				else
 					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), args.get(0).toString());
 				break;
