@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,8 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
@@ -54,16 +53,16 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private String locusTrace;
 
 	@Column(name = "datdep_fou_p")
-	private LocalDate dateDepartPrevueFournisseur;
+	private LocalDateTime dateDepartPrevueFournisseur;
 
 	@Column(name = "datdep_fou_r")
-	private LocalDate dateDepartReelleFournisseur;
+	private LocalDateTime dateDepartReelleFournisseur;
 	
 	@Column(name = "datdep_grp_p")
-	private LocalDate dateDepartPrevueGroupage;
+	private LocalDateTime dateDepartPrevueGroupage;
 
 	@Column(name = "datdep_grp_r")
-	private LocalDate dateDepartReelleGroupage;
+	private LocalDateTime dateDepartReelleGroupage;
 
 	@Column(name = "datliv_grp")
 	private LocalDate dateLivraisonLieuGroupage;
