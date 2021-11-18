@@ -1,31 +1,5 @@
 package fr.microtec.geo2.service.graphql;
 
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
-import fr.microtec.geo2.configuration.graphql.*;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
-import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
-import graphql.relay.Edge;
-import io.leangen.graphql.annotations.GraphQLEnvironment;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.execution.relay.CursorProvider;
-import lombok.val;
-import org.hibernate.metamodel.spi.MetamodelImplementor;
-import org.hibernate.persister.entity.EntityPersister;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.StringUtils;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
@@ -34,8 +8,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+
+import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.persister.entity.EntityPersister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
+
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.ast.Node;
+import fr.microtec.geo2.configuration.graphql.PageFactory;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.configuration.graphql.Summary;
+import fr.microtec.geo2.configuration.graphql.SummaryType;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
+import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import lombok.val;
 
 /**
  * Abstract Geo graphQl service.
@@ -107,31 +107,6 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
     return this.repository.count(spec);
   }
-
-	/** @deprecated Wrong implementation, need to be reimplemented by using queries/predicates */
-	protected RelayPage<T> getPageFiltered(Predicate<? super T> predicate, Pageable pageable, String search, ResolutionEnvironment env) {
-		RelayPage<T> initialPage = this.getPage(search, pageable, env);
-		List<T> allNodes = recursiveFilter(search,pageable,new ArrayList<>(),predicate, env);
-		CursorProvider<T> cursorProvider = PageFactory
-		.offsetBasedCursorProvider(pageable.getOffset());
-		List<Edge<T>> edges = PageFactory.createEdges(allNodes, cursorProvider);
-		return new RelayPageImpl<>(edges, initialPage.getPageInfo(), initialPage.getTotalCount(), initialPage.getTotalPage());
-	}
-
-	/** @deprecated Wrong implementation, need to be reimplemented by using queries/predicates */
-	private List<T> recursiveFilter(String search, Pageable pageable, List<T> acumulatedNodes, Predicate<? super T> predicate, ResolutionEnvironment env){
-		RelayPage<T> page = this.getPage(search, pageable, env);
-		List<T> nodes = page
-		.getEdges()
-		.stream()
-		.map(edge -> edge.getNode())
-		.filter(predicate)
-		.collect(Collectors.toList());
-		acumulatedNodes.addAll(nodes);
-		if(acumulatedNodes.size() < pageable.getPageSize() && page.getPageInfo().isHasNextPage())
-			return recursiveFilter(search,PageRequest.of(pageable.getPageNumber() + 1, pageable.getPageSize()),new ArrayList<>(),predicate, env);
-		return acumulatedNodes;
-	}
 
 	/**
 	 * Get one entity by this id.
