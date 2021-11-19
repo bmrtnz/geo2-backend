@@ -1,17 +1,30 @@
 package fr.microtec.geo2.common;
 
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.hibernate.query.criteria.internal.path.AbstractPathImpl;
-import org.springframework.util.StringUtils;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EntityGraph;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Subgraph;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+
+import org.hibernate.query.criteria.internal.path.AbstractPathImpl;
+import org.springframework.util.StringUtils;
+
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CustomUtils
@@ -19,13 +32,14 @@ public class CustomUtils
     /**
      * @param fields La liste des champs souhaités.
      * @param root Le type racine dans la clause from de l’objet T.
-     * @return Une liste d’object Selection correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
+     * @param mapper La fonction de mappage vers R.
+     * @return Une liste d’object R correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
      * On vérifie également que les fields qui sont passés ne font pas référence à des champs de type entité.
      * Il n’est pas possible de faire une query GraphQL en demandant depuis l’entité Geo_Client le champ "societe".
      */
-    public static <T> List<Selection<?>> getSelections(List<String> fields, Root<T> root)
+    private static <T, R> List<R> parseFields(List<String> fields, Root<T> root, Function<String, ? extends R> mapper)
     {
-        List<Selection<?>> selections = new ArrayList<>();
+        List<R> results = new ArrayList<>();
         val clazz = root.getJavaType();
 
         fields
@@ -56,28 +70,17 @@ public class CustomUtils
             })
             .forEach(field -> {
                 try {
-                    Selection<?> selection;
-
-                    AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
-                    Arrays.stream(field.split("\\.")).forEach(s -> {
-                        if(objectPath.get() == null) {
-                            objectPath.set(root.get(s));
-                        }
-                        else {
-                            objectPath.set(objectPath.get().get(s));
-                        }
-                    });
-
-                    selection = objectPath.get().alias(field);
+                    
+                    val result = mapper.apply(field);
 
                     // On check que le type de l’objet demandé n’est pas un objet provenant du package fr.microtec
                     // Il n’est pas possible de demander directement l’objet GEO_SOCIETE directement depuis une entité GEO_CLIENT
-                    if(selection != null) {
-                        val attribute = ((AbstractPathImpl<?>) selection).getAttribute();
+                    if(result != null) {
+                        val attribute = ((AbstractPathImpl<?>) result).getAttribute();
                         // Si l’on a une collection, on récupère la classe déclarée de la collection, sinon la classe.
                         val aClass = (attribute.isCollection()) ? attribute.getDeclaringType().getJavaType() : attribute.getJavaType();
                         if(!aClass.isAnnotationPresent(Entity.class)) {
-                            selections.add(selection);
+                            results.add(result);
                         }
                     }
                 }
@@ -89,7 +92,57 @@ public class CustomUtils
                 }
             });
 
-        return selections;
+        return results;
+    }
+
+    /**
+     * @param fields La liste des champs souhaités.
+     * @param root Le type racine dans la clause from de l’objet T.
+     * @return Une liste d’object Selection correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
+     */
+    public static <T> List<Selection<?>> getSelections(List<String> fields, Root<T> root)
+    {
+        return CustomUtils
+        .parseFields(fields, root, (String field) -> {
+
+            AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
+            Arrays.stream(field.split("\\.")).forEach(s -> {
+                if(objectPath.get() == null) {
+                    objectPath.set(root.get(s));
+                }
+                else {
+                    objectPath.set(objectPath.get().get(s));
+                }
+            });
+    
+            return objectPath.get().alias(field);
+            
+        });
+    }
+
+    /**
+     * @param fields La liste des champs souhaités.
+     * @param root Le type racine dans la clause from de l’objet T.
+     * @return Une liste d’object Expression correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
+     */
+    public static <T> List<Expression<?>> getSelectionExpressions(List<String> fields, Root<T> root)
+    {
+        return CustomUtils
+        .parseFields(fields, root, (String field) -> {
+
+            AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
+            Arrays.stream(field.split("\\.")).forEach(s -> {
+                if(objectPath.get() == null) {
+                    objectPath.set(root.get(s));
+                }
+                else {
+                    objectPath.set(objectPath.get().get(s));
+                }
+            });
+    
+            return objectPath.get();
+            
+        });
     }
 
     public static <T> void buildGraph(EntityGraph<T> entityGraph, List<Selection<?>> selections)
