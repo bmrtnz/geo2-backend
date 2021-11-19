@@ -23,9 +23,9 @@ public class GeoDevise extends ValidateAndModifiedEntity {
 	private String description;
 
 	@Column(name = "dev_tx")
-	private Float taux;
+	private Double taux;
 
 	@Column(name = "dev_tx_achat")
-	private Float tauxAchat;
+	private Double tauxAchat;
 
 }
