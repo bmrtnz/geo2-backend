@@ -45,6 +45,7 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -185,6 +186,20 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     
     Page<GeoOrdre> page = this.repository.findAll(spec, pageable);
 
+		return PageFactory.fromPage(page);
+  }
+
+  public RelayPage<GeoOrdre> fetchOrdresPlanningTransporteurs(String search, Pageable pageable, final ResolutionEnvironment env) {
+
+    List<String> fields = this.parseSelect(env);
+    Specification<GeoOrdre> spec = (Specification<GeoOrdre>)CriteriaUtils.groupedBySelection(fields);
+
+    if(search != null && !search.isBlank())
+      spec = spec.and(this.parseSearch(search));
+
+    Page<GeoOrdre> page = this.repository
+    .findAllWithPagination(spec, pageable, GeoOrdre.class, fields);
+    
 		return PageFactory.fromPage(page);
   }
 

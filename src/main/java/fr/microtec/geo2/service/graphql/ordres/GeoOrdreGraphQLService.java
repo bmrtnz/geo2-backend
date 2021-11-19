@@ -53,6 +53,16 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLQuery
+	public RelayPage<GeoOrdre> allOrdrePlanningTransporteurs(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment() final ResolutionEnvironment env
+	) {
+		return this.ordreService.fetchOrdresPlanningTransporteurs(search, pageable, env);
+		// return this.getPage(search, pageable, env);
+	}
+
+	@GraphQLQuery
 	public Float sommeColisCommandes(@GraphQLContext GeoOrdre ordre) {
 		return this.ordreService.fetchSommeColisCommandes(ordre);
 	}

@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance;
 
+import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.persistance.entity.Distinct;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Sort;
@@ -70,6 +71,19 @@ public class CriteriaUtils {
 
 		return query;
 	}
+
+	public static Specification<?> groupedBySelection(List<String> selection) {
+    return (root, criteriaQuery, criteriaBuilder) -> {
+
+      List<Expression<?>> expressions = CustomUtils
+      .getSelectionExpressions(selection, root);
+
+      criteriaQuery.groupBy(expressions);
+      return Specification.where(null)
+      .toPredicate(root, criteriaQuery, criteriaBuilder);
+      
+    };
+  }
 
 	/**
 	 * Get id expression from Root.

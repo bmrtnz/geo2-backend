@@ -76,12 +76,12 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		return this.repository.findAll(tSpecification);
 	}
 
-	private List<String> parseSelect(final ResolutionEnvironment env)
+	protected List<String> parseSelect(final ResolutionEnvironment env)
 	{
 		return this.parseSelect(env, "edges/node/**");
 	}
 
-	private List<String> parseSelect(final ResolutionEnvironment env, final String search)
+	protected List<String> parseSelect(final ResolutionEnvironment env, final String search)
 	{
 		List<String> result = new ArrayList<>();
 
