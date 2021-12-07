@@ -1,5 +1,20 @@
 package fr.microtec.geo2.service.graphql.common;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.support.PageableExecutionUtils;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+
 import cz.jirutka.rsql.parser.RSQLParser;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
@@ -11,19 +26,6 @@ import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.support.PageableExecutionUtils;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import java.util.List;
 
 
 @Service
@@ -53,7 +55,7 @@ public class GeoDistinctGraphQLService {
 
 		Page<Distinct> result = this.readPage(spec, pageable, EntityUtils.getEntityClassFromName(inputType), requestField);
 
-		return PageFactory.fromPage(result);
+		return PageFactory.asRelayPage(result);
 	}
 
 	/**

@@ -66,35 +66,35 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				break;
 			case GREATER_THAN:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.greaterThan(cast(expression), (LocalDate)args.get(0));
+					predicate = criteriaBuilder.greaterThan(CriteriaUtils.cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.greaterThan(cast(expression), (LocalDateTime)args.get(0));
+					predicate = criteriaBuilder.greaterThan(CriteriaUtils.cast(expression), (LocalDateTime)args.get(0));
 				else
-					predicate = criteriaBuilder.greaterThan(cast(expression), args.get(0).toString());
+					predicate = criteriaBuilder.greaterThan(CriteriaUtils.cast(expression), args.get(0).toString());
 				break;
 			case GREATER_THAN_OR_EQUALS:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), (LocalDate)args.get(0));
+					predicate = criteriaBuilder.greaterThanOrEqualTo(CriteriaUtils.cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), (LocalDateTime)args.get(0));
+					predicate = criteriaBuilder.greaterThanOrEqualTo(CriteriaUtils.cast(expression), (LocalDateTime)args.get(0));
 				else
-					predicate = criteriaBuilder.greaterThanOrEqualTo(cast(expression), args.get(0).toString());
+					predicate = criteriaBuilder.greaterThanOrEqualTo(CriteriaUtils.cast(expression), args.get(0).toString());
 				break;
 			case LESS_THAN:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.lessThan(cast(expression), (LocalDate)args.get(0));
+					predicate = criteriaBuilder.lessThan(CriteriaUtils.cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.lessThan(cast(expression), (LocalDateTime)args.get(0));
+					predicate = criteriaBuilder.lessThan(CriteriaUtils.cast(expression), (LocalDateTime)args.get(0));
 				else
-					predicate = criteriaBuilder.lessThan(cast(expression), args.get(0).toString());
+					predicate = criteriaBuilder.lessThan(CriteriaUtils.cast(expression), args.get(0).toString());
 				break;
 			case LESS_THAN_OR_EQUAL:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), (LocalDate)args.get(0));
+					predicate = criteriaBuilder.lessThanOrEqualTo(CriteriaUtils.cast(expression), (LocalDate)args.get(0));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), (LocalDateTime)args.get(0));
+					predicate = criteriaBuilder.lessThanOrEqualTo(CriteriaUtils.cast(expression), (LocalDateTime)args.get(0));
 				else
-					predicate = criteriaBuilder.lessThanOrEqualTo(cast(expression), args.get(0).toString());
+					predicate = criteriaBuilder.lessThanOrEqualTo(CriteriaUtils.cast(expression), args.get(0).toString());
 				break;
 			case IN:
 				predicate = expression.in(args);
@@ -106,15 +106,15 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				predicate = criteriaBuilder.isNotNull(expression);
 				break;
 			case LIKE:
-				predicate = criteriaBuilder.like(cast(expression), args.get(0).toString());
+				predicate = criteriaBuilder.like(CriteriaUtils.cast(expression), args.get(0).toString());
 				break;
 			case BETWEEN:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.between(cast(expression), parseToLocalDate(args.get(0)), parseToLocalDate(args.get(1)));
+					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), parseToLocalDate(args.get(0)), parseToLocalDate(args.get(1)));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.between(cast(expression), parseToLocalDateTime(args.get(0)), parseToLocalDateTime(args.get(1)));
+					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), parseToLocalDateTime(args.get(0)), parseToLocalDateTime(args.get(1)));
 				else
-					predicate = criteriaBuilder.between(cast(expression), args.get(0).toString(), args.get(1).toString());
+					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), args.get(0).toString(), args.get(1).toString());
 				break;
 			default:
 				throw new RsqlException(String.format("Unimplemented RSQL operator '%s'", this.operator));
@@ -139,21 +139,10 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 		Expression<Y> expression = CriteriaUtils.toExpressionRecursively(root, this.property, false);
 
 		if (this.operator.isCaseInsensitive()) {
-			expression = cast(builder.upper(cast(expression)));
+			expression = CriteriaUtils.cast(builder.upper(CriteriaUtils.cast(expression)));
 		}
 
 		return expression;
-	}
-
-	/**
-	 * Cast unknown generic expression type to require generic type.
-	 *
-	 * @param expression The expression to cast.
-	 * @param <Y> The required type.
-	 * @return Expression casted with Y require type.
-	 */
-	private <Y> Expression<Y> cast(Expression<?> expression) {
-		return (Expression<Y>) expression;
 	}
 
 	/**

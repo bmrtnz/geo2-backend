@@ -1,14 +1,14 @@
 package fr.microtec.geo2.configuration.graphql;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.List;
 
-import org.springframework.data.domain.Pageable;
-
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.execution.relay.Page;
 
-public interface RelayPage<T> extends Page<T> {
+public interface RelayPage<E> extends Page<E> {
 
 	@GraphQLQuery
 	long getTotalCount();
@@ -16,8 +16,11 @@ public interface RelayPage<T> extends Page<T> {
 	@GraphQLQuery
 	long getTotalPage();
 
-	RelayPage<T> mapNodes(Function<T, T> mapper, Pageable pageable);
-
-	RelayPage<T> filterNodes(Predicate<? super T> predicate, Pageable pageable);
+	@GraphQLQuery
+	Object getSummary(
+		@GraphQLNonNull List<Summary> summaries,
+		@GraphQLNonNull String of,
+		@GraphQLEnvironment final ResolutionEnvironment env
+	);
 
 }

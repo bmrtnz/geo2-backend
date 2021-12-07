@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.graphql.ordres;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -56,10 +57,9 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	public RelayPage<GeoOrdre> allOrdrePlanningTransporteurs(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment() final ResolutionEnvironment env
+			@GraphQLEnvironment() final Set<String> fields
 	) {
-		return this.ordreService.fetchOrdresPlanningTransporteurs(search, pageable, env);
-		// return this.getPage(search, pageable, env);
+		return this.ordreService.fetchOrdresPlanningTransporteurs(search, pageable, fields);
 	}
 
 	@GraphQLQuery

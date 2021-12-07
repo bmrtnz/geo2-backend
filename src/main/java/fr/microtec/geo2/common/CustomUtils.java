@@ -1,14 +1,17 @@
 package fr.microtec.geo2.common;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityGraph;
@@ -16,6 +19,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Subgraph;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -23,6 +28,7 @@ import javax.persistence.criteria.Selection;
 import org.hibernate.query.criteria.internal.path.AbstractPathImpl;
 import org.springframework.util.StringUtils;
 
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,12 +43,11 @@ public class CustomUtils
      * On vérifie également que les fields qui sont passés ne font pas référence à des champs de type entité.
      * Il n’est pas possible de faire une query GraphQL en demandant depuis l’entité Geo_Client le champ "societe".
      */
-    private static <T, R> List<R> parseFields(List<String> fields, Root<T> root, Function<String, ? extends R> mapper)
+    public static <T, R> List<R> parseFields(Set<String> fields, Root<T> root, Function<String, ? extends R> mapper)
     {
-        List<R> results = new ArrayList<>();
         val clazz = root.getJavaType();
 
-        fields
+        return fields
             .stream()
             .filter(field -> {
                 // On se fiche de chercher ou se trouve __typename dans l’entité.
@@ -68,7 +73,7 @@ public class CustomUtils
 
                 return garder.get();
             })
-            .forEach(field -> {
+            .filter(field -> {
                 try {
                     
                     val result = mapper.apply(field);
@@ -79,20 +84,38 @@ public class CustomUtils
                         val attribute = ((AbstractPathImpl<?>) result).getAttribute();
                         // Si l’on a une collection, on récupère la classe déclarée de la collection, sinon la classe.
                         val aClass = (attribute.isCollection()) ? attribute.getDeclaringType().getJavaType() : attribute.getJavaType();
-                        if(!aClass.isAnnotationPresent(Entity.class)) {
-                            results.add(result);
-                        }
+                        return !aClass.isAnnotationPresent(Entity.class);
                     }
+                    return false;
                 }
                 catch (IllegalArgumentException | IllegalStateException ignore)
                 {
                     // Si root.get(field) n’existe pas, on attrape l’exception pour ne rien en faire.
                     // Ceci ne devrait jamais arriver si les champs fournis dans la liste proviennent de GraphQL.
                     log.error("Le champ {} n’existe pas dans l’objet souhaité.", field);
+                    return false;
                 }
-            });
+            })
+            .map(field -> mapper.apply(field))
+            .collect(Collectors.toList());
 
-        return results;
+    }
+
+    /**
+     * @param fields La liste des champs souhaités.
+     * @param root Le type racine dans la clause from de l’objet T.
+     * @param joinType Le type de jointure a utiliser.
+     * @return Une liste d’object Selection correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
+     */
+    public static <T> List<Selection<?>> getSelections(Set<String> fields, Root<T> root, JoinType joinType)
+    {
+        return CustomUtils
+        .parseFields(fields, root, (String field) -> {
+
+            AtomicReference<Path<Object>> objectPath = fetchField(root, field, joinType);
+            return objectPath.get().alias(field);
+            
+        });
     }
 
     /**
@@ -100,22 +123,25 @@ public class CustomUtils
      * @param root Le type racine dans la clause from de l’objet T.
      * @return Une liste d’object Selection correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
      */
-    public static <T> List<Selection<?>> getSelections(List<String> fields, Root<T> root)
+    public static <T> List<Selection<?>> getSelections(Set<String> fields, Root<T> root)
+    {
+        return getSelections(fields, root, JoinType.LEFT);
+    }
+
+    /**
+     * @param fields La liste des champs souhaités.
+     * @param root Le type racine dans la clause from de l’objet T.
+     * @param joinType Le type de jointure a utiliser.
+     * @return Une liste d’object Expression correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
+     */
+    public static <T> List<Expression<?>> getSelectionExpressions(Set<String> fields, Root<T> root, JoinType joinType)
     {
         return CustomUtils
         .parseFields(fields, root, (String field) -> {
-
-            AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
-            Arrays.stream(field.split("\\.")).forEach(s -> {
-                if(objectPath.get() == null) {
-                    objectPath.set(root.get(s));
-                }
-                else {
-                    objectPath.set(objectPath.get().get(s));
-                }
-            });
-    
-            return objectPath.get().alias(field);
+            
+            AtomicReference<Path<Object>> objectPath = fetchField(root, field, joinType);
+            objectPath.get().alias(field);
+            return objectPath.get();
             
         });
     }
@@ -125,24 +151,35 @@ public class CustomUtils
      * @param root Le type racine dans la clause from de l’objet T.
      * @return Une liste d’object Expression correspondant aux attributs de l’entité pour faire une requête SQL avec hibernate.
      */
-    public static <T> List<Expression<?>> getSelectionExpressions(List<String> fields, Root<T> root)
-    {
-        return CustomUtils
-        .parseFields(fields, root, (String field) -> {
+    public static <T> List<Expression<?>> getSelectionExpressions(Set<String> fields, Root<T> root) {
+        return getSelectionExpressions(fields, root, JoinType.LEFT);
+    }
 
-            AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
-            Arrays.stream(field.split("\\.")).forEach(s -> {
-                if(objectPath.get() == null) {
-                    objectPath.set(root.get(s));
-                }
-                else {
-                    objectPath.set(objectPath.get().get(s));
-                }
-            });
-    
-            return objectPath.get();
-            
+    private static <T> AtomicReference<Path<Object>> fetchField(Root<T> root, String field, JoinType joinType) {
+        AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
+        String[] splitted = field.split("\\.");
+
+        IntStream
+        .range(0, splitted.length)
+        .boxed()
+        .forEach(index -> {
+            val chunk = splitted[index];
+            Path<Object> current;
+
+            if(index == splitted.length - 1)
+                current = objectPath.get() == null
+                ? root.get(chunk)
+                : objectPath.get().get(chunk);
+            else
+                current = objectPath.get() == null
+                ? root.join(chunk, joinType)
+                : ((Join<?,?>) objectPath.get()).join(chunk, joinType);
+
+            objectPath.set(current);
+
         });
+
+        return objectPath;
     }
 
     public static <T> void buildGraph(EntityGraph<T> entityGraph, List<Selection<?>> selections)
@@ -167,6 +204,29 @@ public class CustomUtils
             });
     }
 
+    public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env)
+	{
+		return CustomUtils.parseSelectFromEnv(env, "edges/node/**");
+	}
+    public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env, final String search)
+	{
+        return env
+        .dataFetchingEnvironment
+        .getSelectionSet()
+        .getFields(search)
+        .stream()
+        .map( field -> field.getQualifiedName().replace("edges/node/", "").replace("/", "."))
+        .collect(Collectors.toSet());
+	}
+
+    public static Set<String> parseSelect(final Set<String> fields)
+	{
+        return fields
+        .stream()
+        .map(s -> s.replace("/", "."))
+        .collect(Collectors.toSet());
+	}
+
     /**
      * Recherche un champ dans une classe en descendant en profondeur dans les classes enfants.
      * Si l’on ne trouve rien, l’optional sera null, sinon il contiendra le champ trouvé.
@@ -183,5 +243,30 @@ public class CustomUtils
         } catch (NoSuchFieldException e) {
             return getField(clazz.getSuperclass(), fieldName);
         }
+    }
+
+    /**
+     * Build paths from GraphQL Field
+     * @param field Root field
+     * @return Stream of paths (as String)
+     */
+    public static Stream<String> getPaths(graphql.language.Field field) {
+        return CustomUtils
+        .getPaths(field, "")
+        .filter( f -> !f.contains("__typename"));
+    }
+    private static Stream<String> getPaths(graphql.language.Field inputField, String prefix) {
+        if (!inputField.getChildren().isEmpty()) {
+            return inputField
+            .getSelectionSet()
+            .getSelectionsOfType(graphql.language.Field.class)
+            .stream()
+            .flatMap( child -> {
+                val newPrefix = prefix.concat(inputField.getName()).concat("/");
+                return getPaths(child, newPrefix);
+            });
+        }
+
+        return Stream.of(prefix.concat(inputField.getName()));
     }
 }

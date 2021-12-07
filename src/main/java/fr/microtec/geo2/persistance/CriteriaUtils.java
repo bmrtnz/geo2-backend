@@ -1,7 +1,43 @@
 package fr.microtec.geo2.persistance;
 
-import fr.microtec.geo2.common.CustomUtils;
-import fr.microtec.geo2.persistance.entity.Distinct;
+import static javax.persistence.metamodel.Attribute.PersistentAttributeType.ELEMENT_COLLECTION;
+import static javax.persistence.metamodel.Attribute.PersistentAttributeType.MANY_TO_MANY;
+import static javax.persistence.metamodel.Attribute.PersistentAttributeType.MANY_TO_ONE;
+import static javax.persistence.metamodel.Attribute.PersistentAttributeType.ONE_TO_MANY;
+import static javax.persistence.metamodel.Attribute.PersistentAttributeType.ONE_TO_ONE;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Member;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.Bindable;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.PluralAttribute;
+import javax.persistence.metamodel.Type;
+
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,16 +45,9 @@ import org.springframework.data.mapping.PropertyPath;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.criteria.*;
-import javax.persistence.metamodel.*;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Member;
-import java.util.*;
-
-import static javax.persistence.metamodel.Attribute.PersistentAttributeType.*;
+import fr.microtec.geo2.common.CustomUtils;
+import fr.microtec.geo2.configuration.graphql.Summary;
+import fr.microtec.geo2.persistance.entity.Distinct;
 
 /**
  * This code is principally copied from Spring Data QueryUtils class because the code is inaccessible.
@@ -72,7 +101,7 @@ public class CriteriaUtils {
 		return query;
 	}
 
-	public static Specification<?> groupedBySelection(List<String> selection) {
+	public static Specification<?> groupedBySelection(Set<String> selection) {
     return (root, criteriaQuery, criteriaBuilder) -> {
 
       List<Expression<?>> expressions = CustomUtils
@@ -83,6 +112,41 @@ public class CriteriaUtils {
       .toPredicate(root, criteriaQuery, criteriaBuilder);
       
     };
+  }
+
+	public static <E> CriteriaQuery<?> createSummariesQuery(
+		CriteriaBuilder builder,
+		Class<E> entityClass,
+		Specification<?> spec,
+		Set<String> fields,
+		List<Summary> summaries
+	) {
+		CriteriaQuery<?> query = builder.createQuery();
+		Root<E> root = (Root<E>) applySpecification(builder, query, entityClass, spec);
+		List<Expression<?>> expressions = CustomUtils
+		.getSelectionExpressions(fields, root);
+		List<Selection<?>> aggregatesSelections = new ArrayList<>();
+
+		expressions.stream().forEach( expression -> {
+			Optional<Summary> summary = summaries.stream()
+			.filter( s -> s.getSelector().equals(expression.getAlias()))
+			.findAny();
+			if (summary.isPresent()) {
+				Expression<?> aggregateExpression = summary.get()
+				.getSummaryType()
+				.buildExpression(expression, builder);
+				aggregateExpression.alias(expression.getAlias());
+				aggregatesSelections.add(aggregateExpression);
+			}
+		});
+
+		aggregatesSelections.sort((a, b) -> {
+			int aIndex = summaries.stream().map(s -> s.getSelector()).collect(Collectors.toList()).indexOf(a.getAlias());
+			int bIndex = summaries.stream().map(s -> s.getSelector()).collect(Collectors.toList()).indexOf(b.getAlias());
+			return aIndex - bIndex;
+		});
+
+		return query.multiselect(aggregatesSelections);
   }
 
 	/**
@@ -304,6 +368,17 @@ public class CriteriaUtils {
 		}
 
 		return from.join(attribute, JoinType.INNER);
+	}
+
+	/**
+	 * Cast unknown generic expression type to require generic type.
+	 *
+	 * @param expression The expression to cast.
+	 * @param <Y> The required type.
+	 * @return Expression casted with Y require type.
+	 */
+	public static <Y> Expression<Y> cast(Expression<?> expression) {
+		return (Expression<Y>) expression;
 	}
 
 }

@@ -1,6 +1,7 @@
 package fr.microtec.geo2.configuration.graphql;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.data.domain.Page;
 
@@ -16,11 +17,11 @@ public class PageFactory extends io.leangen.graphql.execution.relay.generic.Page
 	 * @param <T> Type of page content.
 	 * @return Relay page.
 	 */
-	public static <T> RelayPage<T> fromPage(Page<T> page) {
+	public static <T> RelayPage<T> asRelayPage(Page<T> page) {
 		CursorProvider<T> cursorProvider = offsetBasedCursorProvider(page.getPageable().getOffset());
 		List<Edge<T>> edges = createEdges(page.getContent(), cursorProvider);
 
-		return new RelayPageImpl<>(
+		return new RelayPageImpl<T>(
 			edges,
 			createPageInfo(edges, page.hasNext(), page.hasPrevious()),
 			page.getTotalElements(),
@@ -29,19 +30,23 @@ public class PageFactory extends io.leangen.graphql.execution.relay.generic.Page
 	}
 
 	/**
-	 * Convert relay page to summarised relay page.
+	 * Convert Spring page to relay page.
 	 *
 	 * @param page Spring page.
+	 * @param repository <T> repository.
 	 * @param <T> Type of page content.
-	 * @return Summarised relay page.
+	 * @return Relay page.
 	 */
-	public static <T> SummarisedRelayPage<T> fromRelayPage(RelayPage<T> page,List<Double> summary) {
-		return new SummarisedRelayPageImpl<>(
-			page.getEdges(),
-			page.getPageInfo(),
-			page.getTotalCount(),
-			page.getTotalPage(),
-			summary
+	public static <T,R> RelayPage<T> asRelayPage(Page<T> page, Function<List<Summary>, List<Double>> summaryResolver) {
+		CursorProvider<T> cursorProvider = offsetBasedCursorProvider(page.getPageable().getOffset());
+		List<Edge<T>> edges = createEdges(page.getContent(), cursorProvider);
+
+		return new RelayPageImpl<T>(
+			edges,
+			createPageInfo(edges, page.hasNext(), page.hasPrevious()),
+			page.getTotalElements(),
+			page.getTotalPages(),
+			summaryResolver
 		);
 	}
 }

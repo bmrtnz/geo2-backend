@@ -2,26 +2,44 @@ package fr.microtec.geo2.configuration.graphql;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Pageable;
-
+import graphql.GraphQLException;
 import graphql.relay.Edge;
 import graphql.relay.PageInfo;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
-import io.leangen.graphql.execution.relay.CursorProvider;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.execution.relay.generic.GenericPage;
 
-public class RelayPageImpl<T> extends GenericPage<T> implements RelayPage<T> {
+public class RelayPageImpl<E> extends GenericPage<E> implements RelayPage<E> {
 
 	private long totalCount;
 	private long totalPage;
+	private Function<List<Summary>, ?> summaryResolver;
 
-	public RelayPageImpl(List<Edge<T>> edges, PageInfo pageInfo, long count, long pageCount) {
+	public RelayPageImpl(
+		List<Edge<E>> edges,
+		PageInfo pageInfo,
+		long count,
+		long pageCount
+	) {
 		super(edges, pageInfo);
 		this.totalCount = count;
 		this.totalPage = pageCount;
+	}
+
+	public RelayPageImpl(
+		List<Edge<E>> edges,
+		PageInfo pageInfo,
+		long count,
+		long pageCount,
+		Function<List<Summary>, ?> summaryResolver
+	) {
+		super(edges, pageInfo);
+		this.totalCount = count;
+		this.totalPage = pageCount;
+		this.summaryResolver = summaryResolver;
 	}
 
 	@Override
@@ -36,26 +54,21 @@ public class RelayPageImpl<T> extends GenericPage<T> implements RelayPage<T> {
 		return this.totalPage;
 	}
 
-	public RelayPage<T> mapNodes(Function<T, T> mapper, Pageable pageable) {
-		CursorProvider<T> cursorProvider = PageFactory.offsetBasedCursorProvider(pageable.getOffset());
-		List<T> nodes = this.getEdges().stream()
-		.map(edge -> edge.getNode())
-		.map(mapper)
-		.collect(Collectors.toList());
-		List<Edge<T>> edges = PageFactory.createEdges(nodes, cursorProvider);
-		return new RelayPageImpl<>(edges, this.getPageInfo(), this.totalCount, this.totalPage);
-	}
+	@Override
+	@GraphQLQuery
+	public Object getSummary(
+		@GraphQLNonNull List<Summary> summaries,
+		@GraphQLNonNull String of,
+		@GraphQLEnvironment final ResolutionEnvironment env
+	) {
 
-	public RelayPage<T> filterNodes(Predicate<? super T> predicate, Pageable pageable) {
-		CursorProvider<T> cursorProvider = PageFactory
-		.offsetBasedCursorProvider(pageable.getOffset());
-		List<T> nodes = this.getEdges().stream()
-		.map(edge -> edge.getNode())
-		.filter(predicate)
-		.collect(Collectors.toList());
+		if (summaries.isEmpty())
+			throw new GraphQLException("Error fetching summary, no summary specified :" + of);
 
-		List<Edge<T>> edges = PageFactory.createEdges(nodes, cursorProvider);
-		return new RelayPageImpl<>(edges, this.getPageInfo(), this.totalCount, this.totalPage);
+		if(this.summaryResolver == null)
+			throw new GraphQLException("Error fetching summary, summary resolver is null :" + of);
+
+		return this.summaryResolver.apply(summaries);
 	}
 	
 }

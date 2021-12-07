@@ -2,6 +2,7 @@ package fr.microtec.geo2.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,8 +19,6 @@ import javax.persistence.criteria.Subquery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,16 +35,10 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeRepository;
-import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreFraisRepository;
-import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
-import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
-import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
-import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
-import io.leangen.graphql.execution.ResolutionEnvironment;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -54,34 +47,18 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   private EntityManager entityManager;
 
   private final GeoOrdreRepository ordreRepository;
-  private final GeoOrdreLigneRepository ordreLigneRepository;
-  private final GeoOrdreLogistiqueRepository ordreLogistiqueRepository;
-  private final GeoOrdreFraisRepository ordreFraisRepository;
-  private final GeoEnvoisRepository envoisRepository;
-  private final GeoFluxRepository fluxRepository;
   private final GeoLitigeRepository litigeRepository;
   private final GeoLitigeLigneRepository litigeLigneRepository;
   private final GeoSocieteRepository societeRepository;
-  private static final Logger logger = LoggerFactory.getLogger(OrdreService.class);
 
   public OrdreService(
     GeoOrdreRepository ordreRepository,
-    GeoOrdreLigneRepository ordreLigneRepository,
-    GeoOrdreLogistiqueRepository ordreLogistiqueRepository,
-    GeoOrdreFraisRepository ordreFraisRepository,
-    GeoEnvoisRepository envoisRepository,
     GeoLitigeRepository litigeRepository,
     GeoLitigeLigneRepository litigeLigneRepository,
-    GeoFluxRepository fluxRepository,
     GeoSocieteRepository societeRepository
   ) {
     super(ordreRepository, GeoOrdre.class);
     this.ordreRepository = ordreRepository;
-    this.ordreLigneRepository = ordreLigneRepository;
-    this.ordreLogistiqueRepository = ordreLogistiqueRepository;
-    this.ordreFraisRepository = ordreFraisRepository;
-    this.envoisRepository = envoisRepository;
-    this.fluxRepository = fluxRepository;
     this.litigeRepository = litigeRepository;
     this.litigeLigneRepository = litigeLigneRepository;
     this.societeRepository = societeRepository;
@@ -186,12 +163,11 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     
     Page<GeoOrdre> page = this.repository.findAll(spec, pageable);
 
-		return PageFactory.fromPage(page);
+		return PageFactory.asRelayPage(page);
   }
 
-  public RelayPage<GeoOrdre> fetchOrdresPlanningTransporteurs(String search, Pageable pageable, final ResolutionEnvironment env) {
+  public RelayPage<GeoOrdre> fetchOrdresPlanningTransporteurs(String search, Pageable pageable, final Set<String> fields) {
 
-    List<String> fields = this.parseSelect(env);
     Specification<GeoOrdre> spec = (Specification<GeoOrdre>)CriteriaUtils.groupedBySelection(fields);
 
     if(search != null && !search.isBlank())
@@ -200,7 +176,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     Page<GeoOrdre> page = this.repository
     .findAllWithPagination(spec, pageable, GeoOrdre.class, fields);
     
-		return PageFactory.fromPage(page);
+		return PageFactory.asRelayPage(page);
   }
 
   public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {

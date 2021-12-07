@@ -1,25 +1,21 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
-import java.util.List;
 import java.util.Optional;
 
-import io.leangen.graphql.annotations.GraphQLEnvironment;
-import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.configuration.graphql.SummarisedRelayPage;
-import fr.microtec.geo2.configuration.graphql.Summary;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.service.OrdreLigneService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
@@ -47,21 +43,21 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 	}
 
 	@GraphQLQuery
-	public SummarisedRelayPage<GeoOrdreLigne> allOrdreLigneSummarised(
+	public RelayPage<GeoOrdreLigne> allOrdreLigneMarge(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLArgument(name = "summary") List<Summary> summary
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.ordreLigneService.fetchAllSummarized(search, pageable, summary);
+		return this.ordreLigneService.fetchAllMarge(search, pageable, env);
 	}
 
 	@GraphQLQuery
-	public SummarisedRelayPage<GeoOrdreLigneTotauxDetail> allOrdreLigneTotauxDetail(
-			@GraphQLArgument(name = "ordre") @GraphQLNonNull String ordre,
+	public RelayPage<GeoOrdreLigne> allOrdreLigneTotauxDetail(
+			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLArgument(name = "summary") List<Summary> summary
+			@GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.ordreLigneService.fetchOrdreLignesTotauxDetail(ordre,pageable,summary);
+		return this.ordreLigneService.fetchOrdreLignesTotauxDetail(search,pageable,env);
 	}
 
 	@GraphQLQuery

@@ -2,8 +2,6 @@ package fr.microtec.geo2.persistance.repository.ordres;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -11,34 +9,11 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
 public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, String> {
-
-  String totauxDetailQuery = "SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail("+
-    "SUM(ol.nombrePalettesExpediees) as totalNombrePalettesExpediees,"+
-    "SUM(ol.nombreColisExpedies) as totalNombreColisExpedies,"+
-    "SUM(ol.poidsNetExpedie) as totalPoidsNetExpedie,"+
-    "SUM(ol.poidsBrutExpedie) as totalPoidsBrutExpedie,"+
-    "ol.fournisseur as fournisseur,"+
-    "ol.logistique.nombrePalettesAuSol as nombrePalettesAuSol,"+
-    "ol.logistique.nombrePalettes100x120 as nombrePalettes100x120,"+
-    "ol.logistique.nombrePalettes80x120 as nombrePalettes80x120,"+
-    "ol.logistique.nombrePalettes60x80 as nombrePalettes60x80"+
-  ") "+
-  "FROM #{#entityName} ol " + 
-  "WHERE ol.ordre = :ordre "+
-  "GROUP BY " +
-  "ol.fournisseur," +
-  "ol.ordre," +
-  "ol.logistique.nombrePalettesAuSol," +
-  "ol.logistique.nombrePalettes100x120," +
-  "ol.logistique.nombrePalettes80x120," +
-  "ol.logistique.nombrePalettes60x80 " +
-  "ORDER BY ol.fournisseur";
 
   @Query("SELECT DISTINCT ol.article FROM #{#entityName} ol")
   List<GeoArticle> findDistinctArticle();
@@ -51,12 +26,6 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
 
   @Query("SELECT new fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneSummed(SUM(ol.nombrePalettesExpediees) as nombrePalettesExpediees, SUM(ol.nombrePalettesCommandees) as nombrePalettesCommandees, ol.fournisseur as fournisseur, ol.logistique as logistique) FROM #{#entityName} ol WHERE ol.ordre = :ordre GROUP BY ol.ordre, ol.fournisseur")
   List<GeoOrdreLigneSummed> getSummedPalettesByOrdreGroupByFournisseur(GeoOrdre ordre);
-
-  @Query(totauxDetailQuery)
-  Page<GeoOrdreLigneTotauxDetail> getTotauxDetail(GeoOrdre ordre,Pageable pageable);
-
-  @Query(totauxDetailQuery)
-  List<GeoOrdreLigneTotauxDetail> getTotauxDetailList(GeoOrdre ordre);
 
   Long countByOrdre(GeoOrdre ordre);
   Long countByOrdreAndGratuitIsTrue(GeoOrdre ordre);

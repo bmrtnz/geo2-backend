@@ -65,7 +65,7 @@ public class PaysService extends GeoAbstractGraphQLService<GeoPays, String> {
     
     Page<GeoPays> page = this.repository.findAll(spec, pageable);
 
-		return PageFactory.fromPage(page);
+		return PageFactory.asRelayPage(page);
   }
 
 }

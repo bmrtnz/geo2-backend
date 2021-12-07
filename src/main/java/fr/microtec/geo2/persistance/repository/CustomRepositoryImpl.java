@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -57,7 +58,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
      * @param fields Une liste des champs que l’on souhaite dans le select.
      * @return Une liste d’object contenant les données spécifiées dans la liste fields.
      */
-    public List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final List<String> fields)
+    public List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields)
     {
         // Il semble que l’entity graph soit déjà utilisé par défaut.
 //        EntityGraph<T> entityGraph = this.entityManager.createEntityGraph(clazz);
@@ -120,7 +121,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
      * @param fields Une liste des champs que l’on souhaite dans le select.
      * @return Un objet Page contenant les données spécifiées dans la liste fields.
      */
-    public Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final List<String> fields)
+    public Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields)
     {
         val list = this.findAllWithPaginations(specs, pageable, clazz, fields);
         val total = this.count(specs);

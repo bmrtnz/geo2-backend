@@ -1,81 +1,124 @@
 package fr.microtec.geo2.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import fr.microtec.geo2.configuration.graphql.PageFactory;
-import fr.microtec.geo2.configuration.graphql.SummarisedRelayPage;
+import fr.microtec.geo2.common.CustomUtils;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.configuration.graphql.Summary;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneTotauxDetail;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
-import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import graphql.GraphQLException;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import lombok.val;
 
 @Service()
 public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
   
-  private final GeoOrdreLigneRepository ordreLigneRepository;
-  private final GeoOrdreRepository ordreRepository;
-
+  private final EntityManager entityManager;
+  
   public OrdreLigneService(
-    GeoOrdreRepository ordreRepository,
-    GeoOrdreLigneRepository ordreLigneRepository
+    GeoOrdreLigneRepository ordreLigneRepository,
+    EntityManager entityManager
   ) {
     super(ordreLigneRepository, GeoOrdreLigne.class);
-    this.ordreRepository = ordreRepository;
-    this.ordreLigneRepository = ordreLigneRepository;
+    this.entityManager = entityManager;
   }
 
-  public SummarisedRelayPage<GeoOrdreLigneTotauxDetail> fetchOrdreLignesTotauxDetail(String ordreID,Pageable pageable,List<Summary> summaries) {
-    // reset sorting
-    Pageable pageableUnsorted = PageRequest
-    .of(pageable.getPageNumber(), pageable.getPageSize());
-    GeoOrdre ordre = this.ordreRepository.getOne(ordreID);
-    Page<GeoOrdreLigneTotauxDetail> page = this.ordreLigneRepository
-    .getTotauxDetail(ordre,pageableUnsorted);
+  public RelayPage<GeoOrdreLigne> fetchOrdreLignesTotauxDetail(String search, Pageable pageable, final ResolutionEnvironment env) {
 
-    List<GeoOrdreLigneTotauxDetail> all = this.ordreLigneRepository
-    .getTotauxDetailList(ordre);
+    Set<String> fields = CustomUtils.parseSelectFromEnv(env);
+    Specification<GeoOrdreLigne> spec = ((Specification<GeoOrdreLigne>)CriteriaUtils.groupedBySelection(fields));
 
-    return PageFactory.fromRelayPage(PageFactory.fromPage(page),summarize(all, summaries));
-  }
+    if(search != null && !search.isBlank())
+      spec = spec.and(this.parseSearch(search));
 
-  public SummarisedRelayPage<GeoOrdreLigne> fetchAllSummarized(String search,Pageable pageable,List<Summary> summaries) {
-    Page<GeoOrdreLigne> page = this.ordreLigneRepository
-    .findAll(parseSearch(search),pageable);
+    return this.getPage(search, pageable, fields, summaries -> {
+      CriteriaQuery<?> query = CriteriaUtils.createSummariesQuery(
+        this.entityManager.getCriteriaBuilder(),
+        GeoOrdreLigne.class,
+        this.parseSearch(search),
+        fields,
+        summaries
+      );
 
-    List<GeoOrdreLigne> all = this.ordreLigneRepository
-    .findAll(parseSearch(search),pageable.getSort());
+      TypedQuery<Object[]> qt = (TypedQuery<Object[]>) this.entityManager.createQuery(query);
+      List<Double> result = new ArrayList(Arrays.asList(qt.getSingleResult()));
 
-    List<Double> summary = summarize(all, summaries);
-
-    // Custom summaries
-    IntStream.range(0, summaries.size())
-    .forEach(index -> {
-      Summary s = summaries.get(index);
-      if(s.getSelector().equals("pourcentageMargeBrute")) {
-        summary.add(index,this.fetchTotalMargeBrute(summaries,summary) / this.getSummaryResult(summaries, summary, "totalVenteBrut"));
-      }
-      if(s.getSelector().equals("pourcentageMargeNette")) {
-        Double totalMargeBrute = this.fetchTotalMargeBrute(summaries,summary);
-        Double totalObjectifMarge = this.getSummaryResult(summaries, summary, "totalObjectifMarge");
-        Double totalVenteBrute = this.getSummaryResult(summaries, summary, "totalVenteBrut");
-        summary.add(index,(totalMargeBrute - totalObjectifMarge) / totalVenteBrute);
-      }
+      return result;
     });
+  }
 
-    return PageFactory.fromRelayPage(PageFactory.fromPage(page), summary);
+  public RelayPage<GeoOrdreLigne> fetchAllMarge(String search,Pageable pageable, final ResolutionEnvironment env) {
+
+    Set<String> fields = CustomUtils.parseSelectFromEnv(env);
+
+    return this.getPage(search, pageable, fields, summaries -> {
+      CriteriaQuery<?> query = CriteriaUtils.createSummariesQuery(
+        this.entityManager.getCriteriaBuilder(),
+        GeoOrdreLigne.class,
+        this.parseSearch(search),
+        fields,
+        summaries
+      );
+
+      TypedQuery<Object[]> qt = (TypedQuery<Object[]>) this.entityManager.createQuery(query);
+      List<Double> result = new ArrayList(Arrays.asList(qt.getSingleResult()));
+      Function<String,Boolean> hasSelector = selector -> summaries
+      .stream()
+      .anyMatch( s -> s.getSelector().equals(selector));
+      Function<String,Integer> getIndex = selector -> summaries
+      .stream()
+      .map(s -> s.getSelector())
+      .collect(Collectors.toList())
+      .indexOf(selector);
+
+      // handling special cases
+      if(hasSelector.apply("margeBrute")) {
+        val res = this.fetchTotalMargeBrute(summaries, result);
+        result.add(getIndex.apply("margeBrute"), res);
+      }
+      
+      if(hasSelector.apply("pourcentageMargeBrute")) {
+        val res = this.fetchTotalMargeBrute(summaries,result) / this.getSummaryResult(summaries, result, "totalVenteBrut");
+        result.add(getIndex.apply("pourcentageMargeBrute"), res);
+      }
+    
+      if(hasSelector.apply("pourcentageMargeNette")) {
+        Double totalMargeBrute = this.fetchTotalMargeBrute(summaries,result);
+        Double totalObjectifMarge = this.getSummaryResult(summaries, result, "totalObjectifMarge");
+        Double totalVenteBrute = this.getSummaryResult(summaries, result, "totalVenteBrut");
+        result.add(getIndex.apply("pourcentageMargeNette"), (totalMargeBrute - totalObjectifMarge) / totalVenteBrute);
+      }
+
+      return result;
+    });
   }
 
   private Double getSummaryResult(List<Summary> summaries,List<Double> summary,String field){
-    return summary.get(summaries.indexOf(summaries.stream().filter(sl -> sl.getSelector().equals(field)).findFirst().get()));
+    val item = summaries
+    .stream()
+    .filter(sl -> sl.getSelector().equals(field))
+    .findFirst();
+
+    if(item.isEmpty())
+      throw new GraphQLException("Missing mandatory field :" + field);
+
+    return summary.get(summaries.indexOf(item.get()));
   };
 
   private Double fetchTotalMargeBrute(List<Summary> summaries,List<Double> summary){
@@ -97,7 +140,7 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     .getSummaryResult(summaries,summary,"totalCourtage");
     Double totalFraisAdditionnels = this
     .getSummaryResult(summaries,summary,"totalFraisAdditionnels");
-    return totalVenteBrut - totalRemise+ totalRestitue - totalFraisMarketing - totalAchat - totalTransport - totalTransit - totalCourtage - totalFraisAdditionnels;
+    return totalVenteBrut - totalRemise + totalRestitue - totalFraisMarketing - totalAchat - totalTransport - totalTransit - totalCourtage - totalFraisAdditionnels;
   };
 
 }

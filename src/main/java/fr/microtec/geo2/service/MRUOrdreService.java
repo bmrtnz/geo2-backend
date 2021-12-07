@@ -58,7 +58,7 @@ public class MRUOrdreService extends GeoAbstractGraphQLService<GeoMRUOrdre, GeoM
 
     page = this.mruOrdreRepository.findAll(spec, pageable);
 
-    return PageFactory.fromPage(page);
+    return PageFactory.asRelayPage(page);
   }
 
 }
