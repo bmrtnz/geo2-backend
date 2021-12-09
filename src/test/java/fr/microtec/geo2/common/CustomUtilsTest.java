@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Root;
@@ -44,11 +45,13 @@ class CustomUtilsTest
     public void getSelectionWithSociete()
     {
         List<Selection<?>> selections = CustomUtils.getSelections(Set.of("id", "adresse1", "societe.id"), this.getRoot());
+        Function<String,Boolean> selectionContain = entry -> selections.stream()
+        .anyMatch( s -> s.getAlias().equalsIgnoreCase(entry));
 
         assertEquals(3, selections.size());
-        assertEquals("id", selections.get(0).getAlias());
-        assertEquals("adresse1", selections.get(1).getAlias());
-        assertEquals("societe.id", selections.get(2).getAlias());
+        assert(selectionContain.apply("id"));
+        assert(selectionContain.apply("adresse1"));
+        assert(selectionContain.apply("societe.id"));
     }
 
     @Test

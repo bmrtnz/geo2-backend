@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.persistence.Entity;
@@ -19,15 +18,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Subgraph;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
 import org.hibernate.query.criteria.internal.path.AbstractPathImpl;
+import org.springframework.data.mapping.PropertyPath;
 import org.springframework.util.StringUtils;
 
+import fr.microtec.geo2.persistance.CriteriaUtils;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -112,8 +112,7 @@ public class CustomUtils
         return CustomUtils
         .parseFields(fields, root, (String field) -> {
 
-            AtomicReference<Path<Object>> objectPath = fetchField(root, field, joinType);
-            return objectPath.get().alias(field);
+            return fetchField(root, field, joinType).alias(field);
             
         });
     }
@@ -139,9 +138,9 @@ public class CustomUtils
         return CustomUtils
         .parseFields(fields, root, (String field) -> {
             
-            AtomicReference<Path<Object>> objectPath = fetchField(root, field, joinType);
-            objectPath.get().alias(field);
-            return objectPath.get();
+            Expression<?> objectPath = fetchField(root, field, joinType);
+            objectPath.alias(field);
+            return objectPath;
             
         });
     }
@@ -155,31 +154,23 @@ public class CustomUtils
         return getSelectionExpressions(fields, root, JoinType.LEFT);
     }
 
-    private static <T> AtomicReference<Path<Object>> fetchField(Root<T> root, String field, JoinType joinType) {
-        AtomicReference<Path<Object>> objectPath = new AtomicReference<>(null);
-        String[] splitted = field.split("\\.");
+    private static Expression<?> fetchField(From<?,?> from, String field, JoinType joinType) {
+        PropertyPath propertyPath = PropertyPath
+        .from(field, from.getJavaType());
+        return fetchField(from, propertyPath, joinType);
+    }
+    private static Expression<?> fetchField(From<?,?> from, PropertyPath propertyPath, JoinType joinType) {
 
-        IntStream
-        .range(0, splitted.length)
-        .boxed()
-        .forEach(index -> {
-            val chunk = splitted[index];
-            Path<Object> current;
+        val chunk = propertyPath.getSegment();
 
-            if(index == splitted.length - 1)
-                current = objectPath.get() == null
-                ? root.get(chunk)
-                : objectPath.get().get(chunk);
-            else
-                current = objectPath.get() == null
-                ? root.join(chunk, joinType)
-                : ((Join<?,?>) objectPath.get()).join(chunk, joinType);
+        val path = propertyPath.hasNext()
+        ? CriteriaUtils.getOrCreateJoin(from, chunk, joinType)
+        : from.get(chunk);
+            
+        if (propertyPath.hasNext())
+            return fetchField((From<?,?>)path, propertyPath.next(), joinType);
 
-            objectPath.set(current);
-
-        });
-
-        return objectPath;
+        return path;
     }
 
     public static <T> void buildGraph(EntityGraph<T> entityGraph, List<Selection<?>> selections)

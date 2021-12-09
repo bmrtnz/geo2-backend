@@ -297,6 +297,25 @@ public class CriteriaUtils {
 	}
 
 	/**
+	 * Return whether the given {@link From} contains a join declaration for the attribute with the given name.
+	 *
+	 * @param from the {@link From} to check for joins.
+	 * @param attribute the attribute name to check.
+	 * @return
+	 */
+	public static boolean isAlreadyJoined(From<?, ?> from, String attribute) {
+
+		for (Join<?, ?> join : from.getJoins()) {
+
+			boolean sameName = join.getAttribute().getName().equals(attribute);
+
+			if (sameName) return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns whether the given {@code propertyPathModel} requires the creation of a join. This is the case if we find a
 	 * optional association.
 	 *
@@ -356,18 +375,22 @@ public class CriteriaUtils {
 		return annotation == null ? defaultValue : (T) AnnotationUtils.getValue(annotation, propertyName);
 	}
 
-	static Join<?, ?> getOrCreateJoin(From<?, ?> from, String attribute) {
+	public static Join<?, ?> getOrCreateJoin(From<?, ?> from, String attribute) {
+		return getOrCreateJoin(from, attribute, JoinType.INNER);
+	}
+
+	public static Join<?, ?> getOrCreateJoin(From<?, ?> from, String attribute, JoinType joinType) {
 
 		for (Join<?, ?> join : from.getJoins()) {
 
 			boolean sameName = join.getAttribute().getName().equals(attribute);
 
-			if (sameName && join.getJoinType().equals(JoinType.INNER)) {
+			if (sameName && join.getJoinType().equals(joinType)) {
 				return join;
 			}
 		}
 
-		return from.join(attribute, JoinType.INNER);
+		return from.join(attribute, joinType);
 	}
 
 	/**

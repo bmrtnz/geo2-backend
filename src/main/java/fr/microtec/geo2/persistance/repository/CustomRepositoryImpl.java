@@ -16,6 +16,7 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -58,7 +59,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
      * @param fields Une liste des champs que l’on souhaite dans le select.
      * @return Une liste d’object contenant les données spécifiées dans la liste fields.
      */
-    public List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields)
+    public List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields, JoinType joinType)
     {
         // Il semble que l’entity graph soit déjà utilisé par défaut.
 //        EntityGraph<T> entityGraph = this.entityManager.createEntityGraph(clazz);
@@ -68,7 +69,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
         Root<T> root = this.applySpecToCriteria(query, builder, specs);
 
-        List<Selection<?>> selections = CustomUtils.getSelections(fields, root);
+        List<Selection<?>> selections = CustomUtils.getSelections(fields, root, joinType);
 
 //        CustomUtils.buildGraph(entityGraph, selections);
 
@@ -107,6 +108,11 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         return result;
     }
 
+    public List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields)
+    {
+        return this.findAllWithPaginations(specs, pageable, clazz, fields, JoinType.LEFT);
+    }
+
     /**
      * Permet de récupérer les données en fonction des champs souhaités.
      * Cela est l’équivalent des projections.
@@ -121,11 +127,15 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
      * @param fields Une liste des champs que l’on souhaite dans le select.
      * @return Un objet Page contenant les données spécifiées dans la liste fields.
      */
-    public Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields)
+    public Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields, JoinType joinType)
     {
-        val list = this.findAllWithPaginations(specs, pageable, clazz, fields);
+        val list = this.findAllWithPaginations(specs, pageable, clazz, fields, joinType);
         val total = this.count(specs);
         return new PageImpl<>(list, pageable, total);
+    }
+    public Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields)
+    {
+        return this.findAllWithPagination(specs, pageable, clazz, fields, JoinType.LEFT);
     }
 
     /**

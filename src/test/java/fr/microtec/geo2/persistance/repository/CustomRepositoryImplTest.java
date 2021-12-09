@@ -12,6 +12,8 @@ import java.time.Month;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.criteria.JoinType;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -70,7 +72,7 @@ class CustomRepositoryImplTest
     @Test
     public void testWithBWSAndSocieteDependency()
     {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "societe.id"));
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "societe.id"), JoinType.INNER);
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
@@ -97,7 +99,7 @@ class CustomRepositoryImplTest
     @Test
     public void testWithBWSAndSocieteAndPaysDependency()
     {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "dateDebutIfco", "dateModification", "blocageAvoirEdi", "nbJourLimiteLitige", "societe.id", "societe.pays.description"));
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "dateDebutIfco", "dateModification", "blocageAvoirEdi", "nbJourLimiteLitige", "societe.id", "societe.pays.description"), JoinType.INNER);
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
@@ -145,7 +147,7 @@ class CustomRepositoryImplTest
     @Test
     public void testWithBWSAndSocieteAndPaysAndNotClients()
     {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "societe.id", "societe.pays.description", "societe.pays.clients"));
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "societe.id", "societe.pays.description", "societe.pays.clients"), JoinType.INNER);
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
