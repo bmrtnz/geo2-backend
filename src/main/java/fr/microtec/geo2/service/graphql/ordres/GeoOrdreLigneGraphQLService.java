@@ -35,34 +35,43 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 
 	@GraphQLQuery
 	public RelayPage<GeoOrdreLigne> allOrdreLigne(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+		@GraphQLArgument(name = "search") String search,
+		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+		@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoOrdreLigne> allOrdreLigneMarge(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+		@GraphQLArgument(name = "search") String search,
+		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+		@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.ordreLigneService.fetchAllMarge(search, pageable, env);
 	}
 
 	@GraphQLQuery
+	public RelayPage<GeoOrdreLigne> allOrdreLigneTotaux(
+		@GraphQLArgument(name = "search") String search,
+		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+		@GraphQLEnvironment ResolutionEnvironment env
+	) {
+		return this.ordreLigneService.fetchOrdreLignesTotauxDetail(search,pageable,env);
+	}
+
+	@GraphQLQuery
 	public RelayPage<GeoOrdreLigne> allOrdreLigneTotauxDetail(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
+		@GraphQLArgument(name = "search") String search,
+		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+		@GraphQLEnvironment ResolutionEnvironment env
 	) {
 		return this.ordreLigneService.fetchOrdreLignesTotauxDetail(search,pageable,env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoOrdreLigne> getOrdreLigne(
-			@GraphQLArgument(name = "id") String id
+		@GraphQLArgument(name = "id") String id
 	) {
 		return super.getOne(id);
   }
