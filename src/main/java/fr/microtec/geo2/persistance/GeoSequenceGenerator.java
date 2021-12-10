@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
+import org.hibernate.Session;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
@@ -64,7 +65,7 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 	 */
 	@Override
 	public synchronized Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-		NativeQuery query = session.getFactory().openSession().createNativeQuery(this.sequenceQuery);
+		NativeQuery query = session.createNativeQuery(this.sequenceQuery);
 
 		return (Serializable) query.getSingleResult();
 	}
