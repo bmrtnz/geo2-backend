@@ -9,8 +9,10 @@ import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.internal.util.config.ConfigurationHelper;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -68,5 +70,17 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 		NativeQuery query = session.createNativeQuery(this.sequenceQuery);
 
 		return (Serializable) query.getSingleResult();
+	}
+
+	/**
+	 * Static helper for generate value from GeoSequenceGenerator.
+	 */
+	public static Serializable generate(EntityManager entityManager, Properties params) {
+		SharedSessionContractImplementor session = entityManager.unwrap(SharedSessionContractImplementor.class);
+		GeoSequenceGenerator generator = new GeoSequenceGenerator();
+
+		generator.configure(StringType.INSTANCE, params, session.getFactory().getServiceRegistry());
+
+		return generator.generate(session, null);
 	}
 }

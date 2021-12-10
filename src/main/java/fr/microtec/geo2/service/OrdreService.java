@@ -1,34 +1,9 @@
 package fr.microtec.geo2.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.NativeQuery;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.CriteriaUtils;
+import fr.microtec.geo2.persistance.GeoSequenceGenerator;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -39,6 +14,23 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -65,14 +57,13 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   }
 
   private String fetchNumero(GeoSociete societe) {
+    Properties params = new Properties();
 
-    String societeId = societe.getId();
-    String sequenceQuery = String.format("SELECT TO_CHAR(seq_nordre_%s.NEXTVAL,'FM099999') FROM DUAL", societeId);
-    Session session = this.entityManager.unwrap(Session.class);
-    SessionFactory factory = session.getSessionFactory();
-    NativeQuery query = factory.openSession().createNativeQuery(sequenceQuery);
+    params.put("sequenceName", String.format("seq_nordre_%s", societe.getId()));
+    params.put("isSequence", true);
+    params.put("mask", "FM099999");
 
-    return query.getSingleResult().toString();
+    return (String) GeoSequenceGenerator.generate(this.entityManager, params);
   }
 
   public GeoOrdre save(GeoOrdre ordreChunk) {
