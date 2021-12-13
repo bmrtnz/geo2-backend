@@ -75,6 +75,9 @@ public class GeoLieuPassageAQuai extends ValidateModifiedPrewrittedEntity implem
 	@Column(name = "echle")
 	private String echeanceLe;
 
+	@Column(name = "compte_compta")
+	private String compteComptable;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tvr_code")
 	private GeoRegimeTva regimeTva;
