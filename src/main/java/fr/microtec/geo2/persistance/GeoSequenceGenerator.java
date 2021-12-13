@@ -2,14 +2,17 @@ package fr.microtec.geo2.persistance;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
+import org.hibernate.Session;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.internal.util.config.ConfigurationHelper;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.type.StringType;
 import org.hibernate.type.Type;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -64,8 +67,20 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 	 */
 	@Override
 	public synchronized Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-		NativeQuery query = session.getFactory().openSession().createNativeQuery(this.sequenceQuery);
+		NativeQuery query = session.createNativeQuery(this.sequenceQuery);
 
 		return (Serializable) query.getSingleResult();
+	}
+
+	/**
+	 * Static helper for generate value from GeoSequenceGenerator.
+	 */
+	public static Serializable generate(EntityManager entityManager, Properties params) {
+		SharedSessionContractImplementor session = entityManager.unwrap(SharedSessionContractImplementor.class);
+		GeoSequenceGenerator generator = new GeoSequenceGenerator();
+
+		generator.configure(StringType.INSTANCE, params, session.getFactory().getServiceRegistry());
+
+		return generator.generate(session, null);
 	}
 }
