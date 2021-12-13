@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -60,6 +61,18 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 			@GraphQLEnvironment() final Set<String> fields
 	) {
 		return this.ordreService.fetchOrdresPlanningTransporteurs(search, pageable, fields);
+	}
+
+	@GraphQLQuery
+	public RelayPage<GeoOrdre> planningTransporteurs(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
+			@GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
+			@GraphQLArgument(name = "societeCode") String societeCode,
+			@GraphQLArgument(name = "transporteurCode") String transporteurCode
+	) {
+		return this.ordreService.getPlanningTransporteurs(search, pageable, dateMin, dateMax, societeCode, transporteurCode);
 	}
 
 	@GraphQLQuery

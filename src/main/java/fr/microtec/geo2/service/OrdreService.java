@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,6 +40,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
+import lombok.val;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -203,5 +205,28 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     }
 
     return this.repository.count(spec);
+  }
+
+  public RelayPage<GeoOrdre> getPlanningTransporteurs(
+    String search,
+    Pageable pageable,
+    LocalDateTime dateMin,
+    LocalDateTime dateMax,
+    String societeCode,
+    String transporteurCode
+  ) {
+    pageable = PageRequest.of(0, (pageable == null) ? 20 : pageable.getPageSize());
+    
+    val page = this.ordreRepository
+    .getPlanningTransporteurs(
+      dateMin,
+      dateMax,
+      societeCode,
+      transporteurCode,
+      search.isEmpty() ? null : this.parseSearch(search),
+      pageable
+    );
+
+		return PageFactory.asRelayPage(page);
   }
 }

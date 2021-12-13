@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.microtec.geo2.common.TemporalUtils;
+
 public class LocalDateMapper extends CachingMapper<GraphQLScalarType, GraphQLScalarType> {
 
 	private static final Map<Type, GraphQLScalarType> MAPPING;
@@ -31,7 +33,7 @@ public class LocalDateMapper extends CachingMapper<GraphQLScalarType, GraphQLSca
 		
 		map.put(LocalDateTime.class, Scalars.temporalScalar(
 			LocalDateTime.class, "LocalDateTime", "a local date time",
-			s -> LocalDateTime.parse(s, DateTimeFormatter.ISO_DATE_TIME),
+			s -> LocalDateTime.parse(s, DateTimeFormatter.ofPattern(TemporalUtils.ISO8601_PATTERN)),
 			i -> i.atZone(ZoneOffset.UTC).toLocalDateTime()
 		));
 

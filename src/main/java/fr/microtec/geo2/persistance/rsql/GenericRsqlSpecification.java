@@ -3,7 +3,6 @@ package fr.microtec.geo2.persistance.rsql;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
+import fr.microtec.geo2.common.TemporalUtils;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.logistique.GeoPortType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
@@ -34,7 +34,6 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 	private final String property;
 	private final RsqlSearchOperation operator;
 	private final List<String> arguments;
-	private static final String ISO8601_PATTERN = "yyyy-MM-dd['T'HH[:mm[:ss[.SSS'Z']]]]"; // ISO 8601 with optional time
 
 	public GenericRsqlSpecification(String property, ComparisonOperator operator, List<String> arguments) {
 		this.property = property;
@@ -110,9 +109,9 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				break;
 			case BETWEEN:
 				if (expression.getJavaType().equals(LocalDate.class))
-					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), parseToLocalDate(args.get(0)), parseToLocalDate(args.get(1)));
+					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), TemporalUtils.parseToLocalDate(args.get(0)), TemporalUtils.parseToLocalDate(args.get(1)));
 				else if (expression.getJavaType().equals(LocalDateTime.class))
-					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), parseToLocalDateTime(args.get(0)), parseToLocalDateTime(args.get(1)));
+					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), TemporalUtils.parseToLocalDateTime(args.get(0)), TemporalUtils.parseToLocalDateTime(args.get(1)));
 				else
 					predicate = criteriaBuilder.between(CriteriaUtils.cast(expression), args.get(0).toString(), args.get(1).toString());
 				break;
@@ -168,9 +167,9 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 				} else if (type.equals(Boolean.class)) {
 					return Boolean.parseBoolean(arg);
 				} else if (type.equals(LocalDate.class)) {
-					return parseToLocalDate(arg);
+					return TemporalUtils.parseToLocalDate(arg);
 				} else if (type.equals(LocalDateTime.class)) {
-					return parseToLocalDateTime(arg);
+					return TemporalUtils.parseToLocalDateTime(arg);
 				} else if (type.equals(Character.class)) {
 					return arg.charAt(0);
 				} else if (type.equals(String.class)) {
@@ -206,24 +205,4 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 		}).collect(Collectors.toList());
 	}
 
-	/**
-	 * Parse Object to ISO LocalDate
-	 * 
-	 * @param o Object argument
-	 * @return ISO LocalDate
-	 */
-	private static LocalDate parseToLocalDate(Object o) {
-		return LocalDate.parse(o.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-	}
-
-	/**
-	 * Parse Object to ISO LocalDateTime
-	 * 
-	 * @param o Object argument
-	 * @return ISO LocalDateTime
-	 */
-	private static LocalDateTime parseToLocalDateTime(Object o) {
-		return LocalDateTime
-		.parse(o.toString(), DateTimeFormatter.ofPattern(ISO8601_PATTERN));
-	}
 }
