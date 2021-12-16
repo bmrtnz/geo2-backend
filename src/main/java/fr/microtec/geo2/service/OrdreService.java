@@ -32,6 +32,7 @@ import fr.microtec.geo2.persistance.GeoSequenceGenerator;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeRepository;
@@ -39,7 +40,6 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
-import lombok.val;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -205,7 +205,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     return this.repository.count(spec);
   }
 
-  public RelayPage<GeoOrdre> getPlanningTransporteurs(
+  public RelayPage<GeoPlanningTransporteur> allPlanningTransporteurs(
     String search,
     Pageable pageable,
     LocalDateTime dateMin,
@@ -214,14 +214,18 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     String transporteurCode
   ) {
     pageable = PageRequest.of(0, (pageable == null) ? 20 : pageable.getPageSize());
-    
-    val page = this.ordreRepository
-    .getPlanningTransporteurs(
+
+    // Specification<GeoPlanningTransporteur> specs = search != null && !search.isBlank()
+    // ? new RSQLParser().parse(search).accept(new GeoCustomVisitor<>())
+    // : null;
+
+    Page<GeoPlanningTransporteur> page = this.ordreRepository
+    .allPlanningTransporteurs(
       dateMin,
       dateMax,
       societeCode,
       transporteurCode,
-      search.isEmpty() ? null : this.parseSearch(search),
+      // specs,
       pageable
     );
 

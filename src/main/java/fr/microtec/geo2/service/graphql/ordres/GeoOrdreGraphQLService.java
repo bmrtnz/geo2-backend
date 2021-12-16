@@ -3,7 +3,6 @@ package fr.microtec.geo2.service.graphql.ordres;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -55,16 +55,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoOrdre> allOrdrePlanningTransporteurs(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment() final Set<String> fields
-	) {
-		return this.ordreService.fetchOrdresPlanningTransporteurs(search, pageable, fields);
-	}
-
-	@GraphQLQuery
-	public RelayPage<GeoOrdre> planningTransporteurs(
+	public RelayPage<GeoPlanningTransporteur> allPlanningTransporteurs(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
@@ -72,7 +63,14 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 			@GraphQLArgument(name = "societeCode") String societeCode,
 			@GraphQLArgument(name = "transporteurCode") String transporteurCode
 	) {
-		return this.ordreService.getPlanningTransporteurs(search, pageable, dateMin, dateMax, societeCode, transporteurCode);
+		return this.ordreService.allPlanningTransporteurs(
+			search,
+			pageable,
+			dateMin,
+			dateMax,
+			societeCode,
+			transporteurCode
+		);
 	}
 
 	@GraphQLQuery

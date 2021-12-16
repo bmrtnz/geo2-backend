@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+  <named-native-query
+    name="Ordre.allPlanningTransporteurs"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur"
+  >
+    <query>
+      SELECT
+      CEIL(
+        sum(
+          case
+            geo_ordlig.PAL_NB_COL
+            when 0 then geo_ordlig.cde_nb_pal
+            else (
+              case
+                when geo_ordlig.DEMIPAL_IND = 1
+                OR geo_ordlig.PAL_NB_PALINTER > 0 then geo_ordlig.CDE_NB_COL / (geo_ordlig.PAL_NB_COL * 2)
+                else geo_ordlig.CDE_NB_COL / geo_ordlig.PAL_NB_COL
+              END
+            )
+          END
+        )
+      ) as somme_colis_palette,
+      sum(geo_ordlig.cde_nb_col) as somme_colis_commandes,
+      round(
+        sum(
+          case
+            geo_ordlig.PAL_NB_COL
+            when 0 then geo_ordlig.cde_nb_pal
+            else (
+              case
+                when geo_ordlig.DEMIPAL_IND = 1
+                OR geo_ordlig.PAL_NB_PALINTER > 0 then geo_ordlig.CDE_NB_COL / (geo_ordlig.PAL_NB_COL * 2)
+                else geo_ordlig.CDE_NB_COL / geo_ordlig.PAL_NB_COL
+              END
+            )
+          END
+        ),
+        2
+      ) as somme_colis_palette_bis,
+      rownum,
+      geo_ordre.code_chargement,
+      geo_entrep.cen_code,
+      geo_entrep.raisoc,
+      geo_entrep.zip as ezip,
+      geo_entrep.ville,
+      geo_entrep.pay_code as epay,
+      geo_ordre.nordre,
+      geo_ordlog.datdep_fou_p,
+      geo_fourni.zip,
+      geo_fourni.pay_code,
+      geo_ordlog.datdep_grp_p,
+      geo_ordlog.grp_code,
+      avi_art_mat_prem.esp_code,
+      geo_ordlig.pal_code,
+      geo_ordre.version_ordre,
+      geo_ordre.trp_code,
+      GEO_ORDRE.LIVDATP,
+      'O' "flag_entrepot",
+      avi_art_emballage.col_code,
+      geo_ordre.ref_cli,
+      geo_ordlog.fou_code
+    FROM
+      geo_entrep,
+      geo_ordlig,
+      geo_ordlog,
+      geo_ordre,
+      avi_art_gestion,
+      avi_art_mat_prem,
+      avi_art_emballage,
+      geo_fourni
+    WHERE
+      geo_entrep.cen_ref = geo_ordre.cen_ref
+      and geo_ordlig.ord_ref = geo_ordre.ord_ref
+      and geo_ordlog.ord_ref = geo_ordlig.ord_ref
+      and geo_ordlog.fou_code = geo_ordlig.fou_code
+      and avi_art_gestion.art_ref = geo_ordlig.art_ref
+      and avi_art_mat_prem.ref_mat_prem = avi_art_gestion.ref_mat_prem
+      and avi_art_emballage.ref_emballage = avi_art_gestion.ref_emballage
+      and geo_ordlog.datdep_fou_p between :arg_date_min
+      and :arg_date_max
+      and geo_ordre.soc_code = :arg_soc_code
+      and (
+        geo_ordre.trp_code = :arg_trp_code
+        or geo_ordlog.trp_code = :arg_trp_code
+      )
+      and geo_ordlog.fou_code =geo_fourni.fou_code                                                 
+    GROUP by
+      rownum,
+      geo_ordre.code_chargement,
+      geo_entrep.cen_code,
+      geo_entrep.raisoc,
+      geo_entrep.zip,
+      geo_entrep.ville,
+      geo_entrep.pay_code,
+      geo_ordre.nordre,
+      geo_ordlog.datdep_fou_p,
+      geo_ordlog.fou_code,
+      geo_fourni.zip,
+      geo_fourni.pay_code,
+      geo_ordlog.datdep_grp_p,
+      geo_ordlog.grp_code,
+      avi_art_mat_prem.esp_code,
+      geo_ordlig.pal_code,
+      geo_ordre.version_ordre,
+      geo_ordre.trp_code,
+      geo_ordre.livdatp,
+      avi_art_emballage.col_code,
+      geo_ordre.ref_cli
+    </query>
+  </named-native-query>
+</entity-mappings>
