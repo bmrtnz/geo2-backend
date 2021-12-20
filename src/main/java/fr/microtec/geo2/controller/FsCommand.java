@@ -15,13 +15,4 @@ public enum FsCommand implements StringEnum {
 	private final String key;
 	FsCommand(String key) { this.key = key; }
 
-	public static FsCommand fromName(String name) {
-		for (FsCommand cmd : FsCommand.values()) {
-			if (cmd.key.equals(name)) {
-				return cmd;
-			}
-		}
-
-		throw new IllegalArgumentException();
-	}
 }

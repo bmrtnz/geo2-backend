@@ -1,30 +1,17 @@
 package fr.microtec.geo2.persistance.rsql;
 
+import cz.jirutka.rsql.parser.ast.ComparisonOperator;
+import fr.microtec.geo2.common.TemporalUtils;
+import fr.microtec.geo2.persistance.CriteriaUtils;
+import fr.microtec.geo2.persistance.StringEnum;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.springframework.data.jpa.domain.Specification;
-
-import cz.jirutka.rsql.parser.ast.ComparisonOperator;
-import fr.microtec.geo2.common.TemporalUtils;
-import fr.microtec.geo2.persistance.CriteriaUtils;
-import fr.microtec.geo2.persistance.entity.logistique.GeoPortType;
-import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
-import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
-import fr.microtec.geo2.persistance.entity.ordres.GeoStatus;
-import fr.microtec.geo2.persistance.entity.ordres.GeoStatusGEO;
-import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
 
 /**
  * Generic specification for Rsql query.
@@ -178,29 +165,21 @@ public class GenericRsqlSpecification<T> implements Specification<T> {
 					}
 
 					return arg;
-				}
-				// TODO Make enums generic
-				else if (type.equals(GeoFactureAvoir.class)) {
-					return GeoFactureAvoir.findByAbbr(arg);
-				} else if (type.equals(GeoRole.class)) {
-					return GeoRole.findByAbbr(arg);
-				} else if (type.equals(GeoOrdreType.class)) {
-					return GeoOrdreType.findByAbbr(arg);
-				} else if (type.equals(GeoStatusGEO.class)) {
-					return GeoStatusGEO.findByAbbr(arg);
-				} else if (type.equals(GeoStatus.class)) {
-					return GeoStatus.findByAbbr(arg);
-				} else if (type.equals(GeoCahierDesCharges.class)) {
-					return GeoCahierDesCharges.findByAbbr(arg);
-				} else if (type.equals(GeoPortType.class)) {
-					return GeoPortType.findByAbbr(arg);
-				} else if (type.equals(GeoOrdreStatut.class)) {
-					return GeoOrdreStatut.findByAbbr(arg);
+				} else if (StringEnum.class.isAssignableFrom(type)) {
+					Class<?>[] interfaces = type.getInterfaces();
+
+					for (Class<?> inter : interfaces) {
+						if (StringEnum.class.equals(inter)) {
+							return inter.getMethod("getValueOf", Class.class, String.class).invoke(null, type, arg);
+						}
+					}
+
+					throw new RsqlException(String.format("Unknown enum const '%s' for parsing value '%s'", type.getSimpleName(), arg));
 				} else {
 					throw new RsqlException(String.format("Unknown type '%s' for parsing", type.getSimpleName()));
 				}
 			} catch (Exception e) {
-				throw new RsqlException("Error in value parsing", e);
+				throw new RsqlException("Error in value parsing : " + e.getMessage(), e);
 			}
 		}).collect(Collectors.toList());
 	}

@@ -22,10 +22,4 @@ public enum GeoOrdreStatut implements StringEnum {
 		this.key = key;
 	}
 
-	public static GeoOrdreStatut findByAbbr(String abbr){
-    for(GeoOrdreStatut v : values())
-        if( v.key.equals(abbr))
-          return v;
-    return null;
-	}
 }

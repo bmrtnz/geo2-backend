@@ -14,10 +14,4 @@ public enum GeoFactureAvoir implements StringEnum {
 		this.key = key;
 	}
 
-	public static GeoFactureAvoir findByAbbr(String abbr){
-    for(GeoFactureAvoir v : values())
-        if( v.key.equals(abbr))
-          return v;
-    return null;
-	}
 }

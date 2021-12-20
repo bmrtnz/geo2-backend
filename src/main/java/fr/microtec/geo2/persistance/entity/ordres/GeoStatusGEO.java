@@ -14,10 +14,4 @@ public enum GeoStatusGEO implements StringEnum {
 		this.key = key;
 	}
 
-	public static GeoStatusGEO findByAbbr(String abbr){
-    for(GeoStatusGEO v : values())
-        if( v.key.equals(abbr))
-          return v;
-    return null;
-	}
 }
