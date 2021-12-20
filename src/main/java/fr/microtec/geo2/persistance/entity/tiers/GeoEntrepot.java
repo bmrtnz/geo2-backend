@@ -54,7 +54,7 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Ser
 
 	@NotNull
 	@Column(name = "tyt_code", nullable = false)
-	private Character typeTiers = 'F';
+	private Character typeTiers = 'E';
 
 	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
