@@ -23,7 +23,6 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
 
   @Query(
     name = "Ordre.allPlanningTransporteurs",
-    countName = "Ordre.allPlanningTransporteurs",
     nativeQuery = true
   )
   Page<GeoPlanningTransporteur> allPlanningTransporteurs(
