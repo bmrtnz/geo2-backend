@@ -205,7 +205,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     return this.repository.count(spec);
   }
 
-  public RelayPage<GeoPlanningTransporteur> allPlanningTransporteurs(
+  public List<GeoPlanningTransporteur> allPlanningTransporteurs(
     String search,
     Pageable pageable,
     LocalDateTime dateMin,
@@ -213,22 +213,19 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     String societeCode,
     String transporteurCode
   ) {
-    pageable = PageRequest.of(0, (pageable == null) ? 20 : pageable.getPageSize());
-
     // Specification<GeoPlanningTransporteur> specs = search != null && !search.isBlank()
     // ? new RSQLParser().parse(search).accept(new GeoCustomVisitor<>())
     // : null;
 
-    Page<GeoPlanningTransporteur> page = this.ordreRepository
+    List<GeoPlanningTransporteur> list = this.ordreRepository
     .allPlanningTransporteurs(
       dateMin,
       dateMax,
       societeCode,
-      transporteurCode,
+      transporteurCode
       // specs,
-      pageable
     );
 
-		return PageFactory.asRelayPage(page);
+		return list;
   }
 }

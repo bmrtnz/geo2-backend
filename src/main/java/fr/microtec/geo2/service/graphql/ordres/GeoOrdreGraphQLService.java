@@ -55,7 +55,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLQuery
-	public RelayPage<GeoPlanningTransporteur> allPlanningTransporteurs(
+	public List<GeoPlanningTransporteur> allPlanningTransporteurs(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
