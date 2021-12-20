@@ -3,11 +3,14 @@
   xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
 http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+  <!-- PLANNING TRANSPORTEUR -->
   <named-native-query
     name="Ordre.allPlanningTransporteurs"
     result-class="fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur"
   >
     <query>
+    <![CDATA[
       SELECT
       CEIL(
         sum(
@@ -110,6 +113,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       geo_ordre.livdatp,
       avi_art_emballage.col_code,
       geo_ordre.ref_cli
+    ]]>
     </query>
   </named-native-query>
+
 </entity-mappings>
