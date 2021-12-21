@@ -14,10 +14,4 @@ public enum GeoRole implements StringEnum {
 		this.key = key;
 	}
 
-	public static GeoRole findByAbbr(String abbr){
-    for(GeoRole v : values())
-        if( v.key.equals(abbr))
-          return v;
-    return null;
-	}
 }

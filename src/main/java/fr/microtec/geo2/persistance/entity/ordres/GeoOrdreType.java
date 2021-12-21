@@ -24,10 +24,4 @@ public enum GeoOrdreType implements StringEnum {
 		this.key = key;
 	}
 
-	public static GeoOrdreType findByAbbr(String abbr){
-    for(GeoOrdreType v : values())
-        if( v.key.equals(abbr))
-          return v;
-    return null;
-	}
 }

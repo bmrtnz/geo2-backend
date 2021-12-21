@@ -12,4 +12,23 @@ public interface StringEnum {
 	 */
 	String getKey();
 
+	/**
+	 * Find enum const from Enum class and key.
+	 *
+	 * @param clazz Enum class
+	 * @param key Value to search into enum const key
+	 * @return Enum const if founded
+	 */
+	static <T extends Enum<T> & StringEnum> T getValueOf(Class<T> clazz, String key) {
+		final T[] values = clazz.getEnumConstants();
+
+		for (T v : values) {
+			if (v.getKey().equals( key )) {
+				return v;
+			}
+		}
+
+		throw new IllegalArgumentException(String.format("No enum value (%s) found in %s", key, clazz.getSimpleName()));
+	}
+
 }

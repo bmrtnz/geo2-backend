@@ -17,10 +17,4 @@ public enum GeoCahierDesCharges implements StringEnum {
 		this.key = key;
 	}
 
-	public static GeoCahierDesCharges findByAbbr(String abbr){
-    for(GeoCahierDesCharges v : values())
-        if( v.key.equals(abbr))
-          return v;
-    return null;
-	}
 }

@@ -35,10 +35,7 @@ public abstract class AbstractStringEnumConverter<T extends Enum<T> & StringEnum
 			return null;
 		}
 
-		return Stream.of(this.enumClass.getEnumConstants())
-				.filter(c -> value.equals(c.getKey()))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException(String.format("No enum value (%s) found in %s", value, this.enumClass.getSimpleName())));
+		return StringEnum.getValueOf(this.enumClass, value);
 	}
 
 	@Override
