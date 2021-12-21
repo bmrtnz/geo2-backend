@@ -32,14 +32,14 @@ public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, Stri
   }
 
   public List<GeoMouvementFournisseur> allMouvementFournisseur(
-    LocalDateTime dateMin,
+    LocalDateTime dateMaxMouvements,
     String codeSociete,
     String codeEntrepot,
     String codeCommercial
   ) {
     return this.entrepotRepository
     .allMouvementFournisseur(
-      dateMin,
+      dateMaxMouvements,
       codeSociete,
       codeEntrepot,
       codeCommercial
@@ -47,14 +47,14 @@ public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, Stri
   }
 
   public List<GeoMouvementEntrepot> allMouvementEntrepot(
-    LocalDateTime dateMin,
+    LocalDateTime dateMaxMouvements,
     String codeSociete,
     String codeEntrepot,
     String codeCommercial
   ) {
     return this.entrepotRepository
     .allMouvementEntrepot(
-      dateMin,
+      dateMaxMouvements,
       codeSociete,
       codeEntrepot,
       codeCommercial
@@ -62,14 +62,14 @@ public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, Stri
   }
 
   public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
-    LocalDateTime dateMin,
+    LocalDateTime dateMaxMouvements,
     String codeSociete,
     String codeEntrepot,
     String codeCommercial
   ) {
     return this.entrepotRepository
     .allRecapitulatifFournisseur(
-      dateMin,
+      dateMaxMouvements,
       codeSociete,
       codeEntrepot,
       codeCommercial
@@ -77,14 +77,14 @@ public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, Stri
   }
 
   public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
-    LocalDateTime dateMin,
+    LocalDateTime dateMaxMouvements,
     String codeSociete,
     String codeEntrepot,
     String codeCommercial
   ) {
     return this.entrepotRepository
     .allRecapitulatifEntrepot(
-      dateMin,
+      dateMaxMouvements,
       codeSociete,
       codeEntrepot,
       codeCommercial

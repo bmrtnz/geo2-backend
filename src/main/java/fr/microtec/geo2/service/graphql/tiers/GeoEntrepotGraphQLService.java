@@ -75,13 +75,13 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 
 	@GraphQLQuery
 	public List<GeoMouvementFournisseur> allMouvementFournisseur(
-    @GraphQLArgument(name = "arg_dat_max") LocalDateTime dateMin,
-    @GraphQLArgument(name = "arg_soc_code") String codeSociete,
-    @GraphQLArgument(name = "arg_cen_ref") String codeEntrepot,
-    @GraphQLArgument(name = "arg_per_code_com") String codeCommercial
+    @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+    @GraphQLArgument(name = "codeSociete") String codeSociete,
+    @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+    @GraphQLArgument(name = "codeCommercial") String codeCommercial
 	) {
 		return this.entrepotService.allMouvementFournisseur(
-			dateMin,
+			dateMaxMouvements,
 			codeSociete,
 			codeEntrepot,
 			codeCommercial
@@ -90,13 +90,13 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 
 	@GraphQLQuery
 	public List<GeoMouvementEntrepot> allMouvementEntrepot(
-    @GraphQLArgument(name = "arg_dat_max") LocalDateTime dateMin,
-    @GraphQLArgument(name = "arg_soc_code") String codeSociete,
-    @GraphQLArgument(name = "arg_cen_ref") String codeEntrepot,
-    @GraphQLArgument(name = "arg_per_code_com") String codeCommercial
+    @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+    @GraphQLArgument(name = "codeSociete") String codeSociete,
+    @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+    @GraphQLArgument(name = "codeCommercial") String codeCommercial
 	) {
 		return this.entrepotService.allMouvementEntrepot(
-			dateMin,
+			dateMaxMouvements,
 			codeSociete,
 			codeEntrepot,
 			codeCommercial
@@ -105,13 +105,13 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 
 	@GraphQLQuery
 	public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
-    @GraphQLArgument(name = "arg_dat_max") LocalDateTime dateMin,
-    @GraphQLArgument(name = "arg_soc_code") String codeSociete,
-    @GraphQLArgument(name = "arg_cen_ref") String codeEntrepot,
-    @GraphQLArgument(name = "arg_per_code_com") String codeCommercial
+    @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+    @GraphQLArgument(name = "codeSociete") String codeSociete,
+    @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+    @GraphQLArgument(name = "codeCommercial") String codeCommercial
 	) {
 		return this.entrepotService.allRecapitulatifFournisseur(
-			dateMin,
+			dateMaxMouvements,
 			codeSociete,
 			codeEntrepot,
 			codeCommercial
@@ -120,13 +120,13 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 
 	@GraphQLQuery
 	public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
-    @GraphQLArgument(name = "arg_dat_max") LocalDateTime dateMin,
-    @GraphQLArgument(name = "arg_soc_code") String codeSociete,
-    @GraphQLArgument(name = "arg_cen_ref") String codeEntrepot,
-    @GraphQLArgument(name = "arg_per_code_com") String codeCommercial
+    @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+    @GraphQLArgument(name = "codeSociete") String codeSociete,
+    @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+    @GraphQLArgument(name = "codeCommercial") String codeCommercial
 	) {
 		return this.entrepotService.allRecapitulatifEntrepot(
-			dateMin,
+			dateMaxMouvements,
 			codeSociete,
 			codeEntrepot,
 			codeCommercial
