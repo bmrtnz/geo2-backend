@@ -206,24 +206,17 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   }
 
   public List<GeoPlanningTransporteur> allPlanningTransporteurs(
-    String search,
-    Pageable pageable,
     LocalDateTime dateMin,
     LocalDateTime dateMax,
     String societeCode,
     String transporteurCode
   ) {
-    // Specification<GeoPlanningTransporteur> specs = search != null && !search.isBlank()
-    // ? new RSQLParser().parse(search).accept(new GeoCustomVisitor<>())
-    // : null;
-
     List<GeoPlanningTransporteur> list = this.ordreRepository
     .allPlanningTransporteurs(
       dateMin,
       dateMax,
       societeCode,
       transporteurCode
-      // specs,
     );
 
 		return list;

@@ -1,16 +1,17 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
-import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
-import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
 public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
