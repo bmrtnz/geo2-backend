@@ -58,8 +58,8 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	public List<GeoPlanningTransporteur> allPlanningTransporteurs(
 			@GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
 			@GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
-			@GraphQLArgument(name = "societeCode") String societeCode,
-			@GraphQLArgument(name = "transporteurCode") String transporteurCode
+			@GraphQLArgument(name = "societeCode", defaultValue = "") String societeCode,
+			@GraphQLArgument(name = "transporteurCode", defaultValue = "") String transporteurCode
 	) {
 		return this.ordreService.allPlanningTransporteurs(
 			dateMin,
