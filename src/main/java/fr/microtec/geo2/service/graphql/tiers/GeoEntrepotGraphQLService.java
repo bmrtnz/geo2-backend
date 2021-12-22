@@ -83,8 +83,8 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 		return this.entrepotService.allMouvementFournisseur(
 			dateMaxMouvements,
 			codeSociete,
-			codeEntrepot,
-			codeCommercial
+			Optional.ofNullable(codeEntrepot).orElse("%"),
+			Optional.ofNullable(codeCommercial).orElse("%")
 		);
 	}
 
@@ -98,8 +98,8 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 		return this.entrepotService.allMouvementEntrepot(
 			dateMaxMouvements,
 			codeSociete,
-			codeEntrepot,
-			codeCommercial
+			Optional.ofNullable(codeEntrepot).orElse("%"),
+			Optional.ofNullable(codeCommercial).orElse("%")
 		);
 	}
 
@@ -113,8 +113,8 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 		return this.entrepotService.allRecapitulatifFournisseur(
 			dateMaxMouvements,
 			codeSociete,
-			codeEntrepot,
-			codeCommercial
+			Optional.ofNullable(codeEntrepot).orElse("%"),
+			Optional.ofNullable(codeCommercial).orElse("%")
 		);
 	}
 
@@ -128,8 +128,8 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 		return this.entrepotService.allRecapitulatifEntrepot(
 			dateMaxMouvements,
 			codeSociete,
-			codeEntrepot,
-			codeCommercial
+			Optional.ofNullable(codeEntrepot).orElse("%"),
+			Optional.ofNullable(codeCommercial).orElse("%")
 		);
 	}
 
