@@ -147,11 +147,6 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     private void setData(final Object newClass, final String alias, final Tuple tuple)
     {
         this.setData(newClass, alias, tuple, "");
-        try {
-            this.handlePostLoadEvent(newClass);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            log.error(e.getMessage());
-        }
     }
 
     /**
@@ -206,6 +201,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
                     }
                 }
             }
+            this.handlePostLoadEvent(newClass);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException | InstantiationException | NoSuchMethodException e) {
             log.error(e.getMessage());
         }
