@@ -78,6 +78,7 @@ public class GeoArticleEmballage extends ValidateCreatedAndModifiedEntity implem
 		clone.conditionSpecial = this.conditionSpecial;
 		clone.alveole = this.alveole;
 		clone.marque = this.marque;
+		clone.poidsNetClient = this.poidsNetClient;
 		clone.poidsNetColis = this.poidsNetColis;
 		clone.poidsNetGaranti = this.poidsNetGaranti;
 		clone.prepese = this.prepese;
