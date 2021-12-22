@@ -11,12 +11,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class GeoRecapitulatifEntrepot extends GeoSupervisionPalox {
 
-  @Column(name = "entree")
-	Integer entree;
-
-  @Column(name = "sortie")
-	Integer sortie;
-
   @Column(name = "station")
 	String station;
 

@@ -34,6 +34,12 @@ public abstract class GeoSupervisionPalox {
   @Column(name = "pay_code")
 	String codePaysEntrepot;
 
+  @Column(name = "entree")
+	Integer entree;
+
+  @Column(name = "sortie")
+	Integer sortie;
+
   @Column(name = "col_code")
 	String codeEmballage;
 

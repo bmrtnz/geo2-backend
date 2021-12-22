@@ -19,12 +19,6 @@ public class GeoMouvementEntrepot extends GeoSupervisionPalox {
   @Column(name = "depdatp")
 	LocalDateTime dateDepartOrdre;
 
-  @Column(name = "entree")
-	Integer entree;
-
-  @Column(name = "sortie")
-	Integer sortie;
-
   @Column(name = "bon_retour")
 	String bonRetour;
 
