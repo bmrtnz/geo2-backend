@@ -98,6 +98,8 @@ public class ArticleService {
 			merged.setBlueWhaleStock(articleChunk.getBlueWhaleStock());
 		if (articleChunk.getDescription() != null)
 			merged.setDescription(articleChunk.getDescription());
+		if (articleChunk.getArticleAssocie() != null)
+			merged.setArticleAssocie(articleChunk.getArticleAssocie());
 
 		if (clone) {
 			this.entityManager.detach(merged);
