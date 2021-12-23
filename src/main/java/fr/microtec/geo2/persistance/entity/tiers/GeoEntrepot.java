@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -144,6 +145,12 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Ser
 
 	@Column(name = "trs_pu")
 	private Float prixUnitaireTarifTransit;
+
+	@Column(name = "ifco")
+	private String referenceIfco;
+
+	@Column(name = "date_debut_ifco")
+	private LocalDate dateDebutIfco;
 
 	@Column(name = "instructions_seccom")
 	private String instructionSecretaireCommercial;
