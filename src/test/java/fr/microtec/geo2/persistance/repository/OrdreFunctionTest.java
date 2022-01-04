@@ -117,4 +117,23 @@ public class OrdreFunctionTest {
 
     }
 
+    @Test
+    public void testFNouvelOrdre() {
+        FunctionResult result = this.functionOrdreRepository.fNouvelOrdre("SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertFalse(result.getData().isEmpty());
+        Assertions.assertNotNull(result.getData().get("ll_nordre"));
+    }
+
+    @Test
+    public void testFNouvelOrdreInvalid() {
+        FunctionResult result = this.functionOrdreRepository.fNouvelOrdre("TRUC");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes());
+        Assertions.assertEquals("%%% f_nouvel_ordre : société TRUC inconnue", result.getMsg());
+    }
+
 }

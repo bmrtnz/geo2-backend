@@ -23,6 +23,11 @@ public interface GeoFunctionOrdreRepository {
      */
     FunctionResult fControlOrdreBaf(String refOrdre, String socCode);
 
+    /**
+     * Génère une nouvelle ref ordre.
+     */
+    FunctionResult fNouvelOrdre(String socCode);
+
     // Sub procedures, declare only for testing
     FunctionResult fCalculMarge(String refOrdre);
     FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture, String origine);
