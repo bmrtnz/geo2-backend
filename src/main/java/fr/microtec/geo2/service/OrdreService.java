@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,21 +19,21 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.*;
+import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.GeoSequenceGenerator;
-import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
-import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
-import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeRepository;
@@ -51,18 +52,20 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   private final GeoLitigeRepository litigeRepository;
   private final GeoLitigeLigneRepository litigeLigneRepository;
   private final GeoSocieteRepository societeRepository;
+  private final GeoFunctionOrdreRepository functionOrdreRepository;
 
   public OrdreService(
-    GeoOrdreRepository ordreRepository,
-    GeoLitigeRepository litigeRepository,
-    GeoLitigeLigneRepository litigeLigneRepository,
-    GeoSocieteRepository societeRepository
-  ) {
+          GeoOrdreRepository ordreRepository,
+          GeoLitigeRepository litigeRepository,
+          GeoLitigeLigneRepository litigeLigneRepository,
+          GeoSocieteRepository societeRepository,
+          GeoFunctionOrdreRepository functionOrdreRepository) {
     super(ordreRepository, GeoOrdre.class);
     this.ordreRepository = ordreRepository;
     this.litigeRepository = litigeRepository;
     this.litigeLigneRepository = litigeLigneRepository;
     this.societeRepository = societeRepository;
+    this.functionOrdreRepository = functionOrdreRepository;
   }
 
   private String fetchNumero(GeoSociete societe) {
@@ -220,5 +223,34 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     );
 
 		return list;
+  }
+
+  public List<GeoOrdreBaf> allDepartBaf(
+          String societeCode,
+          String secteurCode,
+          String clientCode,
+          String entrepotCode,
+          LocalDate dateMin,
+          LocalDate dateMax,
+          String codeAssistante,
+          String codeCommercial
+  ) {
+    // CALL F_AFFICHE_ORDRE_BAF
+    // Foreach ordre baf
+    // CALL F_CONTROL_ORDRE_BAF (f_calcule_marge etc etc)
+
+    Assert.hasText(societeCode, "Code société obligatoire");
+    Assert.hasText(secteurCode, "Code secteur obligatoire");
+
+    FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(societeCode, secteurCode, clientCode, entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
+
+    List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
+    for(GeoOrdreBaf baf : ordresBaf) {
+      FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), societeCode);
+
+      // TODO
+    }
+
+    return ordresBaf;
   }
 }
