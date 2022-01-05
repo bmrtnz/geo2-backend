@@ -103,4 +103,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return null;
     }
+
+    @Override
+    public FunctionResult fNouvelOrdre(String socCode) {
+        FunctionQuery query = this.build("F_NOUVEL_ORDRE");
+
+        query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachOutput("ll_nordre", Integer.class);
+
+        return query.fetch();
+    }
 }
