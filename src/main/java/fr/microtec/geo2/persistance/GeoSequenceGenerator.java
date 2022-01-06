@@ -66,10 +66,13 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 	 * Generate id value.
 	 */
 	@Override
-	public synchronized Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
+	public synchronized Serializable generate(SharedSessionContractImplementor sessionContract, Object object) throws HibernateException {
+		Session session = sessionContract.getFactory().openSession();
 		NativeQuery query = session.createNativeQuery(this.sequenceQuery);
-
-		return (Serializable) query.getSingleResult();
+		Object result = query.getSingleResult();
+		
+		session.close();
+		return (Serializable) result; 
 	}
 
 	/**
