@@ -6,6 +6,7 @@ import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsReposit
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Repository
@@ -90,7 +91,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         FunctionQuery query = this.build("F_CONTROL_ORDRE_BAF");
 
         query.attachInput("arg_ord_ref", String.class, refOrdre);
-        query.attachInput("arg_sco_code", String.class, scoCode);
+        query.attachInput("arg_soc_code", String.class, scoCode);
+
         query.attachOutput("ls_ind_baf", String.class);
         query.attachOutput("ls_ind_trp", String.class);
         query.attachOutput("ls_ind_prix", String.class);
@@ -99,9 +101,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachOutput("ls_ind_station", String.class);
         query.attachOutput("ls_ind_date", String.class);
         query.attachOutput("ls_desc_ctl", String.class);
-        query.attachOutput("ldc_pc_marge_brute", Float.class);
+        query.attachOutput("ldc_pc_marge_brute", BigDecimal.class);
 
-        return null;
+        return query.fetch();
     }
 
     @Override
@@ -110,6 +112,16 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         query.attachInput("arg_soc_code", String.class, socCode);
         query.attachOutput("ll_nordre", Integer.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fVerifOrdreWarning(String refOrdre, String socCode) {
+        FunctionQuery query = this.build("F_VERIF_ORDRE_WARNING");
+
+        query.attachInput("arg_ord_ref", String.class, refOrdre);
+        query.attachInput("arg_soc_code", String.class, socCode);
 
         return query.fetch();
     }

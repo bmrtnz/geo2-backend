@@ -5,22 +5,23 @@ import fr.microtec.geo2.configuration.PersistanceConfiguration;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepositoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@DataJpaTest
-@ContextConfiguration(classes = { Geo2Application.class, PersistanceConfiguration.class })
-@EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
+@SpringBootTest(classes = { Geo2Application.class, PersistanceConfiguration.class })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Transactional
 public class OrdreFunctionTest {
 
     @Autowired
@@ -112,10 +113,19 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(3, ordreBaf.size());
     }
 
-    @Test
-    public void testFControleOrdreBaf() {
+    /*@Test
+    public void testFVerifOrdreWarning() {
+        FunctionResult result = this.functionOrdreRepository.fVerifOrdreWarning("1370744", "SA");
 
-    }
+        Assertions.assertNotNull(result);
+    }*/
+
+    /*@Test
+    public void testFControleOrdreBaf() {
+        FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1370744", "SA");
+
+        Assertions.assertNotNull(result);
+    }*/
 
     @Test
     public void testFNouvelOrdre() {

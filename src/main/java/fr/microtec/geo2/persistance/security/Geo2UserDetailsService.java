@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class Geo2UserDetailsService implements UserDetailsService {
 
-	private GeoUtilisateurRepository utilisateurRepository;
+	private final GeoUtilisateurRepository utilisateurRepository;
 
 	@Autowired
 	public Geo2UserDetailsService(GeoUtilisateurRepository userRepository) {

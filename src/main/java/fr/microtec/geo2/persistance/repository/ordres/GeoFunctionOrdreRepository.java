@@ -32,6 +32,7 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult fCalculMarge(String refOrdre);
     FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture, String origine);
     FunctionResult fCalculPerequation(String refOrdre, String codeSociete);
+    FunctionResult fVerifOrdreWarning(String refOrdre, String socCode);
 
     //FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
 
