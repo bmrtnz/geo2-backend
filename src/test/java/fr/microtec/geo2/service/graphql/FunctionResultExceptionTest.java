@@ -1,7 +1,6 @@
 package fr.microtec.geo2.service.graphql;
 
 import fr.microtec.geo2.Geo2Application;
-import fr.microtec.geo2.configuration.Persistance2Configuration;
 import fr.microtec.geo2.configuration.PersistanceConfiguration;
 import fr.microtec.geo2.persistance.repository.common.GeoUtilisateurRepository;
 import fr.microtec.geo2.service.graphql.ordres.GeoFunctionsOrdreGraphQLService;
