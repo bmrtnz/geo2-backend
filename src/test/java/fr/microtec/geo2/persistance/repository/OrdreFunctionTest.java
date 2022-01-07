@@ -110,19 +110,55 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(3, ordreBaf.size());
     }
 
-    /*@Test
+    @Test
     public void testFVerifOrdreWarning() {
         FunctionResult result = this.functionOrdreRepository.fVerifOrdreWarning("1370744", "SA");
 
         Assertions.assertNotNull(result);
-    }*/
+        Assertions.assertEquals(1, result.getRes());
+        System.out.println(result.getMsg());
+    }
 
-    /*@Test
+    @Test
     public void testFControleOrdreBaf() {
         FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1370744", "SA");
 
         Assertions.assertNotNull(result);
-    }*/
+        System.out.println(result.getMsg());
+    }
+
+    @Test
+    public void testFControleOrdreBaf2() {
+        String expectedMsg = "(A) Aucune confirmation n'a été effectuée\r\n" +
+                "(S) %%%  un détail n'est pas clôturé\r\n" +
+                "(P) Ligne=01 PU vente à zéro\r\n";
+
+        FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1429565", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(expectedMsg, result.getMsg());
+        System.out.println(result.getMsg());
+    }
+
+    @Test
+    public void testFAfficheBafControl() {
+        FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(
+                "SA", "F", "", "",
+                LocalDate.of(2020, 2, 1),
+                LocalDate.of(2020, 3, 1),
+                "", ""
+        );
+
+        List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
+        for(GeoOrdreBaf baf : ordresBaf) {
+            FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), "SA");
+
+            baf.setControlData(controlResult.getData());
+        }
+
+        Assertions.assertNotNull(ordresBaf);
+    }
 
     @Test
     public void testFNouvelOrdre() {

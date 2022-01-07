@@ -3,10 +3,18 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_PARSE_NUMERIC" (
     ls_out out varchar2
 )
 AS
-    ll_ind number;
+    ll_size integer;
+    ll_ind integer;
     ll_car number;
 BEGIN
-    for ll_ind in 1..length(arg_string) LOOP
+    ll_size := length(arg_string);
+
+    if (ll_size is null) then
+        ls_out := '';
+        return;
+    end if;
+
+    for ll_ind in 1..ll_size  LOOP
         ll_car := ascii(substr(arg_string, ll_ind, 1));
 
         if ll_car > 47 and ll_car < 58 then

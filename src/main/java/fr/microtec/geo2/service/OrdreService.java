@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -225,6 +226,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 		return list;
   }
 
+  @Transactional
   public List<GeoOrdreBaf> allDepartBaf(
           String societeCode,
           String secteurCode,
@@ -235,10 +237,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
           String codeAssistante,
           String codeCommercial
   ) {
-    // CALL F_AFFICHE_ORDRE_BAF
-    // Foreach ordre baf
-    // CALL F_CONTROL_ORDRE_BAF (f_calcule_marge etc etc)
-
     Assert.hasText(societeCode, "Code société obligatoire");
     Assert.hasText(secteurCode, "Code secteur obligatoire");
 
@@ -248,7 +246,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     for(GeoOrdreBaf baf : ordresBaf) {
       FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), societeCode);
 
-      // TODO
+      baf.setControlData(controlResult.getData());
     }
 
     return ordresBaf;

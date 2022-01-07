@@ -93,15 +93,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_ord_ref", String.class, refOrdre);
         query.attachInput("arg_soc_code", String.class, scoCode);
 
-        query.attachOutput("ls_ind_baf", String.class);
-        query.attachOutput("ls_ind_trp", String.class);
-        query.attachOutput("ls_ind_prix", String.class);
-        query.attachOutput("ls_ind_qte", String.class);
-        query.attachOutput("ls_ind_autre", String.class);
-        query.attachOutput("ls_ind_station", String.class);
-        query.attachOutput("ls_ind_date", String.class);
-        query.attachOutput("ls_desc_ctl", String.class);
-        query.attachOutput("ldc_pc_marge_brute", BigDecimal.class);
+        query.attachOutput("ind_baf", String.class);
+        query.attachOutput("ind_trp", String.class);
+        query.attachOutput("ind_prix", String.class);
+        query.attachOutput("ind_qte", String.class);
+        query.attachOutput("ind_autre", String.class);
+        query.attachOutput("ind_station", String.class);
+        query.attachOutput("ind_date", String.class);
+        query.attachOutput("desc_ctl", String.class);
+        query.attachOutput("pc_marge_brute", BigDecimal.class);
 
         return query.fetch();
     }

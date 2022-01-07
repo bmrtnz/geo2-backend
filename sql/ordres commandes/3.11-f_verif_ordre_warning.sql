@@ -1,11 +1,11 @@
-CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_VERIF_ORDRE_WARNING" (
+CREATE OR REPLACE PROCEDURE "F_VERIF_ORDRE_WARNING" (
     arg_ord_ref in GEO_ORDLIG.ORD_REF%TYPE,
-    arg_dev_code in GEO_DEVISE.DEV_CODE%TYPE,
     arg_soc_code in GEO_SOCIETE.SOC_CODE%TYPE,
     res out number,
     msg out varchar2
 )
 AS
+    ls_dev_code GEO_DEVISE.DEV_CODE%TYPE;
     ls_rc varchar2(2000) := '';
     ls_err varchar2(50);
     ls_truc varchar2(50);
@@ -13,7 +13,7 @@ AS
     ls_rc_tvr varchar2(50);
     ls_laf_no varchar2(50);
     ls_flbaf varchar2(50);
-    ls_crlf varchar2(50) := '~r~n';
+    ls_crlf varchar2(50) := chr(13) || chr(10);
     ld_achqte number;
     ld_achpu number;
     ld_vteqte number;
@@ -107,6 +107,7 @@ AS
     ll_edi number;
     ls_bloc_factu_edi varchar2(50);
     ls_cli_est_transporteur varchar2(50) := '';
+    ls_fctlvaleurstring varchar(500);
 
     CURSOR C2 (ref_ordre GEO_ORDRE.ORD_REF%type)
     IS
@@ -141,10 +142,13 @@ AS
     where geo_ordre.cli_ref = reference_client and flbaf ='N' and ord_ref <> ref_ordre AND
         ( GEO_CLIENT.CLI_REF = GEO_ORDRE.CLI_REF ) and ( GEO_ORDRE.VALIDE = 'O' ) AND  ( GEO_CLIENT.IND_USINT <> 'O');
 BEGIN
+    res := 0;
     ls_rc := '';
 
+    select dev_code into ls_dev_code from GEO_SOCIETE where SOC_CODE = arg_soc_code;
+
     -- ajuste montant maxi ligne en fonction de la devise de référence de la société
-    ld_max_mt_lig := case arg_dev_code
+    ld_max_mt_lig := case ls_dev_code
         WHEN 'EUR' THEN 30000
         WHEN 'GBP' THEN 50000
         ELSE 1 -- déclenchera warnings intempestifs pour obliger ajuster cette valeur
@@ -165,9 +169,14 @@ BEGIN
     end;
 
     If ls_ctl_champ is null or ls_ctl_champ = '' Then
-        select ctl_ref_cli into ls_ctl_champ
-        from geo_client
-        where geo_client.cli_ref = ls_cli_ref and geo_client.ctl_ref_cli is not null and ROWNUM = 1;
+        begin
+            select ctl_ref_cli into ls_ctl_champ
+            from geo_client
+            where geo_client.cli_ref = ls_cli_ref and geo_client.ctl_ref_cli is not null and ROWNUM = 1;
+
+            exception when no_data_found then
+                ls_ctl_champ := '';
+        end;
     End If;
 
     select IND_PALOX_GRATUIT,IND_USINT,IND_FRAIS_RAMAS, IND_GEST_COLIS_MANQUANT, FL_IDENT_REF_CLI 
@@ -184,10 +193,15 @@ BEGIN
         ll_nb_ligne_gratuit := 0;
     end;
 
-    select T.TRP_CODE into ls_cli_est_transporteur
-    from GEO_ORDRE O, GEO_TRANSP T
-    where 	O.ORd_REF = arg_ord_ref and
-            O.CLI_REF = T.CLI_REF_ASSOC;
+    begin
+        select T.TRP_CODE into ls_cli_est_transporteur
+        from GEO_ORDRE O, GEO_TRANSP T
+        where 	O.ORd_REF = arg_ord_ref and
+                O.CLI_REF = T.CLI_REF_ASSOC;
+
+        exception when no_data_found then
+            ls_cli_est_transporteur := null;
+    end;
 
     begin
         select count(*) into ll_nb_ligne_ordre
@@ -243,7 +257,7 @@ BEGIN
     ls_rc := ls_rc || ls_fctlvaleurstring;
 
     -- verif ordre pere bon à facturer si avoir
-    if ls_facture_avoir = 'A' and ls_ord_ref_pere <> '' then
+    if ls_facture_avoir = 'A' and (ls_ord_ref_pere <> '' or ls_ord_ref_pere is not null) then
         begin
             select O.flbaf , O.nordre
             into ls_truc, ls_machin
@@ -270,7 +284,7 @@ BEGIN
     if ldt_depdatp is null or ldt_depdatp = to_timestamp('01/01/1900 00:00:00', 'DD/MM/RRRR HH24:MI:SS') then
         ls_rc := ls_rc || '(D) %%% la date de départ est obligatoire' || ls_crlf;
     end if;
-    If EXTRACT(day from ldt_depdatp - ldt_livdatp) < 0 Then
+    If EXTRACT(day from ldt_livdatp - ldt_depdatp) < 0 Then
         ls_rc := ls_rc || '(D) %%% la date de départ (' || to_char(ldt_depdatp, 'dd/mm/yy') || ') est incohérente par rapport à la  date de livraison  ('  || to_char(ldt_livdatp, 'dd/mm/yy') || ')' || ls_crlf;
     End If;
 
@@ -448,7 +462,7 @@ BEGIN
         end if;
 
         if (ld_vteqte * ld_vtepu * ld_devtx) > ld_max_mt_lig then
-            ls_rc := ls_rc ||  '(P) Ligne=' || ls_laf_no || ' montant vente ' || to_char(ld_vteqte * ld_vtepu * ld_devtx) || ' > ' || to_char(ld_max_mt_lig) || ' ' || arg_dev_code || ls_crlf;
+            ls_rc := ls_rc ||  '(P) Ligne=' || ls_laf_no || ' montant vente ' || to_char(ld_vteqte * ld_vtepu * ld_devtx) || ' > ' || to_char(ld_max_mt_lig) || ' ' || ls_dev_code || ls_crlf;
         end if;
 
         --ld_marge_montant := ld_totvte - ld_totrem - ld_totres - ld_totfrd - ld_totach - ld_tottrp - ld_totmob - ld_totcrt; -- marge nette
@@ -493,7 +507,8 @@ BEGIN
     End If;
 
     f_calcul_regime_tva(arg_ord_ref, ls_tvr_code_entrep, ls_tvr_code, ls_rc_tvr);
-    if ls_tvr_code <> '' then
+    --msg := ls_tvr_code; return;
+    if (ls_tvr_code <> '' or ls_tvr_code is not null) then
         f_set_regime_tva(arg_ord_ref, ls_tvr_code, ll_res, msg);
     else
         ls_rc := ls_rc || '(P) %%% ' || ls_rc_tvr || ls_crlf;
@@ -526,9 +541,9 @@ BEGIN
         /* Bruno le 07/09/21*/
         /* Libérer ADV  */
         /*If (gs_user.geo_facture = 'O'  OR (ll_nb_ligne_ordre = ll_nb_ligne_gratuit))  Then  */
-        ls_rc := ls_rc || '(P) le coût prévisionnel du transport est supérieur à 1 ' || arg_dev_code || ' au kilo' || ls_crlf;
+        ls_rc := ls_rc || '(P) le coût prévisionnel du transport est supérieur à 1 ' || ls_dev_code || ' au kilo' || ls_crlf;
     ELSE
-        If ls_sqlerr <> '' Then
+        If (ls_sqlerr <> '' or ls_sqlerr is not null) Then
             ls_rc := ls_rc || '(A) %%% ' || ls_sqlerr || ls_crlf;
         End If;
     end if;
@@ -543,7 +558,7 @@ BEGIN
 
     -- On vérifie que tous les ordres d'un même client avec deux entrepôts différents ont un numéro de commande différent
     -- cas particulier de SOCOMOEUROP, LIDL, ect... qui livre avec le même numéro de cmd deux entrepôts. Donc on tient pas compte de l'entrepôt
-    if ls_ident_ref_cli = 'N' and ls_ref_cli is not null and ls_ref_cli <> '' then  -- Le client a un n° de cde par entrepôt
+    if ls_ident_ref_cli = 'N' and ls_ref_cli is not null and (ls_ref_cli <> '' or ls_ref_cli is not null) then  -- Le client a un n° de cde par entrepôt
         open C_CONTROLE (arg_ord_ref, ls_cli_ref);
 
         LOOP
@@ -565,5 +580,6 @@ BEGIN
         ls_rc := ls_rc || '(A) %%% Facturation en EDI mais aucune référence client ' || ls_crlf;
     end if;
 
+    res := 1;
     msg := ls_rc;
 END;

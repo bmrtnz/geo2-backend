@@ -4,14 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
@@ -29,7 +22,8 @@ public class GeoLitige extends ValidateAndModifiedEntity implements Serializable
 	private String id;
 
 	@NotNull
-  @ManyToOne(fetch = FetchType.LAZY)
+  	//@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref_origine",nullable = false)
 	private GeoOrdre ordreOrigine;
 

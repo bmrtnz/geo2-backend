@@ -22,10 +22,17 @@ BEGIN
     from geo_ordre
     where ord_ref = arg_ord_ref ;
 
-    select sum(exp_nb_pal), sum(exp_nb_col), sum(exp_pds_net)
-    into  ld_tot_exp_nb_pal, ld_tot_exp_nb_col, ld_tot_exp_pds_net
-    from geo_ordlig where ord_ref = arg_ord_ref
-    group by ord_ref;
+    begin
+        select sum(exp_nb_pal), sum(exp_nb_col), sum(exp_pds_net)
+        into  ld_tot_exp_nb_pal, ld_tot_exp_nb_col, ld_tot_exp_pds_net
+        from geo_ordlig where ord_ref = arg_ord_ref
+        group by ord_ref;
+
+        exception when no_data_found then
+            ld_tot_exp_nb_pal := 0;
+            ld_tot_exp_nb_col := 0;
+            ld_tot_exp_pds_net := 0;
+    end;
 
     CASE ls_trp_bta_code
         WHEN 'CAMION ' THEN

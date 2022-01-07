@@ -19,13 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Formula;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
@@ -92,6 +86,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
 	private List<GeoOrdreLogistique> logistiques;
 
+	@LazyCollection(LazyCollectionOption.EXTRA)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
 	private List<GeoTracabiliteDetailPalette> tracabiliteDetailPalettes;
 
@@ -492,7 +487,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	/**
 	 * Permet de connaitre le nombre de commentaire associés a cette ordre via un count.
-	 * @see GeoOrdre.getCommentaireOrdreCount()
+	 * @see GeoOrdre.getCommentairesOrdreCount()
 	 */
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
