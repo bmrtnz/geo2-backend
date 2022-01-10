@@ -3,7 +3,7 @@ package fr.microtec.geo2.persistance.entity.common;
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
-import fr.microtec.geo2.persistance.security.Geo2SecurityRoles;
+import fr.microtec.geo2.service.security.GeoSecurityRoles;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
@@ -78,7 +78,7 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Geo2SecurityRoles.authoritiesFor(this);
+		return GeoSecurityRoles.authoritiesFor(this);
 	}
 
 	@Override

@@ -3,9 +3,11 @@ package fr.microtec.geo2.configuration;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationEntryPoint;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationFailureHandler;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationSuccessHandler;
-import fr.microtec.geo2.persistance.security.Geo2UserDetailsService;
+import fr.microtec.geo2.service.security.GeoLdapUserDetailsMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
@@ -18,11 +20,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 public class SecurityDevConfiguration extends SecurityConfiguration {
 
 	public SecurityDevConfiguration(
-			Geo2UserDetailsService userDetailsService,
+			GeoLdapUserDetailsMapper geoLDAPUserDetailsMapper,
 			ApiAuthenticationEntryPoint authenticationEntryPoint,
 			ApiAuthenticationSuccessHandler authSuccessHandler,
-			ApiAuthenticationFailureHandler authFailureHandler) {
-		super(userDetailsService, authenticationEntryPoint, authSuccessHandler, authFailureHandler);
+			ApiAuthenticationFailureHandler authFailureHandler,
+			LdapContextSource ldapContextSource) {
+		super(geoLDAPUserDetailsMapper, authenticationEntryPoint, authSuccessHandler, authFailureHandler, ldapContextSource);
 	}
 
 	/**
@@ -33,5 +36,10 @@ public class SecurityDevConfiguration extends SecurityConfiguration {
 		super.configure(http);
 
 		http.headers().frameOptions().disable();
+	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(this.geoLDAPUserDetailsMapper.getGeo2UserDetailsService());
 	}
 }

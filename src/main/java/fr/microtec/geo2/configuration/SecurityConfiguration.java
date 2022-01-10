@@ -3,11 +3,12 @@ package fr.microtec.geo2.configuration;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationEntryPoint;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationFailureHandler;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationSuccessHandler;
-import fr.microtec.geo2.persistance.security.Geo2UserDetailsService;
+import fr.microtec.geo2.service.security.GeoLdapUserDetailsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,22 +27,23 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private final Geo2UserDetailsService userDetailsService;
+	protected final GeoLdapUserDetailsMapper geoLDAPUserDetailsMapper;
 	private final ApiAuthenticationEntryPoint authenticationEntryPoint;
 	private final AuthenticationSuccessHandler authSuccessHandler;
 	private final AuthenticationFailureHandler authFailureHandler;
+	private final LdapContextSource ldapContextSource;
 
 	@Autowired
 	public SecurityConfiguration(
-			Geo2UserDetailsService userDetailsService,
-			ApiAuthenticationEntryPoint authenticationEntryPoint,
+			GeoLdapUserDetailsMapper geoLDAPUserDetailsMapper, ApiAuthenticationEntryPoint authenticationEntryPoint,
 			ApiAuthenticationSuccessHandler authSuccessHandler,
-			ApiAuthenticationFailureHandler authFailureHandler
-	) {
-		this.userDetailsService = userDetailsService;
+			ApiAuthenticationFailureHandler authFailureHandler,
+			LdapContextSource ldapContextSource) {
+		this.geoLDAPUserDetailsMapper = geoLDAPUserDetailsMapper;
 		this.authenticationEntryPoint = authenticationEntryPoint;
 		this.authSuccessHandler = authSuccessHandler;
 		this.authFailureHandler = authFailureHandler;
+		this.ldapContextSource = ldapContextSource;
 	}
 
 	/**
@@ -68,7 +70,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(this.userDetailsService);
+		auth.ldapAuthentication()
+				.userSearchFilter("SamAccountName={0}")
+				.userDetailsContextMapper(this.geoLDAPUserDetailsMapper)
+				.contextSource(this.ldapContextSource);
 	}
 
 	@Bean
