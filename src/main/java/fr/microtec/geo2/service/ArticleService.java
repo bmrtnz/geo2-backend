@@ -1,21 +1,32 @@
 package fr.microtec.geo2.service;
 
-import fr.microtec.geo2.persistance.entity.Duplicable;
-import fr.microtec.geo2.persistance.entity.produits.*;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
-import fr.microtec.geo2.persistance.repository.produits.*;
-import fr.microtec.geo2.service.graphql.produits.GeoArticleGraphQLService;
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-
-import java.util.List;
-import java.util.Optional;
+import fr.microtec.geo2.persistance.entity.Duplicable;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticleCahierDesCharge;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticleEmballage;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticleMatierePremiere;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticleNormalisation;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleCahierDesChargeRepository;
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleEmballageRepository;
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleMatierePremiereRepository;
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleNormalisationRepository;
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
+import fr.microtec.geo2.service.graphql.produits.GeoArticleGraphQLService;
 
 @Service
 public class ArticleService {
+
+	public static final String codeCNUF = "343006";
 
 	private final GeoArticleRepository articleRepository;
 	private final GeoArticleMatierePremiereRepository matierePremiereRepository;
@@ -107,7 +118,19 @@ public class ArticleService {
 			merged.setValide(false);
 			merged.setPreSaisie(true);
 		}
-		return this.articleRepository.save(merged);
+		
+		GeoArticle saved = this.articleRepository.save(merged);
+
+		if (clone) {
+			String gtin = this.genGTIN(saved);
+			if (saved.getEmballage().getPoidsNetGaranti().intValue() > 0)
+				saved.setGtinUcBlueWhale(gtin);
+			else
+				saved.setGtinColisBlueWhale(gtin);
+			saved = this.articleRepository.save(saved);
+		}
+
+		return saved;
 	}
 
 	private <T extends Duplicable<T>> T fetch(GeoRepository<T, String> repository, T entity) {
@@ -120,5 +143,22 @@ public class ArticleService {
 
 		return entitiesFound.get(0);
 	}
+
+	public String genGTIN(GeoArticle article) {
+		String code = codeCNUF + article.getId();
+		Integer imp = 0;
+        Integer pai = 0;
+        Integer check = 0;
+
+        for (int i = 0; i < code.length(); i += 2)
+          	imp += (int) code.charAt(i);
+        for (int i = 1; i < code.length(); i += 2)
+            pai += (int) code.charAt(i);
+
+        check = imp + (3 * pai);
+        check = (int)(Math.ceil(check.doubleValue() / 10) * 10 - check);
+
+		return code + check;
+	  }
 
 }
