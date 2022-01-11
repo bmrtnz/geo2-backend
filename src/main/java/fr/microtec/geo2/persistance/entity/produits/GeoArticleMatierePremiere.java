@@ -45,11 +45,6 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
-	@JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
-	private GeoCalibreFournisseur calibreFournisseur;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "cun_code"))
 	private GeoCalibreUnifie calibreUnifie;
 
@@ -74,7 +69,6 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 		GeoArticleMatierePremiere clone = new GeoArticleMatierePremiere();
 		clone.espece = this.espece;
 		clone.variete = this.variete;
-		clone.calibreFournisseur= this.calibreFournisseur;
 		clone.calibreUnifie= this.calibreUnifie;
 		clone.origine = this.origine;
 		clone.modeCulture = this.modeCulture;
