@@ -121,14 +121,17 @@ public class ArticleService {
 		
 		GeoArticle saved = this.articleRepository.save(merged);
 
-		if (clone) {
-			String gtin = this.genGTIN(saved);
-			if (saved.getEmballage().getUniteParColis() > 0)
-				saved.setGtinUcBlueWhale(gtin);
-			else
-				saved.setGtinColisBlueWhale(gtin);
-			saved = this.articleRepository.save(saved);
+		// update GTIN
+		String gtin = this.genGTIN(saved);
+		if (saved.getEmballage().getUniteParColis() > 0) {
+			saved.setGtinUcBlueWhale(gtin);
+			saved.setGtinColisBlueWhale(null);
 		}
+		else {
+			saved.setGtinColisBlueWhale(gtin);
+			saved.setGtinUcBlueWhale(null);
+		}
+		saved = this.articleRepository.save(saved);
 
 		return saved;
 	}
