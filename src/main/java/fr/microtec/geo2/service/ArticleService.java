@@ -123,7 +123,7 @@ public class ArticleService {
 
 		if (clone) {
 			String gtin = this.genGTIN(saved);
-			if (saved.getEmballage().getPoidsNetGaranti().intValue() > 0)
+			if (saved.getEmballage().getUniteParColis() > 0)
 				saved.setGtinUcBlueWhale(gtin);
 			else
 				saved.setGtinColisBlueWhale(gtin);
