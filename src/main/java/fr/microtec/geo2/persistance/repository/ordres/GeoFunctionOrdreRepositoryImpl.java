@@ -111,7 +111,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         FunctionQuery query = this.build("F_NOUVEL_ORDRE");
 
         query.attachInput("arg_soc_code", String.class, socCode);
-        query.attachOutput("ll_nordre", Integer.class);
+        query.attachOutput("ls_nordre", String.class);
 
         return query.fetch();
     }
