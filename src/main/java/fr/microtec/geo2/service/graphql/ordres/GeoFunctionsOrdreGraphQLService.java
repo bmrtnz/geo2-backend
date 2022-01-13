@@ -36,6 +36,13 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fNouvelOrdre(
+            @GraphQLArgument(name = "societe") String socCode
+    ) {
+        return this.repository.fNouvelOrdre(socCode);
+    }
+
+    @GraphQLQuery
     public List<GeoOrdreBaf> fAfficheBaf(
             @GraphQLArgument(name = "societeCode") String societeCode,
             @GraphQLArgument(name = "secteurCode") String secteurCode,
