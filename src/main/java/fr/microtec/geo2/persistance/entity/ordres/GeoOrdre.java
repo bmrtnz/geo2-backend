@@ -393,7 +393,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@NotNull
 	@Column(name = "flannul", nullable = false)
-	private Boolean flagAnnule;
+	private Boolean flagAnnule = false;
 
 	@Column(name = "rem_sf_tx_mdd")
 	private Float remiseSurFactureMDDTaux;
