@@ -81,7 +81,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
   public GeoOrdre save(GeoOrdre ordreChunk) {
     if (ordreChunk.getId() == null) {
-      ordreChunk.setNumero(this.fetchNumero(ordreChunk.getSociete()));
+      if (ordreChunk.getNumero() == null)
+        ordreChunk.setNumero(this.fetchNumero(ordreChunk.getSociete()));
       return this.ordreRepository.save(ordreChunk);
     } else {
       Optional<GeoOrdre> ordre = this.ordreRepository.findById(ordreChunk.getId());
