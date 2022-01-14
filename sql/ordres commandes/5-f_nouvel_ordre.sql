@@ -30,7 +30,7 @@ BEGIN
             msg := '%%% f_nouvel_ordre : société ' || arg_soc_code || ' inconnue';
             return;
         end case;
-    ls_nordre := to_char(ll_nordre, '000000');
+    ls_nordre := to_char(ll_nordre, 'FM099999');
     res := 1;
 
     exception when others then
