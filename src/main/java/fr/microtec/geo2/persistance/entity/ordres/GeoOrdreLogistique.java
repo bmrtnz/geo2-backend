@@ -144,7 +144,19 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@PostLoad
 	public void postLoad(){
 		if(this.dateDepartReelleFournisseur == null) {
-			if(this.expedieStation && this.totalPalettesExpediees == 0 && this.nombrePalettesAuSol == 0 && this.nombrePalettes100x120 == 0 && this.nombrePalettes80x120 == 0 && this.nombrePalettes60x80 == 0)
+			if(
+				this.expedieStation
+				&& this.totalPalettesExpediees != null
+				&& this.nombrePalettesAuSol != null
+				&& this.nombrePalettes100x120 != null
+				&& this.nombrePalettes80x120 != null
+				&& this.nombrePalettes60x80 != null
+				&& this.totalPalettesExpediees == 0
+				&& this.nombrePalettesAuSol == 0
+				&& this.nombrePalettes100x120 == 0
+				&& this.nombrePalettes80x120 == 0
+				&& this.nombrePalettes60x80 == 0
+			)
 				this.okStation = "clôturé à zéro";
 			else if(this.expedieStation)
 				this.okStation = "OK";
