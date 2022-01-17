@@ -167,7 +167,7 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
         Assertions.assertFalse(result.getData().isEmpty());
-        Assertions.assertNotNull(result.getData().get("ll_nordre"));
+        Assertions.assertNotNull(result.getData().get("ls_nordre"));
     }
 
     @Test
