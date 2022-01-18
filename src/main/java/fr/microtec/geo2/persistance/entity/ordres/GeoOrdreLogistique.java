@@ -43,6 +43,9 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
 	private GeoFournisseur fournisseur;
 
+	@Column(name = "fou_code", insertable = false, updatable = false)
+	private String codeFournisseur;
+
 	@Column(name = "flag_exped_fournni")
 	private Boolean expedieStation;
 
