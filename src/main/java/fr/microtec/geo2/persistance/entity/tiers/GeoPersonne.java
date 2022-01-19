@@ -40,4 +40,7 @@ public class GeoPersonne extends ValidateAndModifiedEntity {
 	@Column(name = "per_role")
 	private GeoRole role;
 
+	@Column(name = "ind_pres_spec")
+	private String indicateurPresentationSUP;
+
 }

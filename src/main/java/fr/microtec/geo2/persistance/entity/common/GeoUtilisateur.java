@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.common;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.security.Geo2SecurityRoles;
 import lombok.Data;
@@ -57,6 +58,14 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sco_code", insertable = false, updatable = false)
 	private GeoSecteur secteurCommercial;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "per_codecom")
+	private GeoPersonne assistante;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "per_codeass")
+	private GeoPersonne commercial;
 
 	@Lob
 	@Column(name = "config_tuiles_ordres", columnDefinition = "BLOB")

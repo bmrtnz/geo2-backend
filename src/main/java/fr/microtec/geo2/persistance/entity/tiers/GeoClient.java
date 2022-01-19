@@ -217,6 +217,12 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@JoinColumn(name = "per_code_ass")
 	private GeoPersonne assistante;
 
+	@Column(name = "dev_tx_fix")
+	private Float deviseTauxFix;
+
+	@Column(name = "dat_dev_tx_fix")
+	private LocalDate dateDeviseTauxFix;
+
 	@Column(name = "enc_references")
 	private String referenceCoface;
 
@@ -279,6 +285,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
 	@Column(name = "rem_hf_tx")
 	private Float tauxRemiseHorsFacture;
+
+	@Column(name = "rem_sf_tx_mdd")
+	private Float remiseSurFactureMDDTaux;
 
 	@Column(name = "rem_sf_tx")
 	private Float tauxRemiseParFacture;
