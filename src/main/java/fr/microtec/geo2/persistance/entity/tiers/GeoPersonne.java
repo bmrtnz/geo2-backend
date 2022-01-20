@@ -1,12 +1,16 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Data
@@ -28,7 +32,7 @@ public class GeoPersonne extends ValidateAndModifiedEntity {
 	@Column(name = "per_service")
 	private String service;
 
-	@Column(name = "per_username")
+	@Column(name = "per_username", insertable = false, updatable = false)
 	private String nomUtilisateur;
 
 	@Column(name = "per_imprim")
@@ -42,5 +46,9 @@ public class GeoPersonne extends ValidateAndModifiedEntity {
 
 	@Column(name = "ind_pres_spec")
 	private String indicateurPresentationSUP;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "per_username")
+	private GeoUtilisateur utilisateur;
 
 }
