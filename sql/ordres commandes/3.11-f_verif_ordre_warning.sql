@@ -582,4 +582,9 @@ BEGIN
 
     res := 1;
     msg := ls_rc;
+
+    IF msg IS null or msg = ''
+   	THEN msg := 'OK';
+    END IF;
+    
 END;
