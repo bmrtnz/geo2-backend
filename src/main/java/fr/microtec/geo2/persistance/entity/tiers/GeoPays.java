@@ -28,7 +28,6 @@ public class GeoPays extends ValidateAndModifiedEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pays")
 	private List<GeoClient> clients;
 
-	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sco_code", nullable = false)
 	private GeoSecteur secteur;
