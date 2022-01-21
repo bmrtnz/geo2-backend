@@ -101,7 +101,7 @@ AS
     ldc_trp_decimal number := 0;
 
     type tabNumber is table of number;
-    ldc_tab_trp_repartition tabNumber;
+    ldc_tab_trp_repartition tabNumber := tabNumber();
     ls_orl_ref varchar2(50);
     ls_orl_ref_old varchar2(50);
     ldc_nb_pal_soldanslecamion number;
@@ -111,13 +111,13 @@ AS
     ld_lig_frais_plateforme number :=0;
     ld_ord_frais_plateforme_ordre number := 0;
     li_row number := 0;
-    li_row_tot number;
+    li_row_tot number := 0;
 
     type tabString is table of varchar2(50);
-    ls_tab_orl_ref tabString;
+    ls_tab_orl_ref tabString := tabString();
     ll_nb_pal_soldanslecamion_tot varchar2(50);
     ll_nb_pal_soldanslecamion_exp varchar2(50);
-    li_tab_trp_repartition_exp tabString;
+    li_tab_trp_repartition_exp tabString := tabString();
     ls_flag_cloture_lig varchar2(50);
     ls_typordre varchar2(50);
 
@@ -452,9 +452,15 @@ BEGIN
                     if ldc_nb_pal_soldanslecamion > 0 then
                         li_row_tot := li_row_tot + 1;
 
+                        ldc_tab_trp_repartition.extend(1);
                         ldc_tab_trp_repartition(li_row_tot) := ldc_nb_pal_soldanslecamion;
+                       
                         ldc_nb_pal_soldanslecamion_tot := ldc_nb_pal_soldanslecamion_tot + ldc_nb_pal_soldanslecamion;
+                       
+                        ls_tab_orl_ref.extend(1);
 					    ls_tab_orl_ref(li_row_tot) := ls_orl_ref;
+					   
+					    li_tab_trp_repartition_exp.extend(1); 
 					    li_tab_trp_repartition_exp(li_row_tot) := ld_exp_nb_pal;
                     end if;
 
