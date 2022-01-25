@@ -115,9 +115,11 @@ AS
 
     type tabString is table of varchar2(50);
     ls_tab_orl_ref tabString := tabString();
-    ll_nb_pal_soldanslecamion_tot varchar2(50);
-    ll_nb_pal_soldanslecamion_exp varchar2(50);
-    li_tab_trp_repartition_exp tabString := tabString();
+
+    ll_nb_pal_soldanslecamion_tot NUMBER := 0;
+    ll_nb_pal_soldanslecamion_exp NUMBER := 0;
+    li_tab_trp_repartition_exp tabNumber := tabNumber();
+    
     ls_flag_cloture_lig varchar2(50);
     ls_typordre varchar2(50);
 
