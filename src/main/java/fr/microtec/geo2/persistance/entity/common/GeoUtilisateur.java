@@ -1,5 +1,21 @@
 package fr.microtec.geo2.persistance.entity.common;
 
+import java.util.Collection;
+import java.util.HashMap;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
@@ -7,13 +23,6 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.security.Geo2SecurityRoles;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -67,9 +76,10 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "utilisateur")
-	private List<GeoPersonne> personnes;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "nom_utilisateur", referencedColumnName = "per_username", insertable = false, updatable = false)
+	private GeoPersonne personne;
 
 	@Column(name = "profile_client", insertable = false, updatable = false)
 	private String profileClient;

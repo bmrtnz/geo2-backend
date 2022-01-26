@@ -1,9 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,11 +10,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_person")
 @Entity
-public class GeoPersonne extends ValidateAndModifiedEntity {
+public class GeoPersonne extends ValidateAndModifiedEntity implements Serializable {
 
 	@Id
 	@Column(name = "per_code")
@@ -48,7 +50,7 @@ public class GeoPersonne extends ValidateAndModifiedEntity {
 	private String indicateurPresentationSUP;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "per_username")
+	@JoinColumn(name = "per_username", insertable = false, updatable = false)
 	private GeoUtilisateur utilisateur;
 
 }
