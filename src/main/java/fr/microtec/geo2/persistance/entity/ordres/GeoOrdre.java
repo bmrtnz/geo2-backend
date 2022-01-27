@@ -451,7 +451,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "ind_exclu_frais_pu")
 	private Boolean exclusionFraisPU;
 
-	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) > 0 THEN 'N' ELSE 'O' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF AND O.ORD_REF = ord_ref)")
+	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) = 0 THEN 'O' ELSE 'N' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF AND O.ORD_REF = ord_ref)")
 	private Boolean expedieAuComplet;
 
 	@Transient
@@ -466,7 +466,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 		this.setStatut(GeoOrdreStatut.NON_CONFIRME);
 		if (this.getFlagPublication()) this.setStatut(GeoOrdreStatut.CONFIRME);
 		if (!this.getTracabiliteDetailPalettes().isEmpty()) this.setStatut(GeoOrdreStatut.EN_PREPARATION);
-		if (this.getExpedieAuComplet()) this.setStatut(GeoOrdreStatut.EXPEDIE);
+		if (!this.getLignes().isEmpty() && this.getExpedieAuComplet()) this.setStatut(GeoOrdreStatut.EXPEDIE);
 		if (this.getBonAFacturer()) this.setStatut(GeoOrdreStatut.A_FACTURER);
 		if (this.getFacture()) this.setStatut(GeoOrdreStatut.FACTURE);
 		if (this.getFlagAnnule()) this.setStatut(GeoOrdreStatut.ANNULE);
