@@ -5,6 +5,8 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -87,6 +89,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // Require for skip error (Max cursor open) in oracle
     public FunctionResult fControlOrdreBaf(String refOrdre, String scoCode) {
         FunctionQuery query = this.build("F_CONTROL_ORDRE_BAF");
 
