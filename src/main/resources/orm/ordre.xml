@@ -44,7 +44,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         ),
         2
       ) as somme_colis_palette_bis,
-      rownum,
+      geo_ordre.ord_ref,
       geo_ordre.code_chargement,
       geo_entrep.cen_code,
       geo_entrep.raisoc,
@@ -92,7 +92,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       )
       and geo_ordlog.fou_code =geo_fourni.fou_code                                                 
     GROUP by
-      rownum,
+      geo_ordre.ord_ref,
       geo_ordre.code_chargement,
       geo_entrep.cen_code,
       geo_entrep.raisoc,
