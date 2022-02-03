@@ -1,13 +1,12 @@
 -- of_init_article(arg_art_ref)
 
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_INIT_ARTICLE" (
-    arg_art_ref in AVI_ART_GESTION.ART_REF%TYPE,
     arg_ord_ref in GEO_ORDRE.ORD_REF%TYPE,
+    arg_art_ref in AVI_ART_GESTION.ART_REF%TYPE,
 	arg_soc_code in geo_societe.SOC_CODE%TYPE,
-	arg_sco_code in geo_SECCOM.SCO_CODE%TYPE,
-	arg_typ_ordre in varchar2,
-	arg_ind_exclu_frais_pu in varchar2,
-	arg_user in GEO_USER.NOM_UTILISATEUR%TYPE,
+	-- arg_sco_code in geo_SECCOM.SCO_CODE%TYPE,
+	-- arg_typ_ordre in varchar2,
+	-- arg_ind_exclu_frais_pu in varchar2,
     res out number,
     msg out varchar2
 )
@@ -86,15 +85,15 @@ begin
 	left join geo_client c on o.cli_ref = c.cli_ref
 	where ord_ref = arg_ord_ref;
 
-	if arg_sco_code is not null then
-		ls_sco_code := arg_sco_code;
-	end if;
-	if arg_typ_ordre is not null then
-		ls_typ_ordre := arg_typ_ordre;
-	end if;
-	if arg_ind_exclu_frais_pu is not null then
-		ls_ind_exclu_frais_pu := arg_ind_exclu_frais_pu;
-	end if;
+	-- if arg_sco_code is not null then
+	-- 	ls_sco_code := arg_sco_code;
+	-- end if;
+	-- if arg_typ_ordre is not null then
+	-- 	ls_typ_ordre := arg_typ_ordre;
+	-- end if;
+	-- if arg_ind_exclu_frais_pu is not null then
+	-- 	ls_ind_exclu_frais_pu := arg_ind_exclu_frais_pu;
+	-- end if;
 
 	if (arg_art_ref <> '') OR (arg_art_ref IS NOT null) then
 
