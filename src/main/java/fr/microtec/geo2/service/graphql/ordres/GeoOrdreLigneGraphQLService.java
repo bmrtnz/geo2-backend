@@ -13,6 +13,7 @@ import fr.microtec.geo2.service.OrdreLigneService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
@@ -74,6 +75,11 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 		@GraphQLArgument(name = "id") String id
 	) {
 		return super.getOne(id);
+  }
+
+  @GraphQLMutation
+  public GeoOrdreLigne saveContact(GeoOrdreLigne ordreLigne) {
+	  return this.save(ordreLigne);
   }
 
 }
