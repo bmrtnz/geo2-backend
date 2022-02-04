@@ -1,7 +1,9 @@
 -- of_init_artref_grp(arg_row)
 
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_INIT_ARTREF_GRP" (
-    cur_orl_ref GEO_ORDLIG.orl_ref%type
+    cur_orl_ref GEO_ORDLIG.orl_ref%type,
+	res out number,
+    msg out varchar2
 )
 AS
 	ls_artref varchar2(50);
@@ -18,6 +20,9 @@ AS
 	is_edi_ord varchar2(50);
 	is_gtin_colis varchar2(50);
 begin
+
+	res := 0;
+	msg := '';
 
 	select ord_ref, ref_edi_ordre
 	into cur_ord_ref, is_edi_ord
@@ -80,4 +85,6 @@ begin
 			
 	END IF;
 
+	msg := 'OK';
+	return;
 end;

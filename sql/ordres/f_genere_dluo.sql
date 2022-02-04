@@ -10,7 +10,9 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_GENERE_DLUO" (
     arg_param in varchar2,
     arg_datexp in date,
     arg_datliv in date,
-	arg_dluo out varchar
+	arg_dluo out varchar,
+	res out number,
+    msg out varchar2
 )
 AS
 	ll_pos_deb number;
@@ -23,6 +25,9 @@ AS
 	ls_mois_alpha varchar2(50);
 	ld_date date;
 begin
+
+	res := 0;
+	msg := '';
 
 		-- on isole d'abord la section paramètre
 	ll_pos_deb	:= instr(arg_param, '%');
@@ -74,6 +79,8 @@ begin
 	ls_rc := ls_rc ||	substr(arg_param, ll_pos_fin + 1);
 
 	arg_dluo := ls_rc;
+
+	msg := 'OK';
 	return;
 
 end;
