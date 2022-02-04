@@ -128,4 +128,36 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult ofInitArticle(String ordRef, String artRef, String socCode) {
+        FunctionQuery query = this.build("OF_INIT_ARTICLE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_art_ref", String.class, artRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fGenereDluo(String input, LocalDate dateExp, LocalDate dateLiv) {
+        FunctionQuery query = this.build("F_GENERE_DLUO");
+
+        query.attachInput("arg_param", String.class, input);
+        query.attachInput("arg_datexp", LocalDate.class, dateExp);
+        query.attachInput("arg_datliv", LocalDate.class, dateLiv);
+        query.attachOutput("arg_dluo", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofInitArtrefGrp(String orlRef) {
+        FunctionQuery query = this.build("OF_INIT_ARTREF_GRP");
+
+        query.attachInput("cur_orl_ref", String.class, orlRef);
+
+        return query.fetch();
+    }
 }
