@@ -186,4 +186,13 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result.getData().get("arg_dluo"));
     }
+
+    @Test
+    public void testOfInitArtrefGrp() {
+        FunctionResult result = this.functionOrdreRepository
+        .ofInitArtrefGrp("002068");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes());
+    }
 }

@@ -24,10 +24,11 @@ begin
 	res := 0;
 	msg := '';
 
-	select ord_ref, ref_edi_ordre
+	select o.ord_ref, o.ref_edi_ordre
 	into cur_ord_ref, is_edi_ord
-	from geo_ordre
-	where ord_ref = cur_ord_ref;
+	from geo_ordlig ol
+	left join geo_ordre o on o.ord_ref = ol.ord_ref
+	where orl_ref = cur_orl_ref;
 
 	select ol.art_ref, ol.art_ref_kit, ol.gtin_colis_kit, aan.gtin_colis
 	into ls_artref, ls_artref_row, ls_gtin_row, is_gtin_colis
