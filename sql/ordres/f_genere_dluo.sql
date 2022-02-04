@@ -10,7 +10,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_GENERE_DLUO" (
     arg_param in varchar2,
     arg_datexp in date,
     arg_datliv in date,
-	arg_dluo out varchar,
+	arg_dluo out varchar2,
 	res out number,
     msg out varchar2
 )
@@ -58,7 +58,7 @@ begin
 	if ll_pos_m > 0 then
 			-- il y a un mois transformé en A ... L (A=janvier ... L=décembre)
 			-- on le supprime de la chaîne tout en gardant sa position
-		ls_wrk	:= substr(ls_param, 0, ll_pos_m - 1) + substr(ls_param, ll_pos_m + 1);
+		ls_wrk	:= substr(ls_param, 0, ll_pos_m - 1) || substr(ls_param, ll_pos_m + 1);
 			-- on convertit la date en string en supposant que les caractères standards sont utilisés (dd mm yy ou yyyy)
 		ls_tmp	:=	to_char(ld_date, ls_wrk);
 			-- on réintègre le mois converti à sa place initiale en supposant que la chaine formattée est de même structure que le format

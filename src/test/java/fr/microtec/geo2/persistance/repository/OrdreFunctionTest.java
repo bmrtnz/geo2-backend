@@ -179,4 +179,11 @@ public class OrdreFunctionTest {
         Assertions.assertEquals("%%% f_nouvel_ordre : société TRUC inconnue", result.getMsg());
     }
 
+    @Test
+    public void testFGenereDluo() {
+        FunctionResult result = this.functionOrdreRepository
+        .fGenereDluo("%DEMdd%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+
+        Assertions.assertNotNull(result.getData().get("arg_dluo"));
+    }
 }
