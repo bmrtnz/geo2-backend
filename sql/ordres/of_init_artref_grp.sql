@@ -86,6 +86,7 @@ begin
 			
 	END IF;
 
+	res := 1;
 	msg := 'OK';
 	return;
 end;

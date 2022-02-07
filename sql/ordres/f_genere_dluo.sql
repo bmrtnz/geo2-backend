@@ -80,6 +80,7 @@ begin
 
 	arg_dluo := ls_rc;
 
+	res := 1;
 	msg := 'OK';
 	return;
 

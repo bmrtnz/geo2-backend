@@ -110,7 +110,6 @@ begin
 
 		exception
 			when no_data_found then
-				res := 1;
 				msg := SQLERRM;
 				return;
 		end;
@@ -267,7 +266,6 @@ begin
 			where art_ref = arg_art_ref;
 		exception
 			when no_data_found then
-				res := 1;
 				msg := SQLERRM;
 				return;
 		end;
@@ -323,6 +321,7 @@ begin
 
 	end if;
 
+	res := 1;
 	msg := 'OK';
 	return;
 end;
