@@ -253,16 +253,4 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     return ordresBaf;
   }
 
-  public FunctionResult ofInitArticle(
-    String ordreRef,
-    String articleRef,
-    String societeCode
-  ) {
-    return this.functionOrdreRepository
-    .ofInitArticle(
-      ordreRef,
-      articleRef,
-      societeCode
-    );
-  }
 }

@@ -62,7 +62,7 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "articleRef") String articleRef,
             @GraphQLArgument(name = "societeCode") String societeCode
     ) {
-        return this.ordreService.ofInitArticle(ordreRef, articleRef, societeCode);
+        return this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
     }
 
 }
