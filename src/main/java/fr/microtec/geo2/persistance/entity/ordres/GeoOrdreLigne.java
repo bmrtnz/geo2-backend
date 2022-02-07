@@ -298,7 +298,11 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 			this.pourcentageMargeNette = this.totalVenteBrut != 0d ? (this.margeBrute - this.totalObjectifMarge) / this.totalVenteBrut : 0d;
 		} catch (Exception e) {}
 
-		Character dimensions = this.getTypePalette().getDimensions();
+		GeoTypePalette typePalette = this.getTypePalette();
+		if (typePalette == null) return;
+		Character dimensions = typePalette.getDimensions();
+		if (dimensions == null) return;
+		
 		this.nombreColisPaletteByDimensions = 0f;
 
 		if (
