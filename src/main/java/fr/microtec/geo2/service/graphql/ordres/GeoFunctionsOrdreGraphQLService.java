@@ -56,4 +56,13 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.ordreService.allDepartBaf(societeCode, secteurCode, clientCode, entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofInitArticle(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "articleRef") String articleRef,
+            @GraphQLArgument(name = "societeCode") String societeCode
+    ) {
+        return this.ordreService.ofInitArticle(ordreRef, articleRef, societeCode);
+    }
+
 }
