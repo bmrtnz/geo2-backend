@@ -195,4 +195,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.getRes());
     }
+
+    @Test
+    public void testOfInitArticle() {
+        FunctionResult result = this.functionOrdreRepository
+        .ofInitArticle("1434640", "046353", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes());
+    }
 }

@@ -5,8 +5,8 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_INIT_ARTICLE" (
     arg_art_ref in AVI_ART_GESTION.ART_REF%TYPE,
 	arg_soc_code in geo_societe.SOC_CODE%TYPE,
 	-- arg_sco_code in geo_SECCOM.SCO_CODE%TYPE,
-	-- arg_typ_ordre in varchar2,
-	-- arg_ind_exclu_frais_pu in varchar2,
+	-- arg_typ_ordre in GEO_ORDRE.ORD_REF%TYPE,
+	-- arg_ind_exclu_frais_pu in char,
     res out number,
     msg out varchar2
 )
@@ -62,7 +62,7 @@ AS
 	cur_orl_ref GEO_ORDLIG.orl_ref%type;
 	soc_dev_code GEO_DEVISE.dev_code%type;
 	is_cur_cli_ref GEO_CLIENT.cli_ref%type;
-	is_dluo_client GEO_CLIENT.dluo%type;
+	is_dluo_client varchar2(50);
 
 	CURSOR C_CERTIFS
 	IS
@@ -79,8 +79,8 @@ begin
 
 	select f_seq_orl_seq() into cur_orl_ref from dual;
 	select dev_code into soc_dev_code from geo_societe where soc_code = arg_soc_code;
-	select c.cli_ref, c.dluo
-	into is_cur_cli_ref, is_dluo_client
+	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code
+	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code
 	from geo_ordre o
 	left join geo_client c on o.cli_ref = c.cli_ref
 	where ord_ref = arg_ord_ref;
@@ -125,6 +125,7 @@ begin
 			-- end if;
 			insert into geo_ordlig (
 				orl_ref,
+				ord_ref,
 				art_ref,
 				esp_code
 				-- remsf_tx,
@@ -132,6 +133,7 @@ begin
 			)
 			values (
 				cur_orl_ref,
+				arg_ord_ref,
 				ls_art_ref,
 				ls_esp_code
 				-- id_remsf,
@@ -148,23 +150,23 @@ begin
 			
 			f_recup_frais(ls_var_code, ls_ccw_code, ls_sco_code, ls_tvt_code, ll_article_mode_culture, ls_ori_code, ll_k_frais, msg);
 
-			select frais_pu, frais_unite, accompte, perequation
-			into ld_frais_pu_mark, ls_frais_unite_mark, ld_accompte, ls_perequation
-			from geo_attrib_frais
-			where k_frais = ll_k_frais;
+			begin
+				select frais_pu, frais_unite, accompte, perequation
+				into ld_frais_pu_mark, ls_frais_unite_mark, ld_accompte, ls_perequation
+				from geo_attrib_frais
+				where k_frais = ll_k_frais;
 
-			ld_frais_pu := 0;
-			ld_prix_mini := 0;
-
-			if ld_frais_pu_mark is not null then
 				ld_frais_pu := ld_frais_pu_mark;
-			end if;
-			if ls_frais_unite_mark is not null then
 				ls_frais_unite := ls_frais_unite_mark;
-			end if;
-			if  ls_perequation =  'O' then
-				ld_prix_mini := ld_accompte;
-			end if;
+				if  ls_perequation =  'O' then
+					ld_prix_mini := ld_accompte;
+				else
+					ld_prix_mini := 0;
+				end if;
+			EXCEPTION WHEN NO_DATA_FOUND THEN -- Permet de passer a la suite
+				ld_frais_pu := 0;
+				ld_prix_mini := 0;
+			end;
 
 			--fin marketing
 			
@@ -246,7 +248,7 @@ begin
 					end if;
 
 				-- et on récupère le libellé correspondant limité à 35
-				f_genere_dluo(is_dluo_client, ld_date_exp, ld_date_liv, ls_rc);
+				f_genere_dluo(is_dluo_client, ld_date_exp, ld_date_liv, ls_rc, res, msg);
 				ls_rc := substr(ls_rc,0,35);
 				-- et on initialise le  champ correspondant dans la ligne
 				update geo_ordlig set lib_dlv = ls_rc where orl_ref = cur_orl_ref;
@@ -299,7 +301,7 @@ begin
 		-- End IF
 
 		--Fin LLEF
-		of_init_artref_grp(cur_orl_ref);
+		of_init_artref_grp(cur_orl_ref, res, msg);
 			
 		-- CHECK FRONT
 		--DEBUT LLEF AUTOM. IND. TRANSP. + tri et emballage retrait
@@ -321,6 +323,6 @@ begin
 
 	end if;
 
-	res := 'OK';
+	msg := 'OK';
 	return;
 end;
