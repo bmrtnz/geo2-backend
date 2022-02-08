@@ -246,8 +246,9 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@Column(name = "stock_nb_resa")
 	private Float nombreReservationsSurStock;
 
-	@Column(name = "propr_code")
-	private String proprietaireMarchandise;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "propr_code", referencedColumnName = "fou_code")
+	private GeoFournisseur proprietaireMarchandise;
 
 	@Column(name = "promo_code")
 	private String codePromo;
