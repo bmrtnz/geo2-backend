@@ -193,7 +193,7 @@ public class OrdreFunctionTest {
         .ofInitArtrefGrp("002068");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes());
+        Assertions.assertEquals(1, result.getRes());
     }
 
     @Test
@@ -202,6 +202,6 @@ public class OrdreFunctionTest {
         .ofInitArticle("1434640", "046353", "SA");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes());
+        Assertions.assertEquals(1, result.getRes());
     }
 }
