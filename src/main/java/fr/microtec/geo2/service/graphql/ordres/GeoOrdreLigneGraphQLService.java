@@ -82,4 +82,9 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 	  return this.save(ordreLigne);
   }
 
+  @GraphQLMutation
+  public boolean deleteOrdreLigne(String id) {
+	  return this.delete(id);
+  }
+
 }
