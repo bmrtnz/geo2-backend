@@ -73,7 +73,7 @@ public class FileSystemService {
 	 */
 	@SneakyThrows
 	public Path move(Path from, String dest) {
-		Path to = this._getBasePath(dest);
+		Path to = this._getBasePath(dest).resolve(from.getFileName());
 
 		return Files.move(from, to);
 	}
