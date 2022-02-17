@@ -13,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -49,8 +47,10 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransitaire;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypeCamion;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -58,7 +58,28 @@ import lombok.EqualsAndHashCode;
 @DynamicInsert
 @DynamicUpdate
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<GeoOrdre> {
+
+	// constructor to fetch statut
+	public GeoOrdre(
+		Boolean flagPublication,
+		// Collection<GeoTracabiliteDetailPalette> tracabiliteDetailPalettes,
+		// Collection<GeoOrdreLigne> lignes,
+		Boolean expedieAuComplet,
+		Boolean bonAFacturer,
+		Boolean facture,
+		Boolean flagAnnule
+	) {
+		this.setFlagPublication(flagPublication);
+		// this.setTracabiliteDetailPalettes((List<GeoTracabiliteDetailPalette>)tracabiliteDetailPalettes);
+		// this.setLignes((List<GeoOrdreLigne>)lignes);
+		this.setExpedieAuComplet(expedieAuComplet);
+		this.setBonAFacturer(bonAFacturer);
+		this.setFacture(facture);
+		this.setFlagAnnule(flagAnnule);
+	}
 
 	@Id
 	@Column(name = "ord_ref")
@@ -465,18 +486,6 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Transient
 	private GeoOrdreStatut statut;
-
-	@PostLoad
-    @PostUpdate
-    public void postLoadUpdate() {
-        this.setStatut(GeoOrdreStatut.NON_CONFIRME);
-		if (this.getFlagPublication()) this.setStatut(GeoOrdreStatut.CONFIRME);
-		if (!this.getTracabiliteDetailPalettes().isEmpty()) this.setStatut(GeoOrdreStatut.EN_PREPARATION);
-		if (!this.getLignes().isEmpty() && this.getExpedieAuComplet()) this.setStatut(GeoOrdreStatut.EXPEDIE);
-		if (this.getBonAFacturer()) this.setStatut(GeoOrdreStatut.A_FACTURER);
-		if (this.getFacture()) this.setStatut(GeoOrdreStatut.FACTURE);
-		if (this.getFlagAnnule()) this.setStatut(GeoOrdreStatut.ANNULE);
-    }
 
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();

@@ -57,14 +57,14 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 
 	private Page<T> fetchPage(final String search, Pageable pageable, final Set<String> fields)
 	{
-		val tSpecification = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
-		return this.fetchPage(tSpecification, pageable, fields);
+		Specification<T> spec = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
+		return this.fetchPage(spec, pageable, fields);
 	}
 
 	private Page<T> fetchPage(final Specification<T> spec, Pageable pageable, final Set<String> fields)
 	{
 		pageable = (pageable == null) ? PageRequest.of(0, 20) : pageable;
-		val page = this.repository.findAllWithPagination(spec, pageable, this.clazz, CustomUtils.parseSelect(fields));
+		Page<T> page = this.repository.findAllWithPagination(spec, pageable, this.clazz, CustomUtils.parseSelect(fields));
 
 		return page;
 	}
