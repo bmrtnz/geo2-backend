@@ -42,11 +42,11 @@ BEGIN
         fetch C_MARK INTO  ll_k_frais,  ls_cat,  ls_sco,  ls_tvt,  ls_culture,  ls_origine,  ld_frais_pu_mark,  ls_frais_unite_mark,  ld_accompte,  ls_prerequation;
         EXIT WHEN C_MARK%notfound;
 
-        lb_ya_cat := CASE ls_cat WHEN arg_cat_code THEN 1 ELSE 0 END;
-        lb_ya_sco := CASE ls_sco WHEN arg_sco_code THEN 1 ELSE 0 END;
-		lb_ya_tvt := CASE ls_tvt WHEN arg_tvt_code THEN 1 ELSE 0 END;
-		lb_ya_culture := CASE ls_culture WHEN to_char(arg_mode_culture) THEN 1 ELSE 0 END;
-		lb_ya_origine := CASE ls_origine WHEN to_char(arg_origine) THEN 1 ELSE 0 END;
+        lb_ya_cat := CASE ls_cat WHEN arg_cat_code THEN 1 WHEN '%' THEN 1 ELSE 0 END;
+        lb_ya_sco := CASE ls_sco WHEN arg_sco_code THEN 1 WHEN '%' THEN 1 ELSE 0 END;
+		lb_ya_tvt := CASE ls_tvt WHEN arg_tvt_code THEN 1 WHEN '%' THEN 1 ELSE 0 END;
+		lb_ya_culture := CASE ls_culture WHEN to_char(arg_mode_culture) THEN 1 WHEN '%' THEN 1 ELSE 0 END;
+		lb_ya_origine := CASE ls_origine WHEN arg_origine THEN 1 WHEN '%' THEN 1 ELSE 0 END;
 
         if lb_ya_cat = 1 and lb_ya_sco = 1 and lb_ya_tvt = 1 and lb_ya_culture = 1 and lb_ya_origine = 1 then
             CLOSE C_MARK;
