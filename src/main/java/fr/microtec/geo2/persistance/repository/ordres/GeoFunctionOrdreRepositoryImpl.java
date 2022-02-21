@@ -160,4 +160,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fInitBlocageOrdre(String ordRef, String user) {
+        FunctionQuery query = this.build("F_INIT_BLOCAGE_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_user", String.class, user);
+        query.attachOutput("bloquer", Character.class);
+
+        return query.fetch();
+    }
 }

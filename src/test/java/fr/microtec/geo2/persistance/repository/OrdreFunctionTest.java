@@ -204,4 +204,24 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testfInitBlocageOrdreWithGeoClient2() {
+        FunctionResult result = this.functionOrdreRepository
+        .fInitBlocageOrdre("1434640", "LINO");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals('N', result.getData().get("bloquer"));
+    }
+
+    @Test
+    public void testfInitBlocageOrdreTypeRPF() {
+        FunctionResult result = this.functionOrdreRepository
+        .fInitBlocageOrdre("1503751", "VEGA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals('O', result.getData().get("bloquer"));
+    }
 }

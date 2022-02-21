@@ -33,6 +33,11 @@ public interface GeoFunctionOrdreRepository {
      */
     FunctionResult ofInitArticle(String ordRef, String artRef, String socCode);
 
+    /**
+     * Indicateur du blocage de l'ordre dont le départ est aujourd'hui
+     */
+    FunctionResult fInitBlocageOrdre(String ordRef, String user);
+
     // Sub procedures, declare only for testing
     FunctionResult fCalculMarge(String refOrdre);
     FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture, String origine);
