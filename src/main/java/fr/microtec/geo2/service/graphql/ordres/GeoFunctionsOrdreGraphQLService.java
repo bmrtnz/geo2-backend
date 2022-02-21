@@ -65,4 +65,12 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fInitBlocageOrdre(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "userName") String userName
+    ) {
+        return this.repository.fInitBlocageOrdre(ordreRef, userName);
+    }
+
 }

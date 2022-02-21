@@ -167,7 +167,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_user", String.class, user);
-        query.attachOutput("bloquer", Character.class);
+        query.attachOutput("bloquer", Character.class, v -> ((Character)v).equals('O'));
 
         return query.fetch();
     }
