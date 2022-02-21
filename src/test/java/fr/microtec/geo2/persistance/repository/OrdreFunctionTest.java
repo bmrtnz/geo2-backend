@@ -212,7 +212,7 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
-        Assertions.assertEquals('N', result.getData().get("bloquer"));
+        Assertions.assertEquals(false, result.getData().get("bloquer"));
     }
 
     @Test
@@ -222,6 +222,6 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
-        Assertions.assertEquals('O', result.getData().get("bloquer"));
+        Assertions.assertEquals(true, result.getData().get("bloquer"));
     }
 }
