@@ -195,6 +195,10 @@ public class CustomUtils
             });
     }
 
+    public static Map<String, Object> parseArgumentFromEnv(final ResolutionEnvironment env, String argument) {
+        return env.dataFetchingEnvironment.getArgument(argument);
+    }
+
     public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env)
 	{
 		return CustomUtils.parseSelectFromEnv(env, "edges/node/**");

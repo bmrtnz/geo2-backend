@@ -3,11 +3,9 @@ package fr.microtec.geo2.service.graphql;
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -145,11 +143,18 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * @param env GraphQL environment.
 	 * @return Merged entity data.
 	 */
-	public static <T> T merge(T from, T to, ResolutionEnvironment env) {
-		// TODO filter null value from environment
+	public static <T> T merge(T from, T to, Map<String, Object> graphQlArguments) {
+		List<String> nullArgumentsName = graphQlArguments
+				.entrySet()
+				.stream()
+				.filter(e -> e.getValue() == null)
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
+
 		BeanWrapper src = new BeanWrapperImpl(from);
 		PropertyDescriptor[] pds = src.getPropertyDescriptors();
 		String[] ignoredProps = Arrays.stream(pds)
+				.filter(p -> !nullArgumentsName.contains(p.getName()))
 				.filter(p -> {
 					try {
 						return src.getPropertyValue(p.getName()) == null;
@@ -171,14 +176,14 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * @param data Entity data to save.
 	 * @return The saved entity.
 	 */
-	protected T save(T data) {
+	protected T save(T data, Map<String, Object> graphQlArguments) {
 		ID id = (ID) this.getId(data);
 
 		if (id != null) {
 			Optional<T> optionalEntity = this.repository.findById(id);
 
 			if (optionalEntity.isPresent()) {
-				data = this.merge(data, optionalEntity.get(), null);
+				data = this.merge(data, optionalEntity.get(), graphQlArguments);
 			}
 		}
 

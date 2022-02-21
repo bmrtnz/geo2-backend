@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.tiers;
 
+import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
@@ -12,6 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @GraphQLApi
@@ -39,8 +41,8 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 	}
 
 	@GraphQLMutation
-	public GeoClient saveClient(GeoClient client) {
-		return this.save(client);
+	public GeoClient saveClient(GeoClient client, @GraphQLEnvironment ResolutionEnvironment env) {
+		return this.save(client, CustomUtils.parseArgumentFromEnv(env, "client"));
 	}
 
 	@GraphQLMutation
