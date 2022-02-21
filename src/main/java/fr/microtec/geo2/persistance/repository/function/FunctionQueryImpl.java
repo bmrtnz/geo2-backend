@@ -1,26 +1,34 @@
 package fr.microtec.geo2.persistance.repository.function;
 
-import fr.microtec.geo2.persistance.entity.FunctionResult;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import javax.persistence.ParameterMode;
+
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.procedure.internal.ProcedureCallImpl;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.ParameterMode;
-import java.util.ArrayList;
-import java.util.List;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
 
 public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements FunctionQuery {
     private final List<String> outputParameters;
     private String outputCursor;
+    private final Map<String, Function<Object, ?>> mappers;
 
     public FunctionQueryImpl(SharedSessionContractImplementor session, String procedureName) {
         super(session, procedureName);
         this.outputParameters = new ArrayList<>();
+        this.mappers = new HashMap<>();
     }
 
     public FunctionQueryImpl(final SharedSessionContractImplementor session, String procedureName, Class... resultClasses) {
         super(session, procedureName, resultClasses);
         this.outputParameters = new ArrayList<>();
+        this.mappers = new HashMap<>();
     }
 
     @Override
@@ -35,6 +43,12 @@ public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements Functi
 
     @Override
     public FunctionQuery attachOutput(String name, Class<?> type) {
+        return this.attach(name, type, ParameterMode.OUT, null);
+    }
+
+    @Override
+    public FunctionQuery attachOutput(String name, Class<?> type, Function<Object, ?> mapper) {
+        mappers.put(name, mapper);
         return this.attach(name, type, ParameterMode.OUT, null);
     }
 
@@ -72,7 +86,12 @@ public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements Functi
         this.getOutputParameters()
                 .stream()
                 .filter(s -> !(s.equals("res") || s.equals("msg")))
-                .forEach(s -> builder.withData(s, this.getOutputParameterValue(s)));
+                .forEach(s -> {
+                    Object output = this.getOutputParameterValue(s);
+                    if(this.mappers.containsKey(s))
+                        output = this.mappers.get(s).apply(output);
+                    builder.withData(s, output);
+                });
 
         if (StringUtils.hasText(this.outputCursor)) {
             builder.cursorData((List<Object>) this.getResultList());
