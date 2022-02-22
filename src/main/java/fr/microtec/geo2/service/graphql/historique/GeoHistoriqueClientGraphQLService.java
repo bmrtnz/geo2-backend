@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import fr.microtec.geo2.persistance.repository.historique.GeoHistoriqueClientRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLMutation;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
@@ -17,8 +19,8 @@ public class GeoHistoriqueClientGraphQLService extends GeoAbstractGraphQLService
 	}
 
 	@GraphQLMutation
-	public GeoHistoriqueClient saveHistoriqueClient(GeoHistoriqueClient historiqueClient) {
-		return this.save(historiqueClient);
+	public GeoHistoriqueClient saveHistoriqueClient(GeoHistoriqueClient historiqueClient, @GraphQLEnvironment ResolutionEnvironment env) {
+		return this.saveEntity(historiqueClient, env);
 	}
 
 }

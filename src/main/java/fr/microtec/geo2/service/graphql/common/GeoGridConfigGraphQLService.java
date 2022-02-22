@@ -2,8 +2,6 @@ package fr.microtec.geo2.service.graphql.common;
 
 import java.util.Optional;
 
-import io.leangen.graphql.annotations.*;
-import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -13,6 +11,12 @@ import fr.microtec.geo2.persistance.entity.common.GeoGridConfig;
 import fr.microtec.geo2.persistance.entity.common.GeoGridConfigKey;
 import fr.microtec.geo2.persistance.repository.common.GeoGridConfigRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
+import io.leangen.graphql.annotations.GraphQLNonNull;
+import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
@@ -41,8 +45,8 @@ public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGr
   }
 
   	@GraphQLMutation
-	public GeoGridConfig saveGridConfig(GeoGridConfig gridConfig) {
-		return this.save(gridConfig);
+	public GeoGridConfig saveGridConfig(GeoGridConfig gridConfig, @GraphQLEnvironment ResolutionEnvironment env) {
+		return this.saveEntity(gridConfig, env);
 	}
 
 	@GraphQLMutation

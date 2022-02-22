@@ -199,6 +199,13 @@ public class CustomUtils
         return env.dataFetchingEnvironment.getArgument(argument);
     }
 
+    public static <T> String classToArgument(Class<T> clazz) {
+        String arg = clazz.getSimpleName();
+        arg = arg.substring(3);
+        arg = arg.substring(0,1).toLowerCase() + arg.substring(1);
+        return arg;
+    }
+
     public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env)
 	{
 		return CustomUtils.parseSelectFromEnv(env, "edges/node/**");

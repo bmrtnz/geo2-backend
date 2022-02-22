@@ -1,15 +1,9 @@
 package fr.microtec.geo2.service.graphql.common;
 
-import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
-import fr.microtec.geo2.persistance.repository.common.GeoUtilisateurRepository;
-import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import io.leangen.graphql.annotations.GraphQLArgument;
-import io.leangen.graphql.annotations.GraphQLEnvironment;
-import io.leangen.graphql.annotations.GraphQLMutation;
-import io.leangen.graphql.annotations.GraphQLQuery;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import io.leangen.graphql.spqr.spring.autoconfigure.DefaultGlobalContext;
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,10 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
+import fr.microtec.geo2.persistance.repository.common.GeoUtilisateurRepository;
+import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
+import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import io.leangen.graphql.spqr.spring.autoconfigure.DefaultGlobalContext;
 
 @Service
 @GraphQLApi
@@ -65,13 +65,13 @@ public class GeoUtilisateurGraphQLService extends GeoAbstractGraphQLService<GeoU
 
 	@GraphQLMutation
 	@Secured("ROLE_USER")
-	public GeoUtilisateur saveUtilisateur(GeoUtilisateur utilisateur) {
+	public GeoUtilisateur saveUtilisateur(GeoUtilisateur utilisateur, @GraphQLEnvironment ResolutionEnvironment env) {
 		SecurityContext sc = SecurityContextHolder.getContext();
 		GeoUtilisateur currentUser = (GeoUtilisateur)sc.getAuthentication().getPrincipal();
 		if(utilisateur.getNomUtilisateur() == null)
 			throw new SecurityException("User creation is not permitted, entity key needed");
 		if(!currentUser.getNomUtilisateur().equals(utilisateur.getNomUtilisateur()))
 			throw new SecurityException("Can't mutate another user");
-		return this.save(utilisateur);
+		return this.saveEntity(utilisateur, env);
 	}
 }

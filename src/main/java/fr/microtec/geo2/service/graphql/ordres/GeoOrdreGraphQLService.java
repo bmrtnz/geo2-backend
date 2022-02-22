@@ -102,7 +102,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLMutation
-	public GeoOrdre saveOrdre(GeoOrdre ordre) {
+	public GeoOrdre saveOrdre(GeoOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
 		return this.ordreService.save(ordre);
 	}
 
