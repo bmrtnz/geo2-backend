@@ -9,6 +9,7 @@ import fr.microtec.geo2.service.MRUOrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
@@ -58,6 +59,11 @@ public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUO
 			@GraphQLArgument(name = "id") GeoMRUOrdreKey id
 	) {
 		return super.getOne(id);
+  }
+
+  @GraphQLMutation
+  public GeoMRUOrdre saveMRUOrdre(GeoMRUOrdre mruOrdre, @GraphQLEnvironment ResolutionEnvironment env) {
+	  return this.saveEntity(mruOrdre, env);
   }
 
 }
