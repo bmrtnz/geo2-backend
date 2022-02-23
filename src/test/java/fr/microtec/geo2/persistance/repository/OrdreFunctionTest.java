@@ -224,4 +224,14 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes());
         Assertions.assertEquals(true, result.getData().get("bloquer"));
     }
+
+    @Test
+    public void testfInitBlocageOrdreWithUnknownOrdreType() {
+        FunctionResult result = this.functionOrdreRepository
+        .fInitBlocageOrdre("1674878", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(false, result.getData().get("bloquer"));
+    }
 }
