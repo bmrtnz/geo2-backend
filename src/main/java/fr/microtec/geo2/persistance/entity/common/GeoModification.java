@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -46,7 +47,7 @@ public class GeoModification {
 	)
 	private BigDecimal id;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modification")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modification", cascade = CascadeType.ALL)
 	private List<GeoModificationCorps> corps;
 
 	@NotNull
