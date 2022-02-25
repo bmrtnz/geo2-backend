@@ -3,7 +3,6 @@ package fr.microtec.geo2.service.graphql.common;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
-import fr.microtec.geo2.persistance.entity.common.GeoModificationCorps;
 import fr.microtec.geo2.persistance.repository.common.GeoModifRepository;
+import fr.microtec.geo2.service.ModificationService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -27,10 +26,14 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModification, BigDecimal> {
 
+	private final ModificationService modificationService;
+
 	public GeoModifGraphQLService(
-		GeoModifRepository repository
+		GeoModifRepository repository,
+		ModificationService modificationService
 	) {
 		super(repository, GeoModification.class);
+		this.modificationService = modificationService;
 	}
 
 	@GraphQLQuery
@@ -59,15 +62,7 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModific
 
   @GraphQLMutation
 	public GeoModification saveModification(GeoModification modification, @GraphQLEnvironment ResolutionEnvironment env) {
-		List<GeoModificationCorps> mappedCorps = modification.getCorps()
-		.stream()
-		.map(corps -> {
-			corps.setModification(modification);
-			return corps;
-		})
-		.collect(Collectors.toList());
-		modification.setCorps(mappedCorps);
-		return this.saveEntity(modification, env);
+		return this.saveEntity(this.modificationService.prepare(modification), env);
 	}
 
 }
