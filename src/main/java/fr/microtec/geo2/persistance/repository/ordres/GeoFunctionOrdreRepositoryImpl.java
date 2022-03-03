@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Repository
-public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl implements GeoFunctionOrdreRepository {
+public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl
+        implements GeoFunctionOrdreRepository {
 
     @Override
     public FunctionResult ofValideEntrepotForOrdre(String code_entrepot) {
@@ -43,7 +44,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture, String origine) {
+    public FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode,
+            Integer modeCulture, String origine) {
         FunctionQuery query = this.build("F_RECUP_FRAIS");
 
         query.attachInput("arg_var_code", String.class, varCode);
@@ -56,8 +58,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
-    //@Override
-    public FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte) {
+    // @Override
+    public FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float argPdsBrut, Float argPdsNet,
+            Integer argAchQte, Integer argVteQte) {
         FunctionQuery query = super.build("F_CALCUL_QTE");
 
         query
@@ -72,7 +75,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult fAfficheOrdreBaf(String socCode, String scoCode, String cliRef, String cenRef, LocalDate dateMin, LocalDate dateMax, String codeAss, String codeCom) {
+    public FunctionResult fAfficheOrdreBaf(String socCode, String scoCode, String cliRef, String cenRef,
+            LocalDate dateMin, LocalDate dateMax, String codeAss, String codeCom) {
         FunctionQuery query = this.build("F_AFFICHE_ORDRE_BAF", GeoOrdreBaf.class);
 
         query.attachInput("gs_soc_code", String.class, socCode);
@@ -167,7 +171,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_user", String.class, user);
-        query.attachOutput("bloquer", Character.class, v -> ((Character)v).equals('O'));
+        query.attachOutput("bloquer", Character.class, v -> ((Character) v).equals('O'));
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
+        FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("gs_sco_code", String.class, scoCode);
 
         return query.fetch();
     }
