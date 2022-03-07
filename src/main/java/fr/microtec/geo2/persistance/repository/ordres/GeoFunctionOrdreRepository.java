@@ -63,4 +63,6 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangeDemipalInd(String orlRef, String username);
 
+        FunctionResult onChangePalNbCol(String orlRef, String username);
+
 }

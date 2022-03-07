@@ -206,4 +206,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult onChangePalNbCol(String orlRef, String username) {
+        FunctionQuery query = this.build("ON_CHANGE_PAL_NB_COL");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("gs_user", String.class, username);
+
+        return query.fetch();
+    }
 }
