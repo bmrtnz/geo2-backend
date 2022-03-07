@@ -83,4 +83,11 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangeDemipalInd(orlRef, username);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangePalNbCol(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangePalNbCol(orlRef, username);
+    }
+
 }
