@@ -234,6 +234,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOfRepartitionPalette() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofRepartitionPalette("002075", "F", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testOnChangeCdeNbPalWithSecteurFrance() {
         FunctionResult result = this.functionOrdreRepository
                 .onChangeCdeNbPal("9714FC", "F");
