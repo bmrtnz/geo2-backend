@@ -61,4 +61,6 @@ public interface GeoFunctionOrdreRepository {
         // Evenements de cellules sur les lignes d'ordres
         FunctionResult onChangeCdeNbPal(String orlRef, String scoCode);
 
+        FunctionResult onChangeDemipalInd(String orlRef, String username);
+
 }
