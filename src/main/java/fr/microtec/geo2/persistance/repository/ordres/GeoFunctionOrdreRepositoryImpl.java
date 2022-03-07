@@ -177,6 +177,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult ofRepartitionPalette(String ordreLigneRef, String secteurCode, String nomUtilisateur) {
+        FunctionQuery query = this.build("OF_REPARTITION_PALETTE");
+
+        query.attachInput("arg_orl_ref", String.class, ordreLigneRef);
+        query.attachInput("gs_sco_code", String.class, secteurCode);
+        query.attachInput("gs_user", String.class, nomUtilisateur);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 
