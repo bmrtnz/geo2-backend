@@ -65,4 +65,6 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangePalNbCol(String orlRef, String username);
 
+        FunctionResult onChangeCdeNbCol(String orlRef, String username);
+
 }
