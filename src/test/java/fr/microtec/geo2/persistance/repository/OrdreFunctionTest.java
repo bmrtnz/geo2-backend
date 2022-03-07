@@ -259,4 +259,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangePalNbCol() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangePalNbCol("9714FC", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
