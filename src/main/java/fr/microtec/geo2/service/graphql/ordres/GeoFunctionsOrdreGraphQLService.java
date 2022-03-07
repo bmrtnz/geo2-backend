@@ -90,4 +90,11 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangePalNbCol(orlRef, username);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangeCdeNbCol(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangeCdeNbCol(orlRef, username);
+    }
+
 }
