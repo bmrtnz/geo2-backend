@@ -250,4 +250,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangeDemipalInd() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeDemipalInd("9714FC", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
