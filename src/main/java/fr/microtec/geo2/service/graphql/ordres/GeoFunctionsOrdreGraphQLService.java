@@ -76,4 +76,11 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangeCdeNbPal(orlRef, scoCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangeDemipalInd(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangeDemipalInd(orlRef, username);
+    }
+
 }
