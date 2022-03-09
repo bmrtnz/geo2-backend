@@ -58,9 +58,6 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(name = "admin_client", insertable = false, updatable = false)
 	private Boolean adminClient;
 
-	@Column(name = "ind_client_restriction", insertable = false, updatable = false)
-	private Boolean restrictionClient;
-
 	@Column(insertable = false, updatable = false)
 	private String perimetre;
 
@@ -79,7 +76,7 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nom_utilisateur", referencedColumnName = "per_username", insertable = false, updatable = false)
 	private GeoPersonne personne;
