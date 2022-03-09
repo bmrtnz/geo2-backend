@@ -197,6 +197,16 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA) {
+        FunctionQuery query = this.build("OF_CALCUL_REGIME_TVA_ENCOURS");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("str_regime_tva_defaut", String.class, regimeTVA);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 
