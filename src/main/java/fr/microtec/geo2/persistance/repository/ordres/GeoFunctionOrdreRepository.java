@@ -55,6 +55,8 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult ofRepartitionPalette(String ordreLigneRef, String secteurCode, String nomUtilisateur);
 
+        FunctionResult ofVerifLogistiqueDepart(String orlRef);
+
         // FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float
         // argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
 
