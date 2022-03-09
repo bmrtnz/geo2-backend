@@ -234,6 +234,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOfVerifLogistiqueDepart() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofVerifLogistiqueDepart("004036");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testOfRepartitionPalette() {
         FunctionResult result = this.functionOrdreRepository
                 .ofRepartitionPalette("002075", "F", "ADRIEN");
