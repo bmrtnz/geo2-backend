@@ -252,6 +252,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOfCalculRegimeTvaEncours() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofCalculRegimeTvaEncours("000211", "");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testOnChangeCdeNbPalWithSecteurFrance() {
         FunctionResult result = this.functionOrdreRepository
                 .onChangeCdeNbPal("9714FC", "F");
