@@ -9,7 +9,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."ON_CHANGE_PROPR_CODE" (
 ) AS
     ls_val varchar2(50);
     ls_ind_exp varchar2(50);
-    ls_list_fourni_sql varchar2(50);
+    ls_list_fourni_sql varchar2(200);
     ls_fou_code varchar2(50);
     ls_flag_exped_fournni varchar2(50);
     ls_ord_ref varchar2(50);
@@ -79,7 +79,7 @@ begin
             from geo_traca_ligne
             where orl_ref = arg_orl_ref;
     begin
-        select rownum
+        select count(ol.orl_ref)
         into cherche_fourni_res
         from geo_ordlig ol
         left join geo_fourni f on ol.fou_code = f.fou_code
