@@ -59,6 +59,8 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA);
 
+        FunctionResult ofSauveOrdre(String ordRef);
+
         // FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float
         // argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
 
