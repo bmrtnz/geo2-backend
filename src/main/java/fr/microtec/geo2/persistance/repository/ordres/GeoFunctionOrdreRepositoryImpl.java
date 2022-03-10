@@ -188,10 +188,10 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult ofVerifLogistiqueDepart(String orlRef) {
+    public FunctionResult ofVerifLogistiqueDepart(String ordRef) {
         FunctionQuery query = this.build("OF_VERIF_LOGISTIQUE_DEPART");
 
-        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_ord_ref", String.class, ordRef);
 
         return query.fetch();
     }

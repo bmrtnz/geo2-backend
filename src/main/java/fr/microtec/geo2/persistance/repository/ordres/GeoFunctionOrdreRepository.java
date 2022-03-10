@@ -55,7 +55,7 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult ofRepartitionPalette(String ordreLigneRef, String secteurCode, String nomUtilisateur);
 
-        FunctionResult ofVerifLogistiqueDepart(String orlRef);
+        FunctionResult ofVerifLogistiqueDepart(String ordRef);
 
         FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA);
 
