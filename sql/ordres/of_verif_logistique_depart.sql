@@ -8,20 +8,14 @@
 /***************************************************************************/
 
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_VERIF_LOGISTIQUE_DEPART" (
-    arg_orl_ref GEO_ORDLIG.orl_ref%type,
+    arg_ord_ref GEO_ORDLIG.orl_ref%type,
 	res out number,
     msg out varchar2
 ) AS
-    ls_ord_ref varchar2(50);
 begin
 
     msg := '';
     res := 0;
-
-    select ol.ord_ref
-    into ls_ord_ref
-    from geo_ordlig ol
-    where orl_ref = arg_orl_ref;
 
     declare
         cursor cur_ols is
@@ -30,7 +24,7 @@ begin
                 trp_code,
                 grp_code
             from geo_ordlig
-            where ord_ref = ls_ord_ref;
+            where ord_ref = arg_ord_ref;
         ls_trp_code varchar2(50); 
         ls_grp_code varchar2(50);
     begin
