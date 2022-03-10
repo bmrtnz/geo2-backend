@@ -304,4 +304,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangeProprCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeProprCode("004962", "ADRIEN", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
