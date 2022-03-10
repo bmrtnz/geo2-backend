@@ -236,7 +236,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfVerifLogistiqueDepart() {
         FunctionResult result = this.functionOrdreRepository
-                .ofVerifLogistiqueDepart("004036");
+                .ofVerifLogistiqueDepart("001822");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -255,6 +255,15 @@ public class OrdreFunctionTest {
     public void testOfCalculRegimeTvaEncours() {
         FunctionResult result = this.functionOrdreRepository
                 .ofCalculRegimeTvaEncours("000211", "");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOfSauveOrdre() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofSauveOrdre("000927");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
