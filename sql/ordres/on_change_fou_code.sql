@@ -16,8 +16,8 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."ON_CHANGE_FOU_CODE" (
     ls_flag_exped_fournni varchar2(50);
     ls_visible_reparcam varchar2(50) := '0';
     ls_typ_ordre varchar2(50);
-    ls_vte_bta number;
-    ls_ach_bta number;
+    ls_vte_bta varchar2(50);
+    ls_ach_bta varchar2(50);
     ls_fou_code_old varchar2(50);
     ls_ind_modif_detail varchar2(50);
     cursor cur_ols is
@@ -42,10 +42,15 @@ begin
     left join geo_ordre o on o.ord_ref = ol.ord_ref
     where orl_ref = arg_orl_ref;
 
-    select flag_exped_fournni
-    into ls_flag_exped_fournni
-    from GEO_ORDLOG
-    where   ORD_REF = ls_ord_ref and FOU_CODE = ls_fou_code;                                                                       
+    begin
+        select flag_exped_fournni
+        into ls_flag_exped_fournni
+        from GEO_ORDLOG
+        where   ORD_REF = ls_ord_ref and FOU_CODE = ls_fou_code;   
+    exception when others then
+        msg := 'Erreur: Impossible de trouver la logistique associée';
+        return;                                                                    
+    end;
 
     select dev_code
     into ls_soc_dev_code

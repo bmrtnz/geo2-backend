@@ -313,4 +313,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangeFouCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeFouCode("9F243C", "ADRIEN", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
