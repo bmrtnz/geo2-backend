@@ -119,4 +119,12 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangeVtePu(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangePalCode(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "secteurCode") String scoCode) {
+        return this.repository.onChangePalCode(orlRef, username, scoCode);
+    }
+
 }
