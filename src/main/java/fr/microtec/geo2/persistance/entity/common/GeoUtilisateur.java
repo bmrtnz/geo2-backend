@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.common;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -76,13 +78,16 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "nom_utilisateur", referencedColumnName = "per_username", insertable = false, updatable = false)
 	private GeoPersonne personne;
 
 	@Column(name = "profile_client", insertable = false, updatable = false)
 	private String profileClient;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "nomUtilisateur")
+	private List<GeoParamUserClientRestriction> restrictions;
 
 	@Lob
 	@Column(name = "config_tuiles_ordres", columnDefinition = "BLOB")
