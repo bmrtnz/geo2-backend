@@ -73,10 +73,12 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangeCdeNbCol(String orlRef, String username);
 
-        FunctionResult onChangeProprCode(String orlRef, String username, String scoCode);
+        FunctionResult onChangeProprCode(String orlRef, String username, String socCode);
 
-        FunctionResult onChangeFouCode(String orlRef, String username, String scoCode);
+        FunctionResult onChangeFouCode(String orlRef, String username, String socCode);
 
         FunctionResult onChangeVtePu(String orlRef);
+
+        FunctionResult onChangePalCode(String orlRef, String username, String scoCode);
 
 }

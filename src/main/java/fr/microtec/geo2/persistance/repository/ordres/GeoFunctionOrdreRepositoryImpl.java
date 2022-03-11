@@ -256,23 +256,34 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult onChangeProprCode(String orlRef, String username, String scoCode) {
+    public FunctionResult onChangeProprCode(String orlRef, String username, String socCode) {
         FunctionQuery query = this.build("ON_CHANGE_PROPR_CODE");
 
         query.attachInput("arg_orl_ref", String.class, orlRef);
         query.attachInput("arg_user", String.class, username);
-        query.attachInput("arg_soc_code", String.class, scoCode);
+        query.attachInput("arg_soc_code", String.class, socCode);
 
         return query.fetch();
     }
 
     @Override
-    public FunctionResult onChangeFouCode(String orlRef, String username, String scoCode) {
+    public FunctionResult onChangeFouCode(String orlRef, String username, String socCode) {
         FunctionQuery query = this.build("ON_CHANGE_FOU_CODE");
 
         query.attachInput("arg_orl_ref", String.class, orlRef);
         query.attachInput("arg_user", String.class, username);
-        query.attachInput("arg_soc_code", String.class, scoCode);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangePalCode(String orlRef, String username, String scoCode) {
+        FunctionQuery query = this.build("ON_CHANGE_PAL_CODE");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_user", String.class, username);
+        query.attachInput("arg_sco_code", String.class, scoCode);
 
         return query.fetch();
     }
