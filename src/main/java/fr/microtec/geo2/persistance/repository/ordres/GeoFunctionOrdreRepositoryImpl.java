@@ -276,4 +276,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult onChangeVtePu(String orlRef) {
+        FunctionQuery query = this.build("ON_CHANGE_VTE_PU");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+
+        return query.fetch();
+    }
 }
