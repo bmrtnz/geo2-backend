@@ -113,4 +113,10 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangeFouCode(orlRef, username, scoCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangeVtePu(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.onChangeVtePu(orlRef);
+    }
+
 }
