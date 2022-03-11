@@ -265,4 +265,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult onChangeFouCode(String orlRef, String username, String scoCode) {
+        FunctionQuery query = this.build("ON_CHANGE_FOU_CODE");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_user", String.class, username);
+        query.attachInput("arg_soc_code", String.class, scoCode);
+
+        return query.fetch();
+    }
 }

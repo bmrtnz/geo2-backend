@@ -75,4 +75,6 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangeProprCode(String orlRef, String username, String scoCode);
 
+        FunctionResult onChangeFouCode(String orlRef, String username, String scoCode);
+
 }
