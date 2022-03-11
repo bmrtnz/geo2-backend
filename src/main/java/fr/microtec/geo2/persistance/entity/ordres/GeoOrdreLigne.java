@@ -55,7 +55,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoOrdreLogistique logistique;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+	@JoinColumn(name = "fou_code", referencedColumnName = "k_fou")
 	private GeoFournisseur fournisseur;
 
 	@Column(name = "exp_nb_pal")
@@ -247,7 +247,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Float nombreReservationsSurStock;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "propr_code", referencedColumnName = "fou_code")
+	@JoinColumn(name = "propr_code", referencedColumnName = "k_fou")
 	private GeoFournisseur proprietaireMarchandise;
 
 	@Column(name = "promo_code")
