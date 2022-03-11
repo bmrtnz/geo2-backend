@@ -40,11 +40,11 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@Id
 	@Column(name = "orl_ref")
 	private String id;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "art_ref")
 	private GeoArticle article;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
@@ -55,15 +55,15 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoOrdreLogistique logistique;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fou_code", referencedColumnName = "k_fou")
+	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
 	private GeoFournisseur fournisseur;
 
 	@Column(name = "exp_nb_pal")
 	private Float nombrePalettesExpediees;
-
+	
 	@Column(name = "cde_nb_pal")
 	private Float nombrePalettesCommandees;
-
+	
 	@Column(name = "exp_nb_col")
 	private Float nombreColisExpedies;
 
@@ -135,7 +135,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 
 	@Column(name = "totfrais_plateforme")
 	private Float totalFraisPlateforme;
-
+	
 	@Column(name = "var_ristourne")
 	private Boolean ristourne;
 
@@ -247,7 +247,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Float nombreReservationsSurStock;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "propr_code", referencedColumnName = "k_fou")
+	@JoinColumn(name = "propr_code", referencedColumnName = "fou_code")
 	private GeoFournisseur proprietaireMarchandise;
 
 	@Column(name = "promo_code")
@@ -291,47 +291,41 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Double pourcentageMargeNette;
 
 	@PostLoad
-	public void postLoad() {
+	public void postLoad(){
 
 		try {
-			this.margeBrute = (Double) (this.totalVenteBrut - this.totalRemise + this.totalRestitue
-					- this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalTransit
-					- this.totalCourtage - this.totalFraisAdditionnels);
+			this.margeBrute = (Double)(this.totalVenteBrut - this.totalRemise + this.totalRestitue - this.totalFraisMarketing - this.totalAchat - this.totalTransport - this.totalTransit - this.totalCourtage - this.totalFraisAdditionnels);
 			this.pourcentageMargeBrute = this.totalVenteBrut != 0d ? this.margeBrute / this.totalVenteBrut : 0d;
-			this.pourcentageMargeNette = this.totalVenteBrut != 0d
-					? (this.margeBrute - this.totalObjectifMarge) / this.totalVenteBrut
-					: 0d;
-		} catch (Exception e) {
-		}
+			this.pourcentageMargeNette = this.totalVenteBrut != 0d ? (this.margeBrute - this.totalObjectifMarge) / this.totalVenteBrut : 0d;
+		} catch (Exception e) {}
 
 		GeoTypePalette typePalette = this.getTypePalette();
-		if (typePalette == null)
-			return;
+		if (typePalette == null) return;
 		Character dimensions = typePalette.getDimensions();
-		if (dimensions == null)
-			return;
-
+		if (dimensions == null) return;
+		
 		this.nombreColisPaletteByDimensions = 0f;
 
-		if (this.getArticle() != null &&
-				this.getArticle().getEmballage() != null &&
-				this.getArticle().getEmballage().getEmballage() != null) {
+		if (
+			this.getArticle() != null &&
+			this.getArticle().getEmballage() != null &&
+			this.getArticle().getEmballage().getEmballage() != null
+		) {
 
-			if (dimensions == '1') {
+			if(dimensions == '1') {
 				Float xb = this.getArticle().getEmballage().getEmballage().getXb();
 				Float xh = this.getArticle().getEmballage().getEmballage().getXh();
-				if (xb != null && xh != null)
-					this.nombreColisPaletteByDimensions = xb * xh;
-			} else if (dimensions == '8') {
+				if(xb != null && xh != null) this.nombreColisPaletteByDimensions = xb * xh;
+			}
+			else if(dimensions == '8') {
 				Float yb = this.getArticle().getEmballage().getEmballage().getYb();
 				Float yh = this.getArticle().getEmballage().getEmballage().getYh();
-				if (yb != null && yh != null)
-					this.nombreColisPaletteByDimensions = yb * yh;
-			} else if (dimensions == '6') {
+				if(yb != null && yh != null) this.nombreColisPaletteByDimensions = yb * yh;
+			}
+			else if(dimensions == '6') {
 				Float zb = this.getArticle().getEmballage().getEmballage().getZb();
 				Float zh = this.getArticle().getEmballage().getEmballage().getZh();
-				if (zb != null && zh != null)
-					this.nombreColisPaletteByDimensions = zb * zh;
+				if(zb != null && zh != null) this.nombreColisPaletteByDimensions = zb * zh;
 			}
 		}
 	}
