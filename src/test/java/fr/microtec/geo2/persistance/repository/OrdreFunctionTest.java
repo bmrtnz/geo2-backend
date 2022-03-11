@@ -322,4 +322,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangeVtePu() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeVtePu("003098");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
