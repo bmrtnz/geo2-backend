@@ -340,4 +340,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangePalinterCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangePalinterCode("003098");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
