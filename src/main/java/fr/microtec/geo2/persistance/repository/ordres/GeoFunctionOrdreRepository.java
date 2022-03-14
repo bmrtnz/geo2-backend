@@ -81,4 +81,6 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangePalCode(String orlRef, String username, String scoCode);
 
+        FunctionResult onChangePalinterCode(String orlRef);
+
 }
