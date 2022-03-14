@@ -321,6 +321,17 @@ begin
 
 	end if;
 
+	declare
+		art_ass varchar2(50);
+	begin
+		of_get_article_associe(arg_art_ref, art_ass);
+		if art_ass is not null then
+			of_init_article(arg_ord_ref, art_ass, arg_soc_code, res, msg);
+		end if;
+	exception when others then
+		return;
+	end;
+
 	res := 1;
 	msg := 'OK';
 	return;
