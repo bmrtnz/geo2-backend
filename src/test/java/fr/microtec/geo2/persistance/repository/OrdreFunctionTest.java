@@ -204,6 +204,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOfInitArticleWithAssociated() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofInitArticle("000922", "028514", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testfInitBlocageOrdreWithGeoClient2() {
         FunctionResult result = this.functionOrdreRepository
                 .fInitBlocageOrdre("1434640", "LINO");
