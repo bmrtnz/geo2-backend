@@ -317,7 +317,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOnChangeFouCode() {
         FunctionResult result = this.functionOrdreRepository
-                .onChangeFouCode("9F243C", "ADRIEN", "SA");
+                .onChangeFouCode("9F31AC", "ADRIEN", "SA");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
