@@ -101,16 +101,16 @@ public class GeoFunctionsOrdreGraphQLService {
     public FunctionResult onChangeProprCode(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
             @GraphQLArgument(name = "username") String username,
-            @GraphQLArgument(name = "secteurCode") String scoCode) {
-        return this.repository.onChangeProprCode(orlRef, username, scoCode);
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.onChangeProprCode(orlRef, username, socCode);
     }
 
     @GraphQLQuery
     public FunctionResult onChangeFouCode(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
             @GraphQLArgument(name = "username") String username,
-            @GraphQLArgument(name = "secteurCode") String scoCode) {
-        return this.repository.onChangeFouCode(orlRef, username, scoCode);
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.onChangeFouCode(orlRef, username, socCode);
     }
 
     @GraphQLQuery
