@@ -66,10 +66,15 @@ begin
         ls_fou_code := ls_val;			
     End If;
 
-    select flag_exped_fournni
-    into ls_flag_exped_fournni
-    from GEO_ORDLOG
-    where ORD_REF = ls_ord_ref and FOU_CODE = ls_val;     
+    begin
+        select flag_exped_fournni
+        into ls_flag_exped_fournni
+        from GEO_ORDLOG
+        where ORD_REF = ls_ord_ref and FOU_CODE = ls_val;
+    EXCEPTION WHEN NO_DATA_FOUND THEN
+        msg := 'Erreur: Pas de logistique associé pour le fournisseur :' || ls_val;
+        return; 
+    end;
 
     declare
         cherche_fourni_res number;
