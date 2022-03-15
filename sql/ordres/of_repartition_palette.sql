@@ -11,7 +11,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_REPARTITION_PALETTE" (
     ls_pal_code varchar2(50);
     ls_sco_code varchar2(50);
     ls_art_ref GEO_ARTICLE.art_ref%type;
-    ls_palett_dim_code number;
+    ls_palett_dim_code varchar2(1);
     ll_nb_col_pal number;
     ls_pal_nb_col number;
     ls_fou_code varchar2(50);
