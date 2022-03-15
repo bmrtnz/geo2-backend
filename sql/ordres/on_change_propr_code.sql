@@ -88,7 +88,7 @@ begin
         into cherche_fourni_res
         from geo_ordlig ol
         left join geo_fourni f on ol.fou_code = f.fou_code
-        where orl_ref = arg_orl_ref
+        where ord_ref = ls_ord_ref
         and ol.fou_code = ls_fou_code
         order by ol.orl_lig;
         
