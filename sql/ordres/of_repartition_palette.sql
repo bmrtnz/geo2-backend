@@ -57,10 +57,10 @@ begin
         where pal_code = ls_pal_code;
         commit;
 
+        ls_pal_nb_col := ll_nb_col_pal;
         update geo_ordlig
         set
-            -- nb_col_pal = ll_nb_col_pal,
-            pal_nb_col = ll_nb_col_pal,
+            pal_nb_col = ls_pal_nb_col,
             nb_colis_manquant = 0
         where orl_ref = arg_orl_ref;
         commit;
@@ -134,7 +134,11 @@ begin
                         nb_pal_th := nb_pal_th - 1;
                     end if;
                     nb_pal_dispo := nb_pal_th;
-                    r.cde_nb_pal := nb_pal;
+
+                    update geo_ordlig
+                    set cde_nb_pal = nb_pal
+                    where orl_ref = arg_orl_ref;
+                    commit;
 
                 end if;
             end loop;

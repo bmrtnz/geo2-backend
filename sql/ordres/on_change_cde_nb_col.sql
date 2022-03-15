@@ -31,12 +31,12 @@ begin
         where orl_ref = arg_orl_ref;
 
         if ls_sco_code = 'F' then
-            -- if (cde_nb_col is not null and cde_nb_col <> 0) and pal_nb_col = 0 then
-            --     update geo_ordlig
-            --     set pal_nb_col = nb_col_pal
-            --     where orl_ref = arg_orl_ref;
-            --     commit;
-            -- end if;
+            if (cde_nb_col is not null and cde_nb_col <> 0) and pal_nb_col = 0 then
+                update geo_ordlig
+                set pal_nb_col = cde_nb_col
+                where orl_ref = arg_orl_ref;
+                commit;
+            end if;
             
             if (cde_nb_col is null or cde_nb_col = 0) and pal_nb_col <> 0 then
                 update geo_ordlig
