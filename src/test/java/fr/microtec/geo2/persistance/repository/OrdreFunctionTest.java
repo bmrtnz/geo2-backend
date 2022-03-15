@@ -358,4 +358,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangeIndGratuit() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeIndGratuit("9F291C");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
