@@ -329,7 +329,7 @@ public class OrdreFunctionTest {
                 .onChangeFouCode("9F31AC", "ADRIEN", "SA");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(0, result.getRes());
     }
 
     @Test
