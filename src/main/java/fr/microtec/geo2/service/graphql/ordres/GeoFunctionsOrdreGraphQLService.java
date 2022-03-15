@@ -133,4 +133,10 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangePalinterCode(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangeIndGratuit(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.onChangeIndGratuit(orlRef);
+    }
+
 }
