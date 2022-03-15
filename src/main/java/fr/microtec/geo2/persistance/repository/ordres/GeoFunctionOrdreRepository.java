@@ -83,4 +83,6 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangePalinterCode(String orlRef);
 
+        FunctionResult onChangeIndGratuit(String orlRef);
+
 }
