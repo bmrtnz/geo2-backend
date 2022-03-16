@@ -30,15 +30,13 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult ofValideEntrepotForOrdre(
-            @GraphQLArgument(name = "entrepotID") String entrepotID
-    ) {
+            @GraphQLArgument(name = "entrepotID") String entrepotID) {
         return this.repository.ofValideEntrepotForOrdre(entrepotID);
     }
 
     @GraphQLQuery
     public FunctionResult fNouvelOrdre(
-            @GraphQLArgument(name = "societe") String socCode
-    ) {
+            @GraphQLArgument(name = "societe") String socCode) {
         return this.repository.fNouvelOrdre(socCode);
     }
 
@@ -51,26 +49,94 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "dateMin") LocalDate dateMin,
             @GraphQLArgument(name = "dateMax") LocalDate dateMax,
             @GraphQLArgument(name = "codeAssistante") String codeAssistante,
-            @GraphQLArgument(name = "codeCommercial") String codeCommercial
-    ) {
-        return this.ordreService.allDepartBaf(societeCode, secteurCode, clientCode, entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
+            @GraphQLArgument(name = "codeCommercial") String codeCommercial) {
+        return this.ordreService.allDepartBaf(societeCode, secteurCode, clientCode, entrepotCode, dateMin, dateMax,
+                codeAssistante, codeCommercial);
     }
 
     @GraphQLQuery
     public FunctionResult ofInitArticle(
             @GraphQLArgument(name = "ordreRef") String ordreRef,
             @GraphQLArgument(name = "articleRef") String articleRef,
-            @GraphQLArgument(name = "societeCode") String societeCode
-    ) {
+            @GraphQLArgument(name = "societeCode") String societeCode) {
         return this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
     }
 
     @GraphQLQuery
     public FunctionResult fInitBlocageOrdre(
             @GraphQLArgument(name = "ordreRef") String ordreRef,
-            @GraphQLArgument(name = "userName") String userName
-    ) {
+            @GraphQLArgument(name = "userName") String userName) {
         return this.repository.fInitBlocageOrdre(ordreRef, userName);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeCdeNbPal(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "secteurCommercialCode") String scoCode) {
+        return this.repository.onChangeCdeNbPal(orlRef, scoCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeDemipalInd(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangeDemipalInd(orlRef, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangePalNbCol(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangePalNbCol(orlRef, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeCdeNbCol(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangeCdeNbCol(orlRef, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeProprCode(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.onChangeProprCode(orlRef, username, socCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeFouCode(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.onChangeFouCode(orlRef, username, socCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeVtePu(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.onChangeVtePu(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangePalCode(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "secteurCode") String scoCode) {
+        return this.repository.onChangePalCode(orlRef, username, scoCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangePalinterCode(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.onChangePalinterCode(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeIndGratuit(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.onChangeIndGratuit(orlRef);
     }
 
 }

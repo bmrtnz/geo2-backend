@@ -100,8 +100,7 @@ public class OrdreFunctionTest {
                 "SA", "F", "", "",
                 LocalDate.of(2020, 2, 1),
                 LocalDate.of(2020, 3, 1),
-                "", ""
-        );
+                "", "");
 
         Assertions.assertNotNull(result);
         Assertions.assertFalse(result.getCursorData().isEmpty());
@@ -147,11 +146,10 @@ public class OrdreFunctionTest {
                 "SA", "F", "", "",
                 LocalDate.of(2020, 2, 1),
                 LocalDate.of(2020, 3, 1),
-                "", ""
-        );
+                "", "");
 
         List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
-        for(GeoOrdreBaf baf : ordresBaf) {
+        for (GeoOrdreBaf baf : ordresBaf) {
             FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), "SA");
 
             baf.setControlData(controlResult.getData());
@@ -182,7 +180,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFGenereDluo() {
         FunctionResult result = this.functionOrdreRepository
-        .fGenereDluo("%DEMdd%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+                .fGenereDluo("%DEMdd%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
 
         Assertions.assertNotNull(result.getData().get("arg_dluo"));
     }
@@ -190,7 +188,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArtrefGrp() {
         FunctionResult result = this.functionOrdreRepository
-        .ofInitArtrefGrp("002068");
+                .ofInitArtrefGrp("002068");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -199,7 +197,16 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticle() {
         FunctionResult result = this.functionOrdreRepository
-        .ofInitArticle("1434640", "046353", "SA");
+                .ofInitArticle("1434640", "046353", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOfInitArticleWithAssociated() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofInitArticle("000922", "028514", "SA");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -208,7 +215,7 @@ public class OrdreFunctionTest {
     @Test
     public void testfInitBlocageOrdreWithGeoClient2() {
         FunctionResult result = this.functionOrdreRepository
-        .fInitBlocageOrdre("1434640", "LINO");
+                .fInitBlocageOrdre("1434640", "LINO");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -218,10 +225,146 @@ public class OrdreFunctionTest {
     @Test
     public void testfInitBlocageOrdreTypeRPF() {
         FunctionResult result = this.functionOrdreRepository
-        .fInitBlocageOrdre("1503751", "VEGA");
+                .fInitBlocageOrdre("1503751", "VEGA");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
         Assertions.assertEquals(true, result.getData().get("bloquer"));
+    }
+
+    @Test
+    public void testfInitBlocageOrdreWithUnknownOrdreType() {
+        FunctionResult result = this.functionOrdreRepository
+                .fInitBlocageOrdre("1674878", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(false, result.getData().get("bloquer"));
+    }
+
+    @Test
+    public void testOfVerifLogistiqueDepart() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofVerifLogistiqueDepart("001822");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOfRepartitionPalette() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofRepartitionPalette("002075", "F", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOfCalculRegimeTvaEncours() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofCalculRegimeTvaEncours("000211", "");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOfSauveOrdre() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofSauveOrdre("000927");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeCdeNbPalWithSecteurFrance() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeCdeNbPal("9714FC", "F");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeDemipalInd() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeDemipalInd("9714FC", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangePalNbCol() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangePalNbCol("9714FC", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeCdeNbCol() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeCdeNbCol("9714FC", "ADRIEN");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeProprCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeProprCode("004962", "ADRIEN", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeFouCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeFouCode("9F31AC", "ADRIEN", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeVtePu() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeVtePu("003098");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangePalCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangePalCode("9F28EC", "ADRIEN", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangePalinterCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangePalinterCode("003098");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOnChangeIndGratuit() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeIndGratuit("9F291C");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
     }
 }

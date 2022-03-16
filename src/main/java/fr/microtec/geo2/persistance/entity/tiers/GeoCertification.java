@@ -25,4 +25,7 @@ public class GeoCertification extends ValidateAndModifiedEntity {
 	@Column(name = "cert_ment_leg_cli")
 	private String descriptionClient;
 
+	@Column(name = "mask_tiers")
+	private String maskTiers;
+
 }

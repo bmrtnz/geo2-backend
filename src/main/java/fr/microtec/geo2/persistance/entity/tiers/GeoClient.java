@@ -279,7 +279,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "frais_pu")
 	private Float fraisMarketing;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "frais_unite")
 	private GeoBaseTarif fraisMarketingModeCalcul;
 

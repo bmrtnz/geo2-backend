@@ -78,8 +78,8 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
   }
 
   @GraphQLMutation
-  public GeoOrdreLigne saveOrdreLigne(GeoOrdreLigne ordreLigne) {
-	  return this.save(ordreLigne);
+  public GeoOrdreLigne saveOrdreLigne(GeoOrdreLigne ordreLigne, @GraphQLEnvironment ResolutionEnvironment env) {
+	  return this.saveEntity(ordreLigne, env);
   }
 
   @GraphQLMutation

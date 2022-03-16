@@ -40,25 +40,33 @@ begin
 		End If;
 	end;
 
-	select TYP_ORDRE into ls_typ_ordre
-	from GEO_ORDRE
-	where ORD_REF = arg_ord_ref;
+	BEGIN
+		select TYP_ORDRE into ls_typ_ordre
+		from GEO_ORDRE
+		where ORD_REF = arg_ord_ref;
+	EXCEPTION WHEN NO_DATA_FOUND THEN
+		ls_typ_ordre := '';
+	END;
 
-	select  'O' into  ls_a_bloquer
-	from GEO_ORDRE
-	where  ((to_date(DEPDATP,'DD/MM/YY') = to_date(sysdate,'DD/MM/YY') and
-				( TO_CHAR(sysdate,'HH24:MI:SS') ) > '15:00' ) OR (to_date(DEPDATP,'DD/MM/YY') < to_date(sysdate,'DD/MM/YY'))  )  and 
-			ORD_REF = arg_ord_ref  and 
-			not exists (select 1  from GEO_CLIENT
-						where GEO_ORDRE.CLI_REF = GEO_CLIENT.CLI_REF and 
-								IND_COMM_DEBLOQ ='O')  and
-			not exists (select 1  from GEO_CLIENT
-						where GEO_ORDRE.CLI_REF = GEO_CLIENT.CLI_REF and 
-								IND_MODIF_DETAIL ='O')  and						
-			exists (select 1
-						from GEO_ENVOIS
-						WHERE GEO_ENVOIS.FLU_CODE ='ORDRE' AND  
-								GEO_ENVOIS.ORD_REF = GEO_ORDRE.ORD_REF);
+	BEGIN
+		select  'O' into  ls_a_bloquer
+		from GEO_ORDRE
+		where  ((to_date(DEPDATP,'DD/MM/YY') = to_date(sysdate,'DD/MM/YY') and
+					( TO_CHAR(sysdate,'HH24:MI:SS') ) > '15:00' ) OR (to_date(DEPDATP,'DD/MM/YY') < to_date(sysdate,'DD/MM/YY'))  )  and 
+				ORD_REF = arg_ord_ref  and 
+				not exists (select 1  from GEO_CLIENT
+							where GEO_ORDRE.CLI_REF = GEO_CLIENT.CLI_REF and 
+									IND_COMM_DEBLOQ ='O')  and
+				not exists (select 1  from GEO_CLIENT
+							where GEO_ORDRE.CLI_REF = GEO_CLIENT.CLI_REF and 
+									IND_MODIF_DETAIL ='O')  and						
+				exists (select 1
+							from GEO_ENVOIS
+							WHERE GEO_ENVOIS.FLU_CODE ='ORDRE' AND  
+									GEO_ENVOIS.ORD_REF = GEO_ORDRE.ORD_REF);
+	EXCEPTION WHEN NO_DATA_FOUND THEN
+		ls_a_bloquer := '';
+	END;
 
 	If ls_a_bloquer is null  Then ls_a_bloquer := ''; end if;
 

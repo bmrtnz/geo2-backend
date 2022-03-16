@@ -26,6 +26,7 @@ import org.hibernate.annotations.Where;
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
+import fr.microtec.geo2.persistance.entity.common.GeoParamUserFournisseurRestriction;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueFournisseur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import lombok.Data;
@@ -44,14 +45,10 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	@Id
 	@Column(name = "k_fou")
 	@GeneratedValue(generator = "GeoFournisseurGenerator")
-	@GenericGenerator(
-			name = "GeoFournisseurGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequenceName", value = "f_seq_k_fourni"),
-					@org.hibernate.annotations.Parameter(name = "isSequence", value = "false")
-			}
-	)
+	@GenericGenerator(name = "GeoFournisseurGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@org.hibernate.annotations.Parameter(name = "sequenceName", value = "f_seq_k_fourni"),
+			@org.hibernate.annotations.Parameter(name = "isSequence", value = "false")
+	})
 	private String id;
 
 	@NotNull
@@ -241,6 +238,10 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur")
 	private List<GeoHistoriqueFournisseur> historique;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+	private List<GeoParamUserFournisseurRestriction> restrictions;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "fournisseur", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Where(clause = "typ_tiers = '" + TYPE_TIERS + "'")

@@ -1,19 +1,22 @@
 package fr.microtec.geo2.service.graphql.tiers;
 
-import fr.microtec.geo2.common.CustomUtils;
-import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
-import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
-import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import io.leangen.graphql.annotations.*;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
+import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
+import io.leangen.graphql.annotations.GraphQLNonNull;
+import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
 @GraphQLApi
@@ -42,7 +45,7 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 
 	@GraphQLMutation
 	public GeoClient saveClient(GeoClient client, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.save(client, CustomUtils.parseArgumentFromEnv(env, "client"));
+		return this.saveEntity(client, env);
 	}
 
 	@GraphQLMutation

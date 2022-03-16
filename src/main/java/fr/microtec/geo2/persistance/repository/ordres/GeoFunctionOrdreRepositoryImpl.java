@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Repository
-public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl implements GeoFunctionOrdreRepository {
+public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl
+        implements GeoFunctionOrdreRepository {
 
     @Override
     public FunctionResult ofValideEntrepotForOrdre(String code_entrepot) {
@@ -43,7 +44,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture, String origine) {
+    public FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode,
+            Integer modeCulture, String origine) {
         FunctionQuery query = this.build("F_RECUP_FRAIS");
 
         query.attachInput("arg_var_code", String.class, varCode);
@@ -56,8 +58,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
-    //@Override
-    public FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte) {
+    // @Override
+    public FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float argPdsBrut, Float argPdsNet,
+            Integer argAchQte, Integer argVteQte) {
         FunctionQuery query = super.build("F_CALCUL_QTE");
 
         query
@@ -72,7 +75,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult fAfficheOrdreBaf(String socCode, String scoCode, String cliRef, String cenRef, LocalDate dateMin, LocalDate dateMax, String codeAss, String codeCom) {
+    public FunctionResult fAfficheOrdreBaf(String socCode, String scoCode, String cliRef, String cenRef,
+            LocalDate dateMin, LocalDate dateMax, String codeAss, String codeCom) {
         FunctionQuery query = this.build("F_AFFICHE_ORDRE_BAF", GeoOrdreBaf.class);
 
         query.attachInput("gs_soc_code", String.class, socCode);
@@ -167,7 +171,146 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_user", String.class, user);
-        query.attachOutput("bloquer", Character.class, v -> ((Character)v).equals('O'));
+        query.attachOutput("bloquer", Character.class, v -> ((Character) v).equals('O'));
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofRepartitionPalette(String ordreLigneRef, String secteurCode, String nomUtilisateur) {
+        FunctionQuery query = this.build("OF_REPARTITION_PALETTE");
+
+        query.attachInput("arg_orl_ref", String.class, ordreLigneRef);
+        query.attachInput("gs_sco_code", String.class, secteurCode);
+        query.attachInput("gs_user", String.class, nomUtilisateur);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofVerifLogistiqueDepart(String ordRef) {
+        FunctionQuery query = this.build("OF_VERIF_LOGISTIQUE_DEPART");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA) {
+        FunctionQuery query = this.build("OF_CALCUL_REGIME_TVA_ENCOURS");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("str_regime_tva_defaut", String.class, regimeTVA);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofSauveOrdre(String ordRef) {
+        FunctionQuery query = this.build("OF_SAUVE_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
+        FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("gs_sco_code", String.class, scoCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeDemipalInd(String orlRef, String username) {
+        FunctionQuery query = this.build("ON_CHANGE_DEMIPAL_IND");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("gs_user", String.class, username);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangePalNbCol(String orlRef, String username) {
+        FunctionQuery query = this.build("ON_CHANGE_PAL_NB_COL");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("gs_user", String.class, username);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeCdeNbCol(String orlRef, String username) {
+        FunctionQuery query = this.build("ON_CHANGE_CDE_NB_COL");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("gs_user", String.class, username);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeProprCode(String orlRef, String username, String socCode) {
+        FunctionQuery query = this.build("ON_CHANGE_PROPR_CODE");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_user", String.class, username);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeFouCode(String orlRef, String username, String socCode) {
+        FunctionQuery query = this.build("ON_CHANGE_FOU_CODE");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_user", String.class, username);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangePalCode(String orlRef, String username, String scoCode) {
+        FunctionQuery query = this.build("ON_CHANGE_PAL_CODE");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_user", String.class, username);
+        query.attachInput("arg_sco_code", String.class, scoCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeVtePu(String orlRef) {
+        FunctionQuery query = this.build("ON_CHANGE_VTE_PU");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangePalinterCode(String orlRef) {
+        FunctionQuery query = this.build("ON_CHANGE_PALINTER_CODE");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeIndGratuit(String orlRef) {
+        FunctionQuery query = this.build("ON_CHANGE_IND_GRATUIT");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
 
         return query.fetch();
     }

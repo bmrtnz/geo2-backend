@@ -3,7 +3,11 @@ package fr.microtec.geo2.service.graphql;
 import java.beans.FeatureDescriptor;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -188,6 +192,12 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		}
 
 		return this.repository.save(data);
+	}
+
+	protected T saveEntity(T data, ResolutionEnvironment env) {
+		String entityArgumentKey = CustomUtils.classToArgument(this.clazz);
+		Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, entityArgumentKey);
+		return this.save(data, parsedArguments);
 	}
 
 	/**

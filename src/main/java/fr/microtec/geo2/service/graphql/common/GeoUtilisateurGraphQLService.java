@@ -41,7 +41,7 @@ public class GeoUtilisateurGraphQLService extends GeoAbstractGraphQLService<GeoU
 
 	@GraphQLMutation
 	@Secured("ROLE_USER")
-	public GeoUtilisateur saveUtilisateur(GeoUtilisateur utilisateur) {
+	public GeoUtilisateur saveUtilisateur(GeoUtilisateur utilisateur, @GraphQLEnvironment ResolutionEnvironment env) {
 		GeoUtilisateur currentUser = this.securityService.getUser();
 
 		if(utilisateur.getNomUtilisateur() == null)
@@ -50,6 +50,6 @@ public class GeoUtilisateurGraphQLService extends GeoAbstractGraphQLService<GeoU
 		if(!currentUser.getNomUtilisateur().equals(utilisateur.getNomUtilisateur()))
 			throw new SecurityException("Can't mutate another user");
 
-		return this.save(utilisateur);
+		return this.saveEntity(utilisateur, env);
 	}
 }
