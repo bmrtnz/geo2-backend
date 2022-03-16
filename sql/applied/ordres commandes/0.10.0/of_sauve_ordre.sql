@@ -204,38 +204,38 @@ begin
 
     --Commande EDI: Suppresion puis INSERT ref article dans la table GEO_EDI_ART_CLI
     -- TABLE STRUCTURE CHANGE, removing for now
-    -- if is_edi_ord is not null then
-    --     declare
-    --         cursor cur_ols is
-    --             select
-    --                 art_ref,
-    --                 gtin_colis_kit,
-    --                 cde_nb_col
-    --             from geo_ordlig
-    --             where ord_ref = arg_ord_ref;
-    --     begin
-    --         for r in cur_ols
-    --         loop
-    --             SELECT LAST_ORD into ls_last_ord FROM GEO_EDI_ART_CLI 
-    --             WHERE GTIN_COLIS_CLIENT = r.gtin_colis_kit 
-    --             AND CLI_REF = is_cur_cli_ref
-    --             AND ROWNUM = 1
-    --             ORDER BY LAST_ORD;
-    --             if arg_ord_ref >= ls_last_ord AND ll_cde_nb_col > 0 then
-    --                 begin
-    --                     DELETE FROM GEO_EDI_ART_CLI
-    --                     WHERE CLI_REF = is_cur_cli_ref
-    --                     AND GTIN_COLIS_CLIENT = r.gtin_colis_kit;
-    --                     INSERT INTO GEO_EDI_ART_CLI (ART_REF,CLI_REF,GTIN_COLIS_CLIENT,LAST_ORD) 
-    --                     VALUES (r.art_ref, is_cur_cli_ref, r.gtin_colis_kit, arg_ord_ref);
-    --                 exception when others then
-    --                     msg := 'Erreur insert GEO_EDI_ART_CLI: Pb Insert sur GEO_EDI_ART_CLI' || SQLERRM;
-    --                     return;
-    --                 end;
-    --             end if;
-    --         end loop;
-    --     end;
-    -- end if;
+    if is_edi_ord is not null then
+        declare
+            cursor cur_ols is
+                select
+                    art_ref,
+                    gtin_colis_kit,
+                    cde_nb_col
+                from geo_ordlig
+                where ord_ref = arg_ord_ref;
+        begin
+            for r in cur_ols
+            loop
+                SELECT LAST_ORD into ls_last_ord FROM GEO_EDI_ART_CLI 
+                WHERE GTIN_COLIS_CLIENT = r.gtin_colis_kit 
+                AND CLI_REF = is_cur_cli_ref
+                AND ROWNUM = 1
+                ORDER BY LAST_ORD;
+                if arg_ord_ref >= ls_last_ord AND ll_cde_nb_col > 0 then
+                    begin
+                        DELETE FROM GEO_EDI_ART_CLI
+                        WHERE CLI_REF = is_cur_cli_ref
+                        AND GTIN_COLIS_CLIENT = r.gtin_colis_kit;
+                        INSERT INTO GEO_EDI_ART_CLI (ART_REF,CLI_REF,GTIN_COLIS_CLIENT,LAST_ORD) 
+                        VALUES (r.art_ref, is_cur_cli_ref, r.gtin_colis_kit, arg_ord_ref);
+                    exception when others then
+                        msg := 'Erreur insert GEO_EDI_ART_CLI: Pb Insert sur GEO_EDI_ART_CLI' || SQLERRM;
+                        return;
+                    end;
+                end if;
+            end loop;
+        end;
+    end if;
     --FIN Commande EDI
     -- my_window.TriggerEvent("pfc_save")
 
