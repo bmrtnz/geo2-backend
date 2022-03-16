@@ -107,9 +107,7 @@ public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Dupl
 		clone.articleAssocie = this.articleAssocie;
 		clone.blueWhaleStock= this.blueWhaleStock;
 		clone.gerePar = this.gerePar;
-		clone.gtinColisBlueWhale = this.gtinColisBlueWhale;
 		clone.gtinPaletteBlueWhale = this.gtinPaletteBlueWhale;
-		clone.gtinUcBlueWhale = this.gtinUcBlueWhale;
 		clone.majWms = this.majWms;
 		clone.instructionStation = this.instructionStation;
 		clone.procat = this.procat;

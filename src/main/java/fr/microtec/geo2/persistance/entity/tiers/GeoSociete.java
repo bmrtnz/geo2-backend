@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateEntity;
+import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -41,5 +42,9 @@ public class GeoSociete extends ValidateEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "dev_code")
 	private GeoDevise devise;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cam_code")
+	private GeoCampagne campagne;
 
 }

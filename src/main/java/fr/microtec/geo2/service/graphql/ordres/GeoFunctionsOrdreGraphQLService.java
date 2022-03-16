@@ -36,6 +36,13 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fNouvelOrdre(
+            @GraphQLArgument(name = "societe") String socCode
+    ) {
+        return this.repository.fNouvelOrdre(socCode);
+    }
+
+    @GraphQLQuery
     public List<GeoOrdreBaf> fAfficheBaf(
             @GraphQLArgument(name = "societeCode") String societeCode,
             @GraphQLArgument(name = "secteurCode") String secteurCode,
@@ -47,6 +54,23 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "codeCommercial") String codeCommercial
     ) {
         return this.ordreService.allDepartBaf(societeCode, secteurCode, clientCode, entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
+    }
+
+    @GraphQLQuery
+    public FunctionResult ofInitArticle(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "articleRef") String articleRef,
+            @GraphQLArgument(name = "societeCode") String societeCode
+    ) {
+        return this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fInitBlocageOrdre(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "userName") String userName
+    ) {
+        return this.repository.fInitBlocageOrdre(ordreRef, userName);
     }
 
 }

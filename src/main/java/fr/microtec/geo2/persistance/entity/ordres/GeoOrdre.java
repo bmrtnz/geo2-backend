@@ -13,13 +13,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.PostUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
@@ -43,8 +47,10 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransitaire;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypeCamion;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -52,7 +58,28 @@ import lombok.EqualsAndHashCode;
 @DynamicInsert
 @DynamicUpdate
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<GeoOrdre> {
+
+	// constructor to fetch statut
+	public GeoOrdre(
+		Boolean flagPublication,
+		// Collection<GeoTracabiliteDetailPalette> tracabiliteDetailPalettes,
+		// Collection<GeoOrdreLigne> lignes,
+		Boolean expedieAuComplet,
+		Boolean bonAFacturer,
+		Boolean facture,
+		Boolean flagAnnule
+	) {
+		this.setFlagPublication(flagPublication);
+		// this.setTracabiliteDetailPalettes((List<GeoTracabiliteDetailPalette>)tracabiliteDetailPalettes);
+		// this.setLignes((List<GeoOrdreLigne>)lignes);
+		this.setExpedieAuComplet(expedieAuComplet);
+		this.setBonAFacturer(bonAFacturer);
+		this.setFacture(facture);
+		this.setFlagAnnule(flagAnnule);
+	}
 
 	@Id
 	@Column(name = "ord_ref")
@@ -393,7 +420,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@NotNull
 	@Column(name = "flannul", nullable = false)
-	private Boolean flagAnnule;
+	private Boolean flagAnnule = false;
 
 	@Column(name = "rem_sf_tx_mdd")
 	private Float remiseSurFactureMDDTaux;
@@ -451,7 +478,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "ind_exclu_frais_pu")
 	private Boolean exclusionFraisPU;
 
-	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) > 0 THEN 'N' ELSE 'O' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF)")
+	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) = 0 THEN 'O' ELSE 'N' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF AND O.ORD_REF = ord_ref)")
 	private Boolean expedieAuComplet;
 
 	@Transient
@@ -459,18 +486,6 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@Transient
 	private GeoOrdreStatut statut;
-
-	@PostLoad
-	@PostUpdate
-	public void postLoadUpdate(){
-		this.setStatut(GeoOrdreStatut.NON_CONFIRME);
-		if (this.getFlagPublication()) this.setStatut(GeoOrdreStatut.CONFIRME);
-		if (!this.getTracabiliteDetailPalettes().isEmpty()) this.setStatut(GeoOrdreStatut.EN_PREPARATION);
-		if (this.getExpedieAuComplet()) this.setStatut(GeoOrdreStatut.EXPEDIE);
-		if (this.getBonAFacturer()) this.setStatut(GeoOrdreStatut.A_FACTURER);
-		if (this.getFacture()) this.setStatut(GeoOrdreStatut.FACTURE);
-		if (this.getFlagAnnule()) this.setStatut(GeoOrdreStatut.ANNULE);
-	}
 
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();

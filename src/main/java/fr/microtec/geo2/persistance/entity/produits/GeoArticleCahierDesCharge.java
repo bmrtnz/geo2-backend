@@ -64,9 +64,6 @@ public class GeoArticleCahierDesCharge extends ValidateCreatedAndModifiedEntity 
 	@JoinColumnOrFormula(column = @JoinColumn(name = "clr_code"))
 	private GeoColoration coloration;
 
-	@Column(name = "ins_seccom")
-	private String instructionCommercial;
-
 	@Column(name = "ins_station")
 	private String instructionStation;
 
@@ -79,7 +76,6 @@ public class GeoArticleCahierDesCharge extends ValidateCreatedAndModifiedEntity 
 		clone.penetro = this.penetro;
 		clone.cirage = this.cirage;
 		clone.rangement = this.rangement;
-		clone.instructionCommercial = this.instructionCommercial;
 		clone.instructionStation = this.instructionStation;
 		
 		return clone;

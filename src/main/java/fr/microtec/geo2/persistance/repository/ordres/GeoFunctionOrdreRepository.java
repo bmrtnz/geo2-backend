@@ -28,11 +28,23 @@ public interface GeoFunctionOrdreRepository {
      */
     FunctionResult fNouvelOrdre(String socCode);
 
+    /**
+     * Génère une nouvelle ligne d'ordre avec l'article sélectionné.
+     */
+    FunctionResult ofInitArticle(String ordRef, String artRef, String socCode);
+
+    /**
+     * Indicateur du blocage de l'ordre dont le départ est aujourd'hui
+     */
+    FunctionResult fInitBlocageOrdre(String ordRef, String user);
+
     // Sub procedures, declare only for testing
     FunctionResult fCalculMarge(String refOrdre);
     FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture, String origine);
     FunctionResult fCalculPerequation(String refOrdre, String codeSociete);
     FunctionResult fVerifOrdreWarning(String refOrdre, String socCode);
+    FunctionResult fGenereDluo(String input, LocalDate dateExp, LocalDate dateLiv);
+    FunctionResult ofInitArtrefGrp(String orlRef);
 
     //FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
 

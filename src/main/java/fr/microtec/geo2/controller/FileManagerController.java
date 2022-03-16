@@ -64,7 +64,8 @@ public class FileManagerController {
 				this.fileSystemService.delete(path);
 				break;
 			case MOVE:
-				this.fileSystemService.move(path, body.get("dest"));
+				String dest = basePath + body.get("dest");
+				this.fileSystemService.move(path, dest);
 				break;
 			case CREATE_DIR:
 				this.fileSystemService.createDirectory(path, body.get("name"));

@@ -33,9 +33,6 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity im
 	@Column(name = "gtin_colis")
 	private String gtinColis;
 
-	@Column(name = "gtin_palette")
-	private String gtinPalette;
-
 	@Column(name = "gtin_uc")
 	private String gtinUc;
 
@@ -98,7 +95,6 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity im
 		clone.identificationSymbolique = this.identificationSymbolique;
 		clone.marque = this.marque;
 		clone.gtinColis = this.gtinColis;
-		clone.gtinPalette = this.gtinPalette;
 		clone.gtinUc = this.gtinUc;
 		clone.descriptionCalibreClient = this.descriptionCalibreClient;
 		clone.produitMdd = this.produitMdd;

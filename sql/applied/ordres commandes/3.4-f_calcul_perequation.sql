@@ -18,10 +18,10 @@ AS
     ld_crt_lig number;
     ld_fad_lig number;
     ld_frd_ord number;
-	ld_marge_brute_orig_ligne number;
-    ld_marge_brute_4pc_ligne number;
-    ld_marge_brute_delta_ligne number;
-    ld_marge_brute_delta_ordre number;
+	ld_marge_brute_orig_ligne NUMBER := 0;
+    ld_marge_brute_4pc_ligne number := 0;
+    ld_marge_brute_delta_ligne number := 0;
+    ld_marge_brute_delta_ordre number := 0;
     ld_frdnet_lig number;
     ld_frdnet_ord number;
     ld_totpereq_lig number;

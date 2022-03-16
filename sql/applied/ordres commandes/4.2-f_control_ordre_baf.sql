@@ -10,7 +10,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_CONTROL_ORDRE_BAF" (
     ind_station out varchar2,
     ind_date out varchar2,
     desc_ctl out varchar2,
-    pc_marge_brute out decimal,
+    pc_marge_brute out number,
 
     res out number,
     msg out varchar2
@@ -23,9 +23,9 @@ AS
     --ls_ind_date varchar2(50) := '0';
     --ls_ind_station varchar2(50) := '0';
 
-    ldc_marge_nette decimal;
-    ldc_marge_brute decimal;
-    --ldc_pc_marge_brute decimal;
+    ldc_marge_nette number;
+    ldc_marge_brute number;
+    --ldc_pc_marge_brute number;
 
     ls_liv_dat varchar2(50);
     ls_liv_dat_tri varchar2(50);
@@ -62,9 +62,14 @@ BEGIN
             f_verif_ordre_warning (arg_ord_ref, arg_soc_code, res, msg);
         End IF;
 
-        select totvte-totrem+totres-totfrd-totach-tottrp-tottrs-totcrt-totfad,
-               totvte-totrem+totres-totfrd-totach-tottrp-tottrs-totcrt-totfad-totmob,
-               case when totvte > 0 THEN (totvte-totrem+totres-totfrd-totach-tottrp-tottrs-totcrt-totfad) / totvte ELSE 0 END
+        select
+            totvte-totrem+totres-COALESCE(totfrd,0)-totach-tottrp-tottrs-totcrt-totfad,
+            totvte-totrem+totres-COALESCE(totfrd,0)-totach-tottrp-tottrs-totcrt-totfad-totmob,
+            CASE
+                WHEN totvte > 0
+                THEN (totvte-totrem+totres-COALESCE(totfrd,0)-totach-tottrp-tottrs-totcrt-totfad) / totvte
+                ELSE 0
+            END
         INTO ldc_marge_brute, ldc_marge_nette, pc_marge_brute
         from GEO_ORDRE
         where ORD_REF = arg_ord_ref;

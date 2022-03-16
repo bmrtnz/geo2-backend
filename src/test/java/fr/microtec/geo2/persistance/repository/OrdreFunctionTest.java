@@ -167,7 +167,7 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
         Assertions.assertFalse(result.getData().isEmpty());
-        Assertions.assertNotNull(result.getData().get("ll_nordre"));
+        Assertions.assertNotNull(result.getData().get("ls_nordre"));
     }
 
     @Test
@@ -179,4 +179,49 @@ public class OrdreFunctionTest {
         Assertions.assertEquals("%%% f_nouvel_ordre : société TRUC inconnue", result.getMsg());
     }
 
+    @Test
+    public void testFGenereDluo() {
+        FunctionResult result = this.functionOrdreRepository
+        .fGenereDluo("%DEMdd%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+
+        Assertions.assertNotNull(result.getData().get("arg_dluo"));
+    }
+
+    @Test
+    public void testOfInitArtrefGrp() {
+        FunctionResult result = this.functionOrdreRepository
+        .ofInitArtrefGrp("002068");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testOfInitArticle() {
+        FunctionResult result = this.functionOrdreRepository
+        .ofInitArticle("1434640", "046353", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testfInitBlocageOrdreWithGeoClient2() {
+        FunctionResult result = this.functionOrdreRepository
+        .fInitBlocageOrdre("1434640", "LINO");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(false, result.getData().get("bloquer"));
+    }
+
+    @Test
+    public void testfInitBlocageOrdreTypeRPF() {
+        FunctionResult result = this.functionOrdreRepository
+        .fInitBlocageOrdre("1503751", "VEGA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(true, result.getData().get("bloquer"));
+    }
 }

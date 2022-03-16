@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 @Data
@@ -25,5 +27,10 @@ public class GeoPays extends ValidateAndModifiedEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pays")
 	private List<GeoClient> clients;
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sco_code", nullable = false)
+	private GeoSecteur secteur;
 
 }

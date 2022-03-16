@@ -5,6 +5,8 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -87,6 +89,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // Require for skip error (Max cursor open) in oracle
     public FunctionResult fControlOrdreBaf(String refOrdre, String scoCode) {
         FunctionQuery query = this.build("F_CONTROL_ORDRE_BAF");
 
@@ -111,7 +114,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         FunctionQuery query = this.build("F_NOUVEL_ORDRE");
 
         query.attachInput("arg_soc_code", String.class, socCode);
-        query.attachOutput("ll_nordre", Integer.class);
+        query.attachOutput("ls_nordre", String.class);
 
         return query.fetch();
     }
@@ -122,6 +125,49 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         query.attachInput("arg_ord_ref", String.class, refOrdre);
         query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofInitArticle(String ordRef, String artRef, String socCode) {
+        FunctionQuery query = this.build("OF_INIT_ARTICLE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_art_ref", String.class, artRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fGenereDluo(String input, LocalDate dateExp, LocalDate dateLiv) {
+        FunctionQuery query = this.build("F_GENERE_DLUO");
+
+        query.attachInput("arg_param", String.class, input);
+        query.attachInput("arg_datexp", LocalDate.class, dateExp);
+        query.attachInput("arg_datliv", LocalDate.class, dateLiv);
+        query.attachOutput("arg_dluo", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofInitArtrefGrp(String orlRef) {
+        FunctionQuery query = this.build("OF_INIT_ARTREF_GRP");
+
+        query.attachInput("cur_orl_ref", String.class, orlRef);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fInitBlocageOrdre(String ordRef, String user) {
+        FunctionQuery query = this.build("F_INIT_BLOCAGE_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_user", String.class, user);
+        query.attachOutput("bloquer", Character.class, v -> ((Character)v).equals('O'));
 
         return query.fetch();
     }

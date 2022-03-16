@@ -1,12 +1,12 @@
 create or replace procedure "GEO_ADMIN"."F_NOUVEL_ORDRE" (
     arg_soc_code in varchar2,
-    ll_nordre out number,
     res out number,
-    msg out varchar2
+    msg out varchar2,
+    ls_nordre out varchar2
 )
 AS
     ls_ord_ref varchar2(50);
-    ls_nordre varchar2(50);
+    ll_nordre number;
 BEGIN
     res := 0;
     msg := '';
@@ -30,7 +30,7 @@ BEGIN
             msg := '%%% f_nouvel_ordre : société ' || arg_soc_code || ' inconnue';
             return;
         end case;
-    ls_nordre := to_char(ll_nordre, '000000');
+    ls_nordre := to_char(ll_nordre, 'FM099999');
     res := 1;
 
     exception when others then

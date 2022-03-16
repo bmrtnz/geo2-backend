@@ -65,17 +65,17 @@ BEGIN
     ls_sql := ls_sql || '                 GEO_ORDRE.SCO_CODE = ''' || isw_sco_code || ''' AND  ';
     ls_sql := ls_sql || '                 GEO_ORDRE.CEN_CODE  not like ''PREORDRE%'' AND  ';
 
-    IF isw_cli_ref <> '' Then
-        ls_sql := ls_sql || '                 GEO_ORDRE.CLI_REF = ''' || isw_cli_ref || ''' AND  ';
+    IF (isw_cli_ref <> '') OR (isw_cli_ref IS NOT null) Then
+        ls_sql := ls_sql || ' GEO_ORDRE.CLI_REF = ''' || isw_cli_ref || ''' AND ';
     End If;
-    IF isw_cen_ref <> '' Then
-        ls_sql := ls_sql || '                 GEO_ORDRE.CEN_REF = ''' || isw_cen_ref || ''' AND  ';
+    IF (isw_cen_ref <> '') OR (isw_cen_ref IS NOT null) Then
+        ls_sql := ls_sql || ' GEO_ORDRE.CEN_REF = ''' || isw_cen_ref || ''' AND ';
     End If;
-    IF isw_per_codeass <> '' Then
-        ls_sql := ls_sql || '                 GEO_ORDRE.PER_CODEASS = ''' || isw_per_codeass || ''' AND  ';
+    IF (isw_per_codeass <> '') OR (isw_per_codeass IS NOT null) Then
+        ls_sql := ls_sql || ' GEO_ORDRE.PER_CODEASS = ''' || isw_per_codeass || ''' AND ';
     End If;
-    IF isw_per_codecom <> '' Then
-        ls_sql := ls_sql || '                 GEO_ORDRE.PER_CODECOM= ''' || isw_per_codecom  || ''' AND  ';
+    IF (isw_per_codecom <> '') OR (isw_per_codecom IS NOT null) Then
+        ls_sql := ls_sql || ' GEO_ORDRE.PER_CODECOM= ''' || isw_per_codecom || ''' AND ';
     End If;
             
     ls_sql := ls_sql || '                 ( GEO_ENTREP.CEN_REF = GEO_ORDRE.CEN_REF ) and  ';

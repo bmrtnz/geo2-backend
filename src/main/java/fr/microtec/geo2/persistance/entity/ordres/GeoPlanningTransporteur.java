@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import fr.microtec.geo2.persistance.converter.BooleanCharacterConverter;
 import lombok.Data;
@@ -16,7 +18,7 @@ import lombok.Data;
 public class GeoPlanningTransporteur {
 
   @Id
-	@Column(name = "rownum")
+	@Column(name = "ord_ref")
   Integer id;
 
   @Column(name = "code_chargement")
@@ -91,5 +93,9 @@ public class GeoPlanningTransporteur {
   
   @Column(name = "col_code")
 	String colis;
+
+  @ManyToOne
+  @JoinColumn(name = "ord_ref", insertable = false, updatable = false)
+  private GeoOrdre ordre;
 
 }
