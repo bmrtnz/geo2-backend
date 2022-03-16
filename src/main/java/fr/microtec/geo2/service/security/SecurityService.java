@@ -14,6 +14,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.text.Normalizer;
+
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @Service
@@ -29,7 +31,7 @@ public class SecurityService {
      * Authenticate user.
      */
     public GeoUtilisateur login(String login, String password, HttpServletRequest request) {
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(login, password);
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(normalizeLogin(login), password);
         GeoUtilisateur user = null;
 
         try {
@@ -67,5 +69,18 @@ public class SecurityService {
      */
     public GeoUtilisateur getUser() {
         return (GeoUtilisateur) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    /**
+     * Normalize login for search in ldap/database (no accent, uppercase).
+     *
+     * @param login User login
+     * @return Normalized login
+     */
+    public static String normalizeLogin(String login) {
+        return Normalizer
+                .normalize(login, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .toUpperCase();
     }
 }
