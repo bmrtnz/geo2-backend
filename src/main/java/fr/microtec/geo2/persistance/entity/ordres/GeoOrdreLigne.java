@@ -104,37 +104,37 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Double achatQuantite;
 
 	@Column(name = "totvte")
-	private Double totalVenteBrut;
+	private Double totalVenteBrut = 0d;
 
 	@Column(name = "totrem")
-	private Float totalRemise;
+	private Float totalRemise = 0f;
 
 	@Column(name = "totres")
-	private Float totalRestitue;
+	private Float totalRestitue = 0f;
 
 	@Column(name = "totfrd")
-	private Double totalFraisMarketing;
+	private Double totalFraisMarketing = 0d;
 
 	@Column(name = "totach")
-	private Double totalAchat;
+	private Double totalAchat = 0d;
 
 	@Column(name = "totmob")
-	private Float totalObjectifMarge;
+	private Float totalObjectifMarge = 0f;
 
 	@Column(name = "tottrp")
-	private Float totalTransport;
+	private Float totalTransport = 0f;
 
 	@Column(name = "tottrs")
-	private Float totalTransit;
+	private Float totalTransit = 0f;
 
 	@Column(name = "totcrt")
-	private Float totalCourtage;
+	private Float totalCourtage = 0f;
 
 	@Column(name = "totfad")
-	private Float totalFraisAdditionnels;
+	private Float totalFraisAdditionnels = 0f;
 
 	@Column(name = "totfrais_plateforme")
-	private Float totalFraisPlateforme;
+	private Float totalFraisPlateforme = 0f;
 
 	@Column(name = "var_ristourne")
 	private Boolean ristourne;
