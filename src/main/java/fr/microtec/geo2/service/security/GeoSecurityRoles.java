@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.security;
+package fr.microtec.geo2.service.security;
 
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Geo2SecurityRoles {
+public class GeoSecurityRoles {
 
 	/**
 	 * Geo2 roles

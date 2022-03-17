@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.security;
+package fr.microtec.geo2.service.security;
 
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.repository.common.GeoUtilisateurRepository;
@@ -14,12 +14,12 @@ import java.util.Optional;
  * Geo2 spring user detail implementation.
  */
 @Service
-public class Geo2UserDetailsService implements UserDetailsService {
+public class GeoUserDetailsService implements UserDetailsService {
 
 	private final GeoUtilisateurRepository utilisateurRepository;
 
 	@Autowired
-	public Geo2UserDetailsService(GeoUtilisateurRepository userRepository) {
+	public GeoUserDetailsService(GeoUtilisateurRepository userRepository) {
 		this.utilisateurRepository = userRepository;
 	}
 
@@ -33,7 +33,7 @@ public class Geo2UserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<GeoUtilisateur> geoUserOptional = this.utilisateurRepository.findByNomUtilisateur(username);
-		if (!geoUserOptional.isPresent()) {
+		if (geoUserOptional.isEmpty()) {
 			throw new UsernameNotFoundException("Username not found");
 		}
 
