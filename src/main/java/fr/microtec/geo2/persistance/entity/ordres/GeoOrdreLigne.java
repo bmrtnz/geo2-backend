@@ -264,7 +264,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Integer nombreColisManquant;
 
 	@Column(name = "list_certifs")
-	private String listeCertifications;
+	private String listeCertifications = "0";
 
 	@Column(name = "cert_origine")
 	private String origineCertification;
