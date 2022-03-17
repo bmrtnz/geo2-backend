@@ -199,16 +199,17 @@ begin
             exception when others then
                 ld_prix_mini := 0;
             end;
-            if ld_prix_mini > 0 and ld_prix_mini is not null and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK'  then 
+            if ld_prix_mini > 0 and ld_prix_mini is not null and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK' and ls_sco_code <> 'RET' then
                 update geo_ordlig
                 set
                     ach_pu = ld_prix_mini,
-                    ach_dev_pu = ld_dev_taux * ld_prix_mini
+                    ach_dev_pu = ld_dev_taux * ld_prix_mini,
+                    ach_dev_code = ls_soc_dev_code
                 where orl_ref = arg_orl_ref;
                 commit;
             else				
                 update geo_ordlig
-                set ach_dev_pu = ld_dev_taux * ld_dev_taux * ld_prix_mini
+                set ach_dev_pu = ld_dev_taux * ld_dev_taux * ld_prix_mini, ach_dev_code = ls_dev_code
                 where orl_ref = arg_orl_ref;
                 commit;											
             end if;     
