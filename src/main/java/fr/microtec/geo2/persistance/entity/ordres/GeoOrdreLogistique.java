@@ -38,7 +38,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
-  
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
 	private GeoFournisseur fournisseur;
@@ -47,10 +47,10 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private String codeFournisseur;
 
 	@Column(name = "flag_exped_fournni")
-	private Boolean expedieStation;
+	private Boolean expedieStation = false;
 
 	@Column(name = "flag_exped_groupa")
-	private Boolean expedieLieuGroupage;
+	private Boolean expedieLieuGroupage = false;
 
 	@Column(name = "locus_trace")
 	private String locusTrace;
@@ -60,7 +60,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 
 	@Column(name = "datdep_fou_r")
 	private LocalDateTime dateDepartReelleFournisseur;
-	
+
 	@Column(name = "datdep_grp_p")
 	private LocalDateTime dateDepartPrevueGroupage;
 
@@ -69,14 +69,14 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 
 	@Column(name = "datliv_grp")
 	private LocalDate dateLivraisonLieuGroupage;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "grp_code")
 	private GeoGroupage groupage;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "logistique")
 	private List<GeoOrdreLigne> lignes;
-	
+
 	@Column(name = "pal_nb_sol")
 	private Float nombrePalettesAuSol;
 
@@ -145,23 +145,21 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private String okStation;
 
 	@PostLoad
-	public void postLoad(){
-		if(this.dateDepartReelleFournisseur == null) {
-			if(
-				this.expedieStation
-				&& this.totalPalettesExpediees != null
-				&& this.nombrePalettesAuSol != null
-				&& this.nombrePalettes100x120 != null
-				&& this.nombrePalettes80x120 != null
-				&& this.nombrePalettes60x80 != null
-				&& this.totalPalettesExpediees == 0
-				&& this.nombrePalettesAuSol == 0
-				&& this.nombrePalettes100x120 == 0
-				&& this.nombrePalettes80x120 == 0
-				&& this.nombrePalettes60x80 == 0
-			)
+	public void postLoad() {
+		if (this.dateDepartReelleFournisseur == null) {
+			if (this.expedieStation
+					&& this.totalPalettesExpediees != null
+					&& this.nombrePalettesAuSol != null
+					&& this.nombrePalettes100x120 != null
+					&& this.nombrePalettes80x120 != null
+					&& this.nombrePalettes60x80 != null
+					&& this.totalPalettesExpediees == 0
+					&& this.nombrePalettesAuSol == 0
+					&& this.nombrePalettes100x120 == 0
+					&& this.nombrePalettes80x120 == 0
+					&& this.nombrePalettes60x80 == 0)
 				this.okStation = "clôturé à zéro";
-			else if(this.expedieStation)
+			else if (this.expedieStation)
 				this.okStation = "OK";
 			else
 				this.okStation = "non clôturé";

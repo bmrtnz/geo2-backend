@@ -25,4 +25,10 @@ public class GeoTypeVente extends ValidateAndModifiedEntity {
 	@Column(name = "normal_retrait")
 	private Character typeRetrait;
 
+	public static GeoTypeVente getDefault() {
+		GeoTypeVente tv = new GeoTypeVente();
+		tv.setId("F");
+		return tv;
+	}
+
 }
