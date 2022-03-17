@@ -49,14 +49,14 @@ begin
     from geo_societe
     where soc_code = arg_soc_code;
 
-    select  IND_EXP, LIST_EXP
-    into ls_ind_exp, ls_list_fourni_sql
-    from GEO_FOURNI
-    where FOU_CODE = ls_val;
-
-    If ls_ind_exp is null then
+    begin
+        select  COALESCE(IND_EXP, ''), LIST_EXP
+        into ls_ind_exp, ls_list_fourni_sql
+        from GEO_FOURNI
+        where FOU_CODE = ls_val;
+    exception when no_data_found then
         ls_ind_exp := '';
-    end if;
+    end;
 
     if ls_ind_exp ='E' Then
         If ls_list_fourni_sql is not null then
@@ -144,22 +144,41 @@ begin
         ls_dev_code varchar2(50);
         ld_dev_taux number;
     begin
-        select dev_code into ls_dev_code from geo_fourni where fou_code = ls_val;
+        begin
+            select dev_code into ls_dev_code from geo_fourni where fou_code = ls_val;
+        exception when others then
+            msg := 'la devise n''est pas renseignée pour ce fournisseur';
 
-        if ls_dev_code =ls_soc_dev_code   then
+            ls_dev_code := ls_soc_dev_code;
+            ld_dev_taux := 1.0;
+        end;
+
+        if ls_dev_code = ls_soc_dev_code   then
             ld_dev_taux := 1.0;
         else
-            select dev_tx_achat
-            into ld_dev_taux
-            from geo_devise_ref
-            where dev_code = ls_dev_code
-            and dev_code_ref =ls_soc_dev_code  ;
+            begin
+                select dev_tx_achat
+                into ld_dev_taux
+                from geo_devise_ref
+                where dev_code = ls_dev_code
+                and dev_code_ref = ls_soc_dev_code;
+            exception when no_data_found then
+                ld_dev_taux := null;
+            end;
+
             if ld_dev_taux is null then
                 msg := 'le taux de cette devise n''est pas renseigné';
                 ls_dev_code := ls_soc_dev_code;
                 ld_dev_taux := 1.0;
             end if;
         end if;
+
+        update geo_ordlig
+        set
+            ach_dev_code = ls_dev_code,
+            ach_dev_taux = ld_dev_taux
+        where orl_ref = arg_orl_ref;
+        commit;
 
         --Vérification s'il existe un pu mini pour la variété club
         --New gestion des frais marketing
@@ -189,8 +208,10 @@ begin
             from geo_attrib_frais
             where k_frais = ll_k_frais;
 
-            if  ls_perequation =  'O' then
+            if ls_perequation = 'O' then
                 ld_prix_mini := ld_accompte;
+            else
+                ld_prix_mini := 0;
             end if;
         exception when others then
             ld_prix_mini := 0;
@@ -200,13 +221,12 @@ begin
             update geo_ordlig
             set
                 ach_pu = ld_prix_mini,
-                ach_dev_pu = ld_dev_taux * ld_prix_mini,
-                ach_dev_code = ls_soc_dev_code
+                ach_dev_pu = ld_dev_taux * ld_prix_mini
             where orl_ref = arg_orl_ref;
             commit;
         else
             update geo_ordlig
-            set ach_dev_pu = ld_dev_taux * ld_dev_taux * ld_prix_mini, ach_dev_code = ls_dev_code
+            set ach_pu = 0, ACH_DEV_PU = 0
             where orl_ref = arg_orl_ref;
             commit;
         end if;
@@ -235,17 +255,10 @@ begin
                             end if
             end if  */
     exception when others then
-        msg := 'la devise n''est pas renseignée pour ce fournisseur';
-        update geo_ordlig
-        set
-            ach_dev_code = ls_soc_dev_code,
-            ach_dev_taux = 1.0
-        where orl_ref = arg_orl_ref;
-        commit;
+        msg := 'Error';
     end;
 
     if ls_sco_code = 'F' then
-
         If (ls_typ_ordre <> 'RPO' and ls_typ_ordre <> 'RPR') or  (ls_vte_bta <> 'UNITE'  and ls_ach_bta <> 'UNITE')	then		
             of_repartition_palette(arg_orl_ref, ls_sco_code, arg_user, res, msg);
             -- On met aussi à jour les lignes avec l'ancien expéditeur
