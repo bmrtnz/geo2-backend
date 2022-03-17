@@ -238,10 +238,10 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Boolean indicateurBlocagePrix;
 
 	@Column(name = "remsf_tx")
-	private Float tauxRemiseSurFacture;
+	private Float tauxRemiseSurFacture = 0f;
 
 	@Column(name = "remhf_tx")
-	private Float tauxRemiseHorsFacture;
+	private Float tauxRemiseHorsFacture = 0f;
 
 	@Column(name = "stock_nb_resa")
 	private Float nombreReservationsSurStock;
