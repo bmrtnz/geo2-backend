@@ -11,7 +11,6 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_INIT_ARTICLE" (
     msg out varchar2
 )
 AS
-
 	ls_art_ref varchar2(50);
 	ls_esp_code varchar2(50);
 	ls_var_code varchar2(50);
@@ -58,6 +57,7 @@ AS
 	ll_k_frais number;
 	ls_bloque varchar2(50);
 	ls_orl_ref varchar2(50);
+	ls_pal_code varchar2(50);
 
 	cur_orl_ref GEO_ORDLIG.orl_ref%type;
 	soc_dev_code GEO_DEVISE.dev_code%type;
@@ -79,10 +79,11 @@ begin
 
 	select f_seq_orl_seq() into cur_orl_ref from dual;
 	select dev_code into soc_dev_code from geo_societe where soc_code = arg_soc_code;
-	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code
-	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code
+	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code, e.pal_code
+	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code, ls_pal_code
 	from geo_ordre o
 	left join geo_client c on o.cli_ref = c.cli_ref
+	left join geo_entrep e on o.cen_ref = e.cen_ref
 	where ord_ref = arg_ord_ref;
 
 	-- if arg_sco_code is not null then
@@ -126,7 +127,8 @@ begin
 				orl_ref,
 				ord_ref,
 				art_ref,
-				esp_code
+				esp_code,
+				pal_code
 				-- remsf_tx,
 				-- remhf_tx
 			)
@@ -134,7 +136,8 @@ begin
 				cur_orl_ref,
 				arg_ord_ref,
 				ls_art_ref,
-				ls_esp_code
+				ls_esp_code,
+				coalesce(ls_pal_code, '-')
 				-- id_remsf,
 				-- id_remhf_tx
 			);
