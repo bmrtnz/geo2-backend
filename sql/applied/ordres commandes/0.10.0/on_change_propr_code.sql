@@ -72,8 +72,7 @@ begin
         from GEO_ORDLOG
         where ORD_REF = ls_ord_ref and FOU_CODE = ls_val;
     EXCEPTION WHEN NO_DATA_FOUND THEN
-        msg := 'Erreur: Pas de logistique associé pour le fournisseur :' || ls_val;
-        return; 
+        ls_flag_exped_fournni := '';
     end;
 
     declare
@@ -141,113 +140,109 @@ begin
         End If;
     end;
                                     
-    
-    if ls_val <> ls_val or ls_val is null then
+    declare
+        ls_dev_code varchar2(50);
+        ld_dev_taux number;
+    begin
+        select dev_code into ls_dev_code from geo_fourni where fou_code = ls_val;
 
-        declare
-            ls_dev_code varchar2(50);
-            ld_dev_taux number;
-        begin
-            select dev_code into ls_dev_code from geo_fourni where fou_code = ls_val;
-
-            if ls_dev_code =ls_soc_dev_code   then 
+        if ls_dev_code =ls_soc_dev_code   then
+            ld_dev_taux := 1.0;
+        else
+            select dev_tx_achat
+            into ld_dev_taux
+            from geo_devise_ref
+            where dev_code = ls_dev_code
+            and dev_code_ref =ls_soc_dev_code  ;
+            if ld_dev_taux is null then
+                msg := 'le taux de cette devise n''est pas renseigné';
+                ls_dev_code := ls_soc_dev_code;
                 ld_dev_taux := 1.0;
-            else
-                select dev_tx_achat
-                into ld_dev_taux
-                from geo_devise_ref
-                where dev_code = ls_dev_code
-                and dev_code_ref =ls_soc_dev_code  ;
-                if ld_dev_taux is null then
-                    msg := 'le taux de cette devise n''est pas renseigné';
-                    ls_dev_code := ls_soc_dev_code;
-                    ld_dev_taux := 1.0;
-                end if;
-            end if;          
-                
-            --Vérification s'il existe un pu mini pour la variété club                 
-            --New gestion des frais marketing		
-            -- ls_varcode = This.object.geo_article_var_code[row]
-            -- select ach_pu_mini into :ld_prix_mini from geo_variet where var_code = :ls_varcode ;
-            select tvt_code, sco_code into ls_tvt_code, ls_sco_code from geo_ordre where ord_ref = ls_ord_ref;
-            declare
-                ls_var_code varchar2(50);
-                ls_cat_code varchar2(50);
-                ll_article_mode_culture varchar2(50);
-                ls_ori_code varchar2(50);
-                ls_ccw_code varchar2(50);
-                ld_frais_pu_mark number;
-                ls_frais_unite_mark number;
-                ld_accompte number;
-                ls_perequation number;
-                ll_k_frais number;
-            begin
-                select var_code, cat_code, mode_culture, ori_code, ccw_code
-                into ls_var_code, ls_cat_code, ll_article_mode_culture, ls_ori_code, ls_ccw_code
-                from geo_article_colis 
-                where art_ref = ls_art_ref and valide ='O';
-                --ll_k_frais = f_recup_frais(ls_var_code, ls_cat_code, ls_sco_code, ls_tvt_code, ll_article_mode_culture, ls_ori_code)
-                f_recup_frais(ls_var_code, ls_ccw_code, ls_sco_code, ls_tvt_code, ll_article_mode_culture, ls_ori_code, ll_k_frais, msg);
-                select frais_pu, frais_unite, accompte, perequation
-                into ld_frais_pu_mark, ls_frais_unite_mark, ld_accompte, ls_perequation
-                from geo_attrib_frais
-                where k_frais = ll_k_frais;
-        
-                if  ls_perequation =  'O' then
-                    ld_prix_mini := ld_accompte;
-                end if;
-            exception when others then
-                ld_prix_mini := 0;
-            end;
-            if ld_prix_mini > 0 and ld_prix_mini is not null and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK' and ls_sco_code <> 'RET' then
-                update geo_ordlig
-                set
-                    ach_pu = ld_prix_mini,
-                    ach_dev_pu = ld_dev_taux * ld_prix_mini,
-                    ach_dev_code = ls_soc_dev_code
-                where orl_ref = arg_orl_ref;
-                commit;
-            else				
-                update geo_ordlig
-                set ach_dev_pu = ld_dev_taux * ld_dev_taux * ld_prix_mini, ach_dev_code = ls_dev_code
-                where orl_ref = arg_orl_ref;
-                commit;											
-            end if;     
-            --fin marketing
-                    /*if SQLCA.SQLCode = 0 then
-            --Pour affecter uniquement le prix mini sur le mode de culture à 0 demande de AVIALARET LLEF
-            --DEB LLEF
-                    ls_art_ref =  this.object.geo_ordlig_art_ref[row] 
-                    select mode_culture into :ll_mode_culture from geo_article where art_ref = :ls_art_ref;
-            --FIN LLEF
-                    --             if ld_prix_mini > 0 and not(isnull(ld_prix_mini)) and arg_soc_code <> 'IMP' then
-                            if ld_prix_mini > 0 and not(isnull(ld_prix_mini)) and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK' and ll_mode_culture = 0 then --LLEF
-                                                this.SetItem(row,'ach_pu',          ld_prix_mini)
-                                                ld_ach_pu = ld_prix_mini
-                                                ld_ach_dev_pu =  ld_dev_taux * ld_prix_mini
-                                                This.SetItem(row,'ach_pu', ld_ach_pu) 
-                                                this.SetItem(row,'geo_ordlig_ach_dev_pu',        ld_ach_dev_pu) 
-                                                This.object.ach_pu[row]= ld_ach_pu
-                                                This.object.geo_ordlig_ach_dev_pu[row] = ld_ach_dev_pu
-                            ELSE
-                                                                                                
-                                    ld_ach_dev_pu = this.object.geo_ordlig_ach_dev_pu[row]
-                                    ld_ach_pu = ld_dev_taux * ld_ach_dev_pu
-                                        This.object.ach_pu[row] =  ld_ach_pu
-        
-                                end if                    
-                end if  */
+            end if;
+        end if;
+
+        --Vérification s'il existe un pu mini pour la variété club
+        --New gestion des frais marketing
+        -- ls_varcode = This.object.geo_article_var_code[row]
+        -- select ach_pu_mini into :ld_prix_mini from geo_variet where var_code = :ls_varcode ;
+        select tvt_code, sco_code into ls_tvt_code, ls_sco_code from geo_ordre where ord_ref = ls_ord_ref;
+        declare
+            ls_var_code varchar2(50);
+            ls_cat_code varchar2(50);
+            ll_article_mode_culture varchar2(50);
+            ls_ori_code varchar2(50);
+            ls_ccw_code varchar2(50);
+            ld_frais_pu_mark number;
+            ls_frais_unite_mark number;
+            ld_accompte number;
+            ls_perequation number;
+            ll_k_frais number;
+        begin
+            select var_code, cat_code, mode_culture, ori_code, ccw_code
+            into ls_var_code, ls_cat_code, ll_article_mode_culture, ls_ori_code, ls_ccw_code
+            from geo_article_colis
+            where art_ref = ls_art_ref and valide ='O';
+            --ll_k_frais = f_recup_frais(ls_var_code, ls_cat_code, ls_sco_code, ls_tvt_code, ll_article_mode_culture, ls_ori_code)
+            f_recup_frais(ls_var_code, ls_ccw_code, ls_sco_code, ls_tvt_code, ll_article_mode_culture, ls_ori_code, ll_k_frais, msg);
+            select frais_pu, frais_unite, accompte, perequation
+            into ld_frais_pu_mark, ls_frais_unite_mark, ld_accompte, ls_perequation
+            from geo_attrib_frais
+            where k_frais = ll_k_frais;
+
+            if  ls_perequation =  'O' then
+                ld_prix_mini := ld_accompte;
+            end if;
         exception when others then
-            msg := 'la devise n''est pas renseignée pour ce fournisseur';
+            ld_prix_mini := 0;
+        end;
+
+        if ld_prix_mini > 0 and ld_prix_mini is not null and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK' and ls_sco_code <> 'RET' then
             update geo_ordlig
             set
-                ach_dev_code = ls_soc_dev_code,
-                ach_dev_taux = 1.0
+                ach_pu = ld_prix_mini,
+                ach_dev_pu = ld_dev_taux * ld_prix_mini,
+                ach_dev_code = ls_soc_dev_code
             where orl_ref = arg_orl_ref;
             commit;
-        end;
-                    
-    end if;
+        else
+            update geo_ordlig
+            set ach_dev_pu = ld_dev_taux * ld_dev_taux * ld_prix_mini, ach_dev_code = ls_dev_code
+            where orl_ref = arg_orl_ref;
+            commit;
+        end if;
+        --fin marketing
+                /*if SQLCA.SQLCode = 0 then
+        --Pour affecter uniquement le prix mini sur le mode de culture à 0 demande de AVIALARET LLEF
+        --DEB LLEF
+                ls_art_ref =  this.object.geo_ordlig_art_ref[row]
+                select mode_culture into :ll_mode_culture from geo_article where art_ref = :ls_art_ref;
+        --FIN LLEF
+                --             if ld_prix_mini > 0 and not(isnull(ld_prix_mini)) and arg_soc_code <> 'IMP' then
+                        if ld_prix_mini > 0 and not(isnull(ld_prix_mini)) and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK' and ll_mode_culture = 0 then --LLEF
+                                            this.SetItem(row,'ach_pu',          ld_prix_mini)
+                                            ld_ach_pu = ld_prix_mini
+                                            ld_ach_dev_pu =  ld_dev_taux * ld_prix_mini
+                                            This.SetItem(row,'ach_pu', ld_ach_pu)
+                                            this.SetItem(row,'geo_ordlig_ach_dev_pu',        ld_ach_dev_pu)
+                                            This.object.ach_pu[row]= ld_ach_pu
+                                            This.object.geo_ordlig_ach_dev_pu[row] = ld_ach_dev_pu
+                        ELSE
+
+                                ld_ach_dev_pu = this.object.geo_ordlig_ach_dev_pu[row]
+                                ld_ach_pu = ld_dev_taux * ld_ach_dev_pu
+                                    This.object.ach_pu[row] =  ld_ach_pu
+
+                            end if
+            end if  */
+    exception when others then
+        msg := 'la devise n''est pas renseignée pour ce fournisseur';
+        update geo_ordlig
+        set
+            ach_dev_code = ls_soc_dev_code,
+            ach_dev_taux = 1.0
+        where orl_ref = arg_orl_ref;
+        commit;
+    end;
 
     if ls_sco_code = 'F' then
 
