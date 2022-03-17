@@ -187,7 +187,7 @@ begin
 		commit;
 		
 		If ld_prix_mini is not null and ld_prix_mini > 0 and substr(ls_col_code,1,2) <>'CP' and arg_soc_code <> 'IMP' and arg_soc_code <> 'BUK' then
-			update geo_ordlig set ach_dev_pu = ld_prix_mini where orl_ref = cur_orl_ref;
+			update geo_ordlig set ach_dev_pu = ld_prix_mini, ach_dev_code = 'EUR' where orl_ref = cur_orl_ref;
 			commit;
 			
 			If soc_dev_code ='EUR' THEN			
