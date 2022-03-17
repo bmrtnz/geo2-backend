@@ -201,7 +201,7 @@ begin
 				commit;
 			End IF;
 				
-			update geo_ordlig set ach_dev_pu = 'O' where orl_ref = cur_orl_ref;
+			update geo_ordlig set ach_dev_pu = 0 where orl_ref = cur_orl_ref;
 			commit;
 
 			--vérification s'il existe un pu mini de renseigner pour les variétés club
