@@ -64,14 +64,13 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	// constructor to fetch statut
 	public GeoOrdre(
-		Boolean flagPublication,
-		// Collection<GeoTracabiliteDetailPalette> tracabiliteDetailPalettes,
-		// Collection<GeoOrdreLigne> lignes,
-		Boolean expedieAuComplet,
-		Boolean bonAFacturer,
-		Boolean facture,
-		Boolean flagAnnule
-	) {
+			Boolean flagPublication,
+			// Collection<GeoTracabiliteDetailPalette> tracabiliteDetailPalettes,
+			// Collection<GeoOrdreLigne> lignes,
+			Boolean expedieAuComplet,
+			Boolean bonAFacturer,
+			Boolean facture,
+			Boolean flagAnnule) {
 		this.setFlagPublication(flagPublication);
 		// this.setTracabiliteDetailPalettes((List<GeoTracabiliteDetailPalette>)tracabiliteDetailPalettes);
 		// this.setLignes((List<GeoOrdreLigne>)lignes);
@@ -85,8 +84,8 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "ord_ref")
 	@GeneratedValue(generator = "GeoOrdreGenerator")
 	@GenericGenerator(name = "GeoOrdreGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-		@Parameter(name = "sequenceName", value = "seq_ord_num"),
-		@Parameter(name = "mask", value = "FM0999999")
+			@Parameter(name = "sequenceName", value = "seq_ord_num"),
+			@Parameter(name = "mask", value = "FM0999999")
 	})
 	private String id;
 
@@ -149,38 +148,38 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private LocalDate dateLivraisonPrevue;
 
 	@Column(name = "vente_commission")
-	private Boolean venteACommission;
+	private Boolean venteACommission = false;
 
 	@Column(name = "flexp")
-	private Boolean expedie;
+	private Boolean expedie = false;
 
 	@Column(name = "flliv")
-	private Boolean livre;
+	private Boolean livre = false;
 
 	@Column(name = "flbaf")
-	private Boolean bonAFacturer;
+	private Boolean bonAFacturer = false;
 
 	@Column(name = "flfac")
-	private Boolean facture;
+	private Boolean facture = false;
 
 	@Column(name = "flbagqp")
-	private Boolean bonAGenererDansQualifelPlus;
+	private Boolean bonAGenererDansQualifelPlus = false;
 
 	@Column(name = "flgenqp")
-	private Boolean genereDansQualifelPlus;
+	private Boolean genereDansQualifelPlus = false;
 
 	@Column(name = "fbagudc")
-	private Boolean bonAGenererUDC;
+	private Boolean bonAGenererUDC = false;
 
 	@Column(name = "flgenudc")
-	private Boolean genereUDC;
+	private Boolean genereUDC = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_edi_ordre")
 	private GeoEDIOrdre ordreEDI;
 
 	@Column(name = "invoic")
-	private Boolean factureEDIFACT;
+	private Boolean factureEDIFACT = false;
 
 	@Column(name = "invoic_demat")
 	private Boolean factureEDI;
@@ -224,7 +223,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoBaseTarif baseTarifTransport;
 
 	@Column(name = "trp_pu")
-	private Float prixUnitaireTarifTransport;
+	private Float prixUnitaireTarifTransport = 0f;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_code")
@@ -235,7 +234,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoBaseTarif baseTarifTransit;
 
 	@Column(name = "trs_pu")
-	private Float prixUnitaireTarifTransit;
+	private Float prixUnitaireTarifTransit = 0f;
 
 	@Column(name = "trs_ville")
 	private String villeDeTransit;
@@ -249,16 +248,16 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoBaseTarif baseTarifCourtage;
 
 	@Column(name = "crt_pu")
-	private Float prixUnitaireTarifCourtage;
+	private Float prixUnitaireTarifCourtage = 0f;
 
 	@Column(name = "remsf_tx")
-	private Float tauxRemiseFacture;
+	private Float tauxRemiseFacture = 0f;
 
 	@Column(name = "remhf_tx")
-	private Float tauxRemiseHorsFacture;
+	private Float tauxRemiseHorsFacture = 0f;
 
 	@Column(name = "dev_tx")
-	private Double tauxDevise;
+	private Double tauxDevise = 0d;
 
 	@Column(name = "frais_pu")
 	private Double fraisPrixUnitaire;
@@ -271,49 +270,49 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private Float fraisPlateforme;
 
 	@Column(name = "totpal")
-	private Float totalPalette;
+	private Float totalPalette = 0f;
 
 	@Column(name = "totcol")
-	private Float totalColis;
+	private Float totalColis = 0f;
 
 	@Column(name = "totpdsnet")
-	private Float totalPoidsNet;
+	private Float totalPoidsNet = 0f;
 
 	@Column(name = "totpdsbrut")
-	private Float totalPoidsBrut;
+	private Float totalPoidsBrut = 0f;
 
 	@Column(name = "totvte")
-	private Float totalVente;
+	private Float totalVente = 0f;
 
 	@Column(name = "totrem")
-	private Float totalRemise;
+	private Float totalRemise = 0f;
 
 	@Column(name = "totres")
-	private Float totalRestitue;
+	private Float totalRestitue = 0f;
 
 	@Column(name = "totfrd")
-	private Double totalFraisMarketing;
+	private Double totalFraisMarketing = 0d;
 
 	@Column(name = "totach")
-	private Double totalAchat;
+	private Double totalAchat = 0d;
 
 	@Column(name = "totmob")
-	private Float totalObjectifMarge;
+	private Float totalObjectifMarge = 0f;
 
 	@Column(name = "tottrp")
-	private Float totalTransport;
+	private Float totalTransport = 0f;
 
 	@Column(name = "tottrs")
-	private Float totalTransit;
+	private Float totalTransit = 0f;
 
 	@Column(name = "totcrt")
-	private Float totalCourtage;
+	private Float totalCourtage = 0f;
 
 	@Column(name = "totfad")
-	private Float totalFraisAdditionnels;
+	private Float totalFraisAdditionnels = 0f;
 
 	@Column(name = "totfrais_plateforme")
-	private Float totalFraisPlateforme;
+	private Float totalFraisPlateforme = 0f;
 
 	@Column(name = "tot_cde_nb_pal")
 	private Float totalNombrePalettesCommandees;
@@ -366,7 +365,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tvt_code")
-	private GeoTypeVente typeVente;
+	private GeoTypeVente typeVente = GeoTypeVente.getDefault();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tvr_code", nullable = false)
@@ -394,13 +393,13 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoConditionVente conditionVente;
 
 	@Column(name = "trp_prix_visible")
-	private Boolean prixTransportVisible;
+	private Boolean prixTransportVisible = false;
 
 	@Column(name = "trs_prix_visible")
-	private Boolean prixTransitVisible;
+	private Boolean prixTransitVisible = false;
 
 	@Column(name = "crt_prix_visible")
-	private Boolean prixCourtageVisible;
+	private Boolean prixCourtageVisible = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ttr_code")
@@ -416,7 +415,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private LocalDate dateFacture;
 
 	@Column(name = "flag_public")
-	private Boolean flagPublication;
+	private Boolean flagPublication = false;
 
 	@NotNull
 	@Column(name = "flannul", nullable = false)
@@ -444,13 +443,13 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private String ETALocation;
 
 	@Column(name = "trp_dev_code")
-	private String transporteurDEVCode;
+	private String transporteurDEVCode = "EUR";
 
 	@Column(name = "trp_dev_pu")
 	private Double transporteurDEVPrixUnitaire;
 
 	@Column(name = "trp_dev_taux")
-	private Float transporteurDEVTaux;
+	private Float transporteurDEVTaux = 1f;
 
 	@Column(name = "file_cmr")
 	private String fileCMR;
@@ -476,7 +475,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private String bassinTransporteur;
 
 	@Column(name = "ind_exclu_frais_pu")
-	private Boolean exclusionFraisPU;
+	private Boolean exclusionFraisPU = false;
 
 	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) = 0 THEN 'O' ELSE 'N' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF AND O.ORD_REF = ord_ref)")
 	private Boolean expedieAuComplet;
@@ -501,7 +500,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	}
 
 	/**
-	 * Permet de connaitre le nombre de commentaire associés a cette ordre via un count.
+	 * Permet de connaitre le nombre de commentaire associés a cette ordre via un
+	 * count.
+	 * 
 	 * @see GeoOrdre.getCommentairesOrdreCount()
 	 */
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -513,7 +514,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	}
 
 	/**
-	 * Permet de connaitre le nombre de CSLignes associées a cette ordre via un count.
+	 * Permet de connaitre le nombre de CSLignes associées a cette ordre via un
+	 * count.
+	 * 
 	 * @see GeoOrdre.getCqLitigeCount()
 	 */
 	@LazyCollection(LazyCollectionOption.EXTRA)

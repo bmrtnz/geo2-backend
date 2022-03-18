@@ -33,14 +33,10 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Id
 	@Column(name = "cli_ref")
 	@GeneratedValue(generator = "GeoClientGenerator")
-	@GenericGenerator(
-			name = "GeoClientGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "seq_cli_num"),
-					@Parameter(name = "mask", value = "FM099999")
-			}
-	)
+	@GenericGenerator(name = "GeoClientGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "seq_cli_num"),
+			@Parameter(name = "mask", value = "FM099999")
+	})
 	private String id;
 
 	@NotNull
@@ -74,7 +70,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@JoinColumn(name = "sco_code", nullable = false)
 	private GeoSecteur secteur;
 
-	//region Primary Address
+	// region Primary Address
 	@Column(name = "ads1")
 	private String adresse1;
 
@@ -96,9 +92,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pay_code", nullable = false)
 	private GeoPays pays;
-	//endregion
+	// endregion
 
-	//region Billing address
+	// region Billing address
 	@Column(name = "raisoc_fact")
 	private String facturationRaisonSocial;
 
@@ -120,7 +116,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pay_code_fact")
 	private GeoPays facturationPays;
-	//endregion
+	// endregion
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -324,7 +320,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	private Boolean fraisExcluArticlePasOrigineFrance;
 
 	@Column(name = "ind_vente_com")
-	private Boolean venteACommission;
+	private Boolean venteACommission = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref_palox")
@@ -374,7 +370,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	private Float depassement;
 
 	@PostLoad
-	public void postLoad(){
+	public void postLoad() {
 		this.autorise = this.agrement + this.enCoursTemporaire + this.enCoursBlueWhale;
 		float depassement = this.enCoursActuel - this.autorise;
 		this.depassement = depassement > 0 ? depassement : 0f;

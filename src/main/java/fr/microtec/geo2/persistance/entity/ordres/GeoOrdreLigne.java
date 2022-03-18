@@ -59,37 +59,37 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoFournisseur fournisseur;
 
 	@Column(name = "exp_nb_pal")
-	private Float nombrePalettesExpediees;
+	private Float nombrePalettesExpediees = 0f;
 
 	@Column(name = "cde_nb_pal")
-	private Float nombrePalettesCommandees;
+	private Float nombrePalettesCommandees = 0f;
 
 	@Column(name = "exp_nb_col")
-	private Float nombreColisExpedies;
+	private Float nombreColisExpedies = 0f;
 
 	@Column(name = "cde_nb_col")
-	private Float nombreColisCommandes;
+	private Float nombreColisCommandes = 0f;
 
 	@Column(name = "exp_pds_net")
-	private Float poidsNetExpedie;
+	private Float poidsNetExpedie = 0f;
 
 	@Column(name = "cde_pds_net")
 	private Float poidsNetCommande;
 
 	@Column(name = "exp_pds_brut")
-	private Double poidsBrutExpedie;
+	private Double poidsBrutExpedie = 0d;
 
 	@Column(name = "cde_pds_brut")
 	private Float poidsBrutCommande;
 
 	@Column(name = "vte_pu")
-	private Float ventePrixUnitaire;
+	private Float ventePrixUnitaire = 0f;
 
 	@Column(name = "vte_qte")
-	private Double venteQuantite;
+	private Double venteQuantite = 0d;
 
 	@Column(name = "ach_pu")
-	private Double achatPrixUnitaire;
+	private Double achatPrixUnitaire = 0d;
 
 	@Column(name = "ach_dev_code")
 	private String achatDevise;
@@ -101,7 +101,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Double achatDevisePrixUnitaire;
 
 	@Column(name = "ach_qte")
-	private Double achatQuantite;
+	private Double achatQuantite = 0d;
 
 	@Column(name = "totvte")
 	private Double totalVenteBrut = 0d;
@@ -167,13 +167,13 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoTemperature temperature;
 
 	@Column(name = "demipal_ind")
-	private Float indicateurPalette;
+	private Float indicateurPalette = 0f;
 
 	@Column(name = "pal_nb_col")
-	private Float nombreColisPalette;
+	private Float nombreColisPalette = 0f;
 
 	@Column(name = "pal_nb_palinter")
-	private Float nombrePalettesIntermediaires;
+	private Float nombrePalettesIntermediaires = 0f;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "palinter_code")
@@ -196,7 +196,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoTransporteur transporteurGroupage;
 
 	@Column(name = "ind_gratuit")
-	private Boolean gratuit;
+	private Boolean gratuit = false;
 
 	@Column(name = "orl_lig")
 	private String numero;
@@ -220,19 +220,19 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private String stockMouvement;
 
 	@Column(name = "flexp")
-	private Boolean expedie;
+	private Boolean expedie = false;
 
 	@Column(name = "flliv")
-	private Boolean livre;
+	private Boolean livre = false;
 
 	@Column(name = "flbaf")
-	private Boolean bonAFacturer;
+	private Boolean bonAFacturer = false;
 
 	@Column(name = "flfac")
-	private Boolean facture;
+	private Boolean facture = false;
 
 	@Column(name = "flverfou")
-	private Boolean verificationFournisseur;
+	private Boolean verificationFournisseur = false;
 
 	@Column(name = "indbloq_ach_dev_pu")
 	private Boolean indicateurBlocagePrix;
