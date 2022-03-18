@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -148,38 +149,38 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private LocalDate dateLivraisonPrevue;
 
 	@Column(name = "vente_commission")
-	private Boolean venteACommission = false;
+	private Boolean venteACommission;
 
 	@Column(name = "flexp")
-	private Boolean expedie = false;
+	private Boolean expedie;
 
 	@Column(name = "flliv")
-	private Boolean livre = false;
+	private Boolean livre;
 
 	@Column(name = "flbaf")
-	private Boolean bonAFacturer = false;
+	private Boolean bonAFacturer;
 
 	@Column(name = "flfac")
-	private Boolean facture = false;
+	private Boolean facture;
 
 	@Column(name = "flbagqp")
-	private Boolean bonAGenererDansQualifelPlus = false;
+	private Boolean bonAGenererDansQualifelPlus;
 
 	@Column(name = "flgenqp")
-	private Boolean genereDansQualifelPlus = false;
+	private Boolean genereDansQualifelPlus;
 
 	@Column(name = "fbagudc")
-	private Boolean bonAGenererUDC = false;
+	private Boolean bonAGenererUDC;
 
 	@Column(name = "flgenudc")
-	private Boolean genereUDC = false;
+	private Boolean genereUDC;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_edi_ordre")
 	private GeoEDIOrdre ordreEDI;
 
 	@Column(name = "invoic")
-	private Boolean factureEDIFACT = false;
+	private Boolean factureEDIFACT;
 
 	@Column(name = "invoic_demat")
 	private Boolean factureEDI;
@@ -223,7 +224,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoBaseTarif baseTarifTransport;
 
 	@Column(name = "trp_pu")
-	private Float prixUnitaireTarifTransport = 0f;
+	private Float prixUnitaireTarifTransport;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "trs_code")
@@ -234,7 +235,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoBaseTarif baseTarifTransit;
 
 	@Column(name = "trs_pu")
-	private Float prixUnitaireTarifTransit = 0f;
+	private Float prixUnitaireTarifTransit;
 
 	@Column(name = "trs_ville")
 	private String villeDeTransit;
@@ -248,16 +249,16 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoBaseTarif baseTarifCourtage;
 
 	@Column(name = "crt_pu")
-	private Float prixUnitaireTarifCourtage = 0f;
+	private Float prixUnitaireTarifCourtage;
 
 	@Column(name = "remsf_tx")
-	private Float tauxRemiseFacture = 0f;
+	private Float tauxRemiseFacture;
 
 	@Column(name = "remhf_tx")
-	private Float tauxRemiseHorsFacture = 0f;
+	private Float tauxRemiseHorsFacture;
 
 	@Column(name = "dev_tx")
-	private Double tauxDevise = 0d;
+	private Double tauxDevise;
 
 	@Column(name = "frais_pu")
 	private Double fraisPrixUnitaire;
@@ -270,49 +271,49 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private Float fraisPlateforme;
 
 	@Column(name = "totpal")
-	private Float totalPalette = 0f;
+	private Float totalPalette;
 
 	@Column(name = "totcol")
-	private Float totalColis = 0f;
+	private Float totalColis;
 
 	@Column(name = "totpdsnet")
-	private Float totalPoidsNet = 0f;
+	private Float totalPoidsNet;
 
 	@Column(name = "totpdsbrut")
-	private Float totalPoidsBrut = 0f;
+	private Float totalPoidsBrut;
 
 	@Column(name = "totvte")
-	private Float totalVente = 0f;
+	private Float totalVente;
 
 	@Column(name = "totrem")
-	private Float totalRemise = 0f;
+	private Float totalRemise;
 
 	@Column(name = "totres")
-	private Float totalRestitue = 0f;
+	private Float totalRestitue;
 
 	@Column(name = "totfrd")
-	private Double totalFraisMarketing = 0d;
+	private Double totalFraisMarketing;
 
 	@Column(name = "totach")
-	private Double totalAchat = 0d;
+	private Double totalAchat;
 
 	@Column(name = "totmob")
-	private Float totalObjectifMarge = 0f;
+	private Float totalObjectifMarge;
 
 	@Column(name = "tottrp")
-	private Float totalTransport = 0f;
+	private Float totalTransport;
 
 	@Column(name = "tottrs")
-	private Float totalTransit = 0f;
+	private Float totalTransit;
 
 	@Column(name = "totcrt")
-	private Float totalCourtage = 0f;
+	private Float totalCourtage;
 
 	@Column(name = "totfad")
-	private Float totalFraisAdditionnels = 0f;
+	private Float totalFraisAdditionnels;
 
 	@Column(name = "totfrais_plateforme")
-	private Float totalFraisPlateforme = 0f;
+	private Float totalFraisPlateforme;
 
 	@Column(name = "tot_cde_nb_pal")
 	private Float totalNombrePalettesCommandees;
@@ -365,7 +366,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tvt_code")
-	private GeoTypeVente typeVente = GeoTypeVente.getDefault();
+	private GeoTypeVente typeVente;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tvr_code", nullable = false)
@@ -393,13 +394,13 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoConditionVente conditionVente;
 
 	@Column(name = "trp_prix_visible")
-	private Boolean prixTransportVisible = false;
+	private Boolean prixTransportVisible;
 
 	@Column(name = "trs_prix_visible")
-	private Boolean prixTransitVisible = false;
+	private Boolean prixTransitVisible;
 
 	@Column(name = "crt_prix_visible")
-	private Boolean prixCourtageVisible = false;
+	private Boolean prixCourtageVisible;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ttr_code")
@@ -415,11 +416,11 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private LocalDate dateFacture;
 
 	@Column(name = "flag_public")
-	private Boolean flagPublication = false;
+	private Boolean flagPublication;
 
 	@NotNull
 	@Column(name = "flannul", nullable = false)
-	private Boolean flagAnnule = false;
+	private Boolean flagAnnule;
 
 	@Column(name = "rem_sf_tx_mdd")
 	private Float remiseSurFactureMDDTaux;
@@ -443,13 +444,13 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private String ETALocation;
 
 	@Column(name = "trp_dev_code")
-	private String transporteurDEVCode = "EUR";
+	private String transporteurDEVCode;
 
 	@Column(name = "trp_dev_pu")
 	private Double transporteurDEVPrixUnitaire;
 
 	@Column(name = "trp_dev_taux")
-	private Float transporteurDEVTaux = 1f;
+	private Float transporteurDEVTaux;
 
 	@Column(name = "file_cmr")
 	private String fileCMR;
@@ -475,7 +476,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private String bassinTransporteur;
 
 	@Column(name = "ind_exclu_frais_pu")
-	private Boolean exclusionFraisPU = false;
+	private Boolean exclusionFraisPU;
 
 	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) = 0 THEN 'O' ELSE 'N' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF AND O.ORD_REF = ord_ref)")
 	private Boolean expedieAuComplet;
@@ -529,6 +530,90 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	public Boolean getHasLitige() {
 		return this.getLitige() != null;
+	}
+
+	@PrePersist()
+	void prePersist() {
+		if (this.getVenteACommission() == null)
+			this.setVenteACommission(false);
+		if (this.getExpedie() == null)
+			this.setExpedie(false);
+		if (this.getLivre() == null)
+			this.setLivre(false);
+		if (this.getBonAFacturer() == null)
+			this.setBonAFacturer(false);
+		if (this.getFacture() == null)
+			this.setFacture(false);
+		if (this.getBonAGenererDansQualifelPlus() == null)
+			this.setBonAGenererDansQualifelPlus(false);
+		if (this.getGenereDansQualifelPlus() == null)
+			this.setGenereDansQualifelPlus(false);
+		if (this.getBonAGenererUDC() == null)
+			this.setBonAGenererUDC(false);
+		if (this.getGenereUDC() == null)
+			this.setGenereUDC(false);
+		if (this.getFactureEDIFACT() == null)
+			this.setFactureEDIFACT(false);
+		if (this.getPrixUnitaireTarifTransport() == null)
+			this.setPrixUnitaireTarifTransport(0f);
+		if (this.getPrixUnitaireTarifTransit() == null)
+			this.setPrixUnitaireTarifTransit(0f);
+		if (this.getPrixUnitaireTarifCourtage() == null)
+			this.setPrixUnitaireTarifCourtage(0f);
+		if (this.getTauxRemiseFacture() == null)
+			this.setTauxRemiseFacture(0f);
+		if (this.getTauxRemiseHorsFacture() == null)
+			this.setTauxRemiseHorsFacture(0f);
+		if (this.getTauxDevise() == null)
+			this.setTauxDevise(0d);
+		if (this.getTotalPalette() == null)
+			this.setTotalPalette(0f);
+		if (this.getTotalColis() == null)
+			this.setTotalColis(0f);
+		if (this.getTotalPoidsNet() == null)
+			this.setTotalPoidsNet(0f);
+		if (this.getTotalPoidsBrut() == null)
+			this.setTotalPoidsBrut(0f);
+		if (this.getTotalVente() == null)
+			this.setTotalVente(0f);
+		if (this.getTotalRemise() == null)
+			this.setTotalRemise(0f);
+		if (this.getTotalRestitue() == null)
+			this.setTotalRestitue(0f);
+		if (this.getTotalFraisMarketing() == null)
+			this.setTotalFraisMarketing(0d);
+		if (this.getTotalAchat() == null)
+			this.setTotalAchat(0d);
+		if (this.getTotalObjectifMarge() == null)
+			this.setTotalObjectifMarge(0f);
+		if (this.getTotalTransport() == null)
+			this.setTotalTransport(0f);
+		if (this.getTotalTransit() == null)
+			this.setTotalTransit(0f);
+		if (this.getTotalCourtage() == null)
+			this.setTotalCourtage(0f);
+		if (this.getTotalFraisAdditionnels() == null)
+			this.setTotalFraisAdditionnels(0f);
+		if (this.getTotalFraisPlateforme() == null)
+			this.setTotalFraisPlateforme(0f);
+		if (this.getTypeVente() == null)
+			this.setTypeVente(GeoTypeVente.getDefault());
+		if (this.getPrixTransportVisible() == null)
+			this.setPrixTransportVisible(false);
+		if (this.getPrixTransitVisible() == null)
+			this.setPrixTransitVisible(false);
+		if (this.getPrixCourtageVisible() == null)
+			this.setPrixCourtageVisible(false);
+		if (this.getFlagPublication() == null)
+			this.setFlagPublication(false);
+		if (this.getFlagAnnule() == null)
+			this.setFlagAnnule(false);
+		if (this.getTransporteurDEVCode() == null)
+			this.setTransporteurDEVCode("EUR");
+		if (this.getTransporteurDEVTaux() == null)
+			this.setTransporteurDEVTaux(1f);
+		if (this.getExclusionFraisPU() == null)
+			this.setExclusionFraisPU(false);
 	}
 
 }

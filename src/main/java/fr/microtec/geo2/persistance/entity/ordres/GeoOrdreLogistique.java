@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -47,10 +48,10 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private String codeFournisseur;
 
 	@Column(name = "flag_exped_fournni")
-	private Boolean expedieStation = false;
+	private Boolean expedieStation;
 
 	@Column(name = "flag_exped_groupa")
-	private Boolean expedieLieuGroupage = false;
+	private Boolean expedieLieuGroupage;
 
 	@Column(name = "locus_trace")
 	private String locusTrace;
@@ -164,6 +165,14 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 			else
 				this.okStation = "non clôturé";
 		}
+	}
+
+	@PrePersist
+	void prePersist() {
+		if (this.getExpedieStation() == null)
+			this.setExpedieStation(false);
+		if (this.getExpedieLieuGroupage() == null)
+			this.setExpedieLieuGroupage(false);
 	}
 
 }

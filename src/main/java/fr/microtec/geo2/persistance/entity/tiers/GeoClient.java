@@ -320,7 +320,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	private Boolean fraisExcluArticlePasOrigineFrance;
 
 	@Column(name = "ind_vente_com")
-	private Boolean venteACommission = false;
+	private Boolean venteACommission;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref_palox")
@@ -385,6 +385,12 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 		} else {
 			this.certifications = certifications;
 		}
+	}
+
+	@PrePersist()
+	void prePersist() {
+		if (this.getVenteACommission() == null)
+			this.setVenteACommission(false);
 	}
 
 }

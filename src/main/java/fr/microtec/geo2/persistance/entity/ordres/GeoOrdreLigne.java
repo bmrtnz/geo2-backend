@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -59,37 +60,37 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoFournisseur fournisseur;
 
 	@Column(name = "exp_nb_pal")
-	private Float nombrePalettesExpediees = 0f;
+	private Float nombrePalettesExpediees;
 
 	@Column(name = "cde_nb_pal")
-	private Float nombrePalettesCommandees = 0f;
+	private Float nombrePalettesCommandees;
 
 	@Column(name = "exp_nb_col")
-	private Float nombreColisExpedies = 0f;
+	private Float nombreColisExpedies;
 
 	@Column(name = "cde_nb_col")
-	private Float nombreColisCommandes = 0f;
+	private Float nombreColisCommandes;
 
 	@Column(name = "exp_pds_net")
-	private Float poidsNetExpedie = 0f;
+	private Float poidsNetExpedie;
 
 	@Column(name = "cde_pds_net")
 	private Float poidsNetCommande;
 
 	@Column(name = "exp_pds_brut")
-	private Double poidsBrutExpedie = 0d;
+	private Double poidsBrutExpedie;
 
 	@Column(name = "cde_pds_brut")
 	private Float poidsBrutCommande;
 
 	@Column(name = "vte_pu")
-	private Float ventePrixUnitaire = 0f;
+	private Float ventePrixUnitaire;
 
 	@Column(name = "vte_qte")
-	private Double venteQuantite = 0d;
+	private Double venteQuantite;
 
 	@Column(name = "ach_pu")
-	private Double achatPrixUnitaire = 0d;
+	private Double achatPrixUnitaire;
 
 	@Column(name = "ach_dev_code")
 	private String achatDevise;
@@ -101,40 +102,40 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Double achatDevisePrixUnitaire;
 
 	@Column(name = "ach_qte")
-	private Double achatQuantite = 0d;
+	private Double achatQuantite;
 
 	@Column(name = "totvte")
-	private Double totalVenteBrut = 0d;
+	private Double totalVenteBrut;
 
 	@Column(name = "totrem")
-	private Float totalRemise = 0f;
+	private Float totalRemise;
 
 	@Column(name = "totres")
-	private Float totalRestitue = 0f;
+	private Float totalRestitue;
 
 	@Column(name = "totfrd")
-	private Double totalFraisMarketing = 0d;
+	private Double totalFraisMarketing;
 
 	@Column(name = "totach")
-	private Double totalAchat = 0d;
+	private Double totalAchat;
 
 	@Column(name = "totmob")
-	private Float totalObjectifMarge = 0f;
+	private Float totalObjectifMarge;
 
 	@Column(name = "tottrp")
-	private Float totalTransport = 0f;
+	private Float totalTransport;
 
 	@Column(name = "tottrs")
-	private Float totalTransit = 0f;
+	private Float totalTransit;
 
 	@Column(name = "totcrt")
-	private Float totalCourtage = 0f;
+	private Float totalCourtage;
 
 	@Column(name = "totfad")
-	private Float totalFraisAdditionnels = 0f;
+	private Float totalFraisAdditionnels;
 
 	@Column(name = "totfrais_plateforme")
-	private Float totalFraisPlateforme = 0f;
+	private Float totalFraisPlateforme;
 
 	@Column(name = "var_ristourne")
 	private Boolean ristourne;
@@ -167,13 +168,13 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoTemperature temperature;
 
 	@Column(name = "demipal_ind")
-	private Float indicateurPalette = 0f;
+	private Float indicateurPalette;
 
 	@Column(name = "pal_nb_col")
-	private Float nombreColisPalette = 0f;
+	private Float nombreColisPalette;
 
 	@Column(name = "pal_nb_palinter")
-	private Float nombrePalettesIntermediaires = 0f;
+	private Float nombrePalettesIntermediaires;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "palinter_code")
@@ -196,7 +197,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private GeoTransporteur transporteurGroupage;
 
 	@Column(name = "ind_gratuit")
-	private Boolean gratuit = false;
+	private Boolean gratuit;
 
 	@Column(name = "orl_lig")
 	private String numero;
@@ -220,28 +221,28 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private String stockMouvement;
 
 	@Column(name = "flexp")
-	private Boolean expedie = false;
+	private Boolean expedie;
 
 	@Column(name = "flliv")
-	private Boolean livre = false;
+	private Boolean livre;
 
 	@Column(name = "flbaf")
-	private Boolean bonAFacturer = false;
+	private Boolean bonAFacturer;
 
 	@Column(name = "flfac")
-	private Boolean facture = false;
+	private Boolean facture;
 
 	@Column(name = "flverfou")
-	private Boolean verificationFournisseur = false;
+	private Boolean verificationFournisseur;
 
 	@Column(name = "indbloq_ach_dev_pu")
 	private Boolean indicateurBlocagePrix;
 
 	@Column(name = "remsf_tx")
-	private Float tauxRemiseSurFacture = 0f;
+	private Float tauxRemiseSurFacture;
 
 	@Column(name = "remhf_tx")
-	private Float tauxRemiseHorsFacture = 0f;
+	private Float tauxRemiseHorsFacture;
 
 	@Column(name = "stock_nb_resa")
 	private Float nombreReservationsSurStock;
@@ -264,7 +265,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	private Integer nombreColisManquant;
 
 	@Column(name = "list_certifs")
-	private String listeCertifications = "0";
+	private String listeCertifications;
 
 	@Column(name = "cert_origine")
 	private String origineCertification;
@@ -334,6 +335,76 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 					this.nombreColisPaletteByDimensions = zb * zh;
 			}
 		}
+	}
+
+	@PrePersist()
+	void prePersist() {
+		if (this.getNombrePalettesExpediees() == null)
+			this.setNombrePalettesExpediees(0f);
+		if (this.getNombrePalettesCommandees() == null)
+			this.setNombrePalettesCommandees(0f);
+		if (this.getNombreColisExpedies() == null)
+			this.setNombreColisExpedies(0f);
+		if (this.getNombreColisCommandes() == null)
+			this.setNombreColisCommandes(0f);
+		if (this.getPoidsNetExpedie() == null)
+			this.setPoidsNetExpedie(0f);
+		if (this.getPoidsBrutExpedie() == null)
+			this.setPoidsBrutExpedie(0d);
+		if (this.getVentePrixUnitaire() == null)
+			this.setVentePrixUnitaire(0f);
+		if (this.getVenteQuantite() == null)
+			this.setVenteQuantite(0d);
+		if (this.getAchatPrixUnitaire() == null)
+			this.setAchatPrixUnitaire(0d);
+		if (this.getAchatQuantite() == null)
+			this.setAchatQuantite(0d);
+		if (this.getTotalVenteBrut() == null)
+			this.setTotalVenteBrut(0d);
+		if (this.getTotalRemise() == null)
+			this.setTotalRemise(0f);
+		if (this.getTotalRestitue() == null)
+			this.setTotalRestitue(0f);
+		if (this.getTotalFraisMarketing() == null)
+			this.setTotalFraisMarketing(0d);
+		if (this.getTotalAchat() == null)
+			this.setTotalAchat(0d);
+		if (this.getTotalObjectifMarge() == null)
+			this.setTotalObjectifMarge(0f);
+		if (this.getTotalTransport() == null)
+			this.setTotalTransport(0f);
+		if (this.getTotalTransit() == null)
+			this.setTotalTransit(0f);
+		if (this.getTotalCourtage() == null)
+			this.setTotalCourtage(0f);
+		if (this.getTotalFraisAdditionnels() == null)
+			this.setTotalFraisAdditionnels(0f);
+		if (this.getTotalFraisPlateforme() == null)
+			this.setTotalFraisPlateforme(0f);
+		if (this.getIndicateurPalette() == null)
+			this.setIndicateurPalette(0f);
+		if (this.getNombreColisPalette() == null)
+			this.setNombreColisPalette(0f);
+		if (this.getNombrePalettesIntermediaires() == null)
+			this.setNombrePalettesIntermediaires(0f);
+		if (this.getGratuit() == null)
+			this.setGratuit(false);
+		if (this.getExpedie() == null)
+			this.setExpedie(false);
+		if (this.getLivre() == null)
+			this.setLivre(false);
+		if (this.getBonAFacturer() == null)
+			this.setBonAFacturer(false);
+		if (this.getFacture() == null)
+			this.setFacture(false);
+		if (this.getVerificationFournisseur() == null)
+			this.setVerificationFournisseur(false);
+		if (this.getTauxRemiseSurFacture() == null)
+			this.setTauxRemiseSurFacture(0f);
+		if (this.getTauxRemiseHorsFacture() == null)
+			this.setTauxRemiseHorsFacture(0f);
+		if (this.getListeCertifications() == null)
+			this.setListeCertifications("0");
 	}
 
 }
