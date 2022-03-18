@@ -176,7 +176,7 @@ public class FileManagerController {
 
 		try {
 			headers.setContentType(MediaType.parseMediaType(Files.probeContentType(downloadFile)));
-		} catch (IOException e) {
+		} catch (IOException | InvalidMediaTypeException e) {
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 		}
 
