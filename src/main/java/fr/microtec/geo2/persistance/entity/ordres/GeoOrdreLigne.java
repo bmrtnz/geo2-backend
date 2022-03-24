@@ -251,8 +251,9 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 	@JoinColumn(name = "propr_code", referencedColumnName = "fou_code")
 	private GeoFournisseur proprietaireMarchandise;
 
-	@Column(name = "promo_code")
-	private String codePromo;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "promo_code")
+	private GeoCodePromo codePromo;
 
 	@Column(name = "art_ref_kit")
 	private String articleKit;
