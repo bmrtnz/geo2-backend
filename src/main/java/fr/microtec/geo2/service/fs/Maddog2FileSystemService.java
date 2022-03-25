@@ -17,8 +17,6 @@ import java.util.List;
 @Secured("ROLE_USER")
 public class Maddog2FileSystemService extends FileSystemService {
 
-	public static final String HAVE_EXTENSION_REGEX = ".*\\.(\\w+)$";
-
 	/**
 	 * PATH_KEY use by client, it's use to order files.
 	 */
