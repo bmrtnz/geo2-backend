@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -530,90 +529,6 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	public Boolean getHasLitige() {
 		return this.getLitige() != null;
-	}
-
-	@PrePersist()
-	void prePersist() {
-		if (this.getVenteACommission() == null)
-			this.setVenteACommission(false);
-		if (this.getExpedie() == null)
-			this.setExpedie(false);
-		if (this.getLivre() == null)
-			this.setLivre(false);
-		if (this.getBonAFacturer() == null)
-			this.setBonAFacturer(false);
-		if (this.getFacture() == null)
-			this.setFacture(false);
-		if (this.getBonAGenererDansQualifelPlus() == null)
-			this.setBonAGenererDansQualifelPlus(false);
-		if (this.getGenereDansQualifelPlus() == null)
-			this.setGenereDansQualifelPlus(false);
-		if (this.getBonAGenererUDC() == null)
-			this.setBonAGenererUDC(false);
-		if (this.getGenereUDC() == null)
-			this.setGenereUDC(false);
-		if (this.getFactureEDIFACT() == null)
-			this.setFactureEDIFACT(false);
-		if (this.getPrixUnitaireTarifTransport() == null)
-			this.setPrixUnitaireTarifTransport(0f);
-		if (this.getPrixUnitaireTarifTransit() == null)
-			this.setPrixUnitaireTarifTransit(0f);
-		if (this.getPrixUnitaireTarifCourtage() == null)
-			this.setPrixUnitaireTarifCourtage(0f);
-		if (this.getTauxRemiseFacture() == null)
-			this.setTauxRemiseFacture(0f);
-		if (this.getTauxRemiseHorsFacture() == null)
-			this.setTauxRemiseHorsFacture(0f);
-		if (this.getTauxDevise() == null)
-			this.setTauxDevise(0d);
-		if (this.getTotalPalette() == null)
-			this.setTotalPalette(0f);
-		if (this.getTotalColis() == null)
-			this.setTotalColis(0f);
-		if (this.getTotalPoidsNet() == null)
-			this.setTotalPoidsNet(0f);
-		if (this.getTotalPoidsBrut() == null)
-			this.setTotalPoidsBrut(0f);
-		if (this.getTotalVente() == null)
-			this.setTotalVente(0f);
-		if (this.getTotalRemise() == null)
-			this.setTotalRemise(0f);
-		if (this.getTotalRestitue() == null)
-			this.setTotalRestitue(0f);
-		if (this.getTotalFraisMarketing() == null)
-			this.setTotalFraisMarketing(0d);
-		if (this.getTotalAchat() == null)
-			this.setTotalAchat(0d);
-		if (this.getTotalObjectifMarge() == null)
-			this.setTotalObjectifMarge(0f);
-		if (this.getTotalTransport() == null)
-			this.setTotalTransport(0f);
-		if (this.getTotalTransit() == null)
-			this.setTotalTransit(0f);
-		if (this.getTotalCourtage() == null)
-			this.setTotalCourtage(0f);
-		if (this.getTotalFraisAdditionnels() == null)
-			this.setTotalFraisAdditionnels(0f);
-		if (this.getTotalFraisPlateforme() == null)
-			this.setTotalFraisPlateforme(0f);
-		if (this.getTypeVente() == null)
-			this.setTypeVente(GeoTypeVente.getDefault());
-		if (this.getPrixTransportVisible() == null)
-			this.setPrixTransportVisible(false);
-		if (this.getPrixTransitVisible() == null)
-			this.setPrixTransitVisible(false);
-		if (this.getPrixCourtageVisible() == null)
-			this.setPrixCourtageVisible(false);
-		if (this.getFlagPublication() == null)
-			this.setFlagPublication(false);
-		if (this.getFlagAnnule() == null)
-			this.setFlagAnnule(false);
-		if (this.getTransporteurDEVCode() == null)
-			this.setTransporteurDEVCode("EUR");
-		if (this.getTransporteurDEVTaux() == null)
-			this.setTransporteurDEVTaux(1f);
-		if (this.getExclusionFraisPU() == null)
-			this.setExclusionFraisPU(false);
 	}
 
 }

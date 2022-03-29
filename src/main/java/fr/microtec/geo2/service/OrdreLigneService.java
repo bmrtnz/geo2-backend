@@ -28,33 +28,32 @@ import lombok.val;
 
 @Service()
 public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
-  
+
   private final EntityManager entityManager;
-  
+
   public OrdreLigneService(
-    GeoOrdreLigneRepository ordreLigneRepository,
-    EntityManager entityManager
-  ) {
+      GeoOrdreLigneRepository ordreLigneRepository,
+      EntityManager entityManager) {
     super(ordreLigneRepository, GeoOrdreLigne.class);
     this.entityManager = entityManager;
   }
 
-  public RelayPage<GeoOrdreLigne> fetchOrdreLignesTotauxDetail(String search, Pageable pageable, final ResolutionEnvironment env) {
+  public RelayPage<GeoOrdreLigne> fetchOrdreLignesTotauxDetail(String search, Pageable pageable,
+      final ResolutionEnvironment env) {
 
     Set<String> fields = CustomUtils.parseSelectFromEnv(env);
-    Specification<GeoOrdreLigne> spec = ((Specification<GeoOrdreLigne>)CriteriaUtils.groupedBySelection(fields));
+    Specification<GeoOrdreLigne> spec = ((Specification<GeoOrdreLigne>) CriteriaUtils.groupedBySelection(fields));
 
-    if(search != null && !search.isBlank())
+    if (search != null && !search.isBlank())
       spec = spec.and(this.parseSearch(search));
 
     return this.getPage(search, pageable, fields, summaries -> {
       CriteriaQuery<?> query = CriteriaUtils.createSummariesQuery(
-        this.entityManager.getCriteriaBuilder(),
-        GeoOrdreLigne.class,
-        this.parseSearch(search),
-        fields,
-        summaries
-      );
+          this.entityManager.getCriteriaBuilder(),
+          GeoOrdreLigne.class,
+          this.parseSearch(search),
+          fields,
+          summaries);
 
       TypedQuery<Object[]> qt = (TypedQuery<Object[]>) this.entityManager.createQuery(query);
       List<Double> result = new ArrayList(Arrays.asList(qt.getSingleResult()));
@@ -63,43 +62,43 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     });
   }
 
-  public RelayPage<GeoOrdreLigne> fetchAllMarge(String search,Pageable pageable, final ResolutionEnvironment env) {
+  public RelayPage<GeoOrdreLigne> fetchAllMarge(String search, Pageable pageable, final ResolutionEnvironment env) {
 
     Set<String> fields = CustomUtils.parseSelectFromEnv(env);
 
     return this.getPage(search, pageable, fields, summaries -> {
       CriteriaQuery<?> query = CriteriaUtils.createSummariesQuery(
-        this.entityManager.getCriteriaBuilder(),
-        GeoOrdreLigne.class,
-        this.parseSearch(search),
-        fields,
-        summaries
-      );
+          this.entityManager.getCriteriaBuilder(),
+          GeoOrdreLigne.class,
+          this.parseSearch(search),
+          fields,
+          summaries);
 
       TypedQuery<Object[]> qt = (TypedQuery<Object[]>) this.entityManager.createQuery(query);
       List<Double> result = new ArrayList(Arrays.asList(qt.getSingleResult()));
-      Function<String,Boolean> hasSelector = selector -> summaries
-      .stream()
-      .anyMatch( s -> s.getSelector().equals(selector));
-      Function<String,Integer> getIndex = selector -> summaries
-      .stream()
-      .map(s -> s.getSelector())
-      .collect(Collectors.toList())
-      .indexOf(selector);
+      Function<String, Boolean> hasSelector = selector -> summaries
+          .stream()
+          .anyMatch(s -> s.getSelector().equals(selector));
+      Function<String, Integer> getIndex = selector -> summaries
+          .stream()
+          .map(s -> s.getSelector())
+          .collect(Collectors.toList())
+          .indexOf(selector);
 
       // handling special cases
-      if(hasSelector.apply("margeBrute")) {
+      if (hasSelector.apply("margeBrute")) {
         val res = this.fetchTotalMargeBrute(summaries, result);
         result.add(getIndex.apply("margeBrute"), res);
       }
-      
-      if(hasSelector.apply("pourcentageMargeBrute")) {
-        val res = this.fetchTotalMargeBrute(summaries,result) / this.getSummaryResult(summaries, result, "totalVenteBrut");
+
+      if (hasSelector.apply("pourcentageMargeBrute")) {
+        val res = this.fetchTotalMargeBrute(summaries, result)
+            / this.getSummaryResult(summaries, result, "totalVenteBrut");
         result.add(getIndex.apply("pourcentageMargeBrute"), res);
       }
-    
-      if(hasSelector.apply("pourcentageMargeNette")) {
-        Double totalMargeBrute = this.fetchTotalMargeBrute(summaries,result);
+
+      if (hasSelector.apply("pourcentageMargeNette")) {
+        Double totalMargeBrute = this.fetchTotalMargeBrute(summaries, result);
         Double totalObjectifMarge = this.getSummaryResult(summaries, result, "totalObjectifMarge");
         Double totalVenteBrute = this.getSummaryResult(summaries, result, "totalVenteBrut");
         result.add(getIndex.apply("pourcentageMargeNette"), (totalMargeBrute - totalObjectifMarge) / totalVenteBrute);
@@ -109,38 +108,121 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     });
   }
 
-  private Double getSummaryResult(List<Summary> summaries,List<Double> summary,String field){
+  private Double getSummaryResult(List<Summary> summaries, List<Double> summary, String field) {
     val item = summaries
-    .stream()
-    .filter(sl -> sl.getSelector().equals(field))
-    .findFirst();
+        .stream()
+        .filter(sl -> sl.getSelector().equals(field))
+        .findFirst();
 
-    if(item.isEmpty())
+    if (item.isEmpty())
       throw new GraphQLException("Missing mandatory field :" + field);
 
     return summary.get(summaries.indexOf(item.get()));
   };
 
-  private Double fetchTotalMargeBrute(List<Summary> summaries,List<Double> summary){
+  private Double fetchTotalMargeBrute(List<Summary> summaries, List<Double> summary) {
     Double totalVenteBrut = this
-    .getSummaryResult(summaries,summary,"totalVenteBrut");
+        .getSummaryResult(summaries, summary, "totalVenteBrut");
     Double totalRemise = this
-    .getSummaryResult(summaries,summary,"totalRemise");
+        .getSummaryResult(summaries, summary, "totalRemise");
     Double totalRestitue = this
-    .getSummaryResult(summaries,summary,"totalRestitue");
+        .getSummaryResult(summaries, summary, "totalRestitue");
     Double totalFraisMarketing = this
-    .getSummaryResult(summaries,summary,"totalFraisMarketing");
+        .getSummaryResult(summaries, summary, "totalFraisMarketing");
     Double totalAchat = this
-    .getSummaryResult(summaries,summary,"totalAchat");
+        .getSummaryResult(summaries, summary, "totalAchat");
     Double totalTransport = this
-    .getSummaryResult(summaries,summary,"totalTransport");
+        .getSummaryResult(summaries, summary, "totalTransport");
     Double totalTransit = this
-    .getSummaryResult(summaries,summary,"totalTransit");
+        .getSummaryResult(summaries, summary, "totalTransit");
     Double totalCourtage = this
-    .getSummaryResult(summaries,summary,"totalCourtage");
+        .getSummaryResult(summaries, summary, "totalCourtage");
     Double totalFraisAdditionnels = this
-    .getSummaryResult(summaries,summary,"totalFraisAdditionnels");
-    return totalVenteBrut - totalRemise + totalRestitue - totalFraisMarketing - totalAchat - totalTransport - totalTransit - totalCourtage - totalFraisAdditionnels;
+        .getSummaryResult(summaries, summary, "totalFraisAdditionnels");
+    return totalVenteBrut - totalRemise + totalRestitue - totalFraisMarketing - totalAchat - totalTransport
+        - totalTransit - totalCourtage - totalFraisAdditionnels;
   };
+
+  /**
+   * This function takes an order line and returns a new order line with all the
+   * fields that are null
+   * filled with default values
+   * 
+   * @param ordreLigne the object to be updated
+   * @return the updated object.
+   */
+  public GeoOrdreLigne withDefaults(GeoOrdreLigne ordreLigne) {
+    if (ordreLigne.getNombrePalettesExpediees() == null)
+      ordreLigne.setNombrePalettesExpediees(0f);
+    if (ordreLigne.getNombrePalettesCommandees() == null)
+      ordreLigne.setNombrePalettesCommandees(0f);
+    if (ordreLigne.getNombreColisExpedies() == null)
+      ordreLigne.setNombreColisExpedies(0f);
+    if (ordreLigne.getNombreColisCommandes() == null)
+      ordreLigne.setNombreColisCommandes(0f);
+    if (ordreLigne.getPoidsNetExpedie() == null)
+      ordreLigne.setPoidsNetExpedie(0f);
+    if (ordreLigne.getPoidsBrutExpedie() == null)
+      ordreLigne.setPoidsBrutExpedie(0d);
+    if (ordreLigne.getVentePrixUnitaire() == null)
+      ordreLigne.setVentePrixUnitaire(0f);
+    if (ordreLigne.getVenteQuantite() == null)
+      ordreLigne.setVenteQuantite(0d);
+    if (ordreLigne.getAchatPrixUnitaire() == null)
+      ordreLigne.setAchatPrixUnitaire(0d);
+    if (ordreLigne.getAchatQuantite() == null)
+      ordreLigne.setAchatQuantite(0d);
+    if (ordreLigne.getTotalVenteBrut() == null)
+      ordreLigne.setTotalVenteBrut(0d);
+    if (ordreLigne.getTotalRemise() == null)
+      ordreLigne.setTotalRemise(0f);
+    if (ordreLigne.getTotalRestitue() == null)
+      ordreLigne.setTotalRestitue(0f);
+    if (ordreLigne.getTotalFraisMarketing() == null)
+      ordreLigne.setTotalFraisMarketing(0d);
+    if (ordreLigne.getTotalAchat() == null)
+      ordreLigne.setTotalAchat(0d);
+    if (ordreLigne.getTotalObjectifMarge() == null)
+      ordreLigne.setTotalObjectifMarge(0f);
+    if (ordreLigne.getTotalTransport() == null)
+      ordreLigne.setTotalTransport(0f);
+    if (ordreLigne.getTotalTransit() == null)
+      ordreLigne.setTotalTransit(0f);
+    if (ordreLigne.getTotalCourtage() == null)
+      ordreLigne.setTotalCourtage(0f);
+    if (ordreLigne.getTotalFraisAdditionnels() == null)
+      ordreLigne.setTotalFraisAdditionnels(0f);
+    if (ordreLigne.getTotalFraisPlateforme() == null)
+      ordreLigne.setTotalFraisPlateforme(0f);
+    if (ordreLigne.getIndicateurPalette() == null)
+      ordreLigne.setIndicateurPalette(0f);
+    if (ordreLigne.getNombreColisPalette() == null)
+      ordreLigne.setNombreColisPalette(0f);
+    if (ordreLigne.getNombrePalettesIntermediaires() == null)
+      ordreLigne.setNombrePalettesIntermediaires(0f);
+    if (ordreLigne.getGratuit() == null)
+      ordreLigne.setGratuit(false);
+    if (ordreLigne.getExpedie() == null)
+      ordreLigne.setExpedie(false);
+    if (ordreLigne.getLivre() == null)
+      ordreLigne.setLivre(false);
+    if (ordreLigne.getBonAFacturer() == null)
+      ordreLigne.setBonAFacturer(false);
+    if (ordreLigne.getFacture() == null)
+      ordreLigne.setFacture(false);
+    if (ordreLigne.getVerificationFournisseur() == null)
+      ordreLigne.setVerificationFournisseur(false);
+    if (ordreLigne.getTauxRemiseSurFacture() == null)
+      ordreLigne.setTauxRemiseSurFacture(0f);
+    if (ordreLigne.getTauxRemiseHorsFacture() == null)
+      ordreLigne.setTauxRemiseHorsFacture(0f);
+    if (ordreLigne.getListeCertifications() == null)
+      ordreLigne.setListeCertifications("0");
+    if (ordreLigne.getNombreColisManquant() == null)
+      ordreLigne.setNombreColisManquant(0);
+    if (ordreLigne.getAchatDevise() == null)
+      ordreLigne.setAchatDevise("EUR");
+    return ordreLigne;
+  }
 
 }

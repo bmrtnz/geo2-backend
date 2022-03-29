@@ -33,6 +33,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.GeoSequenceGenerator;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -63,11 +64,11 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   private final GeoFunctionOrdreRepository functionOrdreRepository;
 
   public OrdreService(
-          GeoOrdreRepository ordreRepository,
-          GeoLitigeRepository litigeRepository,
-          GeoLitigeLigneRepository litigeLigneRepository,
-          GeoSocieteRepository societeRepository,
-          GeoFunctionOrdreRepository functionOrdreRepository) {
+      GeoOrdreRepository ordreRepository,
+      GeoLitigeRepository litigeRepository,
+      GeoLitigeLigneRepository litigeLigneRepository,
+      GeoSocieteRepository societeRepository,
+      GeoFunctionOrdreRepository functionOrdreRepository) {
     super(ordreRepository, GeoOrdre.class);
     this.ordreRepository = ordreRepository;
     this.litigeRepository = litigeRepository;
@@ -90,7 +91,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     if (ordreChunk.getId() == null) {
       if (ordreChunk.getNumero() == null)
         ordreChunk.setNumero(this.fetchNumero(ordreChunk.getSociete()));
-      return this.ordreRepository.save(ordreChunk);
+      return this.ordreRepository.save(this.withDefaults(ordreChunk));
     } else {
       Optional<GeoOrdre> ordre = this.ordreRepository.findById(ordreChunk.getId());
       GeoOrdre merged = GeoOrdreGraphQLService.merge(ordreChunk, ordre.get(), null);
@@ -100,14 +101,14 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
   public List<GeoOrdre> save(List<GeoOrdre> ordresChunk) {
     Stream<GeoOrdre> mappedOrdres = ordresChunk.stream()
-    .map(chunk -> {
-      if (chunk.getId() == null) {
-        chunk.setNumero(this.fetchNumero(chunk.getSociete()));
-        return chunk;
-      }
-      Optional<GeoOrdre> ordre = this.ordreRepository.findById(chunk.getId());
-      return GeoOrdreGraphQLService.merge(chunk, ordre.get(), null);
-    });
+        .map(chunk -> {
+          if (chunk.getId() == null) {
+            chunk.setNumero(this.fetchNumero(chunk.getSociete()));
+            return chunk;
+          }
+          Optional<GeoOrdre> ordre = this.ordreRepository.findById(chunk.getId());
+          return GeoOrdreGraphQLService.merge(chunk, ordre.get(), null);
+        });
 
     return this.ordreRepository.saveAll(mappedOrdres.collect(Collectors.toList()));
 
@@ -118,77 +119,79 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     GeoOrdre clone = original.duplicate();
     return this.save(clone);
   }
-        
 
   public Float fetchSommeColisCommandes(GeoOrdre ordre) {
     return this
-    .fetchSum(ordre, "logistiques.lignes.nombreColisCommandes")
-    .floatValue();
+        .fetchSum(ordre, "logistiques.lignes.nombreColisCommandes")
+        .floatValue();
   }
 
   public Float fetchSommeColisExpedies(GeoOrdre ordre) {
     return this
-    .fetchSum(ordre, "logistiques.lignes.nombreColisExpedies")
-    .floatValue();
+        .fetchSum(ordre, "logistiques.lignes.nombreColisExpedies")
+        .floatValue();
   }
 
-  public Number fetchSum(GeoOrdre ordre, String path){
+  public Number fetchSum(GeoOrdre ordre, String path) {
     CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-		CriteriaQuery<Number> criteriaQuery = criteriaBuilder.createQuery(Number.class);
+    CriteriaQuery<Number> criteriaQuery = criteriaBuilder.createQuery(Number.class);
     Root<GeoOrdre> root = criteriaQuery.from(GeoOrdre.class);
 
-		criteriaQuery.select(criteriaBuilder.sum(CriteriaUtils.toExpressionRecursively(root, path, false)));
+    criteriaQuery.select(criteriaBuilder.sum(CriteriaUtils.toExpressionRecursively(root, path, false)));
     criteriaQuery.where(criteriaBuilder.equal(root.get("id"), ordre.getId()));
 
-		TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
+    TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
     final Number singleResult = q.getSingleResult();
     return (singleResult == null) ? 0 : singleResult;
   }
 
   public RelayPage<GeoOrdre> fetchOrdreSuiviDeparts(String search, Pageable pageable, Boolean onlyColisDiff) {
-		if (pageable == null)
-			pageable = PageRequest.of(0, 20);
+    if (pageable == null)
+      pageable = PageRequest.of(0, 20);
 
     Specification<GeoOrdre> spec = Specification.where(null);
 
-    if(onlyColisDiff)
+    if (onlyColisDiff)
       spec = (root, query, cb) -> {
         Path<Object> id = root.get("id");
 
         Subquery<Number> sccSubquery = query.subquery(Number.class);
         Root<GeoOrdre> sccRoot = sccSubquery.from(GeoOrdre.class);
-        Expression<Number> scc = cb.sum(CriteriaUtils.toExpressionRecursively(sccRoot, "logistiques.lignes.nombreColisCommandes", false));
+        Expression<Number> scc = cb
+            .sum(CriteriaUtils.toExpressionRecursively(sccRoot, "logistiques.lignes.nombreColisCommandes", false));
         sccSubquery.select(scc);
         sccSubquery.where(cb.equal(id, sccRoot.get("id")));
-        
+
         Subquery<Number> sceSubquery = query.subquery(Number.class);
         Root<GeoOrdre> sceRoot = sceSubquery.from(GeoOrdre.class);
-        Expression<Number> sce = cb.sum(CriteriaUtils.toExpressionRecursively(sceRoot, "logistiques.lignes.nombreColisExpedies", false));
+        Expression<Number> sce = cb
+            .sum(CriteriaUtils.toExpressionRecursively(sceRoot, "logistiques.lignes.nombreColisExpedies", false));
         sceSubquery.select(sce);
         sceSubquery.where(cb.equal(id, sceRoot.get("id")));
-        
-        return cb.notEqual(sccSubquery,sceSubquery);
+
+        return cb.notEqual(sccSubquery, sceSubquery);
       };
 
-    if(search != null && !search.isBlank())
+    if (search != null && !search.isBlank())
       spec = spec.and(this.parseSearch(search));
-    
+
     Page<GeoOrdre> page = this.repository.findAll(spec, pageable);
 
-		return PageFactory.asRelayPage(page);
+    return PageFactory.asRelayPage(page);
   }
 
-  public RelayPage<GeoOrdre> fetchOrdresPlanningTransporteurs(String search, Pageable pageable, final Set<String> fields) {
+  public RelayPage<GeoOrdre> fetchOrdresPlanningTransporteurs(String search, Pageable pageable,
+      final Set<String> fields) {
 
-    Specification<GeoOrdre> spec = (Specification<GeoOrdre>)CriteriaUtils.groupedBySelection(fields);
+    Specification<GeoOrdre> spec = (Specification<GeoOrdre>) CriteriaUtils.groupedBySelection(fields);
 
-    if(search != null && !search.isBlank())
+    if (search != null && !search.isBlank())
       spec = spec.and(this.parseSearch(search));
 
     Page<GeoOrdre> page = this.repository
-    .findAllWithPagination(spec, pageable, GeoOrdre.class, fields);
-    
-		return PageFactory.asRelayPage(page);
+        .findAllWithPagination(spec, pageable, GeoOrdre.class, fields);
+
+    return PageFactory.asRelayPage(page);
   }
 
   public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {
@@ -203,6 +206,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
   /**
    * Return the number of order not closed
+   * 
    * @param search the search string
    * @return The number of order not closed
    */
@@ -210,7 +214,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
     Specification<GeoOrdre> spec = null;
 
-    if(StringUtils.hasText(search)) {
+    if (StringUtils.hasText(search)) {
       spec = Specification.where(this.parseSearch(search));
     }
 
@@ -218,40 +222,38 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
   }
 
   public List<GeoPlanningTransporteur> allPlanningTransporteurs(
-    LocalDateTime dateMin,
-    LocalDateTime dateMax,
-    String societeCode,
-    String transporteurCode
-  ) {
+      LocalDateTime dateMin,
+      LocalDateTime dateMax,
+      String societeCode,
+      String transporteurCode) {
     List<GeoPlanningTransporteur> list = this.ordreRepository
-    .allPlanningTransporteurs(
-      dateMin,
-      dateMax,
-      societeCode,
-      transporteurCode
-    );
+        .allPlanningTransporteurs(
+            dateMin,
+            dateMax,
+            societeCode,
+            transporteurCode);
 
-		return list;
+    return list;
   }
 
   @Transactional
   public List<GeoOrdreBaf> allDepartBaf(
-          String societeCode,
-          String secteurCode,
-          String clientCode,
-          String entrepotCode,
-          LocalDate dateMin,
-          LocalDate dateMax,
-          String codeAssistante,
-          String codeCommercial
-  ) {
+      String societeCode,
+      String secteurCode,
+      String clientCode,
+      String entrepotCode,
+      LocalDate dateMin,
+      LocalDate dateMax,
+      String codeAssistante,
+      String codeCommercial) {
     Assert.hasText(societeCode, "Code société obligatoire");
     Assert.hasText(secteurCode, "Code secteur obligatoire");
 
-    FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(societeCode, secteurCode, clientCode, entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
+    FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(societeCode, secteurCode, clientCode,
+        entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
 
     List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
-    for(GeoOrdreBaf baf : ordresBaf) {
+    for (GeoOrdreBaf baf : ordresBaf) {
       FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), societeCode);
 
       baf.setControlData(controlResult.getData());
@@ -262,52 +264,148 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
   public GeoOrdreStatut fetchStatut(String ordreID) {
 
-    if (ordreID == null) throw new RuntimeException("Ordre ID is needed to fetch statut");
+    if (ordreID == null)
+      throw new RuntimeException("Ordre ID is needed to fetch statut");
 
     CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
 
-		CriteriaQuery<GeoOrdre> ordreQuery = criteriaBuilder.createQuery(GeoOrdre.class);
+    CriteriaQuery<GeoOrdre> ordreQuery = criteriaBuilder.createQuery(GeoOrdre.class);
     Root<GeoOrdre> ordreRoot = ordreQuery.from(GeoOrdre.class);
     final GeoOrdre ordre = this.entityManager
-    .createQuery(
-      ordreQuery.multiselect(
-        ordreRoot.get("flagPublication"),
-        ordreRoot.get("expedieAuComplet"),
-        ordreRoot.get("bonAFacturer"),
-        ordreRoot.get("facture"),
-        ordreRoot.get("flagAnnule")
-      )
-      .where(criteriaBuilder.equal(ordreRoot.get("id"), ordreID)))
-    .getSingleResult();
+        .createQuery(
+            ordreQuery.multiselect(
+                ordreRoot.get("flagPublication"),
+                ordreRoot.get("expedieAuComplet"),
+                ordreRoot.get("bonAFacturer"),
+                ordreRoot.get("facture"),
+                ordreRoot.get("flagAnnule"))
+                .where(criteriaBuilder.equal(ordreRoot.get("id"), ordreID)))
+        .getSingleResult();
 
     CriteriaQuery<Long> tdpQuery = criteriaBuilder.createQuery(Long.class);
     Root<GeoTracabiliteDetailPalette> tdpRoot = tdpQuery.from(GeoTracabiliteDetailPalette.class);
     final Long tdpCount = this.entityManager
-    .createQuery(
-      tdpQuery
-      .multiselect(criteriaBuilder.count(tdpRoot))
-      .where(criteriaBuilder.equal(tdpRoot.get("ordre").get("id"), ordreID)))
-    .getSingleResult();
+        .createQuery(
+            tdpQuery
+                .multiselect(criteriaBuilder.count(tdpRoot))
+                .where(criteriaBuilder.equal(tdpRoot.get("ordre").get("id"), ordreID)))
+        .getSingleResult();
 
     CriteriaQuery<Long> olQuery = criteriaBuilder.createQuery(Long.class);
     Root<GeoOrdreLigne> olRoot = olQuery.from(GeoOrdreLigne.class);
     final Long lignesCount = this.entityManager
-    .createQuery(
-      olQuery
-      .multiselect(criteriaBuilder.count(olRoot))
-      .where(criteriaBuilder.equal(olRoot.get("ordre").get("id"), ordreID)))
-    .getSingleResult();
+        .createQuery(
+            olQuery
+                .multiselect(criteriaBuilder.count(olRoot))
+                .where(criteriaBuilder.equal(olRoot.get("ordre").get("id"), ordreID)))
+        .getSingleResult();
 
     // resolve ordre statut
     GeoOrdreStatut statut = GeoOrdreStatut.NON_CONFIRME;
-    if (ordre.getFlagPublication()) statut = GeoOrdreStatut.CONFIRME;
-    if (tdpCount > 0) statut = GeoOrdreStatut.EN_PREPARATION;
-    if (lignesCount > 0 && ordre.getExpedieAuComplet()) statut = GeoOrdreStatut.EXPEDIE;
-    if (ordre.getBonAFacturer()) statut = GeoOrdreStatut.A_FACTURER;
-    if (ordre.getFacture()) statut = GeoOrdreStatut.FACTURE;
-    if (ordre.getFlagAnnule()) statut = GeoOrdreStatut.ANNULE;
-    
+    if (ordre.getFlagPublication())
+      statut = GeoOrdreStatut.CONFIRME;
+    if (tdpCount > 0)
+      statut = GeoOrdreStatut.EN_PREPARATION;
+    if (lignesCount > 0 && ordre.getExpedieAuComplet())
+      statut = GeoOrdreStatut.EXPEDIE;
+    if (ordre.getBonAFacturer())
+      statut = GeoOrdreStatut.A_FACTURER;
+    if (ordre.getFacture())
+      statut = GeoOrdreStatut.FACTURE;
+    if (ordre.getFlagAnnule())
+      statut = GeoOrdreStatut.ANNULE;
+
     return statut;
+  }
+
+  /**
+   * It sets default values for the fields of the GeoOrdre object.
+   * 
+   * @param ordre the GeoOrdre object to be updated
+   * @return The updated object.
+   */
+  public GeoOrdre withDefaults(GeoOrdre ordre) {
+    if (ordre.getVenteACommission() == null)
+      ordre.setVenteACommission(false);
+    if (ordre.getExpedie() == null)
+      ordre.setExpedie(false);
+    if (ordre.getLivre() == null)
+      ordre.setLivre(false);
+    if (ordre.getBonAFacturer() == null)
+      ordre.setBonAFacturer(false);
+    if (ordre.getFacture() == null)
+      ordre.setFacture(false);
+    if (ordre.getBonAGenererDansQualifelPlus() == null)
+      ordre.setBonAGenererDansQualifelPlus(false);
+    if (ordre.getGenereDansQualifelPlus() == null)
+      ordre.setGenereDansQualifelPlus(false);
+    if (ordre.getBonAGenererUDC() == null)
+      ordre.setBonAGenererUDC(false);
+    if (ordre.getGenereUDC() == null)
+      ordre.setGenereUDC(false);
+    if (ordre.getFactureEDIFACT() == null)
+      ordre.setFactureEDIFACT(false);
+    if (ordre.getPrixUnitaireTarifTransport() == null)
+      ordre.setPrixUnitaireTarifTransport(0f);
+    if (ordre.getPrixUnitaireTarifTransit() == null)
+      ordre.setPrixUnitaireTarifTransit(0f);
+    if (ordre.getPrixUnitaireTarifCourtage() == null)
+      ordre.setPrixUnitaireTarifCourtage(0f);
+    if (ordre.getTauxRemiseFacture() == null)
+      ordre.setTauxRemiseFacture(0f);
+    if (ordre.getTauxRemiseHorsFacture() == null)
+      ordre.setTauxRemiseHorsFacture(0f);
+    if (ordre.getTauxDevise() == null)
+      ordre.setTauxDevise(0d);
+    if (ordre.getTotalPalette() == null)
+      ordre.setTotalPalette(0f);
+    if (ordre.getTotalColis() == null)
+      ordre.setTotalColis(0f);
+    if (ordre.getTotalPoidsNet() == null)
+      ordre.setTotalPoidsNet(0f);
+    if (ordre.getTotalPoidsBrut() == null)
+      ordre.setTotalPoidsBrut(0f);
+    if (ordre.getTotalVente() == null)
+      ordre.setTotalVente(0f);
+    if (ordre.getTotalRemise() == null)
+      ordre.setTotalRemise(0f);
+    if (ordre.getTotalRestitue() == null)
+      ordre.setTotalRestitue(0f);
+    if (ordre.getTotalFraisMarketing() == null)
+      ordre.setTotalFraisMarketing(0d);
+    if (ordre.getTotalAchat() == null)
+      ordre.setTotalAchat(0d);
+    if (ordre.getTotalObjectifMarge() == null)
+      ordre.setTotalObjectifMarge(0f);
+    if (ordre.getTotalTransport() == null)
+      ordre.setTotalTransport(0f);
+    if (ordre.getTotalTransit() == null)
+      ordre.setTotalTransit(0f);
+    if (ordre.getTotalCourtage() == null)
+      ordre.setTotalCourtage(0f);
+    if (ordre.getTotalFraisAdditionnels() == null)
+      ordre.setTotalFraisAdditionnels(0f);
+    if (ordre.getTotalFraisPlateforme() == null)
+      ordre.setTotalFraisPlateforme(0f);
+    if (ordre.getTypeVente() == null)
+      ordre.setTypeVente(GeoTypeVente.getDefault());
+    if (ordre.getPrixTransportVisible() == null)
+      ordre.setPrixTransportVisible(false);
+    if (ordre.getPrixTransitVisible() == null)
+      ordre.setPrixTransitVisible(false);
+    if (ordre.getPrixCourtageVisible() == null)
+      ordre.setPrixCourtageVisible(false);
+    if (ordre.getFlagPublication() == null)
+      ordre.setFlagPublication(false);
+    if (ordre.getFlagAnnule() == null)
+      ordre.setFlagAnnule(false);
+    if (ordre.getTransporteurDEVCode() == null)
+      ordre.setTransporteurDEVCode("EUR");
+    if (ordre.getTransporteurDEVTaux() == null)
+      ordre.setTransporteurDEVTaux(1f);
+    if (ordre.getExclusionFraisPU() == null)
+      ordre.setExclusionFraisPU(false);
+    return ordre;
   }
 
 }

@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -336,76 +335,6 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializ
 					this.nombreColisPaletteByDimensions = zb * zh;
 			}
 		}
-	}
-
-	@PrePersist()
-	void prePersist() {
-		if (this.getNombrePalettesExpediees() == null)
-			this.setNombrePalettesExpediees(0f);
-		if (this.getNombrePalettesCommandees() == null)
-			this.setNombrePalettesCommandees(0f);
-		if (this.getNombreColisExpedies() == null)
-			this.setNombreColisExpedies(0f);
-		if (this.getNombreColisCommandes() == null)
-			this.setNombreColisCommandes(0f);
-		if (this.getPoidsNetExpedie() == null)
-			this.setPoidsNetExpedie(0f);
-		if (this.getPoidsBrutExpedie() == null)
-			this.setPoidsBrutExpedie(0d);
-		if (this.getVentePrixUnitaire() == null)
-			this.setVentePrixUnitaire(0f);
-		if (this.getVenteQuantite() == null)
-			this.setVenteQuantite(0d);
-		if (this.getAchatPrixUnitaire() == null)
-			this.setAchatPrixUnitaire(0d);
-		if (this.getAchatQuantite() == null)
-			this.setAchatQuantite(0d);
-		if (this.getTotalVenteBrut() == null)
-			this.setTotalVenteBrut(0d);
-		if (this.getTotalRemise() == null)
-			this.setTotalRemise(0f);
-		if (this.getTotalRestitue() == null)
-			this.setTotalRestitue(0f);
-		if (this.getTotalFraisMarketing() == null)
-			this.setTotalFraisMarketing(0d);
-		if (this.getTotalAchat() == null)
-			this.setTotalAchat(0d);
-		if (this.getTotalObjectifMarge() == null)
-			this.setTotalObjectifMarge(0f);
-		if (this.getTotalTransport() == null)
-			this.setTotalTransport(0f);
-		if (this.getTotalTransit() == null)
-			this.setTotalTransit(0f);
-		if (this.getTotalCourtage() == null)
-			this.setTotalCourtage(0f);
-		if (this.getTotalFraisAdditionnels() == null)
-			this.setTotalFraisAdditionnels(0f);
-		if (this.getTotalFraisPlateforme() == null)
-			this.setTotalFraisPlateforme(0f);
-		if (this.getIndicateurPalette() == null)
-			this.setIndicateurPalette(0f);
-		if (this.getNombreColisPalette() == null)
-			this.setNombreColisPalette(0f);
-		if (this.getNombrePalettesIntermediaires() == null)
-			this.setNombrePalettesIntermediaires(0f);
-		if (this.getGratuit() == null)
-			this.setGratuit(false);
-		if (this.getExpedie() == null)
-			this.setExpedie(false);
-		if (this.getLivre() == null)
-			this.setLivre(false);
-		if (this.getBonAFacturer() == null)
-			this.setBonAFacturer(false);
-		if (this.getFacture() == null)
-			this.setFacture(false);
-		if (this.getVerificationFournisseur() == null)
-			this.setVerificationFournisseur(false);
-		if (this.getTauxRemiseSurFacture() == null)
-			this.setTauxRemiseSurFacture(0f);
-		if (this.getTauxRemiseHorsFacture() == null)
-			this.setTauxRemiseHorsFacture(0f);
-		if (this.getListeCertifications() == null)
-			this.setListeCertifications("0");
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
+import fr.microtec.geo2.service.OrdreLogistiqueService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLNonNull;
@@ -23,8 +24,12 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoOrdreLogistiqueGraphQLService extends GeoAbstractGraphQLService<GeoOrdreLogistique, String> {
 
-	public GeoOrdreLogistiqueGraphQLService(GeoOrdreLogistiqueRepository repository) {
+	private final OrdreLogistiqueService ordreLogistiqueService;
+
+	public GeoOrdreLogistiqueGraphQLService(GeoOrdreLogistiqueRepository repository,
+			OrdreLogistiqueService ordreLogistiqueService) {
 		super(repository, GeoOrdreLogistique.class);
+		this.ordreLogistiqueService = ordreLogistiqueService;
 	}
 
 	@GraphQLQuery
@@ -44,7 +49,7 @@ public class GeoOrdreLogistiqueGraphQLService extends GeoAbstractGraphQLService<
 	@GraphQLMutation
 	public GeoOrdreLogistique saveOrdreLogistique(GeoOrdreLogistique ordreLogistique,
 			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(ordreLogistique, env);
+		return this.saveEntity(this.ordreLogistiqueService.withDefaults(ordreLogistique), env);
 	}
 
 	@GraphQLMutation
