@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemService {
 
+	public static final String HAVE_EXTENSION_REGEX = ".*\\.(\\w+)$";
+
 	protected String basePath = "/";
 
 	/**
@@ -55,6 +57,11 @@ public class FileSystemService {
 	@SneakyThrows
 	public Path rename(String path, String name) {
 		Path from = this._getBasePath(path);
+
+		// Check if extension is present
+		if (Files.isRegularFile(from) && !name.matches(HAVE_EXTENSION_REGEX)) {
+			name += path.substring(path.lastIndexOf("."));
+		}
 		Path to = from.resolveSibling(name);
 
 		return Files.move(from, to);
