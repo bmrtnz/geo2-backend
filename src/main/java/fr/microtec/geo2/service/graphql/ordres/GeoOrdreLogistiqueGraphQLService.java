@@ -3,6 +3,7 @@ package fr.microtec.geo2.service.graphql.ordres;
 import java.util.Optional;
 
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -30,16 +31,25 @@ public class GeoOrdreLogistiqueGraphQLService extends GeoAbstractGraphQLService<
 	public RelayPage<GeoOrdreLogistique> allOrdreLogistique(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoOrdreLogistique> getOrdreLogistique(
-			@GraphQLArgument(name = "id") String id
-	) {
+			@GraphQLArgument(name = "id") String id) {
 		return super.getOne(id);
-  }
+	}
+
+	@GraphQLMutation
+	public GeoOrdreLogistique saveOrdreLogistique(GeoOrdreLogistique ordreLogistique,
+			@GraphQLEnvironment ResolutionEnvironment env) {
+		return this.saveEntity(ordreLogistique, env);
+	}
+
+	@GraphQLMutation
+	public boolean deleteOrdreLogistique(String id) {
+		return this.delete(id);
+	}
 
 }
