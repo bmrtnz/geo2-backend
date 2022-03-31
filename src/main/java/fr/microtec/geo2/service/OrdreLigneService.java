@@ -154,12 +154,8 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
   public GeoOrdreLigne withDefaults(GeoOrdreLigne ordreLigne) {
     if (ordreLigne.getNombrePalettesExpediees() == null)
       ordreLigne.setNombrePalettesExpediees(0f);
-    if (ordreLigne.getNombrePalettesCommandees() == null)
-      ordreLigne.setNombrePalettesCommandees(0f);
     if (ordreLigne.getNombreColisExpedies() == null)
       ordreLigne.setNombreColisExpedies(0f);
-    if (ordreLigne.getNombreColisCommandes() == null)
-      ordreLigne.setNombreColisCommandes(0f);
     if (ordreLigne.getPoidsNetExpedie() == null)
       ordreLigne.setPoidsNetExpedie(0f);
     if (ordreLigne.getPoidsBrutExpedie() == null)
@@ -196,10 +192,6 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
       ordreLigne.setTotalFraisPlateforme(0f);
     if (ordreLigne.getIndicateurPalette() == null)
       ordreLigne.setIndicateurPalette(0f);
-    if (ordreLigne.getNombreColisPalette() == null)
-      ordreLigne.setNombreColisPalette(0f);
-    if (ordreLigne.getNombrePalettesIntermediaires() == null)
-      ordreLigne.setNombrePalettesIntermediaires(0f);
     if (ordreLigne.getGratuit() == null)
       ordreLigne.setGratuit(false);
     if (ordreLigne.getExpedie() == null)
