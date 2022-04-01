@@ -69,7 +69,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	private LocalDateTime dateDepartReelleGroupage;
 
 	@Column(name = "datliv_grp")
-	private LocalDate dateLivraisonLieuGroupage;
+	private LocalDateTime dateLivraisonLieuGroupage;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "grp_code")
