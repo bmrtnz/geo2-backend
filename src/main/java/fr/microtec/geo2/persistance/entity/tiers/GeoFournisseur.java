@@ -258,6 +258,10 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity implements 
 	@Where(clause = "entite = 'Fournisseur'")
 	private Set<GeoModification> modifications;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "inc_code")
+	private GeoIncoterm incoterm;
+
 	public void setCertifications(Set<GeoCertificationFournisseur> certifications) {
 		certifications.forEach(c -> c.setFournisseur(this));
 
