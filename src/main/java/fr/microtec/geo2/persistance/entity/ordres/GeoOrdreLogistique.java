@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
+import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -113,8 +114,9 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 	@Column(name = "typ_fou")
 	private Character typeLieuDepart;
 
-	@Column(name = "incot_fourn")
-	private String incotermFournisseur;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "incot_fourn")
+	private GeoIncoterm incotermFournisseur;
 
 	@Column(name = "plomb")
 	private String numeroPlomb;
