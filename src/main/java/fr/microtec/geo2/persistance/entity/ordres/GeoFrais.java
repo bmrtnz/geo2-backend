@@ -15,13 +15,13 @@ import lombok.EqualsAndHashCode;
 @Table(name = "geo_frais")
 @Entity
 public class GeoFrais extends ValidateAndModifiedEntity {
-  
-  @Id
+
+	@Id
 	@Column(name = "fra_code")
 	private String id;
 
-  @NotNull
-	@Column(name = "fra_desc",nullable = false)
+	@NotNull
+	@Column(name = "fra_desc", nullable = false)
 	private String description;
-  
+
 }
