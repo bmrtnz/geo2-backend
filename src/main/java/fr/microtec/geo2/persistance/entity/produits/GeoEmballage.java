@@ -1,17 +1,36 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_colis")
 @IdClass(GeoProduitWithEspeceId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class GeoEmballage extends ValidateAndModifiedEntity {
+
+	public GeoEmballage(String especeID, String description, String id) {
+		this.id = id;
+		this.description = description;
+		this.espece = new GeoEspece();
+		this.espece.setId(especeID);
+	}
 
 	@Id
 	@Column(name = "col_code")

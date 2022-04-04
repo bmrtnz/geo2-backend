@@ -2,8 +2,11 @@ package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
@@ -13,7 +16,14 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_variet")
+@AllArgsConstructor
+@NoArgsConstructor
 public class GeoVariete extends ValidateAndModifiedEntity {
+
+	public GeoVariete(String description, String id) {
+		this.id = id;
+		this.description = description;
+	}
 
 	@Id
 	@Column(name = "var_code")

@@ -1,8 +1,10 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,7 +13,16 @@ import javax.persistence.*;
 @Entity
 @Table(name = "geo_origine")
 @IdClass(GeoProduitWithEspeceId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class GeoOrigine extends ValidateAndModifiedEntity {
+
+	public GeoOrigine(String especeID, String description, String id) {
+		this.id = id;
+		this.description = description;
+		this.espece = new GeoEspece();
+		this.espece.setId(especeID);
+	}
 
 	@Id
 	@Column(name = "ori_code")
@@ -30,7 +41,5 @@ public class GeoOrigine extends ValidateAndModifiedEntity {
 
 	@Column(name = "cee")
 	private Boolean origineCee;
-
-
 
 }

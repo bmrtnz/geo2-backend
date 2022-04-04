@@ -2,16 +2,24 @@ package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoGenre;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "geo_espece")
 public class GeoEspece extends ValidateAndModifiedEntity {
+
+	public GeoEspece(String id) {
+		this.id = id;
+	}
 
 	@Id
 	@Column(name = "esp_code")
@@ -44,7 +52,5 @@ public class GeoEspece extends ValidateAndModifiedEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gen_code")
 	private GeoGenre genre;
-
-
 
 }
