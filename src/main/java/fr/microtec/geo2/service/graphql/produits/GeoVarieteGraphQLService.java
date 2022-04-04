@@ -3,6 +3,7 @@ package fr.microtec.geo2.service.graphql.produits;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoVariete;
 import fr.microtec.geo2.persistance.repository.produits.GeoVarieteRepository;
+import fr.microtec.geo2.service.ArticleService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -21,24 +22,33 @@ import java.util.Optional;
 @Secured("ROLE_USER")
 public class GeoVarieteGraphQLService extends GeoAbstractGraphQLService<GeoVariete, String> {
 
-	public GeoVarieteGraphQLService(GeoVarieteRepository repository) {
+	private final ArticleService articleService;
+
+	public GeoVarieteGraphQLService(GeoVarieteRepository repository, ArticleService articleService) {
 		super(repository, GeoVariete.class);
+		this.articleService = articleService;
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoVariete> allVariete(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoVariete> getVariete(
-			@GraphQLArgument(name = "id") String id
-	) {
+			@GraphQLArgument(name = "id") String id) {
 		return super.getOne(id);
+	}
+
+	@GraphQLQuery
+	public RelayPage<GeoVariete> allDistinctVariete(
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env) {
+		return this.articleService.fetchDistinct(GeoVariete.class, pageable, search, env);
 	}
 
 }

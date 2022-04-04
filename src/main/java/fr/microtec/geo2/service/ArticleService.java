@@ -1,28 +1,41 @@
 package fr.microtec.geo2.service;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import cz.jirutka.rsql.parser.RSQLParser;
+import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.CriteriaUtils;
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticleCahierDesCharge;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticleEmballage;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticleMatierePremiere;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticleNormalisation;
+import fr.microtec.geo2.persistance.entity.produits.GeoVariete;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 import fr.microtec.geo2.persistance.repository.produits.GeoArticleCahierDesChargeRepository;
 import fr.microtec.geo2.persistance.repository.produits.GeoArticleEmballageRepository;
@@ -31,6 +44,7 @@ import fr.microtec.geo2.persistance.repository.produits.GeoArticleNormalisationR
 import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
 import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
 import fr.microtec.geo2.service.graphql.produits.GeoArticleGraphQLService;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 
 @Service
 public class ArticleService {
@@ -176,34 +190,66 @@ public class ArticleService {
 	}
 
 	/**
-	 * This function is used to fetch distinct records from the database
+	 * Fetch a distinct list of entities from the database, with pagination and
+	 * search/filter capabilities
 	 * 
-	 * @param clazz      The class of the entity you want to fetch.
-	 * @param repository The GeoRepository to use.
-	 * @param pageable   The pageable object that will be used to paginate the
-	 *                   results.
-	 * @param search     The search string.
-	 * @return A RelayPage<T>
+	 * @param clazz    The class of the entity to be fetched.
+	 * @param pageable The Pageable object that is used to paginate the results.
+	 * @param search   The search string.
+	 * @return A Page of T.
 	 */
-	public <T, K extends Serializable> RelayPage<T> fetchDistinct(
-			final Class<T> clazz,
-			final GeoRepository<T, K> repository,
-			Pageable pageable,
-			String search) {
-		if (pageable == null)
-			pageable = PageRequest.of(0, 20);
+	public <T> RelayPage<T> fetchDistinct(final Class<T> clazz, Pageable pageable, String search,
+			ResolutionEnvironment env) {
 
-		Specification<T> spec = Specification.where(null);
+		Set<String> fields = CustomUtils.parseSelectFromEnv(env);
 
-		spec = (root, query, cb) -> {
-			query = query.distinct(true);
-			return null;
-		};
+		// Define criteria tools
+		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+		CriteriaQuery<T> query = builder.createQuery(clazz);
+		Root<T> root = query.from(clazz);
 
+		// Apply ordering
+		Sort sort = pageable.isPaged() ? pageable.getSort() : Sort.unsorted();
+		if (sort.isSorted()) {
+			query.orderBy(CriteriaUtils.toOrders(sort, CriteriaUtils.findRoot(query, clazz), builder));
+		}
+
+		// Handle search/filter
+		Specification<?> spec = null;
 		if (search != null && !search.isBlank())
-			spec = spec.and(this.rsqlParser.parse(search).accept(new GeoCustomVisitor<>()));
+			spec = this.rsqlParser.parse(search).accept(new GeoCustomVisitor<>());
 
-		Page<T> page = repository.findAll(spec, pageable);
+		// Build query
+		List<Path<?>> selections = CustomUtils.getSelectionPaths(fields, root);
+		query.multiselect(selections.stream().map(s -> (Selection<?>) s).collect(Collectors.toList()));
+		if (spec != null)
+			query.where(((Specification<T>) spec).toPredicate(root, query, builder));
+		query
+				.groupBy(selections.stream().map(s -> (Expression<?>) s).collect(Collectors.toList()))
+				.distinct(true);
+		// .distinct(true);
+		TypedQuery<T> selectionQuery = this.entityManager.createQuery(query);
+
+		// Add pagination to query
+		if (pageable.isPaged()) {
+			selectionQuery.setFirstResult((int) pageable.getOffset());
+			selectionQuery.setMaxResults(pageable.getPageSize());
+		}
+
+		// Build count query
+		CriteriaQuery<Long> cQuery = builder.createQuery(Long.class);
+		Root<Long> cRoot = (Root<Long>) CriteriaUtils.applySpecification(builder, cQuery, clazz, spec);
+		cQuery.select(builder.count(cRoot));
+		if (spec != null)
+			cQuery.where(((Specification<Long>) spec).toPredicate(cRoot, cQuery, builder));
+		cQuery.groupBy(CustomUtils.getSelectionExpressions(fields, cRoot));
+		TypedQuery<Long> countQuery = this.entityManager.createQuery(cQuery);
+
+		// Create Page from result
+		Page<T> page = PageableExecutionUtils.getPage(
+				selectionQuery.getResultList(),
+				pageable,
+				() -> CustomUtils.executeCountQuery(countQuery));
 
 		return PageFactory.asRelayPage(page);
 
