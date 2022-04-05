@@ -216,6 +216,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fVerifLogistiqueOrdre(String ordRef) {
+        FunctionQuery query = this.build("F_VERIF_LOGISTIQUE_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 

@@ -39,6 +39,12 @@ public interface GeoFunctionOrdreRepository {
          */
         FunctionResult fInitBlocageOrdre(String ordRef, String user);
 
+        /**
+         * Verification de la bonne conformité de la logistique
+         * avant envoi de documents et validation bon à facturer
+         */
+        FunctionResult fVerifLogistiqueOrdre(String ordRef);
+
         // Sub procedures, declare only for testing
         FunctionResult fCalculMarge(String refOrdre);
 
