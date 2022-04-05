@@ -42,4 +42,7 @@ public class GeoTransitaire extends ValidateAndModifiedEntity {
 	@JoinColumn(name = "lan_code")
 	private GeoPays langue;
 
+	@Column(name = "ind_decl_douanier")
+	private Boolean declarantDouanier;
+
 }
