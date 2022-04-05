@@ -70,6 +70,12 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fVerifLogistiqueOrdre(
+            @GraphQLArgument(name = "ordreRef") String ordreRef) {
+        return this.repository.fVerifLogistiqueOrdre(ordreRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult onChangeCdeNbPal(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
             @GraphQLArgument(name = "secteurCommercialCode") String scoCode) {
