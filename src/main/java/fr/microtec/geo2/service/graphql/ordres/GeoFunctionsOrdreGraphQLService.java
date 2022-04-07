@@ -76,6 +76,14 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fAjoutOrdLog(
+            @GraphQLArgument(name = "ordreLogRef") String ordreLogRef,
+            @GraphQLArgument(name = "typePassage") String typePassage,
+            @GraphQLArgument(name = "choixPassage") String choixPassage) {
+        return this.repository.fAjoutOrdlog(ordreLogRef, typePassage, choixPassage);
+    }
+
+    @GraphQLQuery
     public FunctionResult onChangeCdeNbPal(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
             @GraphQLArgument(name = "secteurCommercialCode") String scoCode) {
