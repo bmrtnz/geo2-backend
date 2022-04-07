@@ -3,6 +3,7 @@ package fr.microtec.geo2.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -117,28 +118,37 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     if (item.isEmpty())
       throw new GraphQLException("Missing mandatory field :" + field);
 
-    return summary.get(summaries.indexOf(item.get()));
+    return Optional.ofNullable(summary.get(summaries.indexOf(item.get()))).orElse(0d);
   };
 
   private Double fetchTotalMargeBrute(List<Summary> summaries, List<Double> summary) {
-    Double totalVenteBrut = this
-        .getSummaryResult(summaries, summary, "totalVenteBrut");
-    Double totalRemise = this
-        .getSummaryResult(summaries, summary, "totalRemise");
-    Double totalRestitue = this
-        .getSummaryResult(summaries, summary, "totalRestitue");
-    Double totalFraisMarketing = this
-        .getSummaryResult(summaries, summary, "totalFraisMarketing");
-    Double totalAchat = this
-        .getSummaryResult(summaries, summary, "totalAchat");
-    Double totalTransport = this
-        .getSummaryResult(summaries, summary, "totalTransport");
-    Double totalTransit = this
-        .getSummaryResult(summaries, summary, "totalTransit");
-    Double totalCourtage = this
-        .getSummaryResult(summaries, summary, "totalCourtage");
-    Double totalFraisAdditionnels = this
-        .getSummaryResult(summaries, summary, "totalFraisAdditionnels");
+    Double totalVenteBrut = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalVenteBrut"))
+        .orElse(0d);
+    Double totalRemise = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalRemise"))
+        .orElse(0d);
+    Double totalRestitue = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalRestitue"))
+        .orElse(0d);
+    Double totalFraisMarketing = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalFraisMarketing"))
+        .orElse(0d);
+    Double totalAchat = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalAchat"))
+        .orElse(0d);
+    Double totalTransport = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalTransport"))
+        .orElse(0d);
+    Double totalTransit = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalTransit"))
+        .orElse(0d);
+    Double totalCourtage = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalCourtage"))
+        .orElse(0d);
+    Double totalFraisAdditionnels = Optional.ofNullable(this
+        .getSummaryResult(summaries, summary, "totalFraisAdditionnels"))
+        .orElse(0d);
     return totalVenteBrut - totalRemise + totalRestitue - totalFraisMarketing - totalAchat - totalTransport
         - totalTransit - totalCourtage - totalFraisAdditionnels;
   };
