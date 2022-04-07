@@ -64,7 +64,8 @@ public class GeoOrdreFrais extends ValidateAndModifiedEntity {
 	@PostLoad
 	public void postLoad() {
 
-		this.montantTotal = this.montant * this.deviseTaux;
+		if (this.getMontant() != null & this.getDeviseTaux() != null)
+			this.setMontantTotal(this.getMontant() * this.getDeviseTaux());
 
 	}
 
