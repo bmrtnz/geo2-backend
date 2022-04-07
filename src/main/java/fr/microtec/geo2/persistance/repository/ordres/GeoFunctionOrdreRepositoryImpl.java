@@ -225,6 +225,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fAjoutOrdlog(String orxRef, String typePassage, String choixPassage) {
+        FunctionQuery query = this.build("F_AJOUT_ORDLOG");
+
+        query.attachInput("arg_orx_ref", String.class, orxRef);
+        query.attachInput("arg_typ_passage", String.class, typePassage);
+        query.attachInput("arg_ch_passage", String.class, choixPassage);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 

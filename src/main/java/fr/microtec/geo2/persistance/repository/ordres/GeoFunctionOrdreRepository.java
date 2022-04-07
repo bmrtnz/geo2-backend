@@ -45,6 +45,11 @@ public interface GeoFunctionOrdreRepository {
          */
         FunctionResult fVerifLogistiqueOrdre(String ordRef);
 
+        /**
+         * Ajoute un lieu de passage dans la logistique
+         */
+        FunctionResult fAjoutOrdlog(String orxRef, String typePassage, String choixPassage);
+
         // Sub procedures, declare only for testing
         FunctionResult fCalculMarge(String refOrdre);
 
