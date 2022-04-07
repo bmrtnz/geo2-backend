@@ -31,12 +31,6 @@ begin
     msg := '';
     res := 0;
 
-    -- select ol.pal_code, ol.art_ref, ol.pal_nb_col, o.sco_code, ol.vte_bta_code, ol.ach_bta_code, o.typ_ordre
-    -- into ls_pal_code, ls_art_ref, ls_pal_nb_col, ls_sco_code, ls_vte_bta, ls_ach_bta, ls_typ_ordre
-    -- from geo_ordlig ol
-    -- left join geo_ordre o on o.ord_ref = ol.ord_ref
-    -- where orl_ref = arg_orl_ref;
-
     declare
         -- on va supprimer les éléments logistiques orphelins (logistique sans correspondance dans les lignes
         cursor CTROP is
