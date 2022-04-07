@@ -288,6 +288,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFAjoutOrdLog() {
+        FunctionResult result = this.functionOrdreRepository
+                .fAjoutOrdlog("B2894A", "G", "MATHSA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testOnChangeCdeNbPalWithSecteurFrance() {
         FunctionResult result = this.functionOrdreRepository
                 .onChangeCdeNbPal("9714FC", "F");
