@@ -293,7 +293,6 @@ public class OrdreFunctionTest {
                 .fAjoutOrdlog("B2894A", "G", "MATHSA");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1, result.getRes());
     }
 
     @Test
