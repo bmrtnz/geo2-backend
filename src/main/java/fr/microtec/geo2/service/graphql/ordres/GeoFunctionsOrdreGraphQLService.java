@@ -76,7 +76,7 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
-    public FunctionResult fAjoutOrdLog(
+    public FunctionResult fAjoutOrdlog(
             @GraphQLArgument(name = "ordreLogRef") String ordreLogRef,
             @GraphQLArgument(name = "typePassage") String typePassage,
             @GraphQLArgument(name = "choixPassage") String choixPassage) {
