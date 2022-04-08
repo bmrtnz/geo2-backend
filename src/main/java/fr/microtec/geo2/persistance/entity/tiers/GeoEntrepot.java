@@ -24,6 +24,7 @@ import org.hibernate.annotations.Where;
 
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -39,14 +40,10 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Ser
 	@Id
 	@Column(name = "cen_ref")
 	@GeneratedValue(generator = "GeoEntrepotGenerator")
-	@GenericGenerator(
-			name = "GeoEntrepotGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "seq_cen_num"),
-					@Parameter(name = "mask", value = "FM099999")
-			}
-	)
+	@GenericGenerator(name = "GeoEntrepotGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "seq_cen_num"),
+			@Parameter(name = "mask", value = "FM099999")
+	})
 	private String id;
 
 	@NotNull
@@ -61,6 +58,9 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Ser
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cli_ref")
 	private GeoClient client;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entrepot")
+	private List<GeoOrdre> ordres;
 
 	@NotNull
 	@Column(name = "raisoc", nullable = false)
