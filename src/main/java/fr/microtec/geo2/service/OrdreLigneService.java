@@ -170,12 +170,8 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
       ordreLigne.setPoidsNetExpedie(0f);
     if (ordreLigne.getPoidsBrutExpedie() == null)
       ordreLigne.setPoidsBrutExpedie(0d);
-    if (ordreLigne.getVentePrixUnitaire() == null)
-      ordreLigne.setVentePrixUnitaire(0f);
     if (ordreLigne.getVenteQuantite() == null)
       ordreLigne.setVenteQuantite(0d);
-    if (ordreLigne.getAchatPrixUnitaire() == null)
-      ordreLigne.setAchatPrixUnitaire(0d);
     if (ordreLigne.getAchatQuantite() == null)
       ordreLigne.setAchatQuantite(0d);
     if (ordreLigne.getTotalVenteBrut() == null)
