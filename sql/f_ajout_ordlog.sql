@@ -17,32 +17,12 @@ begin
     msg := '';
     res := 0;
 
-    select olo.ord_ref, olo.datliv_grp, o.inc_code
-    into ls_ord_ref, ldt_datliv_grp, ls_inc_code
+    select olo.ord_ref, olo.datliv_grp, olo.datdep_grp_p, olo.incot_fourn
+    into ls_ord_ref, ldt_datliv_grp, ldt_depdatp, ls_inc_code
     from geo_ordlog olo
     left join geo_ordre o on o.ord_ref = olo.ord_ref
     where olo.orx_ref = arg_orx_ref
     order by olo.datdep_fou_p, olo.fou_code;
-
-    -- Selectionne "datdep_grp_p" du precedent ORDLOG
-    SELECT previous_date
-    INTO ldt_depdatp
-    FROM (
-            SELECT
-            olo.orx_ref,
-            olo.datdep_grp_p,
-            LAG(olo.datdep_grp_p) OVER (ORDER BY olo.datdep_fou_p, olo.fou_code) AS previous_date
-        FROM
-            geo_ordlog olo
-        LEFT JOIN geo_ordre o ON
-            o.ord_ref = olo.ord_ref
-        WHERE
-            olo.ord_ref = ls_ord_ref
-        ORDER BY
-            olo.datdep_fou_p,
-            olo.fou_code
-    )
-    WHERE orx_ref = arg_orx_ref;
     
     if arg_ch_passage is not null then 
         select F_SEQ_ORX_SEQ into ls_new_sequence from dual;
