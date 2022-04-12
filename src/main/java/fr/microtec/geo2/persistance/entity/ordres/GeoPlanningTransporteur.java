@@ -18,27 +18,27 @@ import lombok.Data;
 public class GeoPlanningTransporteur {
 
   @Id
-	@Column(name = "ord_ref")
+  @Column(name = "rownum")
   Integer id;
 
   @Column(name = "code_chargement")
-	String codeChargement;
+  String codeChargement;
 
   @Column(name = "nordre")
-	String numero;
+  String numero;
 
   @Column(name = "livdatp")
-	LocalDate dateLivraisonPrevue;
-  
+  LocalDate dateLivraisonPrevue;
+
   @Column(name = "ref_cli")
-	String referenceClient;
+  String referenceClient;
 
   @Column(name = "version_ordre")
-	String version;
+  String version;
 
   @Column(name = "somme_colis_commandes")
   Double sommeColisCommandes;
-  
+
   @Column(name = "somme_colis_palette")
   Double sommeColisPalette;
 
@@ -61,38 +61,38 @@ public class GeoPlanningTransporteur {
   String entrepotPays;
 
   @Column(name = "datdep_fou_p")
-	LocalDateTime dateDepartPrevueFournisseur;
+  LocalDateTime dateDepartPrevueFournisseur;
 
   @Column(name = "fou_code")
-	String fournisseur;
+  String fournisseur;
 
   @Column(name = "zip")
-	String fournisseurCodePostal;
+  String fournisseurCodePostal;
 
   @Column(name = "pay_code")
-	String fournisseurPays;
+  String fournisseurPays;
 
   @Column(name = "datdep_grp_p")
-	LocalDateTime dateDepartPrevueGroupage;
-  
+  LocalDateTime dateDepartPrevueGroupage;
+
   @Column(name = "grp_code")
-	String groupage;
+  String groupage;
 
   @Column(name = "esp_code")
-	String espece;
+  String espece;
 
   @Column(name = "pal_code")
-	String palette;
+  String palette;
 
   @Column(name = "trp_code")
-	String transporteur;
-  
+  String transporteur;
+
   @Column(name = "flag_entrepot")
   @Convert(converter = BooleanCharacterConverter.class)
-	Boolean flagEntrepot;
-  
+  Boolean flagEntrepot;
+
   @Column(name = "col_code")
-	String colis;
+  String colis;
 
   @ManyToOne
   @JoinColumn(name = "ord_ref", insertable = false, updatable = false)
