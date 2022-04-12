@@ -5,6 +5,7 @@ import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import fr.microtec.geo2.persistance.entity.etiquette.DocumentAuditingListener;
 import fr.microtec.geo2.persistance.entity.etiquette.GeoAsDocument;
 import fr.microtec.geo2.persistance.entity.etiquette.GeoDocument;
+import fr.microtec.geo2.persistance.entity.ordres.GeoImprimante;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Data;
@@ -19,11 +20,11 @@ import java.time.LocalDate;
 @EntityListeners(DocumentAuditingListener.class)
 public class GeoEnvois implements GeoAsDocument {
 
-  @Id
+	@Id
 	@Column(name = "env_code")
 	private String id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
 
@@ -41,36 +42,37 @@ public class GeoEnvois implements GeoAsDocument {
 	@JoinColumn(name = "per_codeass")
 	private GeoPersonne commercial;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "flu_code")
 	private GeoFlux flux;
 
 	@Column(name = "tie_code")
-  private String codeTiers;
+	private String codeTiers;
 
 	@Column(name = "acces1")
-  private String numeroAcces1;
+	private String numeroAcces1;
 
 	@Column(name = "demdat")
-  private LocalDate dateDemande;
+	private LocalDate dateDemande;
 
 	@Column(name = "envdat")
-  private LocalDate dateEnvoi;
+	private LocalDate dateEnvoi;
 
 	@Column(name = "ackdat")
-  private LocalDate dateAccuseReception;
+	private LocalDate dateAccuseReception;
 
 	@Column(name = "nbtent")
-  private Integer nombreTentatives;
+	private Integer nombreTentatives;
 
-	@Column(name = "imp_id")
-  private String imprimanteID;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "imp_id")
+	private GeoImprimante imprimante;
 
 	@Column(name = "env_desc")
-  private String commentairesAvancement;
+	private String commentairesAvancement;
 
 	@Column(name = "doc_filename")
-  private String nomFichier;
+	private String nomFichier;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "moc_code")
