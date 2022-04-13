@@ -1,21 +1,20 @@
 package fr.microtec.geo2.persistance.converter;
 
-import fr.microtec.geo2.controller.FileManagerController;
+import javax.persistence.Converter;
+
+import org.springframework.stereotype.Component;
+
 import fr.microtec.geo2.controller.FsCommand;
 import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.persistance.entity.logistique.GeoPortType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCahierDesCharges;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreType;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatus;
 import fr.microtec.geo2.persistance.entity.ordres.GeoStatusGEO;
 import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
 import fr.microtec.geo2.persistance.entity.tiers.GeoNatureStation;
 import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.Converter;
 
 public class EnumsConverter {
 }
@@ -33,16 +32,13 @@ class GeoFactureAvoirConverter extends AbstractStringEnumConverter<GeoFactureAvo
 }
 
 @Converter(autoApply = true)
-class GeoOrdreTypeConverter extends AbstractStringEnumConverter<GeoOrdreType> {
-}
-
-@Converter(autoApply = true)
 class GeoRoleConverter extends AbstractStringEnumConverter<GeoRole> {
 }
 
 @Converter(autoApply = true)
 class GeoPortTypeConverter extends AbstractStringEnumConverter<GeoPortType> {
 }
+
 @Converter(autoApply = true)
 class GeoStatusGEOConverter extends AbstractStringEnumConverter<GeoStatusGEO> {
 }

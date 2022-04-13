@@ -343,8 +343,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@JoinColumn(name = "ord_ref_pere")
 	private GeoOrdre ordrePere;
 
-	@Column(name = "typ_ordre", nullable = false)
-	private GeoOrdreType type;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "typ_ordre", nullable = false)
+	private GeoTypeOrdre type;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pay_code")
