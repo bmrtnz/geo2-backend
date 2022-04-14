@@ -104,7 +104,7 @@ begin
     --fin llef
     End If;
     
-    if ls_fou_code is null then
+    -- if ls_fou_code is null then
     
         If ls_propr_code is null or ls_propr_code = '' Then
             update geo_ordlig
@@ -141,7 +141,7 @@ begin
             End If;
         end if;
 
-    end if;
+    -- end if;
                     
     SELECT ind_modif_detail  INTO ls_ind_modif_detail 
     FROM GEO_FOURNI
