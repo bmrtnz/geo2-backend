@@ -296,6 +296,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testGeoPrepareEnvoisOrdre() {
+        FunctionResult result = this.functionOrdreRepository
+                .geoPrepareEnvois("1675112", "ORDRE", 'O', 'O', "7");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes());
+    }
+
+    @Test
     public void testOnChangeCdeNbPalWithSecteurFrance() {
         FunctionResult result = this.functionOrdreRepository
                 .onChangeCdeNbPal("9714FC", "F");

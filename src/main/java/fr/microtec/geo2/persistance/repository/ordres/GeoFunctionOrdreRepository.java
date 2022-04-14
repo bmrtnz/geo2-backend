@@ -56,8 +56,8 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult geoPrepareEnvois(
                         String ordRef,
                         String fluCode,
-                        Boolean modeAuto,
-                        Boolean annOrdre,
+                        Character modeAuto,
+                        Character annOrdre,
                         String user);
 
         // Sub procedures, declare only for testing
