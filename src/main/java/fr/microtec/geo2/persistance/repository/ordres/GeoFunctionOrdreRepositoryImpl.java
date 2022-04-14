@@ -236,6 +236,24 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult geoPrepareEnvois(
+            String ordRef,
+            String fluCode,
+            Boolean modeAuto,
+            Boolean annOrdre,
+            String user) {
+        FunctionQuery query = this.build("GEO_PREPARE_ENVOIS");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+        query.attachInput("is_flu_code", String.class, fluCode);
+        query.attachInput("mode_auto", Boolean.class, modeAuto);
+        query.attachInput("ann_ordre", Boolean.class, annOrdre);
+        query.attachInput("arg_nom_utilisateur", String.class, user);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 

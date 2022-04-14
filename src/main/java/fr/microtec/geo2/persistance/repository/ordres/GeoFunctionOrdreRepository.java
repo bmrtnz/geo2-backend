@@ -50,6 +50,16 @@ public interface GeoFunctionOrdreRepository {
          */
         FunctionResult fAjoutOrdlog(String orxRef, String typePassage, String choixPassage);
 
+        /**
+         * Point d'entrée pour la gestion des flux de documents
+         */
+        FunctionResult geoPrepareEnvois(
+                        String ordRef,
+                        String fluCode,
+                        Boolean modeAuto,
+                        Boolean annOrdre,
+                        String user);
+
         // Sub procedures, declare only for testing
         FunctionResult fCalculMarge(String refOrdre);
 
