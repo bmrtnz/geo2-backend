@@ -84,6 +84,16 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult geoPrepareEnvois(
+            @GraphQLArgument(name = "ordRef") String ordRef,
+            @GraphQLArgument(name = "fluCode") String fluCode,
+            @GraphQLArgument(name = "modeAuto") Boolean modeAuto,
+            @GraphQLArgument(name = "annOrdre") Boolean annOrdre,
+            @GraphQLArgument(name = "user") String user) {
+        return this.repository.geoPrepareEnvois(ordRef, fluCode, modeAuto ? 'O' : 'N', annOrdre ? 'O' : 'N', user);
+    }
+
+    @GraphQLQuery
     public FunctionResult onChangeCdeNbPal(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
             @GraphQLArgument(name = "secteurCommercialCode") String scoCode) {
