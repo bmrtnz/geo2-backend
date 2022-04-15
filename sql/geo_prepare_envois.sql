@@ -20,9 +20,11 @@ BEGIN
 		WHEN 'INCLIT' THEN
 			/* TODO MICROTEC
 			of_genere_envois_litige_autom();*/
+			msg := 'OK';
 			res := 1;
 			RETURN;
 		WHEN 'RESLIT' THEN
+			msg := 'OK';
 			res := 1;
 			RETURN;
 		ELSE
@@ -68,6 +70,7 @@ BEGIN
 	END case;
 
 	res := 1;
+	msg := 'OK';
 	return;
 
 END GEO_PREPARE_ENVOIS;

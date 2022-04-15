@@ -95,6 +95,7 @@ BEGIN
 		/* TODO MICROTEC
 		il_row	= of_insert_envoi();		-- on crée l'envoi dans la dw  */
 		res := 1;
+		msg := 'OK';
 		return;
 	end if;
 
@@ -111,6 +112,7 @@ BEGIN
 --		dw_table.object.acces1.visible = FALSE
 --		dw_table.object.acces1_1.visible = TRUE
 		res := 1;
+		msg := 'OK';
 		return;
 	end if;
 
@@ -128,6 +130,7 @@ BEGIN
 --		dw_table.object.acces1.visible = TRUE
 --		dw_table.object.acces1_1.visible = FALSE
 		res := 1;
+		msg := 'OK';
 		return;
 	end if;
 
@@ -140,6 +143,7 @@ BEGIN
 		/* TODO MICROTEC
 		il_row	= of_insert_envoi()		// on crée l'envoi dans la dw  */
 		res := 1;
+		msg := 'OK';
 		return;
 	end if;
 
@@ -279,6 +283,7 @@ BEGIN
 	end if; --fin llef test annulation ordre
 
 	res := 1;
+	msg := 'OK';
 	return;
 
 END OF_GENERE_ENVOIS;
