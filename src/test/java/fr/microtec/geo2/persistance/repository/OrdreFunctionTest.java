@@ -301,7 +301,7 @@ public class OrdreFunctionTest {
                 .geoPrepareEnvois("1675112", "ORDRE", 'O', 'O', "7");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes());
+        Assertions.assertEquals(1, result.getRes());
     }
 
     @Test

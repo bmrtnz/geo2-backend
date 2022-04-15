@@ -20,8 +20,11 @@ BEGIN
 		WHEN 'INCLIT' THEN
 			/* TODO MICROTEC
 			of_genere_envois_litige_autom();*/
+			res := 1;
 			RETURN;
-		WHEN 'RESLIT' THEN RETURN;
+		WHEN 'RESLIT' THEN
+			res := 1;
+			RETURN;
 		ELSE
 			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ib_ann_ordre, res, msg);
 
@@ -64,6 +67,7 @@ BEGIN
 			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ib_ann_ordre, res, msg);
 	END case;
 
+	res := 1;
 	return;
 
 END GEO_PREPARE_ENVOIS;

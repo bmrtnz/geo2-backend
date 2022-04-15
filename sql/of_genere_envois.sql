@@ -94,6 +94,7 @@ BEGIN
 		is_con_tiers := is_cli_code;
 		/* TODO MICROTEC
 		il_row	= of_insert_envoi();		-- on crée l'envoi dans la dw  */
+		res := 1;
 		return;
 	end if;
 
@@ -109,6 +110,7 @@ BEGIN
 
 --		dw_table.object.acces1.visible = FALSE
 --		dw_table.object.acces1_1.visible = TRUE
+		res := 1;
 		return;
 	end if;
 
@@ -125,6 +127,7 @@ BEGIN
 
 --		dw_table.object.acces1.visible = TRUE
 --		dw_table.object.acces1_1.visible = FALSE
+		res := 1;
 		return;
 	end if;
 
@@ -136,6 +139,7 @@ BEGIN
 		is_con_tiers := is_cli_code;
 		/* TODO MICROTEC
 		il_row	= of_insert_envoi()		// on crée l'envoi dans la dw  */
+		res := 1;
 		return;
 	end if;
 
@@ -274,6 +278,8 @@ BEGIN
 		close CG;
 	end if; --fin llef test annulation ordre
 
+	res := 1;
+	return;
 
 END OF_GENERE_ENVOIS;
 /
