@@ -21,14 +21,10 @@ public class GeoContact extends ValidateModifiedPrewrittedEntity {
 	@Id
 	@Column(name = "con_ref")
 	@GeneratedValue(generator = "GeoContactsGenerator")
-	@GenericGenerator(
-			name = "GeoContactsGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "seq_con_num"),
-					@Parameter(name = "mask", value = "FM099999")
-			}
-	)
+	@GenericGenerator(name = "GeoContactsGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "seq_con_num"),
+			@Parameter(name = "mask", value = "FM099999")
+	})
 	private String id;
 
 	@Column(name = "con_prenom")
@@ -63,5 +59,11 @@ public class GeoContact extends ValidateModifiedPrewrittedEntity {
 
 	@Column(name = "con_tyt")
 	private Character typeTiers;
+
+	@Column(name = "con_dot")
+	private String fichierDot;
+
+	@Column(name = "con_map")
+	private String fichierMap;
 
 }

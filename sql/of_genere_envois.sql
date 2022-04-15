@@ -5,7 +5,8 @@ CREATE OR REPLACE PROCEDURE OF_GENERE_ENVOIS (
 	arg_nom_utilisateur IN GEO_USER.NOM_UTILISATEUR%TYPE,
 	ib_ann_ordre IN char,
 	res IN OUT number,
-	msg IN OUT varchar2
+	msg IN OUT varchar2,
+	co in out SYS_REFCURSOR
 )
 AS
 	is_soc_code GEO_SOCIETE.SOC_CODE%TYPE;
@@ -23,7 +24,6 @@ AS
 	is_ref_document varchar2(70);
 	is_imprimante varchar2(35);
 	ls_sql varchar(5000);
-	co sys_refcursor;
 
 	is_con_fluvar varchar2(6);
 	is_moc_code varchar2(3);
@@ -205,22 +205,22 @@ BEGIN
 	end if;
 
 	open co for ls_sql;
-	loop
-		fetch co into is_con_tyt, is_con_tiers, is_con_ref, is_moc_code, is_con_acces1, ls_con_access2, is_con_fluvar, is_con_prenom, is_con_nom, ls_con_dot, ls_con_map;
-		exit when co%notfound;
+	-- loop
+	-- 	fetch co into is_con_tyt, is_con_tiers, is_con_ref, is_moc_code, is_con_acces1, ls_con_access2, is_con_fluvar, is_con_prenom, is_con_nom, ls_con_dot, ls_con_map;
+	-- 	exit when co%notfound;
 
-		if ls_code_expediteur = is_con_tiers and ls_con_dot is not null then
-			-- On prend une variation de flux alternative (cas de quercy prestation qui a deux logiciels)
-			is_con_fluvar := ls_con_dot;
-			is_con_nom := ls_con_map;
-			is_con_acces1 := ls_con_access2;
-		end if;
+	-- 	if ls_code_expediteur = is_con_tiers and ls_con_dot is not null then
+	-- 		-- On prend une variation de flux alternative (cas de quercy prestation qui a deux logiciels)
+	-- 		is_con_fluvar := ls_con_dot;
+	-- 		is_con_nom := ls_con_map;
+	-- 		is_con_acces1 := ls_con_access2;
+	-- 	end if;
 
-		/* TODO MICROTEC
-		il_row	= of_insert_envoi() */
+	-- 	/* TODO MICROTEC
+	-- 	il_row	= of_insert_envoi() */
 
-	end loop;
-	close co;
+	-- end loop;
+	-- close co;
 
 	-- Ligne par défaut pour EXPRIMIS qque soit le transporteur
 	--if is_flu_code = 'ORDRE' then

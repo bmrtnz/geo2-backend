@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.repository.ordres;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
+import fr.microtec.geo2.persistance.entity.tiers.GeoContact;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
 import org.springframework.stereotype.Repository;
@@ -242,13 +243,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
             Character modeAuto,
             Character annOrdre,
             String user) {
-        FunctionQuery query = this.build("GEO_PREPARE_ENVOIS");
+        FunctionQuery query = this.build("GEO_PREPARE_ENVOIS", GeoContact.class);
 
         query.attachInput("is_ord_ref", String.class, ordRef);
         query.attachInput("is_flu_code", String.class, fluCode);
         query.attachInput("mode_auto", Character.class, modeAuto);
         query.attachInput("ann_ordre", Character.class, annOrdre);
         query.attachInput("arg_nom_utilisateur", String.class, user);
+        query.attachCursor("co");
 
         return query.fetch();
     }

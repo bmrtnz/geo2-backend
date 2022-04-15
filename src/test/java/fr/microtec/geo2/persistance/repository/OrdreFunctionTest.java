@@ -4,6 +4,7 @@ import fr.microtec.geo2.Geo2Application;
 import fr.microtec.geo2.configuration.PersistanceConfiguration;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
+import fr.microtec.geo2.persistance.entity.tiers.GeoContact;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -298,7 +299,7 @@ public class OrdreFunctionTest {
     @Test
     public void testGeoPrepareEnvoisOrdre() {
         FunctionResult result = this.functionOrdreRepository
-                .geoPrepareEnvois("1675112", "ORDRE", 'O', 'O', "7");
+                .geoPrepareEnvois("1675112", "ORDRE", 'N', 'N', "7");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
