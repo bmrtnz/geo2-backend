@@ -34,7 +34,7 @@ public class GeoImprimante extends ValidateAndModifiedEntity {
 	@Column(name = "imp_id")
 	private String reference;
 
-	@Column(name = "imp_local")
+	@Column(name = "imp_locale")
 	private String nomLocal;
 
 	@Column(name = "ip_v4")
