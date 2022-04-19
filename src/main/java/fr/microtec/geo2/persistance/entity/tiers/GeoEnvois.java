@@ -82,6 +82,9 @@ public class GeoEnvois implements GeoAsDocument {
 	@JoinColumn(name = "tyt_code")
 	private GeoTypeTiers typeTiers;
 
+	@Column(name = "trait_exp")
+	private Character traite;
+
 	@Transient
 	private GeoDocument document;
 
