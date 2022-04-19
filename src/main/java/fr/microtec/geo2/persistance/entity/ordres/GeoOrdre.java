@@ -457,11 +457,11 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_eta")
-	private GeoPort PortTypeA;
+	private GeoPort portTypeA;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_etd")
-	private GeoPort PortTypeD;
+	private GeoPort portTypeD;
 
 	@Column(name = "list_nordre_comp")
 	private String listeOrdresComplementaires;
