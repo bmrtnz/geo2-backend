@@ -432,16 +432,16 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private String commentaireTVA;
 
 	@Column(name = "etd_date")
-	private LocalDate ETDDate;
+	private LocalDate etdDate;
 
 	@Column(name = "eta_date")
-	private LocalDate ETADate;
+	private LocalDate etaDate;
 
 	@Column(name = "etd_location")
-	private String ETDLocation;
+	private String etdLocation;
 
 	@Column(name = "eta_location")
-	private String ETALocation;
+	private String etaLocation;
 
 	@Column(name = "trp_dev_code")
 	private String transporteurDEVCode;
