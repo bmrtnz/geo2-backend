@@ -6,7 +6,7 @@ CREATE OR REPLACE PROCEDURE OF_GENERE_ENVOIS (
 	ib_ann_ordre IN char,
 	res IN OUT number,
 	msg IN OUT varchar2,
-	co in out SYS_REFCURSOR
+	co IN OUT SYS_REFCURSOR
 )
 AS
 	is_soc_code GEO_SOCIETE.SOC_CODE%TYPE;
@@ -149,8 +149,8 @@ BEGIN
 
 	if ib_ann_ordre = 'N' then
 		ls_sql := 'select K.con_tyt, K.con_tiers, K.con_ref, K.moc_code, K.con_acces1, K.con_acces2, K.con_fluvar, K.con_prenom, K.con_nom, K.con_dot, K.con_map ';
-		ls_sql := ls_sql || '	from geo_contac K, geo_ordre O ';
-		ls_sql := ls_sql || 'where	((K.con_tyt = ''C'' and K.con_tiers = O.cli_CODE and K.soc_code = O.soc_code) ';
+		ls_sql := ls_sql || 'from geo_contac K, geo_ordre O ';
+		ls_sql := ls_sql || 'where	((K.con_tyt = ''C'' and K.con_tiers = O.cli_code and K.soc_code = O.soc_code) ';
 		ls_sql := ls_sql || 'or (K.con_tyt = ''E'' and K.con_tiers = O.cen_code and K.soc_code = O.soc_code) ';
 		ls_sql := ls_sql || 'or (K.con_tyt = ''T'' and K.con_tiers = O.trp_code) ';
 		ls_sql := ls_sql || 'or (K.con_tyt = ''U'' and K.con_tiers = O.crt_code) ';

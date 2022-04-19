@@ -243,7 +243,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
             Character modeAuto,
             Character annOrdre,
             String user) {
-        FunctionQuery query = this.build("GEO_PREPARE_ENVOIS", GeoContact.class);
+        FunctionQuery query = this.build("GEO_PREPARE_ENVOIS");
 
         query.attachInput("is_ord_ref", String.class, ordRef);
         query.attachInput("is_flu_code", String.class, fluCode);

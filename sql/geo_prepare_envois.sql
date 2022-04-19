@@ -6,11 +6,10 @@ CREATE OR REPLACE PROCEDURE GEO_PREPARE_ENVOIS (
 	arg_nom_utilisateur IN GEO_USER.NOM_UTILISATEUR%TYPE,
 	res OUT number,
 	msg OUT varchar2,
-	co out SYS_REFCURSOR
+	co OUT SYS_REFCURSOR
 )
 AS
 	ls_typ_ordre GEO_TYPORD.TYP_ORD%TYPE;
-	ib_ann_ordre char;
 BEGIN
 	-- correspond à w_geo_genere_envois_on_open.pbl
     msg := '';
@@ -29,7 +28,7 @@ BEGIN
 			res := 1;
 			RETURN;
 		ELSE
-			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ib_ann_ordre, res, msg, co);
+			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ann_ordre, res, msg, co);
 
 			select TYP_ORDRE INTO ls_typ_ordre
 			FROM GEO_ORDRE
@@ -46,13 +45,6 @@ BEGIN
 		end case;
 	END IF;
 
-
-	--deb LLEF
-	if ann_ordre = 'O' then
-		ib_ann_ordre := 'O';
-	end if;
-	--fin LLEF
-
 	CASE is_flu_code
 		WHEN 'INCLIT' THEN
 			-- of_genere_envois_litige; TODO MICROTEC
@@ -67,7 +59,7 @@ BEGIN
 			-- of_genere_envois_proform; TODO MICROTEC
 			return; --à retirer après
 		ELSE
-			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ib_ann_ordre, res, msg, co);
+			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ann_ordre, res, msg, co);
 	END case;
 
 	res := 1;
