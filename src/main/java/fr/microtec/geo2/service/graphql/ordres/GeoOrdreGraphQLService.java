@@ -40,8 +40,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	public RelayPage<GeoOrdre> allOrdre(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
@@ -49,10 +48,9 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	public RelayPage<GeoOrdre> allOrdreSuiviDeparts(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLArgument(name = "onlyColisDiff") Boolean onlyColisDiff
-	) {
+			@GraphQLArgument(name = "onlyColisDiff") Boolean onlyColisDiff) {
 		return this.ordreService
-		.fetchOrdreSuiviDeparts(search, pageable, onlyColisDiff);
+				.fetchOrdreSuiviDeparts(search, pageable, onlyColisDiff);
 	}
 
 	@GraphQLQuery
@@ -60,14 +58,12 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 			@GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
 			@GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
 			@GraphQLArgument(name = "societeCode") String societeCode,
-			@GraphQLArgument(name = "transporteurCode") String transporteurCode
-	) {
+			@GraphQLArgument(name = "transporteurCode") String transporteurCode) {
 		return this.ordreService.allPlanningTransporteurs(
-			dateMin,
-			dateMax,
-			societeCode,
-			transporteurCode
-		);
+				dateMin,
+				dateMax,
+				societeCode,
+				transporteurCode);
 	}
 
 	@GraphQLQuery
@@ -81,34 +77,31 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 	}
 
 	@GraphQLQuery
-	public long nombreOrdreNonCloture(@GraphQLArgument(name = "search") String search)
-	{
+	public long nombreOrdreNonCloture(@GraphQLArgument(name = "search") String search) {
 		return this.ordreService.fetchNombreOrdreNonCloture(search);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoOrdre> getOrdre(
-			@GraphQLArgument(name = "id") String id
-	) {
+			@GraphQLArgument(name = "id") String id) {
 		return super.getOne(id);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoOrdre> getOrdreByNumeroAndSociete(
 			@GraphQLArgument(name = "numero") String numero,
-			@GraphQLArgument(name = "societe") String societeID
-	) {
+			@GraphQLArgument(name = "societe") String societeID) {
 		return this.ordreService.getByNumeroAndSociete(numero, societeID);
 	}
 
 	@GraphQLMutation
 	public GeoOrdre saveOrdre(GeoOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.ordreService.save(ordre);
+		return this.ordreService.save(ordre, env);
 	}
 
 	@GraphQLMutation
-	public GeoOrdre cloneOrdre(GeoOrdre ordre) {
-		return this.ordreService.clone(ordre);
+	public GeoOrdre cloneOrdre(GeoOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
+		return this.ordreService.clone(ordre, env);
 	}
 
 	@GraphQLMutation
@@ -123,8 +116,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 
 	@GraphQLQuery
 	public long countOrdre(
-		@GraphQLArgument(name = "search") String search
-	) {
+			@GraphQLArgument(name = "search") String search) {
 		return this.count(search);
 	}
 

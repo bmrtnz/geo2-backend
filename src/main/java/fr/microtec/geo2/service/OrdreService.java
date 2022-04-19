@@ -3,6 +3,7 @@ package fr.microtec.geo2.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.CriteriaUtils;
@@ -50,6 +52,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
@@ -87,14 +90,16 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     return (String) GeoSequenceGenerator.generate(this.entityManager, params);
   }
 
-  public GeoOrdre save(GeoOrdre ordreChunk) {
+  public GeoOrdre save(GeoOrdre ordreChunk, ResolutionEnvironment env) {
+    String entityArgumentKey = CustomUtils.classToArgument(GeoOrdre.class);
+    Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, entityArgumentKey);
     if (ordreChunk.getId() == null) {
       if (ordreChunk.getNumero() == null)
         ordreChunk.setNumero(this.fetchNumero(ordreChunk.getSociete()));
       return this.ordreRepository.save(this.withDefaults(ordreChunk));
     } else {
       Optional<GeoOrdre> ordre = this.ordreRepository.findById(ordreChunk.getId());
-      GeoOrdre merged = GeoOrdreGraphQLService.merge(ordreChunk, ordre.get(), null);
+      GeoOrdre merged = GeoOrdreGraphQLService.merge(ordreChunk, ordre.get(), parsedArguments);
       return this.ordreRepository.save(merged);
     }
   }
@@ -114,10 +119,10 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
   }
 
-  public GeoOrdre clone(GeoOrdre chunk) {
+  public GeoOrdre clone(GeoOrdre chunk, ResolutionEnvironment env) {
     GeoOrdre original = this.ordreRepository.getOne(chunk.getId());
     GeoOrdre clone = original.duplicate();
-    return this.save(clone);
+    return this.save(clone, env);
   }
 
   public Float fetchSommeColisCommandes(GeoOrdre ordre) {
