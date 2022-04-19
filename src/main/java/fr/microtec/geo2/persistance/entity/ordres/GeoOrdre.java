@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -142,10 +143,10 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	private GeoEntrepot entrepot;
 
 	@Column(name = "depdatp")
-	private LocalDate dateDepartPrevue;
+	private LocalDateTime dateDepartPrevue;
 
 	@Column(name = "livdatp")
-	private LocalDate dateLivraisonPrevue;
+	private LocalDateTime dateLivraisonPrevue;
 
 	@Column(name = "vente_commission")
 	private Boolean venteACommission;
