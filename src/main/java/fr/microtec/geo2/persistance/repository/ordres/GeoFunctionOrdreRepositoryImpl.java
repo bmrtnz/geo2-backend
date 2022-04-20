@@ -1,16 +1,18 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
-import fr.microtec.geo2.persistance.entity.FunctionResult;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.entity.tiers.GeoContact;
-import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
-import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
+import fr.microtec.geo2.persistance.entity.tiers.GeoContactEnvois;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
+import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
+import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
 
 @Repository
 public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl

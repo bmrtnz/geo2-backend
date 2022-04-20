@@ -299,7 +299,7 @@ public class OrdreFunctionTest {
     @Test
     public void testGeoPrepareEnvoisOrdre() {
         FunctionResult result = this.functionOrdreRepository
-                .geoPrepareEnvois("1675112", "ORDRE", 'N', 'N', "BRUNO");
+                .geoPrepareEnvois("1675112", "ORDRE", 'O', 'N', "BRUNO");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
