@@ -9,6 +9,7 @@ CREATE OR REPLACE PROCEDURE GEO_PREPARE_ENVOIS (
 	co OUT SYS_REFCURSOR
 )
 AS
+	ls_env_code  varchar2(50);
 	ls_typ_ordre GEO_TYPORD.TYP_ORD%TYPE;
 BEGIN
 	-- correspond à w_geo_genere_envois_on_open.pbl
@@ -28,7 +29,7 @@ BEGIN
 			res := 1;
 			RETURN;
 		ELSE
-			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ann_ordre, res, msg, co);
+			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ann_ordre, res, msg, co, ls_env_code);
 
 			select TYP_ORDRE INTO ls_typ_ordre
 			FROM GEO_ORDRE
@@ -59,7 +60,7 @@ BEGIN
 			-- of_genere_envois_proform; TODO MICROTEC
 			return; --à retirer après
 		ELSE
-			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ann_ordre, res, msg, co);
+			of_genere_envois(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, ann_ordre, res, msg, co, ls_env_code);
 	END case;
 
 	res := 1;

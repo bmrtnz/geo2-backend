@@ -6,7 +6,8 @@ CREATE OR REPLACE PROCEDURE OF_GENERE_ENVOIS (
 	ib_ann_ordre IN char,
 	res IN OUT number,
 	msg IN OUT varchar2,
-	co IN OUT SYS_REFCURSOR
+	co IN OUT SYS_REFCURSOR,
+	ls_env_code IN OUT varchar2
 )
 AS
 	is_soc_code GEO_SOCIETE.SOC_CODE%TYPE;
@@ -39,7 +40,6 @@ AS
 	is_tiers_bis_code varchar2(18);
 
 	ll_count_exprimis number;
-	pk_geo_envois GEO_ENVOIS.ENV_CODE%TYPE;
 
 	cursor CG (ref_ordre GEO_ORDRE.ORD_REF%TYPE, code_flux GEO_FLUX.FLU_CODE%TYPE)
 	is
@@ -92,8 +92,28 @@ BEGIN
 		is_con_acces1 := is_imprimante;
 		is_con_tyt := 'C';
 		is_con_tiers := is_cli_code;
-		/* TODO MICROTEC
-		il_row	= of_insert_envoi();		-- on crée l'envoi dans la dw  */
+		-- on crée l'envoi dans la dw
+		of_insert_envois(
+			is_ord_ref,
+			is_flu_code,
+			mode_auto,
+			is_con_tyt,
+			is_con_tiers,
+			is_con_ref,
+			is_moc_code,
+			is_con_acces1,
+			ls_con_access2,
+			is_con_fluvar,
+			is_con_prenom,
+			is_con_nom,
+			null,
+			null,
+			is_imprimante,
+			is_tiers_bis_code,
+			res,
+			msg,
+			ls_env_code
+		);
 		res := 1;
 		msg := 'OK';
 		return;
@@ -106,9 +126,28 @@ BEGIN
 		is_con_acces1 := '';
 		is_con_tyt := 'C';
 		is_con_tiers := is_cli_code;
-		/* TODO MICROTEC
-		il_row	= of_insert_envoi();		-- on crée l'envoi dans la dw  */
-
+		-- on crée l'envoi dans la dw
+				of_insert_envois(
+			is_ord_ref,
+			is_flu_code,
+			mode_auto,
+			is_con_tyt,
+			is_con_tiers,
+			is_con_ref,
+			is_moc_code,
+			is_con_acces1,
+			ls_con_access2,
+			is_con_fluvar,
+			is_con_prenom,
+			is_con_nom,
+			null,
+			null,
+			is_imprimante,
+			is_tiers_bis_code,
+			res,
+			msg,
+			ls_env_code
+		);
 --		dw_table.object.acces1.visible = FALSE
 --		dw_table.object.acces1_1.visible = TRUE
 		res := 1;
@@ -124,9 +163,28 @@ BEGIN
 		is_con_acces1 := '';
 		is_con_tyt := 'C';
 		is_con_tiers := is_cli_code;
-		/* TODO MICROTEC
-		il_row	= of_insert_envoi()		// on crée l'envoi dans la dw  */
-
+		-- on crée l'envoi dans la dw
+				of_insert_envois(
+			is_ord_ref,
+			is_flu_code,
+			mode_auto,
+			is_con_tyt,
+			is_con_tiers,
+			is_con_ref,
+			is_moc_code,
+			is_con_acces1,
+			ls_con_access2,
+			is_con_fluvar,
+			is_con_prenom,
+			is_con_nom,
+			null,
+			null,
+			is_imprimante,
+			is_tiers_bis_code,
+			res,
+			msg,
+			ls_env_code
+		);
 --		dw_table.object.acces1.visible = TRUE
 --		dw_table.object.acces1_1.visible = FALSE
 		res := 1;
@@ -140,8 +198,28 @@ BEGIN
 		is_con_acces1 := '';
 		is_con_tyt := 'T';
 		is_con_tiers := is_cli_code;
-		/* TODO MICROTEC
-		il_row	= of_insert_envoi()		// on crée l'envoi dans la dw  */
+		-- on crée l'envoi dans la dw
+				of_insert_envois(
+			is_ord_ref,
+			is_flu_code,
+			mode_auto,
+			is_con_tyt,
+			is_con_tiers,
+			is_con_ref,
+			is_moc_code,
+			is_con_acces1,
+			ls_con_access2,
+			is_con_fluvar,
+			is_con_prenom,
+			is_con_nom,
+			null,
+			null,
+			is_imprimante,
+			is_tiers_bis_code,
+			res,
+			msg,
+			ls_env_code
+		);
 		res := 1;
 		msg := 'OK';
 		return;
@@ -216,8 +294,27 @@ BEGIN
 			is_con_acces1 := ls_con_access2;
 		end if;
 
-		/* TODO MICROTEC
-		il_row	= of_insert_envoi() */
+		of_insert_envois(
+			is_ord_ref,
+			is_flu_code,
+			mode_auto,
+			is_con_tyt,
+			is_con_tiers,
+			is_con_ref,
+			is_moc_code,
+			is_con_acces1,
+			ls_con_access2,
+			is_con_fluvar,
+			is_con_prenom,
+			is_con_nom,
+			null,
+			null,
+			is_imprimante,
+			is_tiers_bis_code,
+			res,
+			msg,
+			ls_env_code
+		);
 
 	end loop;
 	close co;
@@ -235,8 +332,28 @@ BEGIN
 			is_con_acces1 := 'EXPRIMIS';
 			is_con_tyt := 'T';
 			is_con_tiers := is_trp_code;
-			/* TODO MICROTEC
-			il_row	= of_insert_envoi()		// on crée l'envoi dans la dw */
+			-- on crée l'envoi dans la dw
+			of_insert_envois(
+				is_ord_ref,
+				is_flu_code,
+				mode_auto,
+				is_con_tyt,
+				is_con_tiers,
+				is_con_ref,
+				is_moc_code,
+				is_con_acces1,
+				ls_con_access2,
+				is_con_fluvar,
+				is_con_prenom,
+				is_con_nom,
+				null,
+				null,
+				is_imprimante,
+				is_tiers_bis_code,
+				res,
+				msg,
+				ls_env_code
+			);
 		end if;
 	end if;
 
@@ -256,21 +373,39 @@ BEGIN
 				fetch CT into is_tiers_bis_code;
 				exit when CT%notfound;
 
-				/* TODO MICROTEC
-				-- il faudra passer le pk_geo_envois en out
-				il_row	= of_insert_envoi() */
+				of_insert_envois(
+					is_ord_ref,
+					is_flu_code,
+					mode_auto,
+					is_con_tyt,
+					is_con_tiers,
+					is_con_ref,
+					is_moc_code,
+					is_con_acces1,
+					ls_con_access2,
+					is_con_fluvar,
+					is_con_prenom,
+					is_con_nom,
+					null,
+					null,
+					is_imprimante,
+					is_tiers_bis_code,
+					res,
+					msg,
+					ls_env_code
+				);
 
 
 				if is_moc_code <> 'FTP' then
 					--dw_table.SetItem(il_row,'fluvar','APPROC')
-					update geo_envois set fluvar = 'APPROC' where env_code = pk_geo_envois;
+					update geo_envois set fluvar = 'APPROC' where env_code = ls_env_code;
 				else
 					/*string ls_val
 					ls_val = dw_table.GetItemString(il_row,'fluvar')
 					if isnull(ls_val) then ls_val = ''
 					dw_table.SetItem(il_row,'flu_code_compl','APPROC')*/
 
-					update geo_envois set flu_code_compl = 'APPROC' where env_code = pk_geo_envois;
+					update geo_envois set flu_code_compl = 'APPROC' where env_code = ls_env_code;
 				end if;
 
 			end loop;
