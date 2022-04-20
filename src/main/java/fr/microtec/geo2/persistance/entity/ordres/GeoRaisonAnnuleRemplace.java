@@ -13,9 +13,6 @@ import lombok.Data;
 public class GeoRaisonAnnuleRemplace {
 
     @Id
-    @Column(name = "rownum")
-    private Integer id;
-
     @Column(name = "ard_desc")
     private String description;
 

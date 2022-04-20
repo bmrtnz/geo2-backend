@@ -20,7 +20,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoRaisonAnnuleRemplaceGraphQLService extends GeoAbstractGraphQLService<GeoRaisonAnnuleRemplace, Integer> {
+public class GeoRaisonAnnuleRemplaceGraphQLService extends GeoAbstractGraphQLService<GeoRaisonAnnuleRemplace, String> {
 
 	public GeoRaisonAnnuleRemplaceGraphQLService(GeoRaisonAnnuleRemplaceRepository repository) {
 		super(repository, GeoRaisonAnnuleRemplace.class);
@@ -36,7 +36,7 @@ public class GeoRaisonAnnuleRemplaceGraphQLService extends GeoAbstractGraphQLSer
 
 	@GraphQLQuery
 	public Optional<GeoRaisonAnnuleRemplace> getRaisonAnnuleRemplace(
-			@GraphQLArgument(name = "id") Integer id) {
+			@GraphQLArgument(name = "id") String id) {
 		return super.getOne(id);
 	}
 
