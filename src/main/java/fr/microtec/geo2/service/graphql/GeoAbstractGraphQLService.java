@@ -40,7 +40,7 @@ import lombok.val;
 /**
  * Abstract Geo graphQl service.
  *
- * @param <T> Entity type.
+ * @param <T>  Entity type.
  * @param <ID> Entity id type.
  */
 public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
@@ -57,76 +57,72 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		this.clazz = clazz;
 	}
 
-	private Page<T> fetchPage(final String search, Pageable pageable, final Set<String> fields)
-	{
+	private Page<T> fetchPage(final String search, Pageable pageable, final Set<String> fields) {
 		Specification<T> spec = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
 		return this.fetchPage(spec, pageable, fields);
 	}
 
-	private Page<T> fetchPage(final Specification<T> spec, Pageable pageable, final Set<String> fields)
-	{
+	private Page<T> fetchPage(final Specification<T> spec, Pageable pageable, final Set<String> fields) {
 		pageable = (pageable == null) ? PageRequest.of(0, 20) : pageable;
-		Page<T> page = this.repository.findAllWithPagination(spec, pageable, this.clazz, CustomUtils.parseSelect(fields));
+		Page<T> page = this.repository.findAllWithPagination(spec, pageable, this.clazz,
+				CustomUtils.parseSelect(fields));
 
 		return page;
 	}
 
-	protected RelayPage<T> getPage(final String search, Pageable pageable, final Set<String> fields)
-	{
+	protected RelayPage<T> getPage(final String search, Pageable pageable, final Set<String> fields) {
 		val page = this.fetchPage(search, pageable, CustomUtils.parseSelect(fields));
 		return PageFactory.asRelayPage(page);
 	}
 
-	protected RelayPage<T> getPage(final Specification<T> spec, Pageable pageable, final Set<String> fields)
-	{
+	protected RelayPage<T> getPage(final Specification<T> spec, Pageable pageable, final Set<String> fields) {
 		val page = this.fetchPage(spec, pageable, CustomUtils.parseSelect(fields));
 		return PageFactory.asRelayPage(page);
 	}
 
-	protected RelayPage<T> getPage(final String search, Pageable pageable, final Set<String> fields, Function<List<Summary>, List<Double>> summaryResolver)
-	{
+	protected RelayPage<T> getPage(final String search, Pageable pageable, final Set<String> fields,
+			Function<List<Summary>, List<Double>> summaryResolver) {
 		val page = this.fetchPage(search, pageable, CustomUtils.parseSelect(fields));
 		return PageFactory.asRelayPage(page, summaryResolver);
 	}
 
-	protected RelayPage<T> getPage(final Specification<T> spec, Pageable pageable, final Set<String> fields, Function<List<Summary>, List<Double>> summaryResolver)
-	{
+	protected RelayPage<T> getPage(final Specification<T> spec, Pageable pageable, final Set<String> fields,
+			Function<List<Summary>, List<Double>> summaryResolver) {
 		val page = this.fetchPage(spec, pageable, CustomUtils.parseSelect(fields));
 		return PageFactory.asRelayPage(page, summaryResolver);
 	}
 
 	/**
-	 * @deprecated Use alternative signature in combinaison with `@GraphQLEnvironment() final Set<String> fields` instead
+	 * @deprecated Use alternative signature in combinaison with
+	 *             `@GraphQLEnvironment() final Set<String> fields` instead
 	 * @see fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService#getPage(String,Pageable,Set<String>)
 	 */
 	@Deprecated
-	protected RelayPage<T> getPage(final String search, Pageable pageable, final ResolutionEnvironment env)
-	{
+	protected RelayPage<T> getPage(final String search, Pageable pageable, final ResolutionEnvironment env) {
 		return this.getPage(search, pageable, CustomUtils.parseSelectFromEnv(env));
 	}
 
-	protected List<T> getAll(final String search)
-	{
-		val tSpecification = (StringUtils.hasText(search)) ?
-			this.parseSearch(search) : null;
+	protected List<T> getAll(final String search) {
+		val tSpecification = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
 
 		return this.repository.findAll(tSpecification);
 	}
 
 	/**
-   * Return the number of entities matching search
-   * @param search RSQL filter
-   */
-  public long count(final String search) {
+	 * Return the number of entities matching search
+	 * 
+	 * @param search RSQL filter
+	 */
+	public long count(final String search) {
 
-    Specification<T> spec = null;
+		Specification<T> spec = null;
 
-    if(StringUtils.hasText(search)) {
-      spec = Specification.where(this.parseSearch(search));
-    }
+		if (StringUtils.hasText(search)) {
+			spec = Specification.where(this.parseSearch(search));
+		}
 
-    return this.repository.count(spec);
-  }
+		return this.repository.count(spec);
+	}
 
 	/**
 	 * Get one entity by this id.
@@ -143,17 +139,17 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 	 * Propage null from graphQL environment.
 	 *
 	 * @param from From entity data.
-	 * @param to Destination entity.
-	 * @param env GraphQL environment.
+	 * @param to   Destination entity.
+	 * @param env  GraphQL environment.
 	 * @return Merged entity data.
 	 */
 	public static <T> T merge(T from, T to, Map<String, Object> graphQlArguments) {
-		List<String> nullArgumentsName = graphQlArguments
+		List<String> nullArgumentsName = graphQlArguments != null ? graphQlArguments
 				.entrySet()
 				.stream()
 				.filter(e -> e.getValue() == null)
 				.map(Map.Entry::getKey)
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()) : List.of();
 
 		BeanWrapper src = new BeanWrapperImpl(from);
 		PropertyDescriptor[] pds = src.getPropertyDescriptors();
@@ -162,7 +158,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 				.filter(p -> {
 					try {
 						return src.getPropertyValue(p.getName()) == null;
-					} catch(Exception ex) {
+					} catch (Exception ex) {
 						return true;
 					}
 				})
@@ -192,6 +188,26 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
 		}
 
 		return this.repository.save(data);
+	}
+
+	protected List<T> saveAll(List<T> data, Map<String, Object> graphQlArguments) {
+		data = data.stream()
+				.map(entity -> {
+					T res = entity;
+					ID id = (ID) this.getId(entity);
+
+					if (id != null) {
+						Optional<T> optionalEntity = this.repository.findById(id);
+
+						if (optionalEntity.isPresent()) {
+							res = this.merge(entity, optionalEntity.get(), graphQlArguments);
+						}
+					}
+					return res;
+				})
+				.collect(Collectors.toList());
+
+		return this.repository.saveAll(data);
 	}
 
 	protected T saveEntity(T data, ResolutionEnvironment env) {

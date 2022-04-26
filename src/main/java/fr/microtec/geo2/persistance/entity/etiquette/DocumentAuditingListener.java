@@ -1,18 +1,20 @@
 package fr.microtec.geo2.persistance.entity.etiquette;
 
-import fr.microtec.geo2.controller.FsDocumentType;
-import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Base64;
+
+import javax.persistence.PostLoad;
+
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.PostLoad;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Base64;
+import fr.microtec.geo2.controller.FsDocumentType;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Auditeur permettant de charger l'objet GeoDocument sur les entités écoutés.
@@ -47,7 +49,8 @@ public class DocumentAuditingListener {
 				UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
 				UriComponents uriComponents = uriBuilder
 						.path("/file-manager").path("/")
-						.path(isEtiquette ? FsDocumentType.ETIQUETTE.getKey() : FsDocumentType.DOCUMENT.getKey()).path("/")
+						.path(isEtiquette ? FsDocumentType.ETIQUETTE.getKey() : FsDocumentType.DOCUMENT.getKey())
+						.path("/")
 						.path(Base64.getEncoder().encodeToString(filename.getBytes())).build();
 
 				// Set document type (image as img else iframe)
@@ -65,10 +68,10 @@ public class DocumentAuditingListener {
 					"Search {} '{}' : {}",
 					isEtiquette ? "etiquette" : "document",
 					entityWithDocument.getDocumentName(),
-					document.getIsPresent() ? "Found" : "Not Found"
-			);
+					document.getIsPresent() ? "Found" : "Not Found");
 
-			entityWithDocument.setDocument(document);
+			if (document.getIsPresent())
+				entityWithDocument.setDocument(document);
 		}
 	}
 }
