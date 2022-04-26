@@ -37,6 +37,11 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	}
 
 	@GraphQLQuery
+	public List<GeoEnvois> allEnvoisList(@GraphQLArgument(name = "search") String search) {
+		return this.getAll(search);
+	}
+
+	@GraphQLQuery
 	public Optional<GeoEnvois> getEnvois(@GraphQLArgument(name = "id") String id) {
 		return super.getOne(id);
 	}

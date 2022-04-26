@@ -1,11 +1,8 @@
 package fr.microtec.geo2.persistance.repository;
 
-import fr.microtec.geo2.Geo2Application;
-import fr.microtec.geo2.configuration.PersistanceConfiguration;
-import fr.microtec.geo2.persistance.entity.FunctionResult;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.entity.tiers.GeoContact;
-import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
-import java.util.List;
+import fr.microtec.geo2.Geo2Application;
+import fr.microtec.geo2.configuration.PersistanceConfiguration;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
+import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 
 @SpringBootTest(classes = { Geo2Application.class, PersistanceConfiguration.class })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
