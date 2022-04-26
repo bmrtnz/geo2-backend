@@ -26,16 +26,14 @@ public class GeoStockMouvementGraphQLService extends GeoAbstractGraphQLService<G
 	public RelayPage<GeoStockMouvement> allStockMouvement(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoStockMouvement> getStockMouvement(
-			@GraphQLArgument(name = "id") String id
-	) {
+			@GraphQLArgument(name = "id") String id) {
 		return this.getOne(id);
-  }
+	}
 
 }

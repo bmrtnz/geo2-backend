@@ -13,55 +13,55 @@ import lombok.Data;
 public abstract class GeoSupervisionPalox {
 
   @Id
-	@Column(name = "rownum")
+  @Column(name = "rownum")
   Integer id;
 
   @Column(name = "cli_code")
-	String codeClient;
+  String codeClient;
 
   @Column(name = "cen_code")
-	String codeEntrepot;
+  String codeEntrepot;
 
   @Column(name = "e_raisoc")
-	String raisonSocialeEntrepot;
+  String raisonSocialeEntrepot;
 
   @Column(name = "zip")
-	String codePostalEntrepot;
+  String codePostalEntrepot;
 
   @Column(name = "ville")
-	String villeEntrepot;
+  String villeEntrepot;
 
   @Column(name = "pay_code")
-	String codePaysEntrepot;
+  String codePaysEntrepot;
 
   @Column(name = "entree")
-	Integer entree;
+  Integer entree;
 
   @Column(name = "sortie")
-	Integer sortie;
+  Integer sortie;
 
   @Column(name = "col_code")
-	String codeEmballage;
+  String codeEmballage;
 
   @Column(name = "fou_code")
-	String codeFournisseur;
+  String codeFournisseur;
 
   @Column(name = "raisoc")
-	String raisonSocialeFournisseur;
+  String raisonSocialeFournisseur;
 
   @Column(name = "date_inv")
-	LocalDateTime dateInventaire;
+  LocalDateTime dateInventaire;
 
   @Column(name = "qte_inv")
-	Integer quantiteInventaire;
+  Integer quantiteInventaire;
 
   @Column(name = "esp_code")
-	String codeEspece;
+  String codeEspece;
 
   @Column(name = "cen_ref")
-	String referenceEntrepot;
+  String referenceEntrepot;
 
   @Column(name = "sum_qtt")
-	Integer sommeQuantiteInventaire;
+  Integer sommeQuantiteInventaire;
 
 }

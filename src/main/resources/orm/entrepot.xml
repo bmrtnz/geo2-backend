@@ -125,6 +125,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         and C.SCO_CODE = 'PAL'
         AND F.FOU_CODE = PI1.FOU_CODE
         AND PI1.CEN_REF = T.CEN_REF
+        AND PI1.FOU_CODE like :arg_fou_code
       ORDER BY
         C.CLI_CODE ASC,
         E.CEN_CODE ASC,
@@ -252,6 +253,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND PI1.CEN_REF = T.CEN_REF
         AND ENTREE IS NOT NULL
         AND SORTIE IS NOT NULL
+        AND PI1.FOU_CODE like :arg_fou_code
       ORDER BY
         PI1.FOU_CODE ASC,
         PI1.COL_CODE ASC,
@@ -374,6 +376,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND PI1.CEN_REF = T.CEN_REF
         and C.CLI_REF = E.CLI_REF
         AND F.FOU_CODE = PI1.FOU_CODE
+        AND PI1.FOU_CODE like :arg_fou_code
       ORDER BY
         C.CLI_CODE ASC,
         E.CEN_CODE ASC,
@@ -499,6 +502,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       AND PI1.CEN_REF = T.CEN_REF
       AND ENTREE IS NOT NULL
       AND SORTIE IS NOT NULL
+      AND PI1.FOU_CODE like :arg_fou_code
     ORDER BY
       PI1.FOU_CODE ASC,
       PI1.COL_CODE ASC,

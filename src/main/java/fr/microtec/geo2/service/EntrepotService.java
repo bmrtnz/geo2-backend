@@ -25,69 +25,68 @@ public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, Stri
   private final GeoEntrepotRepository entrepotRepository;
 
   public EntrepotService(
-    GeoEntrepotRepository entrepotRepository
-  ) {
+      GeoEntrepotRepository entrepotRepository) {
     super(entrepotRepository, GeoEntrepot.class);
     this.entrepotRepository = entrepotRepository;
   }
 
   public List<GeoMouvementFournisseur> allMouvementFournisseur(
-    LocalDateTime dateMaxMouvements,
-    String codeSociete,
-    String codeEntrepot,
-    String codeCommercial
-  ) {
+      LocalDateTime dateMaxMouvements,
+      String codeSociete,
+      String codeEntrepot,
+      String codeCommercial,
+      String codeFournisseur) {
     return this.entrepotRepository
-    .allMouvementFournisseur(
-      dateMaxMouvements,
-      codeSociete,
-      codeEntrepot,
-      codeCommercial
-    );
+        .allMouvementFournisseur(
+            dateMaxMouvements,
+            codeSociete,
+            codeEntrepot,
+            codeCommercial,
+            codeFournisseur);
   }
 
   public List<GeoMouvementEntrepot> allMouvementEntrepot(
-    LocalDateTime dateMaxMouvements,
-    String codeSociete,
-    String codeEntrepot,
-    String codeCommercial
-  ) {
+      LocalDateTime dateMaxMouvements,
+      String codeSociete,
+      String codeEntrepot,
+      String codeCommercial,
+      String codeFournisseur) {
     return this.entrepotRepository
-    .allMouvementEntrepot(
-      dateMaxMouvements,
-      codeSociete,
-      codeEntrepot,
-      codeCommercial
-    );
+        .allMouvementEntrepot(
+            dateMaxMouvements,
+            codeSociete,
+            codeEntrepot,
+            codeCommercial,
+            codeFournisseur);
   }
 
   public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
-    LocalDateTime dateMaxMouvements,
-    String codeSociete,
-    String codeEntrepot,
-    String codeCommercial
-  ) {
+      LocalDateTime dateMaxMouvements,
+      String codeSociete,
+      String codeEntrepot,
+      String codeCommercial,
+      String codeFournisseur) {
     return this.entrepotRepository
-    .allRecapitulatifFournisseur(
-      dateMaxMouvements,
-      codeSociete,
-      codeEntrepot,
-      codeCommercial
-    );
+        .allRecapitulatifFournisseur(
+            dateMaxMouvements,
+            codeSociete,
+            codeEntrepot,
+            codeCommercial,
+            codeFournisseur);
   }
 
   public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
-    LocalDateTime dateMaxMouvements,
-    String codeSociete,
-    String codeEntrepot,
-    String codeCommercial
-  ) {
+      LocalDateTime dateMaxMouvements,
+      String codeSociete,
+      String codeEntrepot,
+      String codeCommercial,
+      String codeFournisseur) {
     return this.entrepotRepository
-    .allRecapitulatifEntrepot(
-      dateMaxMouvements,
-      codeSociete,
-      codeEntrepot,
-      codeCommercial
-    );
+        .allRecapitulatifEntrepot(
+            dateMaxMouvements,
+            codeSociete,
+            codeEntrepot,
+            codeCommercial,
+            codeFournisseur);
   }
 }
