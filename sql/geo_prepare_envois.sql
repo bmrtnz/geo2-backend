@@ -44,6 +44,10 @@ BEGIN
                 ELSE null;
 			end case;
 		end case;
+
+		res := 1;
+		msg := 'OK';
+		return;
 	END IF;
 
 	CASE is_flu_code
