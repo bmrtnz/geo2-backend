@@ -395,4 +395,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangeAchDevPu() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeAchDevPu("9F291C", "SA");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }

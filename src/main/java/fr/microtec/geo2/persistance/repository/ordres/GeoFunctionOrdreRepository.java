@@ -106,4 +106,5 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangeIndGratuit(String orlRef);
 
+        FunctionResult onChangeAchDevPu(String orlRef, String socCode);
 }

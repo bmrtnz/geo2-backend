@@ -170,4 +170,11 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangeIndGratuit(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangeAchDevPu(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.onChangeAchDevPu(orlRef, socCode);
+    }
+
 }
