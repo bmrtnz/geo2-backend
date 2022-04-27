@@ -8,7 +8,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -54,6 +56,11 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	@GraphQLMutation
 	public List<GeoEnvois> saveAllEnvois(List<GeoEnvois> allEnvois) {
 		return this.saveAll(allEnvois, null);
+	}
+
+	@GraphQLQuery
+	public long countByOrdreAndFlux(GeoOrdre ordre, GeoFlux flux) {
+		return ((GeoEnvoisRepository) this.repository).countByOrdreAndFlux(ordre, flux);
 	}
 
 }
