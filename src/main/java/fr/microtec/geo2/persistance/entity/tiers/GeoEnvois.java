@@ -68,6 +68,9 @@ public class GeoEnvois implements GeoAsDocument {
 	@Column(name = "demdat")
 	private LocalDate dateDemande;
 
+	@Column(name = "soudat")
+	private LocalDate dateSoumission;
+
 	@Column(name = "envdat")
 	private LocalDate dateEnvoi;
 
