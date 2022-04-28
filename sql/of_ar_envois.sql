@@ -37,12 +37,16 @@ BEGIN
 	-- on tente de caractériser les annule et remplace si flux ordre
 	-- BAM le 21/09/2016
 
-	SELECT  FRA_DESC 
-	INTO 	ls_fra_desc
-	FROM 	GEO_ORDFRA
-	WHERE 	ORD_REF = is_ord_ref and 
-				FRA_CODE ='FRET' and
-				ROWNUM <= 1;
+	begin
+		SELECT  FRA_DESC 
+		INTO 	ls_fra_desc
+		FROM 	GEO_ORDFRA
+		WHERE 	ORD_REF = is_ord_ref and 
+					FRA_CODE ='FRET' and
+					ROWNUM <= 1;
+	exception when no_data_found then
+		ls_fra_desc := '';
+	end;
 		
 	--Deb LLEF recup de la valeur du flag_annul de l'ordre
 	select flannul
