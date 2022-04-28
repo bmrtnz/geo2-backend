@@ -5,9 +5,11 @@ import javax.persistence.MappedSuperclass;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @MappedSuperclass
-public abstract class ValidateEntity {
+public abstract class ValidateEntity implements Serializable {
 
 	// @Generated(GenerationTime.INSERT) // Use this for select value after insert into database
 	@Column(name = "valide")
