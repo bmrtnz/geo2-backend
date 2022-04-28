@@ -22,6 +22,7 @@ AS
     lc_art_ref sys_refcursor;
     ls_art_ref GEO_ORDLIG.ART_REF%TYPE;
     msg_verif_pal varchar2(1000);
+    msg_verif_art varchar2(1000);
 BEGIN
     -- correspond à f_confirmation_commande.pbl
     msg := '';
@@ -108,6 +109,19 @@ BEGIN
             return;
         end if;
     End IF;
+
+    -- LLEF: Blocage si article IFCO et entrepôt n'est pas IFCO
+    -- Uniquement sur la SA et pas pour les PREORDRE
+    if is_soc_code = 'SA' and substr(is_cur_cen_code, 1, 6) <> 'PREORD' then
+        of_verif_article_ifco(is_ord_ref, res, msg_verif_art);
+
+        if msg_verif_art <> '' then
+            msg := msg_verif_art || '- veuillez faire les modifications nécessaires';
+            res := -1;
+            return;
+        end if;
+    end if;
+    -- FIN LLEF
 
     If ls_typ_ordre = 'RGP' THEN
         f_verif_coherence_rgp_orig(is_ord_ref, res, msg);
