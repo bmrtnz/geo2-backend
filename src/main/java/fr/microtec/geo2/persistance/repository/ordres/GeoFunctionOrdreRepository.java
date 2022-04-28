@@ -60,6 +60,11 @@ public interface GeoFunctionOrdreRepository {
                         Character annOrdre,
                         String user);
 
+        /**
+         * Gestion spécifique des annule-et-remplace
+         */
+        FunctionResult ofAREnvois(String ordRef);
+
         // Sub procedures, declare only for testing
         FunctionResult fCalculMarge(String refOrdre);
 
