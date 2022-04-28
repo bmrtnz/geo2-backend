@@ -307,6 +307,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOfAREnvois() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofAREnvois("1675112");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testOnChangeCdeNbPalWithSecteurFrance() {
         FunctionResult result = this.functionOrdreRepository
                 .onChangeCdeNbPal("9714FC", "F");

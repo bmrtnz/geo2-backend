@@ -1,20 +1,19 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.entity.tiers.GeoContactEnvois;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.service.OrdreService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Secured("ROLE_USER")
@@ -98,6 +97,11 @@ public class GeoFunctionsOrdreGraphQLService {
         List<Object> contacts = res.getCursorData();
         res.setData(Map.of("contacts", contacts));
         return res;
+    }
+
+    @GraphQLQuery
+    public FunctionResult ofAREnvois(@GraphQLArgument(name = "ordRef") String ordRef) {
+        return this.repository.ofAREnvois(ordRef);
     }
 
     @GraphQLQuery

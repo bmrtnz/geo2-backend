@@ -258,6 +258,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult ofAREnvois(String ordRef) {
+        FunctionQuery query = this.build("OF_AR_ENVOIS");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 
