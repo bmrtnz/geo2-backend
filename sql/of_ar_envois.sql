@@ -9,21 +9,6 @@ CREATE OR REPLACE PROCEDURE OF_AR_ENVOIS (
 AS
 	ll_rc number;
 	ll_ind number;
-	ll_count number;
-	-- s_strings		s_par
-	type tabString is table of varchar2(50);
-	lsa_ar_fou_code tabString := tabString();
-	lsa_date_entete tabString := tabString();
-	lsa_date_lignes tabString := tabString();
-	lsa_date_envois tabString := tabString();
-	lsa_libdef tabString := tabString();
-	lsa_tyt_code tabString := tabString();
-	ls_1 varchar2(50);
-	ls_2 varchar2(50);
-	ls_3 varchar2(50);
-	ls_4 varchar2(50);
-	ls_5 varchar2(50);
-	ls_6 varchar2(50);
 	ls_fra_desc varchar2(50);
 	ls_flag_annul varchar2(50);
 	lb_transport_en_cours boolean;
@@ -33,7 +18,6 @@ BEGIN
 	res := 0;
 	msg := '';
 
-	-- s_par := Message.PowerObjectParm;
 	-- on tente de caractériser les annule et remplace si flux ordre
 	-- BAM le 21/09/2016
 
@@ -204,6 +188,7 @@ BEGIN
 			insert into geo_envois (
 				env_code,
 				trait_exp,
+				ord_ref,
 				tyt_code, -- tyt_code
 				tie_code, -- fou_code
 				demdat, -- date_entete
@@ -214,6 +199,7 @@ BEGIN
 			values (
 				ls_env_code,
 				'R',
+				is_ord_ref,
 				r.tyt_code,
 				r.fou_code,
 				r.date_entete,
