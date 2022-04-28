@@ -479,7 +479,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "ind_exclu_frais_pu")
 	private Boolean exclusionFraisPU;
 
-	@Formula("(SELECT CASE WHEN COUNT(OL.orx_ref) = 0 THEN 'O' ELSE 'N' END FROM geo_ordlog OL, GEO_ORDRE O WHERE OL.FLAG_EXPED_FOURNNI = 'N' AND O.ORD_REF = OL.ORD_REF AND O.ORD_REF = ord_ref)")
+	@Formula("GEO_ORDRE_STATUS_EXPED(ord_ref)")
 	private Boolean expedieAuComplet;
 
 	@Transient

@@ -365,4 +365,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult onChangeAchDevPu(String orlRef, String socCode) {
+        FunctionQuery query = this.build("ON_CHANGE_ACH_DEV_PU");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
 }
