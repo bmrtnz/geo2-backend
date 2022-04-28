@@ -58,6 +58,7 @@ AS
 	ls_bloque varchar2(50);
 	ls_orl_ref varchar2(50);
 	ls_pal_code varchar2(50);
+    ls_user GEO_ORDRE.MOD_USER%TYPE;
 
 	cur_orl_ref GEO_ORDLIG.orl_ref%type;
 	soc_dev_code GEO_DEVISE.dev_code%type;
@@ -79,8 +80,8 @@ begin
 
 	select f_seq_orl_seq() into cur_orl_ref from dual;
 	select dev_code into soc_dev_code from geo_societe where soc_code = arg_soc_code;
-	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code, e.pal_code
-	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code, ls_pal_code
+	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code, e.pal_code, o.MOD_USER
+	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code, ls_pal_code, ls_user
 	from geo_ordre o
 	left join geo_client c on o.cli_ref = c.cli_ref
 	left join geo_entrep e on o.cen_ref = e.cen_ref
@@ -141,6 +142,10 @@ begin
 				-- id_remsf,
 				-- id_remhf_tx
 			);
+
+			if ls_pal_code is not null then
+                ON_CHANGE_PAL_CODE(cur_orl_ref, ls_user, arg_soc_code, res, msg);
+            end if;
 			commit;
 		end;
 
