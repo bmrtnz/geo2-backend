@@ -181,4 +181,11 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.onChangeAchDevPu(orlRef, socCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangePalNbPalinter(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "userName") String userName) {
+        return this.repository.onChangePalNbPalinter(orlRef, userName);
+    }
+
 }

@@ -413,4 +413,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testOnChangePalNbPalinter() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangePalNbPalinter("9F291C", "STEPHANE");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
 }
