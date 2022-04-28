@@ -10,4 +10,6 @@ import fr.microtec.geo2.persistance.repository.GeoRepository;
 @Repository
 public interface GeoEnvoisRepository extends GeoRepository<GeoEnvois, String> {
   Long countByOrdreAndFlux(GeoOrdre ordre, GeoFlux flux);
+
+  Long countByOrdreAndFluxAndTraite(GeoOrdre ordre, GeoFlux flux, Character traite);
 }
