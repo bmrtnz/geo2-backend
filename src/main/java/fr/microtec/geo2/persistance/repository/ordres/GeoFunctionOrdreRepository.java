@@ -62,6 +62,7 @@ public interface GeoFunctionOrdreRepository {
 
         /**
          * Gestion spécifique des annule-et-remplace
+         * Pour Geo2, créé des lignes envois avec `traite = R`
          */
         FunctionResult ofAREnvois(String ordRef);
 
