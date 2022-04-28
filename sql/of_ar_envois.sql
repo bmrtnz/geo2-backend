@@ -187,6 +187,7 @@ BEGIN
 			-- On se sert de la table geo_envois comme table tampon
 			insert into geo_envois (
 				env_code,
+				flu_code,
 				trait_exp,
 				ord_ref,
 				tyt_code, -- tyt_code
@@ -198,6 +199,7 @@ BEGIN
 			)
 			values (
 				ls_env_code,
+				'ORDRE',
 				'R',
 				is_ord_ref,
 				r.tyt_code,
