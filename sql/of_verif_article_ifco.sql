@@ -50,3 +50,4 @@ BEGIN
 
     res := 1;
 end OF_VERIF_ARTICLE_IFCO;
+/

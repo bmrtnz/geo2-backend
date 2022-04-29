@@ -60,3 +60,5 @@ BEGIN
 
     res := 1;
 end F_CTRL_COHERENCE_ORIG_ART_STA;
+/
+

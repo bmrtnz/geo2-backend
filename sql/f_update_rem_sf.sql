@@ -42,3 +42,4 @@ BEGIN
 
     res := 1;
 end F_UPDATE_REM_SF;
+/
