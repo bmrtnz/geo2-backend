@@ -487,4 +487,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFDocumentEnvoiProforma() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiProforma("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
