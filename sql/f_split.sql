@@ -1,4 +1,4 @@
-create type p_str_tab_type is table of clob;
+create or replace type p_str_tab_type is table of clob;
 
 CREATE OR REPLACE PROCEDURE "F_SPLIT" (
     str in clob,
