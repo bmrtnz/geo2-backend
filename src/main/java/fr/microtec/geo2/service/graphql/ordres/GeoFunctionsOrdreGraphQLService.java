@@ -209,4 +209,10 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDocumentEnvoiConfirmationPrixAchat(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiFichesPalette(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiFichesPalette(orlRef);
+    }
+
 }

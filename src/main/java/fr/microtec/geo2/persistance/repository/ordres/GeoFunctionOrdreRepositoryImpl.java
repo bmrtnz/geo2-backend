@@ -383,7 +383,6 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_orl_ref", String.class, orlRef);
         query.attachInput("arg_user", String.class, username);
 
-
         return query.fetch();
     }
 
@@ -395,7 +394,6 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("is_soc_code", String.class, socCode);
         query.attachInput("is_utilisateur", String.class, username);
 
-
         return query.fetch();
     }
 
@@ -406,7 +404,6 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("is_ord_ref", String.class, ordRef);
         query.attachInput("is_soc_code", String.class, socCode);
 
-
         return query.fetch();
     }
 
@@ -416,6 +413,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         query.attachInput("is_ord_ref", String.class, ordRef);
 
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fDocumentEnvoiFichesPalette(String ordRef) {
+        FunctionQuery query = this.build("F_DOCUMENT_ENVOI_FICHES_PAL");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
 
         return query.fetch();
     }
