@@ -387,6 +387,25 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fConfirmationCommande(String ordRef, String socCode, String username) {
+        FunctionQuery query = this.build("F_CONFIRMATION_COMMANDE");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+        query.attachInput("is_soc_code", String.class, socCode);
+        query.attachInput("is_utilisateur", String.class, username);
+
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode) {
+        FunctionQuery query = this.build("F_DOCUMENT_ENVOI_DETAILS_EXP");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+        query.attachInput("is_soc_code", String.class, socCode);
+
 
         return query.fetch();
     }

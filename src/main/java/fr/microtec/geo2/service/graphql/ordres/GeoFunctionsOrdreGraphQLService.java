@@ -187,6 +187,20 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "username") String username) {
         return this.repository.onChangePalNbPalinter(orlRef, username);
     }
+
+    @GraphQLQuery
+    public FunctionResult fConfirmationCommande(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "societeCode") String socCode,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.fConfirmationCommande(orlRef, socCode, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiDetailsExp(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.fDocumentEnvoiDetailsExp(orlRef, socCode);
     }
 
 }

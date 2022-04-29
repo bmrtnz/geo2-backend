@@ -2,12 +2,12 @@ CREATE OR REPLACE PROCEDURE F_VERIF_CONFIRMATION_ORDRE (
     is_ord_ref IN GEO_ORDRE.ORD_REF%TYPE,
     is_soc_code IN GEO_SOCIETE.SOC_CODE%TYPE,
     is_utilisateur IN GEO_USER.NOM_UTILISATEUR%TYPE,
-    is_cam_code IN GEO_ORDRE.CAM_CODE%TYPE,
-    is_cam_code_old IN GEO_ORDRE.CAM_CODE%TYPE,
     res OUT number,
     msg OUT varchar2
 )
 AS
+    ls_cam_code GEO_ORDRE.CAM_CODE%TYPE;
+    ls_cam_code_old GEO_SOCIETE.CAM_CODE_OLD%TYPE;
     ls_ord_ref GEO_ORDRE.ORD_REF%TYPE;
     ldt_depdatp GEO_ORDRE.DEPDATP%TYPE;
     ldt_livdatp GEO_ORDRE.LIVDATP%TYPE;
@@ -112,6 +112,8 @@ BEGIN
     -- correspond à f_verif_confirmation_ordre.pbl
     res := 0;
     msg := '';
+
+    select CAM_CODE, CAM_CODE_OLD into ls_cam_code, ls_cam_code_old FROM GEO_SOCIETE where soc_code = is_soc_code;
 
     SELECT O.ORD_REF,O.DEPDATP,O.LIVDATP, sum(CDE_NB_PAL),sum(EXP_NB_PAL)
     INTO ls_ord_ref, ldt_depdatp, ldt_livdatp, ll_cde_nb_pal, ll_exp_nb_pal
@@ -362,7 +364,7 @@ BEGIN
     from GEO_PERSON P
     where P.PER_USERNAME = ls_user_name;
 
-    open cur_delai_litige (is_ord_ref, is_cam_code, is_cam_code_old);
+    open cur_delai_litige (is_ord_ref, ls_cam_code, ls_cam_code_old);
     LOOP
         fetch  cur_delai_litige into ls_fou_code, ls_nordre, ls_per_codeass, ls_per_codecom;
         exit when cur_delai_litige%notfound;

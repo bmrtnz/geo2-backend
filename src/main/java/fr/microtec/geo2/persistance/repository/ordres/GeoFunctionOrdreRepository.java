@@ -115,4 +115,8 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult onChangeAchDevPu(String orlRef, String socCode);
 
         FunctionResult onChangePalNbPalinter(String orlRef, String username);
+
+        FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
+
+        FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
 }

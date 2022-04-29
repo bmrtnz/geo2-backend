@@ -424,4 +424,22 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
     }
+
+    @Test
+    public void testFConfirmationCommande() {
+        FunctionResult result = this.functionOrdreRepository
+                .fConfirmationCommande("1675112", SOCIETE_SA, "STEPHANE");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
+    public void testFDocumentEnvoiDetailsExp() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiDetailsExp("000895", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
