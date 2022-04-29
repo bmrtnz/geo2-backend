@@ -13,3 +13,4 @@ BEGIN
 
     res := 1;
 end F_DOC_ENVOI_CONF_PRIX_ACHAT;
+/

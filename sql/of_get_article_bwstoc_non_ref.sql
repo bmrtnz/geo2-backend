@@ -21,3 +21,4 @@ BEGIN
 
     res := 1;
 end OF_GET_ARTICLE_BWSTOC_NON_REF;
+/

@@ -110,3 +110,4 @@ BEGIN
 
     res := 1;
 end ON_CHANGE_PAL_NB_PALINTER;
+/

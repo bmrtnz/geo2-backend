@@ -420,3 +420,4 @@ BEGIN
 
     res := 1;
 end F_VERIF_CONFIRMATION_ORDRE;
+/

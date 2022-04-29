@@ -50,3 +50,5 @@ BEGIN
 
     res := 1;
 end F_CALCUL_MARGE_PREVI;
+/
+

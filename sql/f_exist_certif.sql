@@ -40,3 +40,4 @@ BEGIN
                 end if;
     end;
 end F_EXIST_CERTIF;
+/

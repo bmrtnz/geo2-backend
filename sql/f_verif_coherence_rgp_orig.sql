@@ -105,3 +105,4 @@ BEGIN
 
     res := 1;
 end F_VERIF_COHERENCE_RGP_ORIG;
+/
