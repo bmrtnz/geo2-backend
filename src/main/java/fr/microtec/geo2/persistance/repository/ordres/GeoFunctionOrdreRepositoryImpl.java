@@ -405,4 +405,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     public FunctionResult fDocumentEnvoiCominv(String ordRef) {
         return this.runMono("F_DOCUMENT_ENVOI_COMINV", "is_ord_ref", String.class, ordRef);
     }
+
+    @Override
+    public FunctionResult fDocumentEnvoiShipmentBuyco(String ordRef) {
+        return this.runMono("F_DOCUMENT_ENVOI_SHIP_BUYCO", "is_ord_ref", String.class, ordRef);
+    }
 }

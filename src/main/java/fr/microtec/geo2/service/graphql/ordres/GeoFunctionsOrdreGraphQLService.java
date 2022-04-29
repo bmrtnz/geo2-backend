@@ -239,4 +239,10 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDocumentEnvoiCominv(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiShipmentBuyco(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiShipmentBuyco(orlRef);
+    }
+
 }
