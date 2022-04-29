@@ -60,6 +60,12 @@ public interface GeoFunctionOrdreRepository {
                         Character annOrdre,
                         String user);
 
+        /**
+         * Gestion spécifique des annule-et-remplace
+         * Pour Geo2, créé des lignes envois avec `traite = R`
+         */
+        FunctionResult ofAREnvois(String ordRef);
+
         // Sub procedures, declare only for testing
         FunctionResult fCalculMarge(String refOrdre);
 
@@ -106,4 +112,11 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangeIndGratuit(String orlRef);
 
+        FunctionResult onChangeAchDevPu(String orlRef, String socCode);
+
+        FunctionResult onChangePalNbPalinter(String orlRef, String username);
+
+        FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
+
+        FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
 }

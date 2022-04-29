@@ -258,6 +258,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult ofAREnvois(String ordRef) {
+        FunctionQuery query = this.build("OF_AR_ENVOIS");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult onChangeCdeNbPal(String orlRef, String scoCode) {
         FunctionQuery query = this.build("ON_CHANGE_CDE_NB_PAL");
 
@@ -353,6 +362,50 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         FunctionQuery query = this.build("ON_CHANGE_IND_GRATUIT");
 
         query.attachInput("arg_orl_ref", String.class, orlRef);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangeAchDevPu(String orlRef, String socCode) {
+        FunctionQuery query = this.build("ON_CHANGE_ACH_DEV_PU");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult onChangePalNbPalinter(String orlRef, String username) {
+        FunctionQuery query = this.build("ON_CHANGE_PAL_NB_PALINTER");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_user", String.class, username);
+
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fConfirmationCommande(String ordRef, String socCode, String username) {
+        FunctionQuery query = this.build("F_CONFIRMATION_COMMANDE");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+        query.attachInput("is_soc_code", String.class, socCode);
+        query.attachInput("is_utilisateur", String.class, username);
+
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode) {
+        FunctionQuery query = this.build("F_DOCUMENT_ENVOI_DETAILS_EXP");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+        query.attachInput("is_soc_code", String.class, socCode);
+
 
         return query.fetch();
     }

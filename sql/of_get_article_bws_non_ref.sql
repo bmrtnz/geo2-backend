@@ -18,3 +18,4 @@ BEGIN
 
     res := 1;
 END OF_GET_ARTICLE_BWS_NON_REF;
+/

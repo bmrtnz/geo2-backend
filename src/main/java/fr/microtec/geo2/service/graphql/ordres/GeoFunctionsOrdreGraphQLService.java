@@ -1,20 +1,19 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.entity.tiers.GeoContactEnvois;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.service.OrdreService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Secured("ROLE_USER")
@@ -101,6 +100,11 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult ofAREnvois(@GraphQLArgument(name = "ordRef") String ordRef) {
+        return this.repository.ofAREnvois(ordRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult onChangeCdeNbPal(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
             @GraphQLArgument(name = "secteurCommercialCode") String scoCode) {
@@ -168,6 +172,35 @@ public class GeoFunctionsOrdreGraphQLService {
     public FunctionResult onChangeIndGratuit(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
         return this.repository.onChangeIndGratuit(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangeAchDevPu(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.onChangeAchDevPu(orlRef, socCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult onChangePalNbPalinter(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangePalNbPalinter(orlRef, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fConfirmationCommande(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "societeCode") String socCode,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.fConfirmationCommande(orlRef, socCode, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiDetailsExp(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.fDocumentEnvoiDetailsExp(orlRef, socCode);
     }
 
 }

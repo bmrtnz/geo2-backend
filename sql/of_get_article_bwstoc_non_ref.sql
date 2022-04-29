@@ -17,7 +17,14 @@ BEGIN
     msg := '';
     res := 0;
 
-    open oc_article_cursor for CT(is_ord_ref);
+    open oc_article_cursor for
+        select L.art_ref
+        from geo_ordlig L, geo_article A
+        where L.art_ref = A.art_ref
+         and L.ord_ref = is_ord_ref
+         and L.fou_code = 'BWSTOC'
+         and nvl(A.bwstock,'N') <> 'O';
 
     res := 1;
 end OF_GET_ARTICLE_BWSTOC_NON_REF;
+/

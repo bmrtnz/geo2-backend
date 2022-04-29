@@ -86,6 +86,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(name = "profile_client", insertable = false, updatable = false)
 	private String profileClient;
 
+	@Column(name = "ind_visu_incot_log")
+	private Boolean indicateurVisualisationIncotermFournisseur;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "nomUtilisateur")
 	private List<GeoParamUserClientRestriction> restrictions;
 

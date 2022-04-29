@@ -4,13 +4,16 @@ import fr.microtec.geo2.configuration.authentication.ApiAuthenticationEntryPoint
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationFailureHandler;
 import fr.microtec.geo2.configuration.authentication.ApiAuthenticationSuccessHandler;
 import fr.microtec.geo2.service.security.GeoLdapUserDetailsMapper;
+import fr.microtec.geo2.service.security.GeoAllowAllPasswordEncoder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Configure project security for dev.
@@ -50,5 +53,10 @@ public class SecurityDevConfiguration extends SecurityConfiguration {
 		}
 
 		auth.userDetailsService(this.geoLDAPUserDetailsMapper.getGeo2UserDetailsService());
+	}
+
+	@Bean
+	public PasswordEncoder encoder() {
+		return GeoAllowAllPasswordEncoder.getInstance(); // In dev mode allow all password
 	}
 }
