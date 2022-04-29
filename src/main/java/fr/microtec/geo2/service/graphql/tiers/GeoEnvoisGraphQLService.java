@@ -74,20 +74,20 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	}
 
 	/**
-	 * > Count the number of GeoEnvois that have a given ordre, flux and traite
+	 * > Count the number of GeoEnvois that have a given ordre, flux, and traite
 	 * 
 	 * @param ordre  The GeoOrdre object to search for
 	 * @param flux   the flux to filter on
-	 * @param traite the value of the traite field in the GeoEnvois table
+	 * @param traite a list of characters, each character is a status of the order.
 	 * @return A long
 	 */
 	@GraphQLQuery
 	public long countByOrdreFluxTraite(
 			GeoOrdre ordre,
 			GeoFlux flux,
-			Character traite) {
+			List<Character> traite) {
 		return ((GeoEnvoisRepository) this.repository)
-				.countByOrdreAndFluxAndTraite(ordre, flux, traite);
+				.countByOrdreAndFluxAndTraiteIn(ordre, flux, traite);
 	}
 
 }

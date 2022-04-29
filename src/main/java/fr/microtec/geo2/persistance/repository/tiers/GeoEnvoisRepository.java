@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.repository.tiers;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -11,5 +13,5 @@ import fr.microtec.geo2.persistance.repository.GeoRepository;
 public interface GeoEnvoisRepository extends GeoRepository<GeoEnvois, String> {
   Long countByOrdreAndFlux(GeoOrdre ordre, GeoFlux flux);
 
-  Long countByOrdreAndFluxAndTraite(GeoOrdre ordre, GeoFlux flux, Character traite);
+  Long countByOrdreAndFluxAndTraiteIn(GeoOrdre ordre, GeoFlux flux, List<Character> traite);
 }
