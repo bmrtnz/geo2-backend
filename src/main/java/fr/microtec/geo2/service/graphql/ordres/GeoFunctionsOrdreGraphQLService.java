@@ -221,4 +221,10 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDocumentEnvoiGenereTraca(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiAfficheCMR(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiAfficheCMR(orlRef);
+    }
+
 }

@@ -125,4 +125,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fDocumentEnvoiFichesPalette(String ordRef);
 
         FunctionResult fDocumentEnvoiGenereTraca(String ordRef);
+
+        FunctionResult fDocumentEnvoiAfficheCMR(String ordRef);
 }

@@ -385,4 +385,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     public FunctionResult fDocumentEnvoiGenereTraca(String ordRef) {
         return this.runMono("F_DOCUMENT_ENVOI_FICHES_PAL", "is_ord_ref", String.class, ordRef);
     }
+
+    @Override
+    public FunctionResult fDocumentEnvoiAfficheCMR(String ordRef) {
+        return this.runMono("F_DOCUMENT_ENVOI_AFFICHE_CMR", "is_ord_ref", String.class, ordRef);
+    }
 }
