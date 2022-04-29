@@ -119,4 +119,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
 
         FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
+
+        FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef);
 }

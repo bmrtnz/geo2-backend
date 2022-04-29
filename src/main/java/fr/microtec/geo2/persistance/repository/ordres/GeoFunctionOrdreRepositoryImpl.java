@@ -409,4 +409,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef) {
+        FunctionQuery query = this.build("F_DOC_ENVOI_CONF_PRIX_ACHAT");
+
+        query.attachInput("is_ord_ref", String.class, ordRef);
+
+
+        return query.fetch();
+    }
 }
