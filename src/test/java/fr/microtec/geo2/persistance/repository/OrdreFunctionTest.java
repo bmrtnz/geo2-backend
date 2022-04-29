@@ -514,4 +514,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFDocumentEnvoiDeclarationBollore() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiDeclarationBollore("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
