@@ -215,4 +215,10 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDocumentEnvoiFichesPalette(orlRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiGenereTraca(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiGenereTraca(orlRef);
+    }
+
 }

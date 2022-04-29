@@ -123,4 +123,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef);
 
         FunctionResult fDocumentEnvoiFichesPalette(String ordRef);
+
+        FunctionResult fDocumentEnvoiGenereTraca(String ordRef);
 }

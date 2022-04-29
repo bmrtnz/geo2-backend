@@ -2,6 +2,8 @@ package fr.microtec.geo2.persistance.repository.ordres;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,26 +16,20 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
 
+import javax.persistence.Tuple;
+
 @Repository
 public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl
         implements GeoFunctionOrdreRepository {
 
     @Override
     public FunctionResult ofValideEntrepotForOrdre(String code_entrepot) {
-        FunctionQuery query = this.build("OF_VALIDE_ENTREPOT_FOR_ORDRE");
-
-        query.attachInput("code_entrepot", String.class, code_entrepot);
-
-        return query.fetch();
+        return this.runMono("OF_VALIDE_ENTREPOT_FOR_ORDRE", "code_entrepot", String.class, code_entrepot);
     }
 
     @Override
     public FunctionResult fCalculMarge(String refOrdre) {
-        FunctionQuery query = this.build("F_CALCUL_MARGE");
-
-        query.attachInput("arg_ord_ref", String.class, refOrdre);
-
-        return query.fetch();
+        return this.runMono("F_CALCUL_MARGE", "arg_ord_ref", String.class, refOrdre);
     }
 
     @Override
@@ -161,11 +157,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
     @Override
     public FunctionResult ofInitArtrefGrp(String orlRef) {
-        FunctionQuery query = this.build("OF_INIT_ARTREF_GRP");
-
-        query.attachInput("cur_orl_ref", String.class, orlRef);
-
-        return query.fetch();
+        return this.runMono("OF_INIT_ARTREF_GRP", "cur_orl_ref", String.class, orlRef);
     }
 
     @Override
@@ -192,11 +184,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
     @Override
     public FunctionResult ofVerifLogistiqueDepart(String ordRef) {
-        FunctionQuery query = this.build("OF_VERIF_LOGISTIQUE_DEPART");
-
-        query.attachInput("arg_ord_ref", String.class, ordRef);
-
-        return query.fetch();
+        return this.runMono("OF_VERIF_LOGISTIQUE_DEPART", "arg_ord_ref", String.class, ordRef);
     }
 
     @Override
@@ -211,20 +199,12 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
     @Override
     public FunctionResult ofSauveOrdre(String ordRef) {
-        FunctionQuery query = this.build("OF_SAUVE_ORDRE");
-
-        query.attachInput("arg_ord_ref", String.class, ordRef);
-
-        return query.fetch();
+        return this.runMono("OF_SAUVE_ORDRE", "arg_ord_ref", String.class, ordRef);
     }
 
     @Override
     public FunctionResult fVerifLogistiqueOrdre(String ordRef) {
-        FunctionQuery query = this.build("F_VERIF_LOGISTIQUE_ORDRE");
-
-        query.attachInput("arg_ord_ref", String.class, ordRef);
-
-        return query.fetch();
+        return this.runMono("F_VERIF_LOGISTIQUE_ORDRE", "arg_ord_ref", String.class, ordRef);
     }
 
     @Override
@@ -259,11 +239,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
     @Override
     public FunctionResult ofAREnvois(String ordRef) {
-        FunctionQuery query = this.build("OF_AR_ENVOIS");
-
-        query.attachInput("is_ord_ref", String.class, ordRef);
-
-        return query.fetch();
+        return this.runMono("OF_AR_ENVOIS", "is_ord_ref", String.class, ordRef);
     }
 
     @Override
@@ -341,29 +317,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
     @Override
     public FunctionResult onChangeVtePu(String orlRef) {
-        FunctionQuery query = this.build("ON_CHANGE_VTE_PU");
-
-        query.attachInput("arg_orl_ref", String.class, orlRef);
-
-        return query.fetch();
+        return this.runMono("ON_CHANGE_VTE_PU", "arg_orl_ref", String.class, orlRef);
     }
 
     @Override
     public FunctionResult onChangePalinterCode(String orlRef) {
-        FunctionQuery query = this.build("ON_CHANGE_PALINTER_CODE");
-
-        query.attachInput("arg_orl_ref", String.class, orlRef);
-
-        return query.fetch();
+        return this.runMono("ON_CHANGE_PALINTER_CODE", "arg_orl_ref", String.class, orlRef);
     }
 
     @Override
     public FunctionResult onChangeIndGratuit(String orlRef) {
-        FunctionQuery query = this.build("ON_CHANGE_IND_GRATUIT");
-
-        query.attachInput("arg_orl_ref", String.class, orlRef);
-
-        return query.fetch();
+        return this.runMono("ON_CHANGE_IND_GRATUIT", "arg_orl_ref", String.class, orlRef);
     }
 
     @Override
@@ -409,19 +373,16 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
     @Override
     public FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef) {
-        FunctionQuery query = this.build("F_DOC_ENVOI_CONF_PRIX_ACHAT");
-
-        query.attachInput("is_ord_ref", String.class, ordRef);
-
-        return query.fetch();
+        return this.runMono("F_DOC_ENVOI_CONF_PRIX_ACHAT", "is_ord_ref", String.class, ordRef);
     }
 
     @Override
     public FunctionResult fDocumentEnvoiFichesPalette(String ordRef) {
-        FunctionQuery query = this.build("F_DOCUMENT_ENVOI_FICHES_PAL");
+        return this.runMono("F_DOCUMENT_ENVOI_FICHES_PAL", "is_ord_ref", String.class, ordRef);
+    }
 
-        query.attachInput("is_ord_ref", String.class, ordRef);
-
-        return query.fetch();
+    @Override
+    public FunctionResult fDocumentEnvoiGenereTraca(String ordRef) {
+        return this.runMono("F_DOCUMENT_ENVOI_FICHES_PAL", "is_ord_ref", String.class, ordRef);
     }
 }
