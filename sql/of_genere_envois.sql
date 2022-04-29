@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE OF_GENERE_ENVOIS (
+CREATE OR REPLACE PROCEDURE GEO_ADMIN.OF_GENERE_ENVOIS (
 	is_ord_ref IN GEO_ORDRE.ORD_REF%TYPE,
 	is_flu_code IN GEO_FLUX.FLU_CODE%TYPE,
 	mode_auto IN char,
@@ -40,6 +40,12 @@ AS
 	is_tiers_bis_code varchar2(18);
 
 	ll_count_exprimis number;
+	ls_typ_ordre varchar2(3);
+	ls_comm_interne varchar2(128);
+	ls_nordre_ori varchar2(10);
+	ls_nordre_comp varchar2(10);
+	ll_count number;
+	ll_rc number;
 
 	cursor CG (ref_ordre GEO_ORDRE.ORD_REF%TYPE, code_flux GEO_FLUX.FLU_CODE%TYPE)
 	is
@@ -417,6 +423,114 @@ BEGIN
 		end loop;
 		close CG;
 	end if; --fin llef test annulation ordre
+	
+	
+	-- on traite les pseudo-flux
+	-- commercial invoice ou proforma
+	if is_flu_code = 'COMINV' or is_flu_code = 'PROFOR' or is_flu_code = 'BONLIV' then
+		is_con_fluvar := '';
+		is_moc_code	:= 'IMP';
+		is_con_acces1 := is_imprimante;
+		is_con_tyt := 'C';
+		is_con_tiers := is_cli_code;
+		of_insert_envois(
+					is_ord_ref,
+					is_flu_code,
+					mode_auto,
+					is_con_tyt,
+					is_con_tiers,
+					is_con_ref,
+					is_moc_code,
+					is_con_acces1,
+					ls_con_access2,
+					is_con_fluvar,
+					is_con_prenom,
+					is_con_nom,
+					null,
+					null,
+					is_imprimante,
+					is_tiers_bis_code,
+					res,
+					msg,
+					ls_env_code
+				);
+	end if;
+	
+	-- on tente de caractériser les annule et remplace si flux ordre
+	-- BAM le 21/09/2016
+	update geo_envois set acces2 = (SELECT  FRA_DESC 
+		FROM 	GEO_ORDFRA
+		WHERE 	ORD_REF = is_ord_ref and 
+		FRA_CODE ='FRET' and
+		ROWNUM <= 1)
+	where ord_ref = is_ord_ref and trait_exp = 'A' and tyt_code = 'T' and coalesce(acces2, '') = '';
+	commit;
+	
+	
+	select  TYP_ORDRE,COMM_INTERNE
+	into ls_typ_ordre, ls_comm_interne 
+	from  GEO_ORDRE
+	where ORD_REF = is_ord_ref;
+
+	IF ls_typ_ordre = 'COM' and is_flu_code = 'ORDRE' then
+		 update geo_envois set acces2 = ls_comm_interne where trait_exp = 'A' and ord_ref = is_ord_ref and tyt_code = 'C';
+		 commit;		 
+		 
+		ls_nordre_ori := substr(ls_comm_interne,15,6);
+		ls_nordre_comp := '%' || is_nordre || '%';
+		
+		update geo_envois ge set ge.acces2 = ls_comm_interne
+		where ge.trait_exp = 'A' and ge.ord_ref = is_ord_ref and 
+			(select count(*) 
+			  from  GEO_ORDRE O, 
+					GEO_ENVOIS E
+			  where O.ORD_REF =E.ORD_REF and 
+					 O.NORDRE = ls_nordre_ori and 
+					 O.LIST_NORDRE_COMP like ls_nordre_comp and 
+					 E.tie_code = ge.tie_code and 
+					 E.tyt_code = ge.tyt_code) > 0;
+		commit;
+	END IF;
+	
+	-- Bruno le 18/07/2017
+	If is_flu_code = 'DETAIL' and (is_soc_code = 'QUP' OR is_soc_code ='IMP') Then
+		select count(0) into ll_count from geo_ordlog where ord_ref = is_ord_ref and flag_exped_fournni <> 'O';
+		if ll_count > 0 then
+		   delete from geo_envois where trait_exp = 'A' and ord_ref = is_ord_ref and moc_code = 'FTP';
+		   commit;
+		End if;
+	End If;
+	
+	IF is_flu_code ='MINI' then
+	   of_delete_expedit_uniq(is_ord_ref, msg, res);
+	end if;
+	
+	if is_flu_code <> 'ORDRE' then
+		msg := '';
+		res := 1;
+		return;
+	End If;
+	
+	select count (distinct end_code) into ll_rc from geo_envois
+		where ord_ref = is_ord_ref and flu_code = is_flu_code;
+	if ll_rc < 1 then 
+		msg := '';
+		res := 1;
+		return;
+	End If;
+	
+	-- Vu avec Bruno le 29/04/22 : plus utilisé
+	/*
+	if ib_force_station = true then 
+		shl_force_station.visible		= false
+		shl_force_station.enabled	= false
+		return 0
+	end if
+	shl_force_station.visible		= true
+	shl_force_station.enabled	= true
+	*/
+
+	
 
 	res := 1;
 	msg := 'OK';
