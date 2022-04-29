@@ -5,9 +5,9 @@ CREATE OR REPLACE PROCEDURE F_UPDATE_REM_SF(
 )
 AS
     ld_rem_tx number;
-    ls_flag_fac number;
+    ls_flag_fac GEO_ORDRE.FLFAC%TYPE;
     ld_totvte number;
-    ls_dev number;
+    ls_dev GEO_ORDRE.DEV_CODE%TYPE;
     ld_taux number;
     ld_totvte_dev number;
     ld_remise number;

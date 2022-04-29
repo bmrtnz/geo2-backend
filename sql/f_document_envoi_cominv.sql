@@ -9,6 +9,7 @@ BEGIN
     msg := '';
     res := 0;
 
+    -- actualise la remise sur facture, elle est recalculée pour être présente sur le doc
     F_UPDATE_REM_SF(is_ord_ref, res, msg);
 
     res := 1;
