@@ -22,6 +22,8 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository
 @Transactional
 public class OrdreFunctionTest {
 
+    private static final String SOCIETE_SA = "SA";
+
     @Autowired
     private GeoFunctionOrdreRepository functionOrdreRepository;
 
@@ -77,7 +79,7 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFCalculPerequationSecteurCommercialIndustrie() {
-        FunctionResult result = this.functionOrdreRepository.fCalculPerequation("001061", "SA");
+        FunctionResult result = this.functionOrdreRepository.fCalculPerequation("001061", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
@@ -87,7 +89,7 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFCalculPerequation() {
-        FunctionResult result = this.functionOrdreRepository.fCalculPerequation("1218222", "SA");
+        FunctionResult result = this.functionOrdreRepository.fCalculPerequation("1218222", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
@@ -98,7 +100,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFAfficheOrdreBaf() {
         FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(
-                "SA", "F", "", "",
+                SOCIETE_SA, "F", "", "",
                 LocalDate.of(2020, 2, 1),
                 LocalDate.of(2020, 3, 1),
                 "", "");
@@ -112,7 +114,7 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFVerifOrdreWarning() {
-        FunctionResult result = this.functionOrdreRepository.fVerifOrdreWarning("1370744", "SA");
+        FunctionResult result = this.functionOrdreRepository.fVerifOrdreWarning("1370744", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -121,7 +123,7 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFControleOrdreBaf() {
-        FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1370744", "SA");
+        FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1370744", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         System.out.println(result.getMsg());
@@ -133,7 +135,7 @@ public class OrdreFunctionTest {
                 "(S) %%%  un détail n'est pas clôturé\r\n" +
                 "(P) Ligne=01 PU vente à zéro\r\n";
 
-        FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1429565", "SA");
+        FunctionResult result = this.functionOrdreRepository.fControlOrdreBaf("1429565", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -144,14 +146,14 @@ public class OrdreFunctionTest {
     @Test
     public void testFAfficheBafControl() {
         FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(
-                "SA", "F", "", "",
+                SOCIETE_SA, "F", "", "",
                 LocalDate.of(2020, 2, 1),
                 LocalDate.of(2020, 3, 1),
                 "", "");
 
         List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
         for (GeoOrdreBaf baf : ordresBaf) {
-            FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), "SA");
+            FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), SOCIETE_SA);
 
             baf.setControlData(controlResult.getData());
         }
@@ -161,7 +163,7 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFNouvelOrdre() {
-        FunctionResult result = this.functionOrdreRepository.fNouvelOrdre("SA");
+        FunctionResult result = this.functionOrdreRepository.fNouvelOrdre(SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -198,7 +200,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticle() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("1434640", "046353", "SA");
+                .ofInitArticle("1434640", "046353", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -207,7 +209,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticleWithAssociated() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("000922", "028514", "SA");
+                .ofInitArticle("000922", "028514", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -354,7 +356,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOnChangeProprCode() {
         FunctionResult result = this.functionOrdreRepository
-                .onChangeProprCode("004962", "ADRIEN", "SA");
+                .onChangeProprCode("004962", "ADRIEN", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -363,7 +365,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOnChangeFouCode() {
         FunctionResult result = this.functionOrdreRepository
-                .onChangeFouCode("9F31AC", "ADRIEN", "SA");
+                .onChangeFouCode("9F31AC", "ADRIEN", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.getRes());
@@ -381,7 +383,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOnChangePalCode() {
         FunctionResult result = this.functionOrdreRepository
-                .onChangePalCode("9F28EC", "ADRIEN", "SA");
+                .onChangePalCode("9F28EC", "ADRIEN", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -408,7 +410,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOnChangeAchDevPu() {
         FunctionResult result = this.functionOrdreRepository
-                .onChangeAchDevPu("9F291C", "SA");
+                .onChangeAchDevPu("9F291C", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());

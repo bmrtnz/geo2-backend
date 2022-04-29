@@ -184,8 +184,9 @@ public class GeoFunctionsOrdreGraphQLService {
     @GraphQLQuery
     public FunctionResult onChangePalNbPalinter(
             @GraphQLArgument(name = "ordreLigneRef") String orlRef,
-            @GraphQLArgument(name = "userName") String userName) {
-        return this.repository.onChangePalNbPalinter(orlRef, userName);
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.onChangePalNbPalinter(orlRef, username);
+    }
     }
 
 }

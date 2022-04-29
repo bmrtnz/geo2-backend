@@ -377,11 +377,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult onChangePalNbPalinter(String orlRef, String userName) {
+    public FunctionResult onChangePalNbPalinter(String orlRef, String username) {
         FunctionQuery query = this.build("ON_CHANGE_PAL_NB_PALINTER");
 
         query.attachInput("arg_orl_ref", String.class, orlRef);
-        query.attachInput("arg_user", String.class, userName);
+        query.attachInput("arg_user", String.class, username);
+
+
+        return query.fetch();
+    }
 
 
         return query.fetch();

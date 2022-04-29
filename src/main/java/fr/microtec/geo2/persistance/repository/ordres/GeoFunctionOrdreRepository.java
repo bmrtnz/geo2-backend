@@ -114,5 +114,5 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangeAchDevPu(String orlRef, String socCode);
 
-        FunctionResult onChangePalNbPalinter(String orlRef, String userName);
+        FunctionResult onChangePalNbPalinter(String orlRef, String username);
 }
