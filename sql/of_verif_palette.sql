@@ -94,6 +94,7 @@ BEGIN
             End If;
         End If;
     end loop;
+    close CT;
 
     res := 1;
 end OF_VERIF_PALETTE;

@@ -56,6 +56,8 @@ BEGIN
 
     If lb_ori_art_stat_ok = False Then
         msg := ls_mess;
+        res := 2;
+        return;
     End If;
 
     res := 1;

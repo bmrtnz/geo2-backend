@@ -113,6 +113,7 @@ BEGIN
     res := 0;
     msg := '';
 
+    -- Confirmé par bruno le 29/04/22
     select CAM_CODE, CAM_CODE_OLD into ls_cam_code, ls_cam_code_old FROM GEO_SOCIETE where soc_code = is_soc_code;
 
     SELECT O.ORD_REF,O.DEPDATP,O.LIVDATP, sum(CDE_NB_PAL),sum(EXP_NB_PAL)
@@ -154,13 +155,13 @@ BEGIN
         End If;
     End If;
 
-    If SYSDATE - ldt_depdatp < 0 Then
-        msg := msg || '* La date d''expédition est inférieur à la date jour~r';
+    If trunc(ldt_depdatp) - trunc(SYSDATE) < 0 Then
+        msg := msg || '* La date d''expédition est inférieure à la date jour~r';
         lb_datneg := True;
     End If;
 
-    If ldt_depdatp - ldt_livdatp < 0 Then
-        msg := msg || '* La date de livraison est inférieur à la date d''expédition ~r';
+    If trunc(ldt_livdatp) - trunc(ldt_depdatp) < 0 Then
+        msg := msg || '* La date de livraison est inférieure à la date d''expédition ~r';
 	    lb_dateliv := True;
     End If;
 
@@ -312,11 +313,13 @@ BEGIN
         FETCH C_coh_art_fou INTO ls_art_ref, ls_mod_cult, ls_propr_code, ls_tiers;
         EXIT WHEN C_coh_art_fou%notfound;
 
-        select certif into ll_certif
-        from geo_certifs_tiers
-        where tiers = ls_tiers and certif = 12 and typ_tiers = 'F';
-
-        msg := msg || ' * l''article ' || ls_art_ref || ' avec le mode de culture (' || ls_mod_cult || ') ne peut provenir du propriétaire  (' || ls_propr_code || ') n''étant pas certifié BIO ~r';
+        begin
+            select certif into ll_certif
+            from geo_certifs_tiers
+            where tiers = ls_tiers and certif = 12 and typ_tiers = 'F';
+        exception when no_data_found then
+            msg := msg || ' * l''article ' || ls_art_ref || ' avec le mode de culture (' || ls_mod_cult || ') ne peut provenir du propriétaire  (' || ls_propr_code || ') n''étant pas certifié BIO ~r';
+        end;
     end loop;
     CLOSE C_coh_art_fou;
 
@@ -336,21 +339,24 @@ BEGIN
                 f_split(ls_list_certifs, ',', array_list_certifs_ligne);
                 for i in 0..array_list_certifs_ligne.COUNT LOOP
                     ll_certif_lig := to_number(array_list_certifs_ligne(i));
-                    select C.CERT_MENT_LEG into ls_certif_lib
-                    from geo_certifs_tiers T, geo_fourni F, geo_certif_modcult C
-                    where F.fou_code = ls_fou_code  and F.VALIDE = 'O'
-                      and F.K_FOU = T.TIERS and T.TYP_TIERS = 'F'
-                      and  T.DATE_VALIDITE >= SYSDATE
-                      and   T.CERTIF = ll_certif_lig
-                      and   C.K_CERTIF = T.CERTIF
-                      and   C.TYPE_CERT = 'CERTIF';
 
                     begin
-                        select C.CERT_MENT_LEG into ls_certif_lib from geo_certif_modcult C where k_certif = ll_certif_lig and type_cert = 'CERTIF';
-
-                        msg := msg || ' * l''article ' || ls_art_ref || ' avec la certification: ' || ls_certif_lib || ' ne peut provenir de la station: ' || ls_fou_code || ' n''étant pas certificié ' || ls_certif_lib || '~r';
-                        lb_certif_stat := TRUE;
+                        select C.CERT_MENT_LEG into ls_certif_lib
+                        from geo_certifs_tiers T, geo_fourni F, geo_certif_modcult C
+                        where F.fou_code = ls_fou_code  and F.VALIDE = 'O'
+                          and F.K_FOU = T.TIERS and T.TYP_TIERS = 'F'
+                          and  T.DATE_VALIDITE >= SYSDATE
+                          and   T.CERTIF = ll_certif_lig
+                          and   C.K_CERTIF = T.CERTIF
+                          and   C.TYPE_CERT = 'CERTIF';
                     exception when no_data_found then null;
+                        begin
+                            select C.CERT_MENT_LEG into ls_certif_lib from geo_certif_modcult C where k_certif = ll_certif_lig and type_cert = 'CERTIF';
+
+                            msg := msg || ' * l''article ' || ls_art_ref || ' avec la certification: ' || ls_certif_lib || ' ne peut provenir de la station: ' || ls_fou_code || ' n''étant pas certificié ' || ls_certif_lib || '~r';
+                            lb_certif_stat := TRUE;
+                        exception when no_data_found then null;
+                        end;
                     end;
                 end loop;
             end if;
@@ -415,6 +421,8 @@ BEGIN
            lb_datneg_autorise = True or lb_datneg = True or lb_code_emb_diff = True  or lb_non_cloture = True or lb_certif_stat = True
         Then
             msg := ls_mess_ok || ls_mess || '~rVoulez-vous continuer ?~r';
+            res := 2;
+            return;
         End If;
     end if;
 

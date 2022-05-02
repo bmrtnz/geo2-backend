@@ -56,7 +56,6 @@ BEGIN
         delete from geo_ordlig where ord_ref = is_ord_ref and (art_ref is null or fou_code is null);
         commit;
 
-        -- TODO
         /*IF ib_ligne_ordre_bloquer = TRUE 	then
                 ls_bloque ='1'
         ELSE
@@ -75,6 +74,10 @@ BEGIN
 
     -- on s'assure de la synchro avec la logistique
     f_verif_logistique_ordre(is_ord_ref, res, msg);
+    if (msg <> 'OK') then
+        msg := 'validation refusée' || msg || '~nveuillez faire les modifications si nécessaires';
+        return;
+    end if;
 
     if is_soc_code = 'BWS' then
         of_get_article_bws_non_ref(is_ord_ref, lc_art_ref, res, msg);
@@ -96,7 +99,7 @@ BEGIN
         msg := msg || 'ne sont pas référencés pour BWSTOC - veuillez les avertir';
     end if;
 
-    of_verif_palette_chep(is_ord_ref, is_soc_code, ls_cur_cen_code,res, msg_verif_pal);
+    of_verif_palette_chep(is_ord_ref, is_soc_code, ls_cur_cen_code, res, msg_verif_pal);
     if msg_verif_pal <> '' then
         msg := 'validation refusée ' || msg_verif_pal || ' - veuillez faire les modifications nécessaires';
         res := -1;

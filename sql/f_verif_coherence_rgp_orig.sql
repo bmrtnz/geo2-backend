@@ -73,6 +73,7 @@ BEGIN
             return;
         End IF;
     end loop;
+    CLOSE C_RGP_PAL;
 
     OPEN C_RGP_ART (is_ord_ref);
     LOOP
@@ -85,6 +86,7 @@ BEGIN
             return;
         End If;
     end loop;
+    CLOSE C_RGP_ART;
 
     OPEN C_RGP_CAL (is_ord_ref);
     LOOP
@@ -102,6 +104,7 @@ BEGIN
             End If;
         End If;
     end loop;
+    CLOSE C_RGP_CAL;
 
     res := 1;
 end F_VERIF_COHERENCE_RGP_ORIG;

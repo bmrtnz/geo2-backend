@@ -58,12 +58,15 @@ BEGIN
             end if;
         end if;
     end loop;
+    close CT;
 
     if ll_count <> 0 then
         if ls_cen_gest_code = 'CHEP' then
             msg := to_char(ll_count) || ' ligne(s) sans palette bleue ou rouge pour un entrepôt CHEP';
+            return;
         else
             msg := to_char(ll_count) || ' ligne(s) avec palette bleue pour un entrepôt NORMAL';
+            return;
         end if;
     else
         If (ll_count_ko_lpr <> 0 and ls_cen_gest_code = 'CHEP') Then
