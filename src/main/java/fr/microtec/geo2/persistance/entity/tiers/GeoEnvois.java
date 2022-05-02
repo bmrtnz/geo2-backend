@@ -8,11 +8,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.common.StringUtils;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
@@ -32,6 +36,12 @@ public class GeoEnvois implements GeoAsDocument {
 
 	@Id
 	@Column(name = "env_code")
+	@GeneratedValue(generator = "GeoEnvoisGenerator") // logic from `F_SEQ_ORX_SEQ`
+	@GenericGenerator(name = "GeoEnvoisGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "seq_orx_num"),
+			@Parameter(name = "mask", value = "FM0XXXX"),
+			@Parameter(name = "prepend", value = "B")
+	})
 	private String id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
