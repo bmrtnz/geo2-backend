@@ -12,6 +12,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
+import fr.microtec.geo2.service.EnvoisService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -26,8 +27,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois, String> {
 
-	public GeoEnvoisGraphQLService(GeoEnvoisRepository envoisRepository) {
+	private final EnvoisService envoisService;
+
+	public GeoEnvoisGraphQLService(
+			GeoEnvoisRepository envoisRepository,
+			EnvoisService envoisService) {
 		super(envoisRepository, GeoEnvois.class);
+		this.envoisService = envoisService;
 	}
 
 	@GraphQLQuery
@@ -58,6 +64,12 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 		return this.saveAll(allEnvois, null);
 	}
 
+	@GraphQLMutation
+	public List<GeoEnvois> duplicateMergeAllEnvois(List<GeoEnvois> allEnvois) {
+		List<GeoEnvois> merged = this.envoisService.duplicateMergeAll(allEnvois);
+		return this.saveAll(merged, null);
+	}
+
 	/**
 	 * > Count the number of GeoEnvois that have the given GeoOrdre and GeoFlux
 	 * 
@@ -74,20 +86,20 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	}
 
 	/**
-	 * > Count the number of GeoEnvois that have a given ordre, flux and traite
+	 * > Count the number of GeoEnvois that have a given ordre, flux, and traite
 	 * 
 	 * @param ordre  The GeoOrdre object to search for
 	 * @param flux   the flux to filter on
-	 * @param traite the value of the traite field in the GeoEnvois table
+	 * @param traite a list of characters, each character is a status of the order.
 	 * @return A long
 	 */
 	@GraphQLQuery
 	public long countByOrdreFluxTraite(
 			GeoOrdre ordre,
 			GeoFlux flux,
-			Character traite) {
+			List<Character> traite) {
 		return ((GeoEnvoisRepository) this.repository)
-				.countByOrdreAndFluxAndTraite(ordre, flux, traite);
+				.countByOrdreAndFluxAndTraiteIn(ordre, flux, traite);
 	}
 
 }

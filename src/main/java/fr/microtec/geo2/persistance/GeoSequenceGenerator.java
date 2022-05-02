@@ -21,16 +21,17 @@ import java.util.Properties;
  *
  * Can generate from sequence or function and apply a mask if it's needed.
  * Exemple :
- *  - SELECT {sequenceName}.NEXTVAL FROM dual;
- *  - SELECT {sequenceName} FROM dual;
- *  - SELECT TO_CHAR({sequenceName}, {mask}) FROM dual;
- *  - SELECT TO_CHAR({sequenceName}.NEXTVAL, {mask}) FROM dual;
+ * - SELECT {sequenceName}.NEXTVAL FROM dual;
+ * - SELECT {sequenceName} FROM dual;
+ * - SELECT TO_CHAR({sequenceName}, {mask}) FROM dual;
+ * - SELECT TO_CHAR({sequenceName}.NEXTVAL, {mask}) FROM dual;
  */
 public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 
 	public static final String SEQUENCE_PARAM = "sequenceName";
 	public static final String IS_SEQUENCE_PARAM = "isSequence";
 	public static final String MASK_PARAM = "mask";
+	public static final String PREPEND_PARAM = "prepend";
 
 	private static final String BASE_QUERY = "SELECT %s FROM DUAL";
 	private static final String BASE_SEQUENCE_NAME = "%s.NEXTVAL";
@@ -58,6 +59,12 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 
 			sequenceName = String.format(BASE_FORMAT_MASK, sequenceName, mask);
 		}
+		boolean applyPrepend = params.containsKey(PREPEND_PARAM);
+		if (applyPrepend) {
+			String prepend = ConfigurationHelper.getString(PREPEND_PARAM, params);
+
+			sequenceName = "'" + prepend + "'" + " || " + sequenceName;
+		}
 
 		this.sequenceQuery = String.format(BASE_QUERY, sequenceName);
 	}
@@ -66,7 +73,8 @@ public class GeoSequenceGenerator implements Configurable, IdentifierGenerator {
 	 * Generate id value.
 	 */
 	@Override
-	public synchronized Serializable generate(SharedSessionContractImplementor sessionContract, Object object) throws HibernateException {
+	public synchronized Serializable generate(SharedSessionContractImplementor sessionContract, Object object)
+			throws HibernateException {
 		try (Session session = sessionContract.getFactory().openSession()) {
 			NativeQuery query = session.createNativeQuery(this.sequenceQuery);
 
