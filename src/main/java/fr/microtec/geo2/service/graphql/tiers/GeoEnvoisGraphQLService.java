@@ -12,6 +12,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
+import fr.microtec.geo2.service.EnvoisService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -26,8 +27,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois, String> {
 
-	public GeoEnvoisGraphQLService(GeoEnvoisRepository envoisRepository) {
+	private final EnvoisService envoisService;
+
+	public GeoEnvoisGraphQLService(
+			GeoEnvoisRepository envoisRepository,
+			EnvoisService envoisService) {
 		super(envoisRepository, GeoEnvois.class);
+		this.envoisService = envoisService;
 	}
 
 	@GraphQLQuery
@@ -56,6 +62,12 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	@GraphQLMutation
 	public List<GeoEnvois> saveAllEnvois(List<GeoEnvois> allEnvois) {
 		return this.saveAll(allEnvois, null);
+	}
+
+	@GraphQLMutation
+	public List<GeoEnvois> duplicateMergeAllEnvois(List<GeoEnvois> allEnvois) {
+		List<GeoEnvois> merged = this.envoisService.duplicateMergeAll(allEnvois);
+		return this.saveAll(merged, null);
 	}
 
 	/**
