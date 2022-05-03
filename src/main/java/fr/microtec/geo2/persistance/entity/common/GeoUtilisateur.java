@@ -63,6 +63,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(insertable = false, updatable = false)
 	private String perimetre;
 
+	@Column(name = "geo_client")
+	private Character geoClient;
+
 	@Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "flag_limiter_secteur", insertable = false, updatable = false)
 	private Boolean limitationSecteur;
