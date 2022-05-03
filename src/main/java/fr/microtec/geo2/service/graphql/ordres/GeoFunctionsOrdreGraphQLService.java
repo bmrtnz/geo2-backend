@@ -203,4 +203,52 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDocumentEnvoiDetailsExp(orlRef, socCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiConfirmationPrixAchat(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiConfirmationPrixAchat(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiFichesPalette(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiFichesPalette(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiGenereTraca(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiGenereTraca(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiAfficheCMR(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiAfficheCMR(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiBonLivraison(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiBonLivraison(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiCominv(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiCominv(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiShipmentBuyco(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiShipmentBuyco(orlRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fDocumentEnvoiDeclarationBollore(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDocumentEnvoiDeclarationBollore(orlRef);
+    }
+
 }

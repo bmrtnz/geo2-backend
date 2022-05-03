@@ -119,4 +119,22 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
 
         FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
+
+        FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef);
+
+        FunctionResult fDocumentEnvoiFichesPalette(String ordRef);
+
+        FunctionResult fDocumentEnvoiGenereTraca(String ordRef);
+
+        FunctionResult fDocumentEnvoiAfficheCMR(String ordRef);
+
+        FunctionResult fDocumentEnvoiBonLivraison(String ordRef);
+
+        FunctionResult fDocumentEnvoiProforma(String ordRef);
+
+        FunctionResult fDocumentEnvoiCominv(String ordRef);
+
+        FunctionResult fDocumentEnvoiShipmentBuyco(String ordRef);
+
+        FunctionResult fDocumentEnvoiDeclarationBollore(String ordRef);
 }

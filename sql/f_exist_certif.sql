@@ -36,8 +36,9 @@ BEGIN
                 SELECT  count(*) into ll_cpt FROM "GEO_CERTIFS_TIERS" WHERE  "GEO_CERTIFS_TIERS"."TIERS" = is_cli_ref AND "GEO_CERTIFS_TIERS"."TYP_TIERS" = 'C';
                 If ll_cpt > 0 then
                     msg := 'OUI';
-                    res := 1;
                 end if;
     end;
+
+    res := 1;
 end F_EXIST_CERTIF;
 /

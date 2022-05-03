@@ -9,9 +9,9 @@ BEGIN
     msg := '';
     res := 0;
 
-    -- Nothing to do
     OF_SAUVE_ORDRE(is_ord_ref, res, msg);
+    -- Res doit deja être égal a 1 -> Sinon sauvegarde pas bien passé
 
-    res := 1;
+    --res := 1;
 end F_DOCUMENT_ENVOI_SHIP_BUYCO;
 /

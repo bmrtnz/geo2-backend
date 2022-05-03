@@ -45,7 +45,11 @@ BEGIN
 
                 result := round( (( ld_vte_ord_tot - ld_rem_ord_tot + ld_res_ord_tot - ld_frd_ord_tot - ld_ach_ord_tot - ld_trp_ord_tot - ld_trs_ord_tot - ld_crt_ord_tot - ld_fad_ord_tot)/ld_vte_ord_tot)*100  ,2);
             End If;
+        else
+            msg := 'problème sur le calcul de la marge sur variété club : ' || msg;
         end if;
+    else
+        msg := 'problème sur le calcul de la marge prévisionnelle : ' || msg;
     end if;
 
     res := 1;

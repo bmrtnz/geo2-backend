@@ -442,4 +442,85 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFDocumentEnvoiConfirmationPrixAchat() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiConfirmationPrixAchat("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiFichesPalette() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiFichesPalette("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiGenereTraca() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiGenereTraca("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiAfficheCMR() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiAfficheCMR("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiBonLivraison() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiBonLivraison("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiProforma() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiProforma("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiCominv() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiCominv("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiShipmentBuyco() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiShipmentBuyco("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFDocumentEnvoiDeclarationBollore() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDocumentEnvoiDeclarationBollore("000895");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
