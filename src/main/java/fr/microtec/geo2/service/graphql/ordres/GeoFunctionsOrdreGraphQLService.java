@@ -190,10 +190,10 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult fConfirmationCommande(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "ordreRef") String ordRef,
             @GraphQLArgument(name = "societeCode") String socCode,
             @GraphQLArgument(name = "username") String username) {
-        return this.repository.fConfirmationCommande(orlRef, socCode, username);
+        return this.repository.fConfirmationCommande(ordRef, socCode, username);
     }
 
     @GraphQLQuery
