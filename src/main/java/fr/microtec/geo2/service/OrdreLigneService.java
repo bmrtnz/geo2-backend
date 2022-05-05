@@ -214,8 +214,6 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
       ordreLigne.setTauxRemiseSurFacture(0f);
     if (ordreLigne.getTauxRemiseHorsFacture() == null)
       ordreLigne.setTauxRemiseHorsFacture(0f);
-    if (ordreLigne.getListeCertifications() == null)
-      ordreLigne.setListeCertifications("0");
     if (ordreLigne.getNombreColisManquant() == null)
       ordreLigne.setNombreColisManquant(0);
     if (ordreLigne.getAchatDevise() == null)
