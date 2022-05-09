@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
@@ -100,6 +101,14 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 			List<Character> traite) {
 		return ((GeoEnvoisRepository) this.repository)
 				.countByOrdreAndFluxAndTraiteIn(ordre, flux, traite);
+	}
+
+	@GraphQLQuery
+	public long countBy(String search) {
+		Specification<GeoEnvois> spec = null;
+		if (search != null && !search.isBlank())
+			spec = this.parseSearch(search);
+		return ((GeoEnvoisRepository) this.repository).count(spec);
 	}
 
 }
