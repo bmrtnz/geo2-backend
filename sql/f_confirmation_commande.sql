@@ -131,16 +131,16 @@ BEGIN
         if res <> 1 then
             return;
         end if;
+    end if;
 
-        f_verif_confirmation_ordre(is_ord_ref, is_soc_code, is_utilisateur, res, msg);
-        if res <> 1 then
-            return;
-        end if;
+    f_verif_confirmation_ordre(is_ord_ref, is_soc_code, is_utilisateur, res, msg);
+    if res <> 1 then
+        return;
+    end if;
 
-        f_ctrl_coherence_orig_art_sta(is_ord_ref, res, msg);
-        If res <> 1 then
-            return;
-        end if;
+    f_ctrl_coherence_orig_art_sta(is_ord_ref, res, msg);
+    If res <> 1 then
+        return;
     end if;
 
     res := 1;

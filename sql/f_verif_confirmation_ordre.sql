@@ -365,10 +365,14 @@ BEGIN
     close CT_LIG;
     -- FIN LLEF
 
-    ls_user_name := upper(is_utilisateur);
-    select PER_CODE into ls_percode
-    from GEO_PERSON P
-    where P.PER_USERNAME = ls_user_name;
+    begin
+        ls_user_name := upper(is_utilisateur);
+        select PER_CODE into ls_percode
+        from GEO_PERSON P
+        where P.PER_USERNAME = ls_user_name;
+    exception when no_data_found then
+        ls_percode := '';
+    end;
 
     open cur_delai_litige (is_ord_ref, ls_cam_code, ls_cam_code_old);
     LOOP
@@ -413,7 +417,7 @@ BEGIN
         ) and ls_user_facture <> 'O'
     Then
         msg := ls_mess_ko || ls_mess || '~rConfirmation annulée';
-		res := -1;
+		res := 0;
         return;
     Else
         If lb_pasdeprixachat = True or lb_pasdeprixvente = True or lb_pasdebta = True or lb_pluscolismoinspalet = True or

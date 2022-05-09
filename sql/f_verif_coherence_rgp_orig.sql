@@ -69,7 +69,7 @@ BEGIN
 
         If ll_ecart <> 0 Then
             msg := 'Confirmation impossible, Sur la station ' || ls_fou_code || ', il y a un écart de '  || to_char(ll_ecart) || ' palettes entre l''ordre de regroupement et les ordres regoupés';
-            res := -1;
+            res := 0;
             return;
         End IF;
     end loop;
@@ -82,7 +82,7 @@ BEGIN
 
         IF li_nb_orl_ref_rgp > 1 Then
             msg := 'Confirmation impossible, L''article ' || ls_art_ref_orig || ' ne devrait apparaitre qu''une seule fois';
-            res := -1;
+            res := 0;
             return;
         End If;
     end loop;
@@ -99,7 +99,7 @@ BEGIN
         else
             If li_nb_cal_old <> li_nb_cal Then
                 msg := 'Confirmation impossible, Un des ordres fils  n''a pas le même nombre d''ouverture de calibre.Veuillez vérifier et le ou tous les dupliquer';
-                res := -1;
+                res := 0;
                 return;
             End If;
         End If;
