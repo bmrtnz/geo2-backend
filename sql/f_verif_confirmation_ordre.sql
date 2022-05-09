@@ -142,12 +142,16 @@ BEGIN
     end if;
 
     If  ll_exp_nb_pal = 0 Then
-        SELECT O.ORD_REF,count(*) into ls_ord_ref, ll_nb_nopal
-        FROM GEO_ORDRE O, GEO_ORDLIG L
-        where O.ORD_REF = L.ORD_REF 		and
-                L.PAL_CODE in('-','DEPAL') 		and
-                O.ORD_REF = is_ord_ref
-        group by O.ORD_REF;
+        begin
+            SELECT O.ORD_REF,count(*) into ls_ord_ref, ll_nb_nopal
+            FROM GEO_ORDRE O, GEO_ORDLIG L
+            where O.ORD_REF = L.ORD_REF 		and
+                    L.PAL_CODE in('-','DEPAL') 		and
+                    O.ORD_REF = is_ord_ref
+            group by O.ORD_REF;
+        exception when no_data_found then
+            ll_nb_nopal := 0;
+        end;
 
         If ll_nb_nopal = 0 Then
             lb_pal_zero := True;
@@ -416,7 +420,7 @@ BEGIN
         lb_dateliv = True or li_nb_station_pas_propr > 0
         ) and ls_user_facture <> 'O'
     Then
-        msg := ls_mess_ko || ls_mess || '~rConfirmation annulée';
+        msg := ls_mess_ko || msg || '~rConfirmation annulée';
 		res := 0;
         return;
     Else
@@ -424,7 +428,7 @@ BEGIN
            lb_pasdeUC = True or lb_dateliv= True or li_nb_station_pas_propr > 0  or ld_ord_edi = True or lb_pal_zero = True or
            lb_datneg_autorise = True or lb_datneg = True or lb_code_emb_diff = True  or lb_non_cloture = True or lb_certif_stat = True
         Then
-            msg := ls_mess_ok || ls_mess || '~rVoulez-vous continuer ?~r';
+            msg := ls_mess_ok || msg || '~rVoulez-vous continuer ?~r';
             res := 2;
             return;
         End If;
