@@ -431,7 +431,7 @@ public class OrdreFunctionTest {
                 .fConfirmationCommande("1675112", SOCIETE_SA, "STEPHANE");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertEquals(2, result.getRes());
     }
 
     @Test
