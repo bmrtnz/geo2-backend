@@ -120,6 +120,8 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult fChgtQteArtRet(String ordRef);
 
+        FunctionResult fDetailsExpClickModifier(String ordRef, String orlRef, String histoOrxRef);
+
         FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
 
         FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);

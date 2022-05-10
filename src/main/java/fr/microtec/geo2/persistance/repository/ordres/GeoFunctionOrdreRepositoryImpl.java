@@ -369,6 +369,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fDetailsExpClickModifier(String ordRef, String orlRef, String histoOrxRef) {
+        FunctionQuery query = this.build("F_DETAILS_EXP_CLICK_MODIFIER");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_histo_orx_ref", String.class, histoOrxRef);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult fConfirmationCommande(String ordRef, String socCode, String username) {
         FunctionQuery query = this.build("F_CONFIRMATION_COMMANDE");
 
