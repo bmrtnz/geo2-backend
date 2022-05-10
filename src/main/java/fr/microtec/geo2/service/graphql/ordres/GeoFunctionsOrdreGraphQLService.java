@@ -201,6 +201,14 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fDetailsExpClickModifier(
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "historiqueRef") String histoOrxRef) {
+        return this.repository.fDetailsExpClickModifier(ordRef, orlRef, histoOrxRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult fConfirmationCommande(
             @GraphQLArgument(name = "ordreRef") String ordRef,
             @GraphQLArgument(name = "societeCode") String socCode,
