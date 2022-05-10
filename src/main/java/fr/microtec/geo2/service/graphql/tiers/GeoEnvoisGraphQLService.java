@@ -68,6 +68,11 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	@GraphQLMutation
 	public List<GeoEnvois> duplicateMergeAllEnvois(List<GeoEnvois> allEnvois) {
 		List<GeoEnvois> merged = this.envoisService.duplicateMergeAll(allEnvois);
+
+		// assuming all "envois" are of the same "ordre"
+		GeoOrdre ordre = this.repository.getOne(allEnvois.get(0).getId()).getOrdre();
+		this.envoisService.clearTemp(ordre);
+
 		return this.saveAll(merged, null);
 	}
 
