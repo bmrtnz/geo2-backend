@@ -195,6 +195,12 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fChgtQteArtRet(
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fChgtQteArtRet(ordRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult fConfirmationCommande(
             @GraphQLArgument(name = "ordreRef") String ordRef,
             @GraphQLArgument(name = "societeCode") String socCode,
