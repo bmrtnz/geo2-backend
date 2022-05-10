@@ -96,6 +96,7 @@ BEGIN
 	l.VTE_QTE = ld_vte_qte
 	WHERE l.ORL_REF = arg_orl_ref;
 
+	res := 1;
 	RETURN;
 	
 END F_DETAILS_EXP_ON_CLICK_AUTO;
