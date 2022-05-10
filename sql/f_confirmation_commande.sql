@@ -29,7 +29,7 @@ BEGIN
     select o.TRP_PU, o.TRP_DEV_PU, o.TRP_DEV_TAUX, o.TRP_DEV_CODE, e.TVR_CODE, e.CEN_CODE
     into ld_TRP_PU, ld_TRP_DEV_PU, ld_TRP_DEV_TAUX, ls_TRP_DEV_CODE, ls_tvr_code_entrepot, ls_cur_cen_code
     from geo_ordre o, GEO_ENTREP e, GEO_CLIENT c
-    where o.ord_ref = is_ord_ref and o.cen_code = e.CEN_CODE and o.CLI_REF = c.CLI_REF AND ROWNUM = 1;
+    where o.ord_ref = is_ord_ref and o.cen_ref = e.cen_ref and o.CLI_REF = c.CLI_REF AND ROWNUM = 1;
 
     select dev_code into ls_soc_dev_code from GEO_SOCIETE where soc_code = is_soc_code;
 
@@ -67,7 +67,7 @@ BEGIN
 
     -- Verification des régimes de TVA
     f_calcul_regime_tva(is_ord_ref,ls_tvr_code_entrepot, ls_regime_tva, msg);
-    if msg <> '' then
+    if msg is not null then
         msg := 'validation refusée:' || msg || '~nveuillez faire les modifications nécessaires';
         return;
     end if;
@@ -100,13 +100,13 @@ BEGIN
     end if;
 
     of_verif_palette_chep(is_ord_ref, is_soc_code, ls_cur_cen_code, res, msg_verif_pal);
-    if msg_verif_pal <> '' then
+    if msg_verif_pal is not null then 
         msg := 'validation refusée ' || msg_verif_pal || ' - veuillez faire les modifications nécessaires';
         res := 0;
         return;
     ELSE
         of_verif_palette(is_ord_ref, is_soc_code, ls_cur_cen_code, res, msg_verif_pal);
-        if msg_verif_pal <> '' then
+        if msg_verif_pal is not null then
             msg := 'validation refusée ' || msg_verif_pal || ' - veuillez faire les modifications nécessaires';
             res := 0;
             return;
@@ -118,7 +118,7 @@ BEGIN
     if is_soc_code = 'SA' and substr(ls_cur_cen_code, 1, 6) <> 'PREORD' then
         of_verif_article_ifco(is_ord_ref, res, msg_verif_art);
 
-        if msg_verif_art <> '' then
+        if msg_verif_art is not null then
             msg := msg_verif_art || '- veuillez faire les modifications nécessaires';
             res := 0;
             return;
