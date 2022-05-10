@@ -435,6 +435,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFChgtQteArtRet() {
+        FunctionResult result = this.functionOrdreRepository
+                .fChgtQteArtRet("001819");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testFConfirmationCommande() {
         FunctionResult result = this.functionOrdreRepository
                 .fConfirmationCommande("1675112", SOCIETE_SA, "STEPHANE");
