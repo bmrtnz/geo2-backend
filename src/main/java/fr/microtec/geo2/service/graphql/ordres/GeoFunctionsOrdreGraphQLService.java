@@ -189,6 +189,12 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fDetailsExpOnClickAuto(
+            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
+        return this.repository.fDetailsExpOnClickAuto(orlRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult fConfirmationCommande(
             @GraphQLArgument(name = "ordreRef") String ordRef,
             @GraphQLArgument(name = "societeCode") String socCode,
