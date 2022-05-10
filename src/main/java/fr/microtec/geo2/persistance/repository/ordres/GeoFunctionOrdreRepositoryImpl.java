@@ -360,6 +360,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fChgtQteArtRet(String ordRef) {
+        FunctionQuery query = this.build("F_CHGT_QTE_ART_RET");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult fConfirmationCommande(String ordRef, String socCode, String username) {
         FunctionQuery query = this.build("F_CONFIRMATION_COMMANDE");
 

@@ -118,6 +118,8 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult fDetailsExpOnClickAuto(String orlRef);
 
+        FunctionResult fChgtQteArtRet(String ordRef);
+
         FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
 
         FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
