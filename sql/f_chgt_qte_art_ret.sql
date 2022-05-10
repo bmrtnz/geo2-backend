@@ -22,6 +22,7 @@ BEGIN
 	COMMIT;
 
 	msg := 'OK';
+	res := 1;
 
 	RETURN;
 END F_CHGT_QTE_ART_RET;
