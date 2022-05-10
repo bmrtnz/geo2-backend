@@ -218,57 +218,57 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiDetailsExp(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef,
+            @GraphQLArgument(name = "ordreRef") String ordRef,
             @GraphQLArgument(name = "societeCode") String socCode) {
-        return this.repository.fDocumentEnvoiDetailsExp(orlRef, socCode);
+        return this.repository.fDocumentEnvoiDetailsExp(ordRef, socCode);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiConfirmationPrixAchat(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiConfirmationPrixAchat(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiConfirmationPrixAchat(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiFichesPalette(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiFichesPalette(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiFichesPalette(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiGenereTraca(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiGenereTraca(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiGenereTraca(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiAfficheCMR(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiAfficheCMR(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiAfficheCMR(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiBonLivraison(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiBonLivraison(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiBonLivraison(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiCominv(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiCominv(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiCominv(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiShipmentBuyco(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiShipmentBuyco(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiShipmentBuyco(ordRef);
     }
 
     @GraphQLQuery
     public FunctionResult fDocumentEnvoiDeclarationBollore(
-            @GraphQLArgument(name = "ordreLigneRef") String orlRef) {
-        return this.repository.fDocumentEnvoiDeclarationBollore(orlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fDocumentEnvoiDeclarationBollore(ordRef);
     }
 
 }
