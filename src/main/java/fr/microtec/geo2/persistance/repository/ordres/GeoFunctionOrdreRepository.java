@@ -116,6 +116,8 @@ public interface GeoFunctionOrdreRepository {
 
         FunctionResult onChangePalNbPalinter(String orlRef, String username);
 
+        FunctionResult fDetailsExpOnClickAuto(String orlRef);
+
         FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
 
         FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
