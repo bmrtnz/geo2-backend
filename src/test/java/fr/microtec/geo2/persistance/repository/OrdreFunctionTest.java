@@ -444,6 +444,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFDetailsExpClickModifier() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDetailsExpClickModifier("1058713", "A8E75B", "1075");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testFConfirmationCommande() {
         FunctionResult result = this.functionOrdreRepository
                 .fConfirmationCommande("1675112", SOCIETE_SA, "STEPHANE");
