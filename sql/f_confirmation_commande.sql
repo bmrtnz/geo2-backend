@@ -29,7 +29,7 @@ BEGIN
     select o.TRP_PU, o.TRP_DEV_PU, o.TRP_DEV_TAUX, o.TRP_DEV_CODE, e.TVR_CODE, e.CEN_CODE
     into ld_TRP_PU, ld_TRP_DEV_PU, ld_TRP_DEV_TAUX, ls_TRP_DEV_CODE, ls_tvr_code_entrepot, ls_cur_cen_code
     from geo_ordre o, GEO_ENTREP e, GEO_CLIENT c
-    where o.ord_ref = is_ord_ref and o.cen_code = e.CEN_CODE and o.CLI_REF = c.CLI_REF AND ROWNUM = 1;
+    where o.ord_ref = is_ord_ref and o.cen_ref = e.cen_ref and o.CLI_REF = c.CLI_REF AND ROWNUM = 1;
 
     select dev_code into ls_soc_dev_code from GEO_SOCIETE where soc_code = is_soc_code;
 
