@@ -125,6 +125,8 @@ BEGIN
 	
 	END IF;
 
+	res := 1;
+	msg := 'OK';
 	RETURN;
 	
 END F_DETAILS_EXP_CLICK_MODIFIER;
