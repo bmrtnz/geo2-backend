@@ -426,6 +426,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFDetailsExpOnClickAuto() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDetailsExpOnClickAuto("9F1F7C");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testFConfirmationCommande() {
         FunctionResult result = this.functionOrdreRepository
                 .fConfirmationCommande("1675112", SOCIETE_SA, "STEPHANE");
