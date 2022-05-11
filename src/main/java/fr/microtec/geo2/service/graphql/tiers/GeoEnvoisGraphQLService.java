@@ -2,6 +2,8 @@ package fr.microtec.geo2.service.graphql.tiers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -108,12 +110,33 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 				.countByOrdreAndFluxAndTraiteIn(ordre, flux, traite);
 	}
 
+	/**
+	 * It counts the number of GeoEnvois entities that match the search criteria
+	 * 
+	 * @param search The search string to use to filter the results.
+	 * @return The number of GeoEnvois that match the search criteria.
+	 */
 	@GraphQLQuery
 	public long countBy(String search) {
 		Specification<GeoEnvois> spec = null;
 		if (search != null && !search.isBlank())
 			spec = this.parseSearch(search);
 		return ((GeoEnvoisRepository) this.repository).count(spec);
+	}
+
+	/**
+	 * > Delete all the temporary envois (those with a status of 'A' or 'R') from
+	 * the database
+	 * 
+	 * @param allEnvois The list of all envois
+	 */
+	@GraphQLMutation
+	public void deleteTempEnvois(List<GeoEnvois> allEnvois) {
+		List<GeoEnvois> allTemps = allEnvois.stream()
+				.map(envois -> this.repository.getOne(envois.getId()))
+				.filter(envois -> envois.getTraite() == 'A' || envois.getTraite() == 'R')
+				.collect(Collectors.toList());
+		this.repository.deleteAll(allTemps);
 	}
 
 }
