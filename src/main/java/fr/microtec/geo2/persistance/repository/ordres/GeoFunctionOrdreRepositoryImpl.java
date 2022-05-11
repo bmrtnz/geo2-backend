@@ -444,4 +444,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     public FunctionResult fDocumentEnvoiDeclarationBollore(String ordRef) {
         return this.runMono("F_DOC_ENVOI_DEC_BOLLORE", "is_ord_ref", String.class, ordRef);
     }
+
+    @Override
+    public FunctionResult fClotureLogGrp(String ordRef, String fouCode, Character expedie) {
+        FunctionQuery query = this.build("F_CLOTURE_LOG_GRP");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_fou_code", String.class, fouCode);
+        query.attachInput("arg_exped_fournni", Character.class, expedie);
+
+        return query.fetch();
+    }
 }
