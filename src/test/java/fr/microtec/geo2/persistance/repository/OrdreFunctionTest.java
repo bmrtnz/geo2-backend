@@ -550,4 +550,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFClotureLogGrp() {
+        FunctionResult result = this.functionOrdreRepository
+                .fClotureLogGrp("002615", "QUESOL", 'O');
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
