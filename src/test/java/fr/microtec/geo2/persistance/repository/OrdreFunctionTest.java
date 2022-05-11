@@ -455,7 +455,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFConfirmationCommande() {
         FunctionResult result = this.functionOrdreRepository
-                .fConfirmationCommande("1675112", SOCIETE_SA, "STEPHANE");
+                .fConfirmationCommande("1150382", SOCIETE_SA, "STEPHANE");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.getRes());
