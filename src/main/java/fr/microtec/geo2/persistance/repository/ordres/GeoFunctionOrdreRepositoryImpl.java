@@ -475,4 +475,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fGetQttPerBta(String artRef, String btaCode, Double nbPal, Double nbCol, Double pdsNet) {
+        FunctionQuery query = this.build("F_GET_QTT_PER_BTA");
+
+        query.attachInput("arg_art_ref", String.class, artRef);
+        query.attachInput("arg_bta_code", String.class, btaCode);
+        query.attachInput("arg_nb_pal", Double.class, nbPal);
+        query.attachInput("arg_nb_col", Double.class, nbCol);
+        query.attachInput("arg_pds_net", Double.class, pdsNet);
+
+        return query.fetch();
+    }
 }

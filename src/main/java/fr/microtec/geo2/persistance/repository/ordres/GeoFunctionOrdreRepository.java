@@ -149,4 +149,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fSetDetailKitArticle(String ordRef, String fouCode);
 
         FunctionResult fActualiseNbPalettesSol(String ordRef, String fouCode);
+
+        FunctionResult fGetQttPerBta(String artRef, String btaCode, Double nbPal, Double nbCol, Double pdsNet);
 }
