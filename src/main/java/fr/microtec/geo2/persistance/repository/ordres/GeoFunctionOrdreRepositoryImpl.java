@@ -2,8 +2,6 @@ package fr.microtec.geo2.persistance.repository.ordres;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,12 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.entity.tiers.GeoContactEnvois;
-import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
-
-import javax.persistence.Tuple;
 
 @Repository
 public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl
@@ -485,6 +479,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_nb_pal", Double.class, nbPal);
         query.attachInput("arg_nb_col", Double.class, nbCol);
         query.attachInput("arg_pds_net", Double.class, pdsNet);
+        query.attachOutput("ld_qte", Double.class);
 
         return query.fetch();
     }

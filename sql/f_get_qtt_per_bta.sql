@@ -8,7 +8,7 @@ CREATE OR REPLACE PROCEDURE F_GET_QTT_PER_BTA (
     arg_pds_net IN number,
     res IN OUT number,
     msg IN OUT varchar2,
-    ld_qte IN OUT number
+    ld_qte OUT number
 )
 AS
     ls_button_name varchar2(50);

@@ -577,4 +577,15 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFGetQttPerBta() {
+        FunctionResult result = this.functionOrdreRepository
+                .fGetQttPerBta("004484", "CAMION", 10d, 50d, 500d);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertFalse(result.getData().isEmpty());
+        Assertions.assertNotNull(result.getData().get("ld_qte"));
+    }
 }
