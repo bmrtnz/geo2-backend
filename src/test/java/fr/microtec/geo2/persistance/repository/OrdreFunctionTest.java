@@ -559,4 +559,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFSetDetailKitArticle() {
+        FunctionResult result = this.functionOrdreRepository
+                .fSetDetailKitArticle("002615", "QUESOL");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
