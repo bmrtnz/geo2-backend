@@ -465,4 +465,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fActualiseNbPalettesSol(String ordRef, String fouCode) {
+        FunctionQuery query = this.build("F_ACTUALISE_NB_PALETTES_SOL");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_fou_code", String.class, fouCode);
+
+        return query.fetch();
+    }
 }

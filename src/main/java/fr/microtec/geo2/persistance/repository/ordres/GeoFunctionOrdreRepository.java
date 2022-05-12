@@ -147,4 +147,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fClotureLogGrp(String ordRef, String fouCode, Character expedie);
 
         FunctionResult fSetDetailKitArticle(String ordRef, String fouCode);
+
+        FunctionResult fActualiseNbPalettesSol(String ordRef, String fouCode);
 }
