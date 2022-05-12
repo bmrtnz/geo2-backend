@@ -145,4 +145,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fDocumentEnvoiDeclarationBollore(String ordRef);
 
         FunctionResult fClotureLogGrp(String ordRef, String fouCode, Character expedie);
+
+        FunctionResult fSetDetailKitArticle(String ordRef, String fouCode);
 }

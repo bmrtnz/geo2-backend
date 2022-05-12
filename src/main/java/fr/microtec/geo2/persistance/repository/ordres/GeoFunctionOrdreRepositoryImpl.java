@@ -455,4 +455,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fSetDetailKitArticle(String ordRef, String fouCode) {
+        FunctionQuery query = this.build("F_SET_DETAIL_KIT_ARTICLE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_fou_code", String.class, fouCode);
+
+        return query.fetch();
+    }
 }
