@@ -14,6 +14,13 @@ import javax.persistence.Id;
 @Entity
 public class Distinct {
 
+	public Distinct(Float key, Long count) {
+		this.key = key == null
+				? "[null]"
+				: key.toString();
+		this.count = count;
+	}
+
 	@Id
 	private String key;
 
