@@ -151,4 +151,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fActualiseNbPalettesSol(String ordRef, String fouCode);
 
         FunctionResult fGetQttPerBta(String artRef, String btaCode, Double nbPal, Double nbCol, Double pdsNet);
+
+        FunctionResult fSubmitEnvoiDetailSeccom(String ordRef, String fouCode, String logName);
 }

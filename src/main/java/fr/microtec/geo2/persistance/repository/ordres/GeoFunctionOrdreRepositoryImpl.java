@@ -483,4 +483,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fSubmitEnvoiDetailSeccom(String ordRef, String fouCode, String logName) {
+        FunctionQuery query = this.build("F_SUBMIT_ENVOI_DETAIL_SECCOM");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_fou_code", String.class, fouCode);
+        query.attachInput("log_name", String.class, logName);
+
+        return query.fetch();
+    }
 }
