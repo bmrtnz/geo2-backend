@@ -588,4 +588,13 @@ public class OrdreFunctionTest {
         Assertions.assertFalse(result.getData().isEmpty());
         Assertions.assertNotNull(result.getData().get("ld_qte"));
     }
+
+    @Test
+    public void tesFSubmitEnvoiDetailSeccom() {
+        FunctionResult result = this.functionOrdreRepository
+                .fSubmitEnvoiDetailSeccom("000927", "CONFOU", "unit_test");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
