@@ -1,5 +1,33 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Where;
+
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
@@ -7,18 +35,6 @@ import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -225,22 +241,22 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@Column(name = "decision_coface")
 	private Boolean refusCoface;
 
-	@Column(name = "enc_assure")
+	@Column(name = "enc_assure", nullable = false)
 	private Float agrement;
 
-	@Column(name = "enc_0")
+	@Column(name = "enc_0", nullable = false)
 	private Float enCoursNonEchu;
 
-	@Column(name = "enc_1")
+	@Column(name = "enc_1", nullable = false)
 	private Float enCours1a30;
 
-	@Column(name = "enc_2")
+	@Column(name = "enc_2", nullable = false)
 	private Float enCours31a60;
 
-	@Column(name = "enc_3")
+	@Column(name = "enc_3", nullable = false)
 	private Float enCours61a90;
 
-	@Column(name = "enc_4")
+	@Column(name = "enc_4", nullable = false)
 	private Float enCours90Plus;
 
 	@Column(name = "alerte_coface")
@@ -292,13 +308,13 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 	@JoinColumn(name = "tvt_code")
 	private GeoTypeVente typeVente;
 
-	@Column(name = "enc_depasse")
+	@Column(name = "enc_depasse", nullable = false)
 	private Float enCoursTemporaire;
 
-	@Column(name = "enc_bw")
+	@Column(name = "enc_bw", nullable = false)
 	private Float enCoursBlueWhale;
 
-	@Column(name = "enc_actuel")
+	@Column(name = "enc_actuel", nullable = false)
 	private Float enCoursActuel;
 
 	@Column(name = "enc_douteux")
@@ -371,8 +387,11 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
 	@PostLoad
 	public void postLoad() {
-		this.autorise = this.agrement + this.enCoursTemporaire + this.enCoursBlueWhale;
-		float depassement = this.enCoursActuel - this.autorise;
+		this.autorise = Optional.ofNullable(this.agrement).orElse(0f)
+				+ Optional.ofNullable(this.enCoursTemporaire).orElse(0f)
+				+ Optional.ofNullable(this.enCoursBlueWhale).orElse(0f);
+		float depassement = Optional.ofNullable(this.enCoursActuel).orElse(0f)
+				- Optional.ofNullable(this.autorise).orElse(0f);
 		this.depassement = depassement > 0 ? depassement : 0f;
 	}
 
