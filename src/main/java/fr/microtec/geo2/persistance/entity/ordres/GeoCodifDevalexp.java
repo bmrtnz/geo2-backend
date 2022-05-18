@@ -8,12 +8,12 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Data
-@Table(name = "geo_codif_devalex")
+@Table(name = "geo_codif_devalexp")
 @Entity
-public class GeoCodifDevalex {
+public class GeoCodifDevalexp {
 
     @Id
-    @Column(name = "def_devalex")
+    @Column(name = "ref_devalexp")
     private String id;
 
     @Column(name = "desc_devalexp")
