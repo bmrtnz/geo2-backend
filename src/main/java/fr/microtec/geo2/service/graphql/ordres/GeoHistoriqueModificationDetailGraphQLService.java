@@ -45,9 +45,9 @@ public class GeoHistoriqueModificationDetailGraphQLService
 
 	@GraphQLMutation
 	public GeoHistoriqueModificationDetail saveHistoriqueModificationDetail(
-			GeoHistoriqueModificationDetail HistoriqueModificationDetail,
+			GeoHistoriqueModificationDetail historiqueModificationDetail,
 			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(HistoriqueModificationDetail, env);
+		return this.saveEntity(historiqueModificationDetail, env);
 	}
 
 	@GraphQLMutation
