@@ -42,9 +42,9 @@ public class GeoHistoriqueLogistiqueGraphQLService extends GeoAbstractGraphQLSer
 	}
 
 	@GraphQLMutation
-	public GeoHistoriqueLogistique saveHistoriqueLogistique(GeoHistoriqueLogistique HistoriqueLogistique,
+	public GeoHistoriqueLogistique saveHistoriqueLogistique(GeoHistoriqueLogistique historiqueLogistique,
 			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(HistoriqueLogistique, env);
+		return this.saveEntity(historiqueLogistique, env);
 	}
 
 	@GraphQLMutation
