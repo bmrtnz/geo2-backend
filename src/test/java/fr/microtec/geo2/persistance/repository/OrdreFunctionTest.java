@@ -200,7 +200,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticle() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("1434640", "046353", SOCIETE_SA);
+                .ofInitArticle("1504560", "087187", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());

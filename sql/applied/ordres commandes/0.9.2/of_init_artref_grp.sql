@@ -64,15 +64,20 @@ begin
 			ls_artref_row 		:= ls_artref ;
 			-- lb_ya_gtin      		:= 'N';
 			
-			select ol.art_ref_kit into ls_artref_row
-			from geo_ordlig ol
-			left join avi_art_gestion aag on aag.art_ref = ol.art_ref
-			left join avi_art_normalisation aan on aag.ref_normalisation = aan.ref_normalisation
-			where ol.ord_ref = cur_ord_ref
-			and (ol.gtin_colis_kit = aan.gtin_colis or ol.gtin_colis_kit = is_gtin_colis)
-			and ol.art_ref <> ls_artref
-			and rownum = 1
-			order by mod_date;
+			begin
+				select ol.art_ref_kit into ls_artref_row
+				from geo_ordlig ol
+				left join avi_art_gestion aag on aag.art_ref = ol.art_ref
+				left join avi_art_normalisation aan on aag.ref_normalisation = aan.ref_normalisation
+				where ol.ord_ref = cur_ord_ref
+				and (ol.gtin_colis_kit = aan.gtin_colis or ol.gtin_colis_kit = is_gtin_colis)
+				and ol.art_ref <> ls_artref
+				and rownum = 1
+				order by mod_date;
+			exception when no_data_found then
+				msg := 'Impossible de trouver une reference de kit d''article pour l''ordre ' || cur_ord_ref;
+				return;
+			end;
 
 			update geo_ordlig set art_ref_kit = ls_artref_row where orl_ref = cur_orl_ref;
 			
