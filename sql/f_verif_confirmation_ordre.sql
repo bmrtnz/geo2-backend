@@ -195,7 +195,7 @@ BEGIN
             GEO_ORDLIG.CDE_NB_COL > 0;
 
     If li_nb_lig_erreur >  0 Then
-        msg := 'll y a plus de palettes que de colis sur au moins une ligne de commande.';
+        msg := msg || 'll y a plus de palettes que de colis sur au moins une ligne de commande.';
         lb_pluscolismoinspalet := True;
     End If;
 
@@ -336,7 +336,7 @@ BEGIN
         fetch CT_LIG into ls_list_certifs, ls_fou_code, ls_orl_ref, ls_art_ref, ls_propr_code, ls_cli_ref;
         EXIT WHEN CT_LIG%notfound;
 
-        if ls_list_certifs is not null and ls_list_certifs <> '' then
+        if ls_list_certifs is not null then
             f_exist_certif(ls_cli_ref, ls_orl_ref, ld_exist, ls_exist);
 
             if ls_exist = 'OUI'  then
@@ -405,16 +405,15 @@ BEGIN
     end if;
 
     If is_soc_code = 'SA' and ls_sco_code = 'F' Then
-        declare
-            tmp_msg varchar2(200) := '';
-        begin
-            f_calcul_marge_previ(is_ord_ref, is_soc_code, ldc_marge_previ, res, tmp_msg);
-            msg := msg || tmp_msg;
-        end;
-        If ldc_marge_previ < 0 Then
-            lb_marge_negative := TRUE;
-            msg := msg || ' * La marge est négative :' || to_char(ldc_marge_previ) || '~r~n';
-        End If;
+	    declare
+		  tmp_msg varchar2(200); 
+		begin
+	        f_calcul_marge_previ(is_ord_ref, is_soc_code, ldc_marge_previ, res, tmp_msg);
+	        If ldc_marge_previ < 0 Then
+	            lb_marge_negative := TRUE;
+	            msg := msg || ' * La marge est négative :' || to_char(ldc_marge_previ) || tmp_msg || '~r~n';
+	        End If;
+		end;
     End If;
 
     select geo_facture into ls_user_facture from geo_user where NOM_UTILISATEUR = is_utilisateur;
@@ -442,3 +441,4 @@ BEGIN
     res := 1;
 end F_VERIF_CONFIRMATION_ORDRE;
 /
+
