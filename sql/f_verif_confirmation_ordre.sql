@@ -195,7 +195,7 @@ BEGIN
             GEO_ORDLIG.CDE_NB_COL > 0;
 
     If li_nb_lig_erreur >  0 Then
-        msg := msg || 'll y a plus de palettes que de colis sur au moins une ligne de commande.';
+        msg := 'll y a plus de palettes que de colis sur au moins une ligne de commande.';
         lb_pluscolismoinspalet := True;
     End If;
 
@@ -406,14 +406,15 @@ BEGIN
 
     If is_soc_code = 'SA' and ls_sco_code = 'F' Then
 	    declare
-		  tmp_msg varchar2(200); 
+		  tmp_msg varchar2(200) := ''; 
 		begin
 	        f_calcul_marge_previ(is_ord_ref, is_soc_code, ldc_marge_previ, res, tmp_msg);
-	        If ldc_marge_previ < 0 Then
-	            lb_marge_negative := TRUE;
-	            msg := msg || ' * La marge est négative :' || to_char(ldc_marge_previ) || tmp_msg || '~r~n';
-	        End If;
-		end;
+			msg := msg || tmp_msg;
+		end;	
+        If ldc_marge_previ < 0 Then
+            lb_marge_negative := TRUE;
+            msg := msg || ' * La marge est négative :' || to_char(ldc_marge_previ) || '~r~n';
+        End If;
     End If;
 
     select geo_facture into ls_user_facture from geo_user where NOM_UTILISATEUR = is_utilisateur;
