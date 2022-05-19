@@ -3,6 +3,7 @@ package fr.microtec.geo2.service.graphql.ordres;
 import java.util.Optional;
 
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -38,6 +39,17 @@ public class GeoHistoriqueLogistiqueGraphQLService extends GeoAbstractGraphQLSer
 	public Optional<GeoHistoriqueLogistique> getHistoriqueLogistique(
 			@GraphQLArgument(name = "id") String id) {
 		return super.getOne(id);
+	}
+
+	@GraphQLMutation
+	public GeoHistoriqueLogistique saveHistoriqueLogistique(GeoHistoriqueLogistique HistoriqueLogistique,
+			@GraphQLEnvironment ResolutionEnvironment env) {
+		return this.saveEntity(HistoriqueLogistique, env);
+	}
+
+	@GraphQLMutation
+	public void deleteHistoriqueLogistique(String id) {
+		this.delete(id);
 	}
 
 }
