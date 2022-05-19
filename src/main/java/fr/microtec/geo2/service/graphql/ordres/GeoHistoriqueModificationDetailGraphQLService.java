@@ -56,4 +56,10 @@ public class GeoHistoriqueModificationDetailGraphQLService
 		return this.saveAll(allHistoriqueModificationDetail, null);
 	}
 
+	@GraphQLQuery
+	public long countHistoriqueModificationDetail(
+			@GraphQLArgument(name = "search") String search) {
+		return this.count(search);
+	}
+
 }
