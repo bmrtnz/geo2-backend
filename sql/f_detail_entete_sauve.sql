@@ -5,7 +5,7 @@ CREATE OR REPLACE PROCEDURE F_DETAIL_ENTETE_SAUVE (
     arg_mode IN varchar2,
     arg_check_palette IN varchar2,
     res IN OUT number,
-    arg_msg IN OUT varchar2
+    msg IN OUT varchar2
 )
 AS
     is_msg varchar2(50):= '<msg>';
@@ -122,7 +122,7 @@ BEGIN
         if ld_pal_nb > 0 and ld_pal_nb_sol < 1 and arg_check_palette = 'O' then
             -- ll_rc	:= f_xml_input_status(arg_ds_status, 'D', false);
             res := 0;
-            arg_msg := arg_msg || is_msg || 'nbre de palettes au sol OBLIGATOIRE !' || is_msgz || is_crlf;
+            msg := msg || is_msg || 'nbre de palettes au sol OBLIGATOIRE !' || is_msgz || is_crlf;
         -- else
         --     ll_rc	:= f_xml_input_status(arg_ds_status, 'D', true);
         end if;
@@ -130,7 +130,7 @@ BEGIN
         ld_pal_nb_sol	:= 0;
         -- ll_rc	:= f_xml_input_status(arg_ds_status, 'D', false);
         res := 0;
-        arg_msg := arg_msg  || is_msg || ' ' || 'pb sur nbre palettes au sol : ' || s_pal_nb_sol || is_msgz || is_crlf;
+        msg := msg  || is_msg || ' ' || 'pb sur nbre palettes au sol : ' || s_pal_nb_sol || is_msgz || is_crlf;
     end;
 
     select geo_entrep.gest_ref, geo_ordre.SOC_CODE,geo_ordre.typ_ordre
@@ -172,7 +172,7 @@ BEGIN
             exception when others then
                 ld_pal_nb_pb100x120 := 0;
                 res := 0;
-                arg_msg := arg_msg  || is_msg || ' ' || 'pb sur nbre palettes bleues 100x120 : ' || s_pal_nb_pb100x120 || is_msgz || is_crlf;
+                msg := msg  || is_msg || ' ' || 'pb sur nbre palettes bleues 100x120 : ' || s_pal_nb_pb100x120 || is_msgz || is_crlf;
             end;
 
             begin
@@ -191,7 +191,7 @@ BEGIN
             exception when others then
                 s_pal_nb_pb80x120 := 0;
                 res := 0;
-                arg_msg := arg_msg  || is_msg || ' ' || 'pb sur nbre palettes bleues 80x120 : ' || s_pal_nb_pb80x120 || is_msgz || is_crlf;
+                msg := msg  || is_msg || ' ' || 'pb sur nbre palettes bleues 80x120 : ' || s_pal_nb_pb80x120 || is_msgz || is_crlf;
             end;
             
             begin
@@ -210,7 +210,7 @@ BEGIN
             exception when others then
                 s_pal_nb_pb60x80 := 0;
                 res := 0;
-                arg_msg := arg_msg  || is_msg || ' ' || 'pb sur nbre palettes bleues 60x80 : ' || s_pal_nb_pb60x80 || is_msgz || is_crlf;
+                msg := msg  || is_msg || ' ' || 'pb sur nbre palettes bleues 60x80 : ' || s_pal_nb_pb60x80 || is_msgz || is_crlf;
             end;
             
             begin
@@ -226,12 +226,12 @@ BEGIN
             
             
             if ld_pal_nb_pb100x120 = 0 and ld_pal_nb_pb80x120 = 0 and ld_pal_nb_pb60x80 = 0 and ld_pal_nb_pr100x120 = 0 and ld_pal_nb_pr80x120 = 0 and ld_pal_nb_pr60x80 = 0   then
-                arg_msg := arg_msg  || is_msg || ' ' || 'vous devez saisir la quantité de palettes bleues ou rouges expédiées par type de palettes (y compris les palettes intermédiaires)' || is_msgz || is_crlf;
+                msg := msg  || is_msg || ' ' || 'vous devez saisir la quantité de palettes bleues ou rouges expédiées par type de palettes (y compris les palettes intermédiaires)' || is_msgz || is_crlf;
             end if;
             
             
             if ls_soc_code <> 'BWS' AND ls_typ_ordre <> 'RGP' AND (ld_pal_nb_pb100x120  || ld_pal_nb_pb80x120 || ld_pal_nb_pb60x80 || ld_pal_nb_pr100x120 || ld_pal_nb_pr80x120 ||  ld_pal_nb_pr60x80  < ld_pal_nb_sol) then
-                arg_msg := arg_msg  || is_msg || ' ' || 'quantité de palettes bleues ou rouges incohérente par rapport au nombre de palettes au sol' || is_msgz || is_crlf;
+                msg := msg  || is_msg || ' ' || 'quantité de palettes bleues ou rouges incohérente par rapport au nombre de palettes au sol' || is_msgz || is_crlf;
             end if;
         end if;
     exception when others then
@@ -272,7 +272,7 @@ BEGIN
             tmp_msg varchar2(200) := '';
         begin
             f_cloture_log_grp(arg_ord_ref, l_fou_code, 'O', res, tmp_msg);
-            arg_msg := arg_msg || tmp_msg;
+            msg := msg || tmp_msg;
         end;
         --Fin LLEF
     else
@@ -298,6 +298,6 @@ BEGIN
 
     res := 1;
 exception when others then
-        arg_msg := arg_msg || is_msg || 'actualisation en-tête logistique ' || arg_ord_ref || l_fou_code || ' : erreur ORA' || SQLCODE || ' ' || SQLERRM || is_msgz || is_crlf;
+        msg := msg || is_msg || 'actualisation en-tête logistique ' || arg_ord_ref || l_fou_code || ' : erreur ORA' || SQLCODE || ' ' || SQLERRM || is_msgz || is_crlf;
 END;
 /

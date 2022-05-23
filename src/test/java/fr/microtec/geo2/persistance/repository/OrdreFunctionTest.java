@@ -597,4 +597,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void tesFDetailEnteteSauve() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDetailEnteteSauve("000503", "B_CLOTURER", 'O');
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }

@@ -153,4 +153,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fGetQttPerBta(String artRef, String btaCode, Double nbPal, Double nbCol, Double pdsNet);
 
         FunctionResult fSubmitEnvoiDetailSeccom(String ordRef, String fouCode, String logName);
+
+        FunctionResult fDetailEnteteSauve(String ordRef, String mode, Character checkPalette);
 }
