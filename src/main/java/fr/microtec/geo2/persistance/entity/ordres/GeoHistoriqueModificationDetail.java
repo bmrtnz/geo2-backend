@@ -3,10 +3,14 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.GenericGenerator;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import lombok.Data;
@@ -20,6 +24,10 @@ public class GeoHistoriqueModificationDetail extends ModifiedEntity {
 
     @Id
     @Column(name = "histo_orx_ref")
+    @GeneratedValue(generator = "GeoHistoModifDetailGenerator")
+    @GenericGenerator(name = "GeoHistoModifDetailGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "seq_ordlog_declo")
+    })
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
