@@ -71,12 +71,16 @@ BEGIN
 					UPDATE geo_ordlig SET ach_qte = ldc_exp_pds_net_new WHERE orl_ref = arg_orl_ref;
 				when 'TONNE' then
 					UPDATE geo_ordlig SET ach_qte = round(ldc_exp_pds_net_new / 1000, 3) WHERE orl_ref = arg_orl_ref;
+				else
+					null;
 			end CASE;
 			case ls_vte_bta_code
 				when 'KILO' then
 					UPDATE geo_ordlig SET vte_qte = ldc_exp_pds_net_new WHERE orl_ref = arg_orl_ref;
 				when 'TONNE' then
 					UPDATE geo_ordlig SET vte_qte = round(ldc_exp_pds_net_new / 1000, 3) WHERE orl_ref = arg_orl_ref;
+				else
+					null;
 			end CASE;
 		END IF;
 
