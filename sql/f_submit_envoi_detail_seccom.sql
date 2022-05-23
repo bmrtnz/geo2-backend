@@ -18,7 +18,7 @@
 
 CREATE OR REPLACE PROCEDURE F_SUBMIT_ENVOI_DETAIL_SECCOM (
     arg_ord_ref IN geo_ordre.ORD_REF%TYPE,
-    arg_fou_code IN geo_envois.tie_code%TYPE,
+    arg_fou_code IN geo_ordlog.FOU_CODE%TYPE,
     log_name IN varchar2,
     res IN OUT number,
     msg IN OUT varchar2
