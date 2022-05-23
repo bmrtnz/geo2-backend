@@ -494,4 +494,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fDetailEnteteSauve(String ordRef, String mode, Character checkPalette) {
+        FunctionQuery query = this.build("F_DETAIL_ENTETE_SAUVE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_mode", String.class, mode);
+        query.attachInput("arg_check_palette", Character.class, checkPalette);
+
+        return query.fetch();
+    }
 }
