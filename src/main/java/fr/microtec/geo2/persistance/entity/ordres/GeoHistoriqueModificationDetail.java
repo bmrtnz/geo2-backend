@@ -26,7 +26,8 @@ public class GeoHistoriqueModificationDetail extends ModifiedEntity {
     @Column(name = "histo_orx_ref")
     @GeneratedValue(generator = "GeoHistoModifDetailGenerator")
     @GenericGenerator(name = "GeoHistoModifDetailGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-            @Parameter(name = "sequenceName", value = "seq_ordlog_declo")
+            @Parameter(name = "sequenceName", value = "seq_ordlog_declo"),
+            @Parameter(name = "mask", value = "FM099999")
     })
     private String id;
 
