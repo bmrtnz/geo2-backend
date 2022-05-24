@@ -359,7 +359,7 @@ BEGIN
 
     if arg_cloturer = 'O' then
 
-        if ls_err_msg = '' then
+        if ls_err_msg is null then
         
             commit;
         
@@ -386,7 +386,7 @@ BEGIN
         else
             rollback;
             -- on renvoie la liste des ID de tous les champs avec leur status
-            ls_xml	:= ls_err_msg + '~r~n<br>';
+            ls_xml	:= ls_err_msg || '~r~n<br>';
             /*
             for ll_ligne = 1 to lds_x.RowCount()
                 ls_xml	= ls_xml + lds_x.GetItemto_char(ll_ligne, 'champ') + '" ok="' + lds_x.GetItemto_char(ll_ligne, 'status') + '"/>' + '~r~n<br>'
@@ -402,14 +402,13 @@ BEGIN
             */
                         
             -- destroy lds_x
-            msg := msg || 'Erreur entete detail : ' ||  ls_xml;
+            msg := 'Erreur entete detail : ' ||  ls_xml;
             --arg_err_msg += "Erreur entete detail : " +  ls_xml
 
             res := 0;
             return;
         end if;
     else
-        msg := '';
         commit;
         res := 1;
         msg := 'OK';

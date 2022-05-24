@@ -606,4 +606,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void tesFTracabiliteDecloturer() {
+        FunctionResult result = this.functionOrdreRepository
+                .fTracabiliteCloturer("001864", 'O');
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }

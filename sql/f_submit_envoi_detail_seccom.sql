@@ -193,10 +193,9 @@ BEGIN
             -- Tous les détails sont clôturés, envoi d'un mail de notification à l'assistante commerciale
             -- wsh = CREATE OleObject
             -- li_rc = wsh.ConnectToNewObject( "WScript.Shell" )
-            if li_rc < 0 then
-                null;
+            -- if li_rc < 0 then
                 -- f_ecrit_log(log_name,"%%ERREUR - dans clôture détails d'expedition : exécution du client mail : " + ls_email + ", Ordre Ref : " + ordref + is_crlf)
-            else
+            if li_rc >= 0 then
                 ls_MailSubject := 'Clôture des détails d''expédition. Ordre : ' || ls_nordre || ', client : ' || ls_client || ', entrepôt : ' || ls_entrep;
                 if ls_email is null or ls_email = '' then 
                     ls_email := 'stephane@blue-whale.com';
