@@ -615,4 +615,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void tesFDetailsExpOnCheckCloturer() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDetailsExpOnCheckCloturer("001977", "001", "BRUNO", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
 }
