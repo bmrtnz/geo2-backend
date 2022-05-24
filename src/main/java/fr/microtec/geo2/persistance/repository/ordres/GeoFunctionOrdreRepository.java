@@ -155,4 +155,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fSubmitEnvoiDetailSeccom(String ordRef, String fouCode, String logName);
 
         FunctionResult fDetailEnteteSauve(String ordRef, String mode, Character checkPalette);
+
+        FunctionResult fTracabiliteCloturer(String ordRef, Character cloturer);
 }

@@ -505,4 +505,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fTracabiliteCloturer(String ordRef, Character cloturer) {
+        FunctionQuery query = this.build("F_TRACABILITE_CLOTURER");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_cloturer", Character.class, cloturer);
+
+        return query.fetch();
+    }
 }
