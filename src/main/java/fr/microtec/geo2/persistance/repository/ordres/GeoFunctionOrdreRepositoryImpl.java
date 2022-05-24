@@ -515,4 +515,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fDetailsExpOnCheckCloturer(String orxRef, String devalexpRef, String username,
+            String socCode) {
+        FunctionQuery query = this.build("F_EXP_ON_CHECK_CLOTURER");
+
+        query.attachInput("arg_orx_ref", String.class, orxRef);
+        query.attachInput("arg_devalexp_ref", String.class, devalexpRef);
+        query.attachInput("arg_username", String.class, username);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
 }

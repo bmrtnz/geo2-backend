@@ -157,4 +157,6 @@ public interface GeoFunctionOrdreRepository {
         FunctionResult fDetailEnteteSauve(String ordRef, String mode, Character checkPalette);
 
         FunctionResult fTracabiliteCloturer(String ordRef, Character cloturer);
+
+        FunctionResult fDetailsExpOnCheckCloturer(String orxRef, String devalexpRef, String username, String socCode);
 }
