@@ -271,4 +271,13 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDocumentEnvoiDeclarationBollore(ordRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDetailsExpOnCheckCloturer(
+            @GraphQLArgument(name = "logistiqueRef") String orxRef,
+            @GraphQLArgument(name = "devalexpRef") String devalexpRef,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "societeCode") String socCode) {
+        return this.repository.fDetailsExpOnCheckCloturer(orxRef, devalexpRef, username, socCode);
+    }
+
 }
