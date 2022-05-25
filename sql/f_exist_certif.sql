@@ -7,7 +7,7 @@ CREATE OR REPLACE PROCEDURE F_EXIST_CERTIF (
 AS
     ls_list_certifs GEO_ORDLIG.LIST_CERTIFS%TYPE;
     ll_certif_lig number;
-    array_list_certifs_ligne p_str_tab_type;
+    array_list_certifs_ligne p_str_tab_type := p_str_tab_type();
     ls_type GEO_CERTIF_MODCULT.TYPE_CERT%TYPE;
     ll_cpt number;
 BEGIN
