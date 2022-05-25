@@ -90,8 +90,8 @@ BEGIN
 		-- 	return 2
 		-- End If
 
-		insert into GEO_HISTO_ORDLOG_DECLO(ORX_REF,FLAG_EXPED_FOURNNI,REF_DEVALEXP)
-		VALUES (arg_orx_ref,ls_cloture,arg_devalexp_ref);
+		insert into GEO_HISTO_ORDLOG_DECLO(ORX_REF,FLAG_EXPED_FOURNNI,REF_DEVALEXP,MOD_USER)
+		VALUES (arg_orx_ref,ls_cloture,arg_devalexp_ref,arg_username);
         commit;
 
 		--if ls_geo_client = '2' then
