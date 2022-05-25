@@ -32,7 +32,7 @@ public class GeoMRUOrdre extends ModifiedEntity implements Serializable {
     private GeoSociete societe;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CEN_CODE")
+    @JoinColumn(name = "cen_code", referencedColumnName = "cen_ref")
     private GeoEntrepot entrepot;
 
     @Column(name = "nordre")
@@ -44,7 +44,7 @@ public class GeoMRUOrdre extends ModifiedEntity implements Serializable {
     @Column(name = "soc_code", insertable = false, updatable = false)
     private String socCode;
 
-    @Column(name = "CEN_CODE", insertable = false, updatable = false)
+    @Column(name = "cen_code", insertable = false, updatable = false)
     private String cenCode;
 
 }
