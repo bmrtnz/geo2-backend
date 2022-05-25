@@ -116,14 +116,16 @@ BEGIN
 		from GEO_ORDRE O
 		where O.ord_ref = ls_ord_ref;
 
-		select distinct  'OK_DETAIL' into ls_ok_detail
-		from GEO_ORDLIG L , GEO_ARTICLE_COLIS A
-		where  L.ORD_REF = ls_ord_ref and
-                    L.FOU_CODE = ls_fou_code and
-		           L.ART_REF 	= A.ART_REF and
-            		  A.IND_MODIF_DETAIL ='O' ;
-
-		if ls_ok_detail is null then ls_ok_detail :=''; end if;
+        begin
+            select distinct 'OK_DETAIL' into ls_ok_detail
+            from GEO_ORDLIG L , GEO_ARTICLE_COLIS A
+            where  L.ORD_REF = ls_ord_ref and
+                        L.FOU_CODE = ls_fou_code and
+                    L.ART_REF 	= A.ART_REF and
+                        A.IND_MODIF_DETAIL ='O' ;
+        exception when no_data_found then
+		    ls_ok_detail := '';
+        end;
 
 		If ls_profile_client <> 'ADMIN'  and ls_geo_client <>'2' and arg_soc_code <>'IMP' and arg_soc_code <> 'IUK' and  ls_modif_detail <> 'O'  and ls_modif_detail_client <>'O' and  ls_sco_code <>'PAL'  and ls_typ_ordre <> 'REP'  and ls_typ_ordre <> 'RPO' and ls_typ_ordre <> 'RPR' and ls_typ_ordre <> 'RPF' and ls_ok_detail <> 'OK_DETAIL'    Then
             msg := 'Erreur, Fonction non autorisée';
