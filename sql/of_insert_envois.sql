@@ -98,7 +98,8 @@ BEGIN
 			cam_code,
 			nordre,
 			ord_ref,
-			flu_code
+			flu_code,
+			version_ordre
 		)
 		values (
 			ls_env_code,
@@ -107,7 +108,8 @@ BEGIN
 			is_cam_code,
 			is_nordre,
 			is_ord_ref,
-			is_flu_code
+			is_flu_code,
+			'001'
 		);
 		commit;
 	end;

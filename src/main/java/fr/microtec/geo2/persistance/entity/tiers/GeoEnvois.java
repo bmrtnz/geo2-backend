@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.persistence.Column;
@@ -76,7 +77,7 @@ public class GeoEnvois implements GeoAsDocument {
 	private String numeroAcces1;
 
 	@Column(name = "demdat")
-	private LocalDate dateDemande;
+	private LocalDateTime dateDemande;
 
 	@Column(name = "soudat")
 	private LocalDate dateSoumission;
