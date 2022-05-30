@@ -330,8 +330,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
    * @return The updated object.
    */
   public GeoOrdre withDefaults(GeoOrdre ordre) {
-    if (ordre.getId() != null)
-      ordre = OrdreLigneService.merge(this.repository.getOne(ordre.getId()), ordre, null);
     if (ordre.getVenteACommission() == null)
       ordre.setVenteACommission(false);
     if (ordre.getExpedie() == null)

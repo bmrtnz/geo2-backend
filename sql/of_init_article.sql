@@ -57,6 +57,7 @@ AS
 	ls_orl_ref varchar2(50);
 	ls_pal_code varchar2(50);
     ls_user GEO_ORDRE.MOD_USER%TYPE;
+	ls_ach_dev_code varchar2(50);
 
 	cur_orl_ref GEO_ORDLIG.orl_ref%type;
 	soc_dev_code GEO_DEVISE.dev_code%type;
@@ -78,8 +79,8 @@ begin
 
 	select f_seq_orl_seq() into cur_orl_ref from dual;
 	select dev_code into soc_dev_code from geo_societe where soc_code = arg_soc_code;
-	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code, e.pal_code, o.MOD_USER
-	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code, ls_pal_code, ls_user
+	select c.cli_ref, c.dluo, o.typ_ordre, o.ind_exclu_frais_pu, o.sco_code, e.pal_code, o.MOD_USER, o.dev_code
+	into is_cur_cli_ref, is_dluo_client, ls_typ_ordre, ls_ind_exclu_frais_pu, ls_sco_code, ls_pal_code, ls_user, ls_ach_dev_code
 	from geo_ordre o
 	left join geo_client c on o.cli_ref = c.cli_ref
 	left join geo_entrep e on o.cen_ref = e.cen_ref
@@ -127,7 +128,8 @@ begin
 				ord_ref,
 				art_ref,
 				esp_code,
-				pal_code
+				pal_code,
+				ach_dev_code
 				-- remsf_tx,
 				-- remhf_tx
 			)
@@ -136,7 +138,8 @@ begin
 				arg_ord_ref,
 				ls_art_ref,
 				ls_esp_code,
-				coalesce(ls_pal_code, '-')
+				coalesce(ls_pal_code, '-'),
+				coalesce(ls_ach_dev_code, 'EUR')
 				-- id_remsf,
 				-- id_remhf_tx
 			);

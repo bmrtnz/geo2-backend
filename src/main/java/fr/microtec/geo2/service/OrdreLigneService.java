@@ -162,8 +162,6 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
    * @return the updated object.
    */
   public GeoOrdreLigne withDefaults(GeoOrdreLigne ordreLigne) {
-    if (ordreLigne.getId() != null)
-      ordreLigne = OrdreLigneService.merge(this.repository.getOne(ordreLigne.getId()), ordreLigne, null);
     if (ordreLigne.getNombrePalettesExpediees() == null)
       ordreLigne.setNombrePalettesExpediees(0f);
     if (ordreLigne.getNombreColisExpedies() == null)
@@ -218,8 +216,6 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
       ordreLigne.setTauxRemiseHorsFacture(0f);
     if (ordreLigne.getNombreColisManquant() == null)
       ordreLigne.setNombreColisManquant(0);
-    if (ordreLigne.getAchatDevise() == null)
-      ordreLigne.setAchatDevise("EUR");
     return ordreLigne;
   }
 
