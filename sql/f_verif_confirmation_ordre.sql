@@ -339,7 +339,7 @@ BEGIN
         if ls_list_certifs is not null then
             f_exist_certif(ls_cli_ref, ls_orl_ref, ld_exist, ls_exist);
 
-            if ls_exist = 'OUI'  then
+            if ls_exist = 'OUI' and ls_list_certifs <> '0' then
                 f_split(ls_list_certifs, ',', array_list_certifs_ligne);
                 for i in 0..array_list_certifs_ligne.COUNT LOOP
                     ll_certif_lig := to_number(array_list_certifs_ligne(i));

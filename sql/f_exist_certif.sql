@@ -18,7 +18,11 @@ BEGIN
     begin
         SELECT "GEO_ORDLIG"."LIST_CERTIFS" into ls_list_certifs FROM "GEO_ORDLIG" WHERE ( "GEO_ORDLIG"."ORL_REF" = is_ord_ref);
 
-        if ls_list_certifs is not null then
+        if ls_list_certifs = '0' then -- wildcard
+            msg := 'OUI';
+            res := 1;
+            return;
+        elsif ls_list_certifs is not null then
             f_split(ls_list_certifs, ',', array_list_certifs_ligne);
             for i in 0..array_list_certifs_ligne.COUNT loop
                     ll_certif_lig := to_number(array_list_certifs_ligne(i));
