@@ -24,6 +24,8 @@ public class OrdreLogistiqueService extends GeoAbstractGraphQLService<GeoOrdreLo
    * @return The updated object.
    */
   public GeoOrdreLogistique withDefaults(GeoOrdreLogistique ordreLogistique) {
+    if (ordreLogistique.getId() != null)
+      ordreLogistique = OrdreLigneService.merge(this.repository.getOne(ordreLogistique.getId()), ordreLogistique, null);
     if (ordreLogistique.getExpedieStation() == null)
       ordreLogistique.setExpedieStation(false);
     if (ordreLogistique.getExpedieLieuGroupage() == null)
