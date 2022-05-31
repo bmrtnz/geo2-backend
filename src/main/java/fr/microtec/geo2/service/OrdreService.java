@@ -352,8 +352,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
       ordre.setFactureEDIFACT(false);
     if (ordre.getPrixUnitaireTarifTransport() == null)
       ordre.setPrixUnitaireTarifTransport(0f);
-    if (ordre.getPrixUnitaireTarifTransit() == null)
-      ordre.setPrixUnitaireTarifTransit(0f);
     if (ordre.getPrixUnitaireTarifCourtage() == null)
       ordre.setPrixUnitaireTarifCourtage(0f);
     if (ordre.getTauxRemiseFacture() == null)
@@ -362,14 +360,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
       ordre.setTauxRemiseHorsFacture(0f);
     if (ordre.getTauxDevise() == null)
       ordre.setTauxDevise(0d);
-    if (ordre.getTotalPalette() == null)
-      ordre.setTotalPalette(0f);
-    if (ordre.getTotalColis() == null)
-      ordre.setTotalColis(0f);
-    if (ordre.getTotalPoidsNet() == null)
-      ordre.setTotalPoidsNet(0f);
-    if (ordre.getTotalPoidsBrut() == null)
-      ordre.setTotalPoidsBrut(0f);
     if (ordre.getTotalVente() == null)
       ordre.setTotalVente(0f);
     if (ordre.getTotalRemise() == null)
@@ -388,10 +378,10 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
       ordre.setTotalTransit(0f);
     if (ordre.getTotalCourtage() == null)
       ordre.setTotalCourtage(0f);
-    if (ordre.getTotalFraisAdditionnels() == null)
-      ordre.setTotalFraisAdditionnels(0f);
     if (ordre.getTotalFraisPlateforme() == null)
       ordre.setTotalFraisPlateforme(0f);
+    if (ordre.getTransporteurDEVPrixUnitaire() == null)
+      ordre.setTransporteurDEVPrixUnitaire(0d);
     if (ordre.getTypeVente() == null)
       ordre.setTypeVente(GeoTypeVente.getDefault());
     if (ordre.getPrixTransportVisible() == null)
