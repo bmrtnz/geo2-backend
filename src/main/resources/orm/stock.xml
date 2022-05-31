@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm
+http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+   <!-- SELECTION D'ARTICLES PAR LE STOCK -->
+  <named-native-query
+    name="Stock.allStockArticle"
+    result-class="fr.microtec.geo2.persistance.entity.stock.GeoStockArticle"
+  >
+    <query>
+    <![CDATA[
+      SELECT
+        geo_stock.art_ref as art_ref,
+        geo_stock.age as age,
+        avi_art_cdc.esp_code as esp_code,
+        avi_art_mat_prem.var_code as var_code,
+        geo_article.caf_code as caf_code,
+        avi_art_normalisation.cam_code as cam_code,
+        avi_art_cdc.cat_code as cat_code,
+        avi_art_emballage.col_code as col_code,
+        avi_art_mat_prem.ori_code as ori_code,
+        geo_stock.STO_REF as sto_ref,
+        geo_stock.fou_code as fou_code,
+        geo_stock.PROP_CODE as prop_code,
+        geo_stock.STO_DESC as sto_desc,
+        geo_stock.DATE_FAB as date_fab,
+        geo_stock.STO_STATUT as sto_statut,
+        geo_stock.DATE_STATUT as date_statut,
+        geo_stock.PAL_CODE as pal_code
+      FROM
+        geo_stock,
+        geo_article,
+        geo_fourni,
+        avi_art_gestion,
+        avi_art_mat_prem,
+        avi_art_cdc,
+        avi_art_emballage,
+        avi_art_normalisation
+      WHERE
+        (avi_art_gestion.art_ref = geo_stock.art_ref)
+        AND geo_fourni.fou_code (+) = geo_stock.fou_code
+        AND geo_stock.art_ref (+) = geo_article.art_ref
+        AND avi_art_mat_prem.ref_mat_prem (+) = avi_art_gestion.ref_mat_prem
+        AND avi_art_cdc.ref_cdc (+) = avi_art_gestion.ref_cdc
+        AND avi_art_emballage.ref_emballage (+) = avi_art_gestion.ref_emballage
+        AND avi_art_normalisation.ref_normalisation (+) = avi_art_gestion.ref_normalisation
+        AND geo_stock.STO_REF_FROM IS NULL
+        AND avi_art_cdc.esp_code LIKE :arg_espece
+        AND avi_art_mat_prem.var_code LIKE :arg_variete
+        AND avi_art_mat_prem.ori_code LIKE :arg_origine
+        AND avi_art_mat_prem.mode_culture LIKE :arg_mode_culture
+        AND avi_art_emballage.col_code LIKE :arg_emballage
+        AND geo_fourni.bac_code LIKE :arg_bureau_achat
+      GROUP BY
+        geo_stock.art_ref,
+        geo_stock.age,
+        avi_art_cdc.esp_code,
+        avi_art_mat_prem.var_code,
+        geo_article.caf_code,
+        avi_art_normalisation.cam_code,
+        avi_art_cdc.cat_code,
+        avi_art_emballage.col_code,
+        avi_art_mat_prem.ori_code,
+        geo_stock.STO_REF,
+        geo_stock.fou_code,
+        geo_stock.PROP_CODE,
+        geo_stock.STO_DESC,
+        geo_stock.DATE_FAB,
+        geo_stock.STO_STATUT,
+        geo_stock.DATE_STATUT,
+        geo_stock.PAL_CODE
+    ]]>
+    </query>
+  </named-native-query>
+
+</entity-mappings>

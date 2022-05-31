@@ -2,7 +2,10 @@ package fr.microtec.geo2.persistance.repository;
 
 import fr.microtec.geo2.Geo2Application;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +25,30 @@ public class NativeQueryRepositoryTest {
 
     @Autowired
     private GeoOrdreRepository ordreRepository;
+    @Autowired
+    private GeoStockRepository stockRepository;
 
     @Test
-    public void testGetList() {
+    public void testAllPlanningTransporteurs() {
         List<GeoPlanningTransporteur> list = this.ordreRepository.allPlanningTransporteurs(
                 LocalDateTime.of(2020, 8, 1, 0, 0, 0),
                 LocalDateTime.of(2020, 8, 3, 23, 59, 59),
                 "SA",
-                "VERAY"
-        );
+                "VERAY");
+
+        Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllStockArticle() {
+        List<GeoStockArticle> list = this.stockRepository
+                .allStockArticle(
+                        "POMME",
+                        "GRANNY",
+                        "F",
+                        "%",
+                        "%",
+                        "%");
 
         Assertions.assertFalse(list.isEmpty());
     }

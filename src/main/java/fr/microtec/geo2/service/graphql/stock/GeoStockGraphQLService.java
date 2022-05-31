@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.stock;
 
+import java.util.List;
 import java.util.Optional;
 
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -30,16 +32,25 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
 	public RelayPage<GeoStock> allStock(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoStock> getStock(
-			@GraphQLArgument(name = "id") String id
-	) {
+			@GraphQLArgument(name = "id") String id) {
 		return this.getOne(id);
-  }
+	}
+
+	@GraphQLQuery
+	public List<GeoStockArticle> allStockArticle(
+			@GraphQLArgument(name = "espece") String espece,
+			@GraphQLArgument(name = "variete", defaultValue = "%") String variete,
+			@GraphQLArgument(name = "origine", defaultValue = "%") String origine,
+			@GraphQLArgument(name = "modeCulture", defaultValue = "%") String modeCulture,
+			@GraphQLArgument(name = "emballage", defaultValue = "%") String emballage,
+			@GraphQLArgument(name = "bureauAchat", defaultValue = "%") String bureauAchat) {
+		return this.allStockArticle(espece, variete, origine, modeCulture, emballage, bureauAchat);
+	}
 
 }

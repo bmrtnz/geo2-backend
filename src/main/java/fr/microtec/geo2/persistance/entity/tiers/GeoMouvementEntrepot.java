@@ -9,35 +9,35 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class GeoMouvementEntrepot extends GeoSupervisionPalox {
 
   @Column(name = "nordre")
-	String numeroOrdre;
+  String numeroOrdre;
 
   @Column(name = "depdatp")
-	LocalDateTime dateDepartOrdre;
+  LocalDateTime dateDepartOrdre;
 
   @Column(name = "bon_retour")
-	String bonRetour;
+  String bonRetour;
 
   @Column(name = "cmr")
-	String cmr;
+  String cmr;
 
   @Column(name = "ref_cli")
-	String referenceClient;
+  String referenceClient;
 
   @Column(name = "cli_ref")
-	String codeClient;
+  String codeClient;
 
   @Column(name = "palox_ko_nbr")
-	Double nombrePaloxKO;
+  Double nombrePaloxKO;
 
   @Column(name = "palox_ko_cause")
-	Double nombrePaloxCause;
+  Double nombrePaloxCause;
 
   @Column(name = "station")
-	String station;
+  String station;
 
 }
