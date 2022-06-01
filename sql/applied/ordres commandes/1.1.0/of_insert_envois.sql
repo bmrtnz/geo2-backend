@@ -16,6 +16,7 @@ CREATE OR REPLACE PROCEDURE "OF_INSERT_ENVOIS" (
 	is_con_map IN varchar2,
 	is_imprimante IN varchar2,
 	is_tiers_bis_code IN varchar2,
+	is_nom_utilisateur IN GEO_USER.NOM_UTILISATEUR%TYPE,
 	-- response
 	res IN OUT number,
 	msg IN OUT varchar2,
@@ -99,7 +100,8 @@ BEGIN
 			nordre,
 			ord_ref,
 			flu_code,
-			version_ordre
+			version_ordre,
+            mod_user
 		)
 		values (
 			ls_env_code,
@@ -109,7 +111,8 @@ BEGIN
 			is_nordre,
 			is_ord_ref,
 			is_flu_code,
-			'001'
+			'001',
+            is_nom_utilisateur
 		);
 		commit;
 	end;
