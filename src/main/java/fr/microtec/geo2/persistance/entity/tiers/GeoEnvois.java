@@ -37,11 +37,10 @@ public class GeoEnvois implements GeoAsDocument {
 
 	@Id
 	@Column(name = "env_code")
-	@GeneratedValue(generator = "GeoEnvoisGenerator") // logic from `F_SEQ_ORX_SEQ`
+	@GeneratedValue(generator = "GeoEnvoisGenerator")
 	@GenericGenerator(name = "GeoEnvoisGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-			@Parameter(name = "sequenceName", value = "seq_orx_num"),
-			@Parameter(name = "mask", value = "FM0XXXX"),
-			@Parameter(name = "prepend", value = "B")
+			@Parameter(name = "sequenceName", value = "F_SEQ_ENV_NUM"),
+			@Parameter(name = "isSequence", value = "false")
 	})
 	private String id;
 
