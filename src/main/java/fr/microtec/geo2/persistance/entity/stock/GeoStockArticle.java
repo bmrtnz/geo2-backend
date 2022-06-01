@@ -6,11 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import fr.microtec.geo2.persistance.entity.ValidateEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-public class GeoStockArticle {
+public class GeoStockArticle extends ValidateEntity {
     @Id
     @Column(name = "art_ref")
     String id;
@@ -64,31 +67,31 @@ public class GeoStockArticle {
     String typePaletteID;
 
     @Column(name = "qte_ini_1")
-    String quantiteInitiale1;
+    Float quantiteInitiale1;
     @Column(name = "qte_res_1")
-    String quantiteRestante1;
+    Float quantiteRestante1;
     @Column(name = "qte_opt_1")
-    String quantiteOptionnelle1;
+    Float quantiteOptionnelle1;
 
     @Column(name = "qte_ini_2")
-    String quantiteInitiale2;
+    Float quantiteInitiale2;
     @Column(name = "qte_res_2")
-    String quantiteRestante2;
+    Float quantiteRestante2;
     @Column(name = "qte_opt_2")
-    String quantiteOptionnelle2;
+    Float quantiteOptionnelle2;
 
     @Column(name = "qte_ini_3")
-    String quantiteInitiale3;
+    Float quantiteInitiale3;
     @Column(name = "qte_res_3")
-    String quantiteRestante3;
+    Float quantiteRestante3;
     @Column(name = "qte_opt_3")
-    String quantiteOptionnelle3;
+    Float quantiteOptionnelle3;
 
     @Column(name = "qte_ini_4")
-    String quantiteInitiale4;
+    Float quantiteInitiale4;
     @Column(name = "qte_res_4")
-    String quantiteRestante4;
+    Float quantiteRestante4;
     @Column(name = "qte_opt_4")
-    String quantiteOptionnelle4;
+    Float quantiteOptionnelle4;
 
 }

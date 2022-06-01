@@ -43,14 +43,21 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
 	}
 
 	@GraphQLQuery
-	public List<GeoStockArticle> allStockArticle(
+	public List<GeoStockArticle> allStockArticleList(
 			@GraphQLArgument(name = "espece") String espece,
 			@GraphQLArgument(name = "variete", defaultValue = "%") String variete,
 			@GraphQLArgument(name = "origine", defaultValue = "%") String origine,
 			@GraphQLArgument(name = "modeCulture", defaultValue = "%") String modeCulture,
 			@GraphQLArgument(name = "emballage", defaultValue = "%") String emballage,
 			@GraphQLArgument(name = "bureauAchat", defaultValue = "%") String bureauAchat) {
-		return this.allStockArticle(espece, variete, origine, modeCulture, emballage, bureauAchat);
+		return ((GeoStockRepository) this.repository)
+				.allStockArticleList(
+						espece,
+						Optional.ofNullable(variete).orElse("%"),
+						Optional.ofNullable(origine).orElse("%"),
+						Optional.ofNullable(modeCulture).orElse("%"),
+						Optional.ofNullable(emballage).orElse("%"),
+						Optional.ofNullable(bureauAchat).orElse("%"));
 	}
 
 }

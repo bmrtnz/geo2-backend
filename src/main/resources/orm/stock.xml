@@ -14,6 +14,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       SELECT
         geo_stock.art_ref,
         geo_stock.age,
+        avi_art_gestion.valide,
         avi_art_cdc.esp_code,
         avi_art_mat_prem.var_code,
         geo_article.caf_code,
@@ -112,6 +113,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       GROUP BY
         geo_stock.art_ref,
         geo_stock.age,
+        avi_art_gestion.valide,
         avi_art_cdc.esp_code,
         avi_art_mat_prem.var_code,
         geo_article.caf_code,

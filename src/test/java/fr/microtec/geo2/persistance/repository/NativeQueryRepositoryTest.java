@@ -1,10 +1,7 @@
 package fr.microtec.geo2.persistance.repository;
 
-import fr.microtec.geo2.Geo2Application;
-import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
-import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
-import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
-import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,8 +11,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import fr.microtec.geo2.Geo2Application;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 
 @DataJpaTest
 @ContextConfiguration(classes = Geo2Application.class)
@@ -42,10 +42,10 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllStockArticle() {
         List<GeoStockArticle> list = this.stockRepository
-                .allStockArticle(
+                .allStockArticleList(
                         "POMME",
-                        "GRANNY",
-                        "F",
+                        "%",
+                        "%",
                         "%",
                         "%",
                         "%");

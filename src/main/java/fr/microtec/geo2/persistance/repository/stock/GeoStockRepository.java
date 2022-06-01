@@ -13,7 +13,7 @@ import fr.microtec.geo2.persistance.repository.GeoRepository;
 @Repository
 public interface GeoStockRepository extends GeoRepository<GeoStock, String> {
     @Query(name = "Stock.allStockArticle", nativeQuery = true)
-    List<GeoStockArticle> allStockArticle(
+    List<GeoStockArticle> allStockArticleList(
             @Param("arg_espece") String espece,
             @Param("arg_variete") String variete,
             @Param("arg_origine") String origine,
