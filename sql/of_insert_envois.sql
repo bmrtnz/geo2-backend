@@ -90,7 +90,7 @@ BEGIN
 	end;
 
 	begin
-		select F_SEQ_ORX_SEQ into ls_env_code from dual;
+		select F_SEQ_ENV_NUM into ls_env_code from dual;
 		insert into geo_envois (
 			env_code,
 			trait_exp,
