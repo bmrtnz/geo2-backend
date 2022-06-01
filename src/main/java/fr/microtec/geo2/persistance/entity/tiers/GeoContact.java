@@ -66,4 +66,7 @@ public class GeoContact extends ValidateModifiedPrewrittedEntity {
 	@Column(name = "con_map")
 	private String fichierMap;
 
+	@Column(name = "clicen_ref")
+	private String refClientEntrepot;
+
 }
