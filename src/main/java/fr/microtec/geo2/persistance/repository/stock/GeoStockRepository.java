@@ -1,14 +1,14 @@
 package fr.microtec.geo2.persistance.repository.stock;
 
-import fr.microtec.geo2.persistance.entity.stock.GeoStock;
-import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
-
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import fr.microtec.geo2.persistance.entity.stock.GeoStock;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
+import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
 public interface GeoStockRepository extends GeoRepository<GeoStock, String> {

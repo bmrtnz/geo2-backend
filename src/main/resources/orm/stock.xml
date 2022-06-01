@@ -12,23 +12,79 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <query>
     <![CDATA[
       SELECT
-        geo_stock.art_ref as art_ref,
-        geo_stock.age as age,
-        avi_art_cdc.esp_code as esp_code,
-        avi_art_mat_prem.var_code as var_code,
-        geo_article.caf_code as caf_code,
-        avi_art_normalisation.cam_code as cam_code,
-        avi_art_cdc.cat_code as cat_code,
-        avi_art_emballage.col_code as col_code,
-        avi_art_mat_prem.ori_code as ori_code,
-        geo_stock.STO_REF as sto_ref,
-        geo_stock.fou_code as fou_code,
-        geo_stock.PROP_CODE as prop_code,
-        geo_stock.STO_DESC as sto_desc,
-        geo_stock.DATE_FAB as date_fab,
-        geo_stock.STO_STATUT as sto_statut,
-        geo_stock.DATE_STATUT as date_statut,
-        geo_stock.PAL_CODE as pal_code
+        geo_stock.art_ref,
+        geo_stock.age,
+        avi_art_cdc.esp_code,
+        avi_art_mat_prem.var_code,
+        geo_article.caf_code,
+        avi_art_normalisation.cam_code,
+        avi_art_cdc.cat_code,
+        avi_art_emballage.col_code,
+        avi_art_mat_prem.ori_code,
+        geo_stock.sto_ref,
+        geo_stock.fou_code,
+        geo_stock.prop_code,
+        geo_stock.sto_desc,
+        geo_stock.date_fab,
+        geo_stock.sto_statut,
+        geo_stock.date_statut,
+        geo_stock.pal_code,
+        DECODE (geo_stock.age,
+        '1',
+        SUM (geo_stock.qte_ini),
+        0) "qte_ini_1",
+        DECODE (geo_stock.age,
+        '1',
+        SUM (geo_stock.qte_res),
+        0) "qte_res_1",
+        DECODE (geo_stock.age || geo_stock.sto_statut,
+        '1O',
+        SUM (geo_stock.qte_ini),
+        0) 
+
+                    "qte_opt_1",
+        DECODE (geo_stock.age,
+        '2',
+        SUM (geo_stock.qte_ini),
+        0) "qte_ini_2",
+        DECODE (geo_stock.age,
+        '2',
+        SUM (geo_stock.qte_res),
+        0) "qte_res_2",
+        DECODE (geo_stock.age || geo_stock.sto_statut,
+        '2O',
+        SUM (geo_stock.qte_ini),
+        0) 
+
+                    "qte_opt_2",
+        DECODE (geo_stock.age,
+        '3',
+        SUM (geo_stock.qte_ini),
+        0) "qte_ini_3",
+        DECODE (geo_stock.age,
+        '3',
+        SUM (geo_stock.qte_res),
+        0) "qte_res_3",
+        DECODE (geo_stock.age || geo_stock.sto_statut,
+        '3O',
+        SUM (geo_stock.qte_ini),
+        0) 
+
+                    "qte_opt_3",
+        DECODE (geo_stock.age,
+        '4',
+        SUM (geo_stock.qte_ini),
+        0) "qte_ini_4",
+        DECODE (geo_stock.age,
+        '4',
+        SUM (geo_stock.qte_res),
+        0) "qte_res_4",
+        DECODE (geo_stock.age || geo_stock.sto_statut,
+        '4O',
+        SUM (geo_stock.qte_ini),
+        0) 
+
+                    "qte_opt_4"
       FROM
         geo_stock,
         geo_article,
@@ -39,7 +95,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         avi_art_emballage,
         avi_art_normalisation
       WHERE
-        (avi_art_gestion.art_ref = geo_stock.art_ref)
+        avi_art_gestion.art_ref = geo_stock.art_ref
         AND geo_fourni.fou_code (+) = geo_stock.fou_code
         AND geo_stock.art_ref (+) = geo_article.art_ref
         AND avi_art_mat_prem.ref_mat_prem (+) = avi_art_gestion.ref_mat_prem

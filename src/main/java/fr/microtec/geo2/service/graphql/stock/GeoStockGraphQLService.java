@@ -3,8 +3,6 @@ package fr.microtec.geo2.service.graphql.stock;
 import java.util.List;
 import java.util.Optional;
 
-import io.leangen.graphql.annotations.GraphQLEnvironment;
-import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -15,8 +13,10 @@ import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
+import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
