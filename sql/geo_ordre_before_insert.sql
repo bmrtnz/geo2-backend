@@ -17,3 +17,4 @@ BEGIN
  :NEW.depdatp_asc := TO_CHAR(:NEW.depdatp,'yyyymmdd');
  :NEW.came_code := TO_CHAR(ADD_MONTHS(:NEW.depdatp,-6),'YY');
 END;
+/
