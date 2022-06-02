@@ -129,4 +129,10 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
 				Optional.ofNullable(codeFournisseur).orElse("%"));
 	}
 
+	@GraphQLQuery
+	public Optional<GeoEntrepot> getEntrepotByCode(
+			@GraphQLArgument(name = "code") String code) {
+		return ((GeoEntrepotRepository) this.repository).getOneByCode(code);
+	}
+
 }

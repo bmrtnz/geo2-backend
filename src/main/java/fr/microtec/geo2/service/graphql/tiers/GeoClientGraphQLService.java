@@ -31,16 +31,20 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 	public RelayPage<GeoClient> allClient(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoClient> getClient(
-			@GraphQLArgument(name = "id") String id
-	) {
+			@GraphQLArgument(name = "id") String id) {
 		return this.getOne(id);
+	}
+
+	@GraphQLQuery
+	public Optional<GeoClient> getClientByCode(
+			@GraphQLArgument(name = "code") String code) {
+		return ((GeoClientRepository) this.repository).getOneByCode(code);
 	}
 
 	@GraphQLMutation
@@ -55,8 +59,7 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 
 	@GraphQLQuery
 	public long countClient(
-		@GraphQLArgument(name = "search") String search
-	) {
+			@GraphQLArgument(name = "search") String search) {
 		return this.count(search);
 	}
 }
