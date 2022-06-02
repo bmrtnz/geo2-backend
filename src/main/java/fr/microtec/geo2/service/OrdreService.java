@@ -20,6 +20,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -395,7 +396,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     if (ordre.getFlagAnnule() == null)
       ordre.setFlagAnnule(false);
     if (ordre.getTransporteurDEVCode() == null)
-      ordre.setTransporteurDEVCode("EUR");
+      ordre.setTransporteurDEVCode(GeoDevise.getDefault());
     if (ordre.getTransporteurDEVTaux() == null)
       ordre.setTransporteurDEVTaux(1f);
     if (ordre.getExclusionFraisPU() == null)
