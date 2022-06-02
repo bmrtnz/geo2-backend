@@ -444,8 +444,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 	@Column(name = "eta_location")
 	private String etaLocation;
 
-	@Column(name = "trp_dev_code")
-	private String transporteurDEVCode;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "trp_dev_code")
+	private GeoDevise transporteurDEVCode;
 
 	@Column(name = "trp_dev_pu")
 	private Double transporteurDEVPrixUnitaire;
