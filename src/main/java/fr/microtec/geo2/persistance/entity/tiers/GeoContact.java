@@ -69,4 +69,12 @@ public class GeoContact extends ValidateModifiedPrewrittedEntity {
 	@Column(name = "clicen_ref")
 	private String refClientEntrepot;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cli_ref")
+	private GeoClient client;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cen_ref")
+	private GeoEntrepot entrepot;
+
 }
