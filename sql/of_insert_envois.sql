@@ -120,7 +120,7 @@ BEGIN
 	If is_con_tyt ='P' and is_flu_code ='ORDRE' Then
 		update geo_envois
 		set flu_code = 'ACHMAR'
-		where env_code = env_code;
+		where env_code = ls_env_code;
 	End If;
 
 	--Deb LLEF mise en place des fiches palettes lors de lieux de groupage existants
