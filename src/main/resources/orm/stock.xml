@@ -14,6 +14,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       SELECT
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long,
+        geo2_art_desc.art_bio,
         geo_stock.age,
         avi_art_gestion.valide,
         avi_art_cdc.esp_code,
@@ -116,6 +117,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       GROUP BY
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long,
+        geo2_art_desc.art_bio,
         geo_stock.age,
         avi_art_gestion.valide,
         avi_art_cdc.esp_code,

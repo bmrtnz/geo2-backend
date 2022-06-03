@@ -21,6 +21,9 @@ public class GeoStockArticle extends ValidateEntity {
     @Column(name = "art_desc_long")
     private String articleDescription;
 
+    @Column(name = "art_bio")
+    private Boolean bio;
+
     @Column(name = "age")
     private String age;
 
