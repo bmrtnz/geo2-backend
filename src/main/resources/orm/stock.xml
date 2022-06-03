@@ -13,6 +13,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <![CDATA[
       SELECT
         geo_stock.art_ref,
+        geo2_art_desc.art_desc_long,
         geo_stock.age,
         avi_art_gestion.valide,
         avi_art_cdc.esp_code,
@@ -41,7 +42,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         DECODE (geo_stock.age || geo_stock.sto_statut,
         '1O',
         SUM (geo_stock.qte_ini),
-        0) 
+        0)
 
                     "qte_opt_1",
         DECODE (geo_stock.age,
@@ -55,7 +56,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         DECODE (geo_stock.age || geo_stock.sto_statut,
         '2O',
         SUM (geo_stock.qte_ini),
-        0) 
+        0)
 
                     "qte_opt_2",
         DECODE (geo_stock.age,
@@ -69,7 +70,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         DECODE (geo_stock.age || geo_stock.sto_statut,
         '3O',
         SUM (geo_stock.qte_ini),
-        0) 
+        0)
 
                     "qte_opt_3",
         DECODE (geo_stock.age,
@@ -83,7 +84,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         DECODE (geo_stock.age || geo_stock.sto_statut,
         '4O',
         SUM (geo_stock.qte_ini),
-        0) 
+        0)
 
                     "qte_opt_4"
       FROM
@@ -94,7 +95,8 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         avi_art_mat_prem,
         avi_art_cdc,
         avi_art_emballage,
-        avi_art_normalisation
+        avi_art_normalisation,
+        geo2_art_desc
       WHERE
         avi_art_gestion.art_ref = geo_stock.art_ref
         AND geo_fourni.fou_code (+) = geo_stock.fou_code
@@ -103,6 +105,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_cdc.ref_cdc (+) = avi_art_gestion.ref_cdc
         AND avi_art_emballage.ref_emballage (+) = avi_art_gestion.ref_emballage
         AND avi_art_normalisation.ref_normalisation (+) = avi_art_gestion.ref_normalisation
+        AND geo_article.art_ref (+) = geo2_art_desc.art_ref
         AND geo_stock.STO_REF_FROM IS NULL
         AND avi_art_cdc.esp_code LIKE :arg_espece
         AND avi_art_mat_prem.var_code LIKE :arg_variete
@@ -112,6 +115,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND geo_fourni.bac_code LIKE :arg_bureau_achat
       GROUP BY
         geo_stock.art_ref,
+        geo2_art_desc.art_desc_long,
         geo_stock.age,
         avi_art_gestion.valide,
         avi_art_cdc.esp_code,
