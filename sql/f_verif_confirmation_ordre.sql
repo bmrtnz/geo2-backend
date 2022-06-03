@@ -118,9 +118,9 @@ BEGIN
 
     SELECT O.ORD_REF,O.DEPDATP,O.LIVDATP, sum(CDE_NB_PAL),sum(EXP_NB_PAL)
     INTO ls_ord_ref, ldt_depdatp, ldt_livdatp, ll_cde_nb_pal, ll_exp_nb_pal
-    FROM GEO_ORDRE O, GEO_ORDLIG L
-    where O.ORD_REF = L.ORD_REF and
-    O.ORD_REF = is_ord_ref
+    FROM GEO_ORDRE O
+    LEFT OUTER JOIN GEO_ORDLIG L on O.ORD_REF = L.ORD_REF
+    WHERE O.ORD_REF = is_ord_ref
     group by O.ORD_REF,O.DEPDATP,O.LIVDATP;
 
     select count(*) into li_nb_station_pas_propr
