@@ -16,82 +16,88 @@ import lombok.EqualsAndHashCode;
 public class GeoStockArticle extends ValidateEntity {
     @Id
     @Column(name = "art_ref")
-    String id;
+    private String id;
+
+    @Column(name = "art_desc_long")
+    private String articleDescription;
+
+    @Column(name = "art_bio")
+    private Boolean bio;
 
     @Column(name = "age")
-    String age;
+    private String age;
 
     @Column(name = "esp_code")
-    String especeID;
+    private String especeID;
 
     @Column(name = "var_code")
-    String varieteID;
+    private String varieteID;
 
     @Column(name = "caf_code")
-    String calibreFournisseurID;
+    private String calibreFournisseurID;
 
     @Column(name = "cam_code")
-    String calibreMarquageID;
+    private String calibreMarquageID;
 
     @Column(name = "cat_code")
-    String categorieID;
+    private String categorieID;
 
     @Column(name = "col_code")
-    String colisID;
+    private String colisID;
 
     @Column(name = "ori_code")
-    String origineID;
+    private String origineID;
 
     @Column(name = "sto_ref")
-    String stockID;
+    private String stockID;
 
     @Column(name = "fou_code")
-    String fournisseurCode;
+    private String fournisseurCode;
 
     @Column(name = "prop_code")
-    String proprietaireCode;
+    private String proprietaireCode;
 
     @Column(name = "sto_desc")
-    String description;
+    private String description;
 
     @Column(name = "date_fab")
-    LocalDateTime dateFabrication;
+    private LocalDateTime dateFabrication;
 
     @Column(name = "sto_statut")
-    String statut;
+    private String statut;
 
     @Column(name = "date_statut")
-    LocalDateTime dateStatut;
+    private LocalDateTime dateStatut;
 
     @Column(name = "pal_code")
-    String typePaletteID;
+    private String typePaletteID;
 
     @Column(name = "qte_ini_1")
-    Float quantiteInitiale1;
+    private Float quantiteInitiale1;
     @Column(name = "qte_res_1")
-    Float quantiteRestante1;
+    private Float quantiteRestante1;
     @Column(name = "qte_opt_1")
-    Float quantiteOptionnelle1;
+    private Float quantiteOptionnelle1;
 
     @Column(name = "qte_ini_2")
-    Float quantiteInitiale2;
+    private Float quantiteInitiale2;
     @Column(name = "qte_res_2")
-    Float quantiteRestante2;
+    private Float quantiteRestante2;
     @Column(name = "qte_opt_2")
-    Float quantiteOptionnelle2;
+    private Float quantiteOptionnelle2;
 
     @Column(name = "qte_ini_3")
-    Float quantiteInitiale3;
+    private Float quantiteInitiale3;
     @Column(name = "qte_res_3")
-    Float quantiteRestante3;
+    private Float quantiteRestante3;
     @Column(name = "qte_opt_3")
-    Float quantiteOptionnelle3;
+    private Float quantiteOptionnelle3;
 
     @Column(name = "qte_ini_4")
-    Float quantiteInitiale4;
+    private Float quantiteInitiale4;
     @Column(name = "qte_res_4")
-    Float quantiteRestante4;
+    private Float quantiteRestante4;
     @Column(name = "qte_opt_4")
-    Float quantiteOptionnelle4;
+    private Float quantiteOptionnelle4;
 
 }
