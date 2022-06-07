@@ -62,7 +62,7 @@ public class OrdreFunctionTest {
         FunctionResult result = this.functionOrdreRepository.fRecupFrais("ENVY", "%", "%", "F", 0, "F");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(44, result.getRes(), result.getMsg());
+        Assertions.assertEquals(0, result.getRes(), result.getMsg());
         Assertions.assertTrue(StringUtils.isEmpty(result.getMsg()));
         Assertions.assertTrue(result.getData().isEmpty());
     }
