@@ -8,9 +8,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import fr.microtec.geo2.service.OrdreLigneService;
 import fr.microtec.geo2.service.OrdreService;
+import fr.microtec.geo2.service.security.SecurityService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
@@ -22,12 +25,18 @@ public class GeoFunctionsOrdreGraphQLService {
 
     private final GeoFunctionOrdreRepository repository;
     private final OrdreService ordreService;
+    private final OrdreLigneService ordreLigneService;
+    private final SecurityService securityService;
 
     public GeoFunctionsOrdreGraphQLService(
             GeoFunctionOrdreRepository repository,
-            OrdreService ordreService) {
+            OrdreLigneService ordreLigneService,
+            OrdreService ordreService,
+            SecurityService securityService) {
         this.repository = repository;
         this.ordreService = ordreService;
+        this.ordreLigneService = ordreLigneService;
+        this.securityService = securityService;
     }
 
     @GraphQLQuery
@@ -62,6 +71,31 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "articleRef") String articleRef,
             @GraphQLArgument(name = "societeCode") String societeCode) {
         return this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult ofInitArticleHistory(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "articleRef") String articleRef,
+            @GraphQLArgument(name = "societeCode") String societeCode,
+            @GraphQLArgument(name = "fromLigneRef") String historyLigneRef) {
+        FunctionResult res = this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+
+        String newligneRef = res.getData().get("new_orl_ref").toString();
+
+        // Update generated row with history values
+        if (res.getRes() == 1) {
+            this.ordreLigneService.updateFromHistory(newligneRef, historyLigneRef);
+
+            // Manually calling on_change_fou_code procedure to generate logistique
+            GeoUtilisateur currentUser = this.securityService.getUser();
+            this.repository.fVerifLogistiqueOrdre(ordreRef);
+            this.repository.onChangeProprCode(newligneRef, currentUser.getNomUtilisateur(), societeCode);
+            this.repository.onChangeFouCode(newligneRef, currentUser.getNomUtilisateur(), societeCode);
+        }
+
+        return res;
+
     }
 
     @GraphQLQuery

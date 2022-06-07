@@ -8,155 +8,155 @@ import java.time.LocalDate;
 @Repository
 public interface GeoFunctionOrdreRepository {
 
-        /**
-         * Vérifie si la création de l'ordre pour l'entrepot est autorisé
-         */
-        FunctionResult ofValideEntrepotForOrdre(String code_entrepot);
+    /**
+     * Vérifie si la création de l'ordre pour l'entrepot est autorisé
+     */
+    FunctionResult ofValideEntrepotForOrdre(String code_entrepot);
 
-        /**
-         * Retourne les ordres BAF.
-         */
-        FunctionResult fAfficheOrdreBaf(String socCode, String scoCode, String cliRef, String cenRef, LocalDate dateMin,
-                        LocalDate dateMax, String codeAss, String codeCom);
+    /**
+     * Retourne les ordres BAF.
+     */
+    FunctionResult fAfficheOrdreBaf(String socCode, String scoCode, String cliRef, String cenRef, LocalDate dateMin,
+            LocalDate dateMax, String codeAss, String codeCom);
 
-        /**
-         * Control les ordres BAF.
-         */
-        FunctionResult fControlOrdreBaf(String refOrdre, String socCode);
+    /**
+     * Control les ordres BAF.
+     */
+    FunctionResult fControlOrdreBaf(String refOrdre, String socCode);
 
-        /**
-         * Génère une nouvelle ref ordre.
-         */
-        FunctionResult fNouvelOrdre(String socCode);
+    /**
+     * Génère une nouvelle ref ordre.
+     */
+    FunctionResult fNouvelOrdre(String socCode);
 
-        /**
-         * Génère une nouvelle ligne d'ordre avec l'article sélectionné.
-         */
-        FunctionResult ofInitArticle(String ordRef, String artRef, String socCode);
+    /**
+     * Génère une nouvelle ligne d'ordre avec l'article sélectionné.
+     */
+    FunctionResult ofInitArticle(String ordRef, String artRef, String socCode);
 
-        /**
-         * Indicateur du blocage de l'ordre dont le départ est aujourd'hui
-         */
-        FunctionResult fInitBlocageOrdre(String ordRef, String user);
+    /**
+     * Indicateur du blocage de l'ordre dont le départ est aujourd'hui
+     */
+    FunctionResult fInitBlocageOrdre(String ordRef, String user);
 
-        /**
-         * Verification de la bonne conformité de la logistique
-         * avant envoi de documents et validation bon à facturer
-         */
-        FunctionResult fVerifLogistiqueOrdre(String ordRef);
+    /**
+     * Verification de la bonne conformité de la logistique
+     * avant envoi de documents et validation bon à facturer
+     */
+    FunctionResult fVerifLogistiqueOrdre(String ordRef);
 
-        /**
-         * Ajoute un lieu de passage dans la logistique
-         */
-        FunctionResult fAjoutOrdlog(String orxRef, String typePassage, String choixPassage);
+    /**
+     * Ajoute un lieu de passage dans la logistique
+     */
+    FunctionResult fAjoutOrdlog(String orxRef, String typePassage, String choixPassage);
 
-        /**
-         * Point d'entrée pour la gestion des flux de documents
-         */
-        FunctionResult geoPrepareEnvois(
-                        String ordRef,
-                        String fluCode,
-                        Character modeAuto,
-                        Character annOrdre,
-                        String user);
+    /**
+     * Point d'entrée pour la gestion des flux de documents
+     */
+    FunctionResult geoPrepareEnvois(
+            String ordRef,
+            String fluCode,
+            Character modeAuto,
+            Character annOrdre,
+            String user);
 
-        /**
-         * Gestion spécifique des annule-et-remplace
-         * Pour Geo2, créé des lignes envois avec `traite = R`
-         */
-        FunctionResult ofAREnvois(String ordRef);
+    /**
+     * Gestion spécifique des annule-et-remplace
+     * Pour Geo2, créé des lignes envois avec `traite = R`
+     */
+    FunctionResult ofAREnvois(String ordRef);
 
-        // Sub procedures, declare only for testing
-        FunctionResult fCalculMarge(String refOrdre);
+    // Sub procedures, declare only for testing
+    FunctionResult fCalculMarge(String refOrdre);
 
-        FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture,
-                        String origine);
+    FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode, Integer modeCulture,
+            String origine);
 
-        FunctionResult fCalculPerequation(String refOrdre, String codeSociete);
+    FunctionResult fCalculPerequation(String refOrdre, String codeSociete);
 
-        FunctionResult fVerifOrdreWarning(String refOrdre, String socCode);
+    FunctionResult fVerifOrdreWarning(String refOrdre, String socCode);
 
-        FunctionResult fGenereDluo(String input, LocalDate dateExp, LocalDate dateLiv);
+    FunctionResult fGenereDluo(String input, LocalDate dateExp, LocalDate dateLiv);
 
-        FunctionResult ofInitArtrefGrp(String orlRef);
+    FunctionResult ofInitArtrefGrp(String orlRef);
 
-        FunctionResult ofRepartitionPalette(String ordreLigneRef, String secteurCode, String nomUtilisateur);
+    FunctionResult ofRepartitionPalette(String ordreLigneRef, String secteurCode, String nomUtilisateur);
 
-        FunctionResult ofVerifLogistiqueDepart(String ordRef);
+    FunctionResult ofVerifLogistiqueDepart(String ordRef);
 
-        FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA);
+    FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA);
 
-        FunctionResult ofSauveOrdre(String ordRef);
+    FunctionResult ofSauveOrdre(String ordRef);
 
-        // FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float
-        // argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
+    // FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float
+    // argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
 
-        // Evenements de cellules sur les lignes d'ordres
-        FunctionResult onChangeCdeNbPal(String orlRef, String scoCode);
+    // Evenements de cellules sur les lignes d'ordres
+    FunctionResult onChangeCdeNbPal(String orlRef, String scoCode);
 
-        FunctionResult onChangeDemipalInd(String orlRef, String username);
+    FunctionResult onChangeDemipalInd(String orlRef, String username);
 
-        FunctionResult onChangePalNbCol(String orlRef, String username);
+    FunctionResult onChangePalNbCol(String orlRef, String username);
 
-        FunctionResult onChangeCdeNbCol(String orlRef, String username);
+    FunctionResult onChangeCdeNbCol(String orlRef, String username);
 
-        FunctionResult onChangeProprCode(String orlRef, String username, String socCode);
+    FunctionResult onChangeProprCode(String orlRef, String username, String socCode);
 
-        FunctionResult onChangeFouCode(String orlRef, String username, String socCode);
+    FunctionResult onChangeFouCode(String orlRef, String username, String socCode);
 
-        FunctionResult onChangeVtePu(String orlRef);
+    FunctionResult onChangeVtePu(String orlRef);
 
-        FunctionResult onChangePalCode(String orlRef, String username, String scoCode);
+    FunctionResult onChangePalCode(String orlRef, String username, String scoCode);
 
-        FunctionResult onChangePalinterCode(String orlRef);
+    FunctionResult onChangePalinterCode(String orlRef);
 
-        FunctionResult onChangeIndGratuit(String orlRef);
+    FunctionResult onChangeIndGratuit(String orlRef);
 
-        FunctionResult onChangeAchDevPu(String orlRef, String socCode);
+    FunctionResult onChangeAchDevPu(String orlRef, String socCode);
 
-        FunctionResult onChangePalNbPalinter(String orlRef, String username);
+    FunctionResult onChangePalNbPalinter(String orlRef, String username);
 
-        FunctionResult fDetailsExpOnClickAuto(String orlRef);
+    FunctionResult fDetailsExpOnClickAuto(String orlRef);
 
-        FunctionResult fChgtQteArtRet(String ordRef);
+    FunctionResult fChgtQteArtRet(String ordRef);
 
-        FunctionResult fDetailsExpClickModifier(String ordRef, String orlRef, String histoOrxRef);
+    FunctionResult fDetailsExpClickModifier(String ordRef, String orlRef, String histoOrxRef);
 
-        FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
+    FunctionResult fConfirmationCommande(String ordRef, String socCode, String username);
 
-        FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
+    FunctionResult fDocumentEnvoiDetailsExp(String ordRef, String socCode);
 
-        FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef);
+    FunctionResult fDocumentEnvoiConfirmationPrixAchat(String ordRef);
 
-        FunctionResult fDocumentEnvoiFichesPalette(String ordRef);
+    FunctionResult fDocumentEnvoiFichesPalette(String ordRef);
 
-        FunctionResult fDocumentEnvoiGenereTraca(String ordRef);
+    FunctionResult fDocumentEnvoiGenereTraca(String ordRef);
 
-        FunctionResult fDocumentEnvoiAfficheCMR(String ordRef);
+    FunctionResult fDocumentEnvoiAfficheCMR(String ordRef);
 
-        FunctionResult fDocumentEnvoiBonLivraison(String ordRef);
+    FunctionResult fDocumentEnvoiBonLivraison(String ordRef);
 
-        FunctionResult fDocumentEnvoiProforma(String ordRef);
+    FunctionResult fDocumentEnvoiProforma(String ordRef);
 
-        FunctionResult fDocumentEnvoiCominv(String ordRef);
+    FunctionResult fDocumentEnvoiCominv(String ordRef);
 
-        FunctionResult fDocumentEnvoiShipmentBuyco(String ordRef);
+    FunctionResult fDocumentEnvoiShipmentBuyco(String ordRef);
 
-        FunctionResult fDocumentEnvoiDeclarationBollore(String ordRef);
+    FunctionResult fDocumentEnvoiDeclarationBollore(String ordRef);
 
-        FunctionResult fClotureLogGrp(String ordRef, String fouCode, Character expedie);
+    FunctionResult fClotureLogGrp(String ordRef, String fouCode, Character expedie);
 
-        FunctionResult fSetDetailKitArticle(String ordRef, String fouCode);
+    FunctionResult fSetDetailKitArticle(String ordRef, String fouCode);
 
-        FunctionResult fActualiseNbPalettesSol(String ordRef, String fouCode);
+    FunctionResult fActualiseNbPalettesSol(String ordRef, String fouCode);
 
-        FunctionResult fGetQttPerBta(String artRef, String btaCode, Double nbPal, Double nbCol, Double pdsNet);
+    FunctionResult fGetQttPerBta(String artRef, String btaCode, Double nbPal, Double nbCol, Double pdsNet);
 
-        FunctionResult fSubmitEnvoiDetailSeccom(String ordRef, String fouCode, String logName);
+    FunctionResult fSubmitEnvoiDetailSeccom(String ordRef, String fouCode, String logName);
 
-        FunctionResult fDetailEnteteSauve(String ordRef, String mode, Character checkPalette);
+    FunctionResult fDetailEnteteSauve(String ordRef, String mode, Character checkPalette);
 
-        FunctionResult fTracabiliteCloturer(String ordRef, Character cloturer);
+    FunctionResult fTracabiliteCloturer(String ordRef, Character cloturer);
 
-        FunctionResult fDetailsExpOnCheckCloturer(String orxRef, String devalexpRef, String username, String socCode);
+    FunctionResult fDetailsExpOnCheckCloturer(String orxRef, String devalexpRef, String username, String socCode);
 }
