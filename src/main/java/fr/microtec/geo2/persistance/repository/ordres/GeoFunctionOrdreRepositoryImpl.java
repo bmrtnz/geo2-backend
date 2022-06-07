@@ -133,6 +133,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_art_ref", String.class, artRef);
         query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachOutput("new_orl_ref", String.class);
 
         return query.fetch();
     }
