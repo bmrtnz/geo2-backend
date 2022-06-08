@@ -75,28 +75,28 @@ public class GeoStockArticle extends ValidateEntity {
     @Column(name = "qte_ini_1")
     private Float quantiteInitiale1;
     @Column(name = "qte_res_1")
-    private Float quantiteRestante1;
+    private Float quantiteReservee1;
     @Column(name = "qte_opt_1")
     private Float quantiteOptionnelle1;
 
     @Column(name = "qte_ini_2")
     private Float quantiteInitiale2;
     @Column(name = "qte_res_2")
-    private Float quantiteRestante2;
+    private Float quantiteReservee2;
     @Column(name = "qte_opt_2")
     private Float quantiteOptionnelle2;
 
     @Column(name = "qte_ini_3")
     private Float quantiteInitiale3;
     @Column(name = "qte_res_3")
-    private Float quantiteRestante3;
+    private Float quantiteReservee3;
     @Column(name = "qte_opt_3")
     private Float quantiteOptionnelle3;
 
     @Column(name = "qte_ini_4")
     private Float quantiteInitiale4;
     @Column(name = "qte_res_4")
-    private Float quantiteRestante4;
+    private Float quantiteReservee4;
     @Column(name = "qte_opt_4")
     private Float quantiteOptionnelle4;
 
