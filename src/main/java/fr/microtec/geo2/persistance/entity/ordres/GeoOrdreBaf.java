@@ -13,29 +13,48 @@ public class GeoOrdreBaf {
 
     // Partie F_AFFICHE_ORDRE_BAF
     @Id
-    @Column(name = "ORD_REF") private String ordreRef;
-    @Column(name = "NORDRE") private String numeroOrdre;
-    @Column(name = "CLIENT") private String client;
-    @Column(name = "REF_CLI") private String clientReference;
-    @Column(name = "ENTREP") private String entrepot;
-    @Column(name = "TRANSP") private String transporteur;
-    @Column(name = "LIVDATPFR") private String dateFr;
-    @Column(name = "LIVDATPEN") private String dateEN;
+    @Column(name = "ORD_REF")
+    private String ordreRef;
+    @Column(name = "NORDRE")
+    private String numeroOrdre;
+    @Column(name = "CAM_CODE")
+    private String campagneID;
+    @Column(name = "CLIENT")
+    private String client;
+    @Column(name = "REF_CLI")
+    private String clientReference;
+    @Column(name = "ENTREP")
+    private String entrepot;
+    @Column(name = "TRANSP")
+    private String transporteur;
+    @Column(name = "LIVDATPFR")
+    private String dateFr;
+    @Column(name = "LIVDATPEN")
+    private String dateEN;
 
     @ManyToOne
     @JoinColumn(name = "ord_ref", insertable = false, updatable = false)
     private GeoOrdre ordre;
 
     // Partie F_CONTROL_ORDRE_BAF
-    @Transient private String indicateurBaf;
-    @Transient private String indicateurPrix;
-    @Transient private String indicateurAutre;
-    @Transient private String indicateurQte;
-    @Transient private String indicateurTransporteur;
-    @Transient private String indicateurDate;
-    @Transient private String indicateurStation;
-    @Transient private String description;
-    @Transient private BigDecimal pourcentageMargeBrut;
+    @Transient
+    private String indicateurBaf;
+    @Transient
+    private String indicateurPrix;
+    @Transient
+    private String indicateurAutre;
+    @Transient
+    private String indicateurQte;
+    @Transient
+    private String indicateurTransporteur;
+    @Transient
+    private String indicateurDate;
+    @Transient
+    private String indicateurStation;
+    @Transient
+    private String description;
+    @Transient
+    private BigDecimal pourcentageMargeBrut;
 
     public void setControlData(Map<String, Object> data) {
         this.setIndicateurBaf((String) data.get("ind_baf"));

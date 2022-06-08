@@ -12,56 +12,56 @@ import lombok.Data;
 @MappedSuperclass
 public abstract class GeoSupervisionPalox {
 
-  @Id
-  @Column(name = "rownum")
-  Integer id;
+    @Id
+    @Column(name = "rownum")
+    Integer id;
 
-  @Column(name = "cli_code")
-  String codeClient;
+    @Column(name = "cli_code")
+    String codeClient;
 
-  @Column(name = "cen_code")
-  String codeEntrepot;
+    @Column(name = "cen_code")
+    String codeEntrepot;
 
-  @Column(name = "e_raisoc")
-  String raisonSocialeEntrepot;
+    @Column(name = "e_raisoc")
+    String raisonSocialeEntrepot;
 
-  @Column(name = "zip")
-  String codePostalEntrepot;
+    @Column(name = "zip")
+    String codePostalEntrepot;
 
-  @Column(name = "ville")
-  String villeEntrepot;
+    @Column(name = "ville")
+    String villeEntrepot;
 
-  @Column(name = "pay_code")
-  String codePaysEntrepot;
+    @Column(name = "pay_code")
+    String codePaysEntrepot;
 
-  @Column(name = "entree")
-  Integer entree;
+    @Column(name = "entree")
+    Integer entree;
 
-  @Column(name = "sortie")
-  Integer sortie;
+    @Column(name = "sortie")
+    Integer sortie;
 
-  @Column(name = "col_code")
-  String codeEmballage;
+    @Column(name = "col_code")
+    String codeEmballage;
 
-  @Column(name = "fou_code")
-  String codeFournisseur;
+    @Column(name = "fou_code")
+    String codeFournisseur;
 
-  @Column(name = "raisoc")
-  String raisonSocialeFournisseur;
+    @Column(name = "raisoc")
+    String raisonSocialeFournisseur;
 
-  @Column(name = "date_inv")
-  LocalDateTime dateInventaire;
+    @Column(name = "date_inv")
+    LocalDateTime dateInventaire;
 
-  @Column(name = "qte_inv")
-  Integer quantiteInventaire;
+    @Column(name = "qte_inv")
+    Integer quantiteInventaire;
 
-  @Column(name = "esp_code")
-  String codeEspece;
+    @Column(name = "esp_code")
+    String codeEspece;
 
-  @Column(name = "cen_ref")
-  String referenceEntrepot;
+    @Column(name = "cen_ref")
+    String referenceEntrepot;
 
-  @Column(name = "sum_qtt")
-  Integer sommeQuantiteInventaire;
+    @Column(name = "sum_qtt")
+    Integer sommeQuantiteInventaire;
 
 }
