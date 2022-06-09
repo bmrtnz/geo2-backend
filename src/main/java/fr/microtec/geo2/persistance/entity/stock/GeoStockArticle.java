@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import fr.microtec.geo2.persistance.entity.ValidateEntity;
 import lombok.Data;
@@ -15,11 +18,18 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class GeoStockArticle extends ValidateEntity {
     @Id
+    @Column(name = "rownum")
+    private Integer id;
+
     @Column(name = "art_ref")
-    private String id;
+    private String articleID;
 
     @Column(name = "art_desc_long")
     private String articleDescription;
+
+    @ManyToOne
+    @JoinColumn(name = "sto_ref", insertable = false, updatable = false)
+    private GeoStock stock;
 
     @Column(name = "art_bio")
     private Boolean bio;
@@ -64,7 +74,7 @@ public class GeoStockArticle extends ValidateEntity {
     private LocalDateTime dateFabrication;
 
     @Column(name = "sto_statut")
-    private String statut;
+    private Character statut;
 
     @Column(name = "date_statut")
     private LocalDateTime dateStatut;
@@ -73,31 +83,51 @@ public class GeoStockArticle extends ValidateEntity {
     private String typePaletteID;
 
     @Column(name = "qte_ini_1")
-    private Float quantiteInitiale1;
+    private Integer quantiteInitiale1;
     @Column(name = "qte_res_1")
-    private Float quantiteReservee1;
+    private Integer quantiteReservee1;
     @Column(name = "qte_opt_1")
-    private Float quantiteOptionnelle1;
+    private Integer quantiteOptionnelle1;
 
     @Column(name = "qte_ini_2")
-    private Float quantiteInitiale2;
+    private Integer quantiteInitiale2;
     @Column(name = "qte_res_2")
-    private Float quantiteReservee2;
+    private Integer quantiteReservee2;
     @Column(name = "qte_opt_2")
-    private Float quantiteOptionnelle2;
+    private Integer quantiteOptionnelle2;
 
     @Column(name = "qte_ini_3")
-    private Float quantiteInitiale3;
+    private Integer quantiteInitiale3;
     @Column(name = "qte_res_3")
-    private Float quantiteReservee3;
+    private Integer quantiteReservee3;
     @Column(name = "qte_opt_3")
-    private Float quantiteOptionnelle3;
+    private Integer quantiteOptionnelle3;
 
     @Column(name = "qte_ini_4")
-    private Float quantiteInitiale4;
+    private Integer quantiteInitiale4;
     @Column(name = "qte_res_4")
-    private Float quantiteReservee4;
+    private Integer quantiteReservee4;
     @Column(name = "qte_opt_4")
-    private Float quantiteOptionnelle4;
+    private Integer quantiteOptionnelle4;
+
+    @Transient
+    private Integer quantiteInitiale;
+
+    public Integer getQuantiteInitiale() {
+        return this.getQuantiteInitiale1()
+                + this.getQuantiteInitiale2()
+                + this.getQuantiteInitiale3()
+                + this.getQuantiteInitiale4();
+    }
+
+    @Transient
+    private Integer quantiteReservee;
+
+    public Integer getQuantiteReservee() {
+        return this.getQuantiteReservee1()
+                + this.getQuantiteReservee2()
+                + this.getQuantiteReservee3()
+                + this.getQuantiteReservee4();
+    }
 
 }
