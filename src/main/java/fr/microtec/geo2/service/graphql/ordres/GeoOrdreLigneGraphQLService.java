@@ -1,8 +1,12 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import fr.microtec.geo2.service.security.SecurityService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -25,14 +29,18 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
 
+    private final GeoFunctionOrdreRepository geoFunctionOrdreRepository;
 	private final OrdreLigneService ordreLigneService;
+    private final SecurityService securityService;
 
 	public GeoOrdreLigneGraphQLService(
-			GeoOrdreLigneRepository repository,
-			OrdreLigneService ordreLigneService) {
+        GeoOrdreLigneRepository repository,
+        GeoFunctionOrdreRepository geoFunctionOrdreRepository, OrdreLigneService ordreLigneService, SecurityService securityService) {
 		super(repository, GeoOrdreLigne.class);
-		this.ordreLigneService = ordreLigneService;
-	}
+        this.geoFunctionOrdreRepository = geoFunctionOrdreRepository;
+        this.ordreLigneService = ordreLigneService;
+        this.securityService = securityService;
+    }
 
 	@GraphQLQuery
 	public RelayPage<GeoOrdreLigne> allOrdreLigne(
@@ -89,4 +97,72 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 		return this.delete(id);
 	}
 
+
+    @GraphQLMutation
+    public FunctionResult updateField(final String fieldName, final String id, final Object value, final String socCode) {
+
+        FunctionResult result = null;
+
+        switch (fieldName) {
+            case "nombrePalettesCommandees":
+                result = this.geoFunctionOrdreRepository.onChangeCdeNbPal(id, socCode);
+                break;
+
+            case "nombreColisPalette":
+                result = this.geoFunctionOrdreRepository.onChangePalNbCol(id, this.securityService.getUser().getUsername());
+                break;
+
+            case "nombreColisCommandes":
+                result = this.geoFunctionOrdreRepository.onChangeCdeNbCol(id, this.securityService.getUser().getUsername());
+                break;
+
+            case "proprietaireMarchandise":
+                // TODO
+            break;
+
+            case "fournisseur":
+                // TODO
+                break;
+
+            case "ventePrixUnitaire":
+                result = this.geoFunctionOrdreRepository.onChangeVtePu(id);
+                break;
+
+            case "achatDevisePrixUnitaire":
+                result = this.geoFunctionOrdreRepository.onChangeAchDevPu(id, socCode);
+                break;
+
+            case "gratuit":
+                result = this.geoFunctionOrdreRepository.onChangeIndGratuit(id);
+                break;
+
+            case "typePalette":
+                result = this.geoFunctionOrdreRepository.onChangePalCode(id, this.securityService.getUser().getUsername(), socCode);
+                break;
+
+            case "paletteInter":
+                result = this.geoFunctionOrdreRepository.onChangePalinterCode(id);
+                break;
+
+            case "nombrePalettesIntermediaires":
+                result = this.geoFunctionOrdreRepository.onChangePalNbPalinter(id, this.securityService.getUser().getUsername());
+                break;
+
+        }
+
+
+//        final Optional<GeoOrdreLigne> one = super.getOne(id);
+//
+//        if(one.isPresent()) {
+//            one.get()
+//        }
+//
+//        super.getOne(id)
+//            .ifPresent(geoOrdreLigne -> {
+//            result.setData(Map.of(geoOrdreLigne.getId(), geoOrdreLigne));
+//        });
+//        return super.getOne(id);
+
+        return result;
+    }
 }
