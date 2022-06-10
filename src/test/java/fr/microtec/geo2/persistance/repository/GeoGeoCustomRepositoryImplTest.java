@@ -29,8 +29,8 @@ import lombok.val;
 
 @DataJpaTest
 @ContextConfiguration(classes = Geo2Application.class)
-@EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
-class CustomRepositoryImplTest
+@EnableJpaRepositories(repositoryBaseClass = GeoCustomRepositoryImpl.class)
+class GeoGeoCustomRepositoryImplTest
 {
     @Autowired
     private GeoClientRepository geoClientRepository;

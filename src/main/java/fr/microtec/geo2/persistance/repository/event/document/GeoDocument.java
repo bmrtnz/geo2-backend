@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.etiquette;
+package fr.microtec.geo2.persistance.repository.event.document;
 
 import lombok.Data;
 
