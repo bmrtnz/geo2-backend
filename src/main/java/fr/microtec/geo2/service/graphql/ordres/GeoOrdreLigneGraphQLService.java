@@ -1,32 +1,31 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
+import fr.microtec.geo2.service.OrdreLigneService;
+import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.security.SecurityService;
+import io.leangen.graphql.annotations.*;
+import io.leangen.graphql.execution.ResolutionEnvironment;
+import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
-import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
-import fr.microtec.geo2.service.OrdreLigneService;
-import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import io.leangen.graphql.annotations.GraphQLArgument;
-import io.leangen.graphql.annotations.GraphQLEnvironment;
-import io.leangen.graphql.annotations.GraphQLMutation;
-import io.leangen.graphql.annotations.GraphQLNonNull;
-import io.leangen.graphql.annotations.GraphQLQuery;
-import io.leangen.graphql.execution.ResolutionEnvironment;
-import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
+@Slf4j
 public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
 
     private final GeoFunctionOrdreRepository geoFunctionOrdreRepository;
@@ -101,68 +100,73 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     @GraphQLMutation
     public FunctionResult updateField(final String fieldName, final String id, final Object value, final String socCode) {
 
-        FunctionResult result = null;
+        AtomicReference<FunctionResult> result = new AtomicReference<>(new FunctionResult());
 
-        switch (fieldName) {
-            case "nombrePalettesCommandees":
-                result = this.geoFunctionOrdreRepository.onChangeCdeNbPal(id, socCode);
-                break;
+        this.getOne(id)
+            .ifPresent(geoOrdreLigne -> {
+                try {
+                    final Field field = GeoOrdreLigne.class.getField(fieldName);
+                    field.set(geoOrdreLigne, value);
+                    this.repository.save(geoOrdreLigne);
 
-            case "nombreColisPalette":
-                result = this.geoFunctionOrdreRepository.onChangePalNbCol(id, this.securityService.getUser().getUsername());
-                break;
+                    switch (fieldName) {
+                        case "nombrePalettesCommandees":
+                            result.set(this.geoFunctionOrdreRepository.onChangeCdeNbPal(id, socCode));
+                            break;
 
-            case "nombreColisCommandes":
-                result = this.geoFunctionOrdreRepository.onChangeCdeNbCol(id, this.securityService.getUser().getUsername());
-                break;
+                        case "nombreColisPalette":
+                            result.set(this.geoFunctionOrdreRepository.onChangePalNbCol(id, this.securityService.getUser().getUsername()));
+                            break;
 
-            case "proprietaireMarchandise":
-                // TODO
-            break;
+                        case "nombreColisCommandes":
+                            result.set(this.geoFunctionOrdreRepository.onChangeCdeNbCol(id, this.securityService.getUser().getUsername()));
+                            break;
 
-            case "fournisseur":
-                // TODO
-                break;
+                        case "proprietaireMarchandise":
+                            result.set(this.geoFunctionOrdreRepository.onChangeProprCode(id, this.securityService.getUser().getUsername(), socCode));
+                            break;
 
-            case "ventePrixUnitaire":
-                result = this.geoFunctionOrdreRepository.onChangeVtePu(id);
-                break;
+                        case "fournisseur":
+                            result.set(this.geoFunctionOrdreRepository.onChangeFouCode(id, this.securityService.getUser().getUsername(), socCode));
+                            break;
 
-            case "achatDevisePrixUnitaire":
-                result = this.geoFunctionOrdreRepository.onChangeAchDevPu(id, socCode);
-                break;
+                        case "ventePrixUnitaire":
+                            result.set(this.geoFunctionOrdreRepository.onChangeVtePu(id));
+                            break;
 
-            case "gratuit":
-                result = this.geoFunctionOrdreRepository.onChangeIndGratuit(id);
-                break;
+                        case "gratuit":
+                            result.set(this.geoFunctionOrdreRepository.onChangeIndGratuit(id));
+                            break;
 
-            case "typePalette":
-                result = this.geoFunctionOrdreRepository.onChangePalCode(id, this.securityService.getUser().getUsername(), socCode);
-                break;
+                        case "achatDevisePrixUnitaire":
+                            result.set(this.geoFunctionOrdreRepository.onChangeAchDevPu(id, socCode));
+                            break;
 
-            case "paletteInter":
-                result = this.geoFunctionOrdreRepository.onChangePalinterCode(id);
-                break;
+                        case "typePalette":
+                            result.set(this.geoFunctionOrdreRepository.onChangePalCode(id, this.securityService.getUser().getUsername(), socCode));
+                            break;
 
-            case "nombrePalettesIntermediaires":
-                result = this.geoFunctionOrdreRepository.onChangePalNbPalinter(id, this.securityService.getUser().getUsername());
-                break;
+                        case "paletteInter":
+                            result.set(this.geoFunctionOrdreRepository.onChangePalinterCode(id));
+                            break;
 
-        }
+                        case "nombrePalettesIntermediaires":
+                            result.set(this.geoFunctionOrdreRepository.onChangePalNbPalinter(id, this.securityService.getUser().getUsername()));
+                            break;
+                    }
 
+                    final GeoOrdreLigne ordreLigne = this.repository.getOne(id);
 
-//        final Optional<GeoOrdreLigne> one = super.getOne(id);
-//
-//        if(one.isPresent()) {
-//            one.get()
-//        }
-//
-//        super.getOne(id)
-//            .ifPresent(geoOrdreLigne -> {
-//            result.setData(Map.of(geoOrdreLigne.getId(), geoOrdreLigne));
-//        });
-//        return super.getOne(id);
+                    result.get().setData(Map.of(ordreLigne.getId(), ordreLigne));
+                } catch (NoSuchFieldException e) {
+                    log.error("Impossible de récupérer le champ \"{}\" dans l'objet GeoOrdreLigne avec l'id \"{}\".", fieldName, id);
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    log.error("Impossible d'accédez au setter du champ \"{}\" de l'objet GeoOrdreLigne", fieldName);
+                    throw new RuntimeException(e);
+                }
+            });
 
-        return result;
+        return result.get();
     }
 }
