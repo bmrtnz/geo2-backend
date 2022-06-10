@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.stock;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,31 +63,56 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
     }
 
     @GraphQLQuery
-    public Float quantiteCalculee1(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee1(@GraphQLContext GeoStockArticle stockArticle) {
         return stockArticle.getQuantiteInitiale1()
                 - stockArticle.getQuantiteReservee1()
                 - stockArticle.getQuantiteOptionnelle1();
     }
 
     @GraphQLQuery
-    public Float quantiteCalculee2(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee2(@GraphQLContext GeoStockArticle stockArticle) {
         return stockArticle.getQuantiteInitiale2()
                 - stockArticle.getQuantiteReservee2()
                 - stockArticle.getQuantiteOptionnelle2();
     }
 
     @GraphQLQuery
-    public Float quantiteCalculee3(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee3(@GraphQLContext GeoStockArticle stockArticle) {
         return stockArticle.getQuantiteInitiale3()
                 - stockArticle.getQuantiteReservee3()
                 - stockArticle.getQuantiteOptionnelle3();
     }
 
     @GraphQLQuery
-    public Float quantiteCalculee4(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee4(@GraphQLContext GeoStockArticle stockArticle) {
         return stockArticle.getQuantiteInitiale4()
                 - stockArticle.getQuantiteReservee4()
                 - stockArticle.getQuantiteOptionnelle4();
+    }
+
+    @GraphQLQuery
+    public String descriptionAbregee(@GraphQLContext GeoStockArticle stockArticle) {
+        String value = "";
+
+        if (stockArticle.getStatut() != null && stockArticle.getStatut().equals('O')) {
+            value += "-> option ";
+            value += stockArticle.getStock().getUtilisateurInfo();
+            value += "à";
+            value += stockArticle.getStock().getDateInfo().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        }
+
+        Optional<Integer> quantite = stockArticle.getStock().getMouvements().stream()
+                .map((mouvement) -> mouvement.getQuantite())
+                .reduce((acm, crt) -> acm + crt);
+
+        if (quantite.isPresent())
+            if (quantite.get() >= 0) {
+                value += " initial=" + stockArticle.getQuantiteInitiale();
+                value += " réservé=" + stockArticle.getQuantiteReservee();
+            } else
+                value += " réappro=" + quantite.get();
+
+        return value;
     }
 
 }
