@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository.event.document;
 
+import fr.microtec.geo2.controller.FsCommand;
 import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.persistance.repository.event.Geo2LoadEventListener;
 import fr.microtec.geo2.persistance.repository.event.document.GeoAsDocument;
@@ -42,8 +43,9 @@ public class DocumentPostLoadListener implements Geo2LoadEventListener<GeoAsDocu
             // Uri
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
             UriComponents uriComponents = uriBuilder
-                .path("/file-manager").path("/")
-                .path(isEtiquette ? FsDocumentType.ETIQUETTE.getKey() : FsDocumentType.DOCUMENT.getKey())
+                .path("/file-manager")
+                .path("/")
+                .path(this.getDocumentType(entity).getKey())
                 .path("/")
                 .path(Base64.getEncoder().encodeToString(filename.getBytes())).build();
 
@@ -66,6 +68,16 @@ public class DocumentPostLoadListener implements Geo2LoadEventListener<GeoAsDocu
 
         if (document.getIsPresent())
             entity.setDocument(document);
+    }
+
+    private FsDocumentType getDocumentType(GeoAsDocument entity) {
+        boolean isEtiquette = entity instanceof GeoAsEtiquette;
+
+        if (isEtiquette) return FsDocumentType.ETIQUETTE;
+
+        return entity.getDocumentPathKey().equals(Maddog2FileSystemService.PATH_KEY.GEO_IMG)
+            ? FsDocumentType.IMAGE
+            : FsDocumentType.DOCUMENT;
     }
 
 }
