@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.repository;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.querydsl.EntityPathResolver;
@@ -12,12 +13,22 @@ import javax.persistence.EntityManager;
 
 public class GeoCustomRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends JpaRepositoryFactoryBean<T, S, ID> {
 
-    private final GeoRepositoryEvent repositoryEvent;
-    private final ObjectProvider<EntityPathResolver> resolver;
+    private ObjectProvider<EntityPathResolver> resolver;
+    private GeoRepositoryEvent repositoryEvent;
 
-    public GeoCustomRepositoryFactoryBean(Class<? extends T> repositoryInterface, GeoRepositoryEvent repositoryEvent, ObjectProvider<EntityPathResolver> resolver) {
+    public GeoCustomRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
+    }
+
+    @Autowired
+    public void setRepositoryEvent(GeoRepositoryEvent repositoryEvent) {
         this.repositoryEvent = repositoryEvent;
+    }
+
+    @Autowired
+    @Override
+    public void setEntityPathResolver(ObjectProvider<EntityPathResolver> resolver) {
+        super.setEntityPathResolver(resolver);
         this.resolver = resolver;
     }
 
