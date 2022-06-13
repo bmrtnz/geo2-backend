@@ -19,7 +19,7 @@ import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 
 @DataJpaTest
 @ContextConfiguration(classes = Geo2Application.class)
-@EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
+@EnableJpaRepositories(repositoryBaseClass = GeoCustomRepositoryImpl.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class NativeQueryRepositoryTest {
 

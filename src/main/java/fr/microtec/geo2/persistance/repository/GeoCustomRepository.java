@@ -11,9 +11,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
-public interface CustomRepository<T> {
+public interface GeoCustomRepository<T> {
     List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields);
     List<T> findAllWithPaginations(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields, JoinType joinType);
     Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields);
     Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields, JoinType joinType);
+
+    void setRepositoryEvent(GeoRepositoryEvent repositoryEvent);
 }

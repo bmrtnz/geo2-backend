@@ -1,28 +1,8 @@
 package fr.microtec.geo2.persistance.repository;
 
-import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
-
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.PostLoad;
-import javax.persistence.PrePersist;
-import javax.persistence.Tuple;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-
+import fr.microtec.geo2.common.CustomUtils;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,19 +11,38 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.util.ReflectionUtils;
 
-import fr.microtec.geo2.common.CustomUtils;
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+
+import static org.springframework.data.jpa.repository.query.QueryUtils.toOrders;
 
 @Slf4j
-public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID>
-        implements CustomRepository<T> {
+public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID>
+        implements GeoCustomRepository<T> {
     private final EntityManager entityManager;
 
-    public CustomRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+    private GeoRepositoryEvent geoRepositoryEvent;
+
+    public GeoCustomRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.entityManager = entityManager;
+    }
+
+    @Override
+    public Optional<T> findById(ID id) {
+        Optional<T> entity = super.findById(id);
+
+        entity.ifPresent(this.geoRepositoryEvent::fireLoad);
+
+        return entity;
     }
 
     /**
@@ -58,7 +57,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
      * descendants, alors il sera ignoré.
      * * Tout autres champs non spécifiés dans la liste fields aura pour valeur
      * null, ou sa valeur par défaut pour valeur dans l’objet T ou ses descendances.
-     * 
+     *
      * @param specs    Une specification de l’objet T. La spécification peut-être
      *                 null.
      * @param pageable L’objet pageable.
@@ -76,6 +75,12 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         CriteriaQuery<Tuple> query = builder.createTupleQuery();
 
         Root<T> root = this.applySpecToCriteria(query, builder, specs);
+
+        // Call 'defaultGraphQLFields' if exists on entity
+        Arrays.stream(clazz.getMethods())
+            .filter(m -> "defaultGraphQLFields".equals(m.getName()) && Modifier.isStatic(m.getModifiers()))
+            .findFirst()
+            .ifPresent(m -> ReflectionUtils.invokeMethod(m, null, fields));
 
         List<Selection<?>> selections = CustomUtils.getSelections(fields, root, joinType);
 
@@ -105,6 +110,8 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
                     this.setData(newClass, alias, tuple);
                 });
+
+                this.geoRepositoryEvent.fireLoad(newClass);
                 result.add(newClass);
 
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException
@@ -133,7 +140,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
      * descendants, alors il sera ignoré.
      * Tout autres champs non spécifiés dans la liste fields aura pour valeur null,
      * ou sa valeur par défaut pour valeur dans l’objet T ou ses descendances.
-     * 
+     *
      * @param specs    Une specification de l’objet T. La spécification peut-être
      *                 null.
      * @param pageable L’objet pageable.
@@ -156,7 +163,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     /**
      * Met les valeurs de l’objet Tuple dans l’instance de l’objet newClass en
      * utilisant le paramètre alias.
-     * 
+     *
      * @param newClass Une instance de l’objet qui sera utilisé pour binder les
      *                 résultats du Tuple hibernate.
      * @param alias    Correspond à l’alias qui est utilisé dans la query
@@ -169,7 +176,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
     /**
      * Met les valeurs de l’objet Tuple dans l’instance de l’objet newClass en
      * utilisant le paramètre alias.
-     * 
+     *
      * @param newClass  Une instance de l’objet qui sera utilisé pour binder les
      *                  résultats du Tuple hibernate.
      * @param fullAlias Correspond à l’alias qui est utilisé dans la query
@@ -245,7 +252,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
     /**
      * Applique les spécifications à la query.
-     * 
+     *
      * @param query   L’objet query.
      * @param builder L’objet criteria builder.
      * @param specs   L’objet représentant les spécifications que l’on souhaite
@@ -271,7 +278,7 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
     /**
      * Execute les methodes associées à l'annotation @PostLoad
-     * 
+     *
      * @param newClass Une instance de l’objet après remplissage des données
      */
     private void handleAnnotationEvent(final Object newClass, final Class<? extends Annotation> clazz)
@@ -301,5 +308,9 @@ public class CustomRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
             log.error(e.getMessage());
         }
         return super.saveAll(entities);
+    }
+
+    public void setRepositoryEvent(GeoRepositoryEvent repositoryEvent) {
+        this.geoRepositoryEvent = repositoryEvent;
     }
 }

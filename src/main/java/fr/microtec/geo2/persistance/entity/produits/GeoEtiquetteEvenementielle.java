@@ -1,9 +1,8 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import fr.microtec.geo2.persistance.entity.etiquette.DocumentAuditingListener;
-import fr.microtec.geo2.persistance.entity.etiquette.GeoAsEtiquette;
-import fr.microtec.geo2.persistance.entity.etiquette.GeoDocument;
+import fr.microtec.geo2.persistance.repository.event.document.GeoAsEtiquette;
+import fr.microtec.geo2.persistance.repository.event.document.GeoDocument;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +13,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "geo_etievt")
 @IdClass(GeoProduitWithEspeceId.class)
-@EntityListeners(DocumentAuditingListener.class)
 public class GeoEtiquetteEvenementielle extends ValidateAndModifiedEntity implements GeoAsEtiquette {
 
 	@Id
