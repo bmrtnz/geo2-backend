@@ -17,7 +17,7 @@ import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 
-@SpringBootTest(classes = { Geo2Application.class, PersistanceConfiguration.class })
+@SpringBootTest(classes = Geo2Application.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Transactional
 public class OrdreFunctionTest {
