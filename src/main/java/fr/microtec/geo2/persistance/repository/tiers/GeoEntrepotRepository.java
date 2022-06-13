@@ -51,4 +51,6 @@ public interface GeoEntrepotRepository extends GeoRepository<GeoEntrepot, String
             @Param("arg_fou_code") String codeFournisseur);
 
     Optional<GeoEntrepot> getOneByCode(String code);
+
+    Optional<GeoEntrepot> getOneByCodeAndSocieteId(String code, String societeId);
 }
