@@ -15,6 +15,10 @@ import java.util.Map;
 @AllArgsConstructor
 @Entity
 public class FunctionResult {
+    public final static int RESULT_UNKNOWN = 0;
+    public final static int RESULT_OK = 1;
+    public final static int RESULT_WARNING = 2;
+
     @Id
     private Integer res;
 

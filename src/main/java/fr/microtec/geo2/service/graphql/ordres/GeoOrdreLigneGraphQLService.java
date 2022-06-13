@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static fr.microtec.geo2.persistance.entity.FunctionResult.RESULT_UNKNOWN;
 
 @Service
 @GraphQLApi
@@ -123,11 +124,15 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                             break;
 
                         case "proprietaireMarchandise":
-                            result.set(this.geoFunctionOrdreRepository.onChangeProprCode(id, this.securityService.getUser().getUsername(), socCode));
+                            if(this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(id).getRes() != RESULT_UNKNOWN) {
+                                result.set(this.geoFunctionOrdreRepository.onChangeProprCode(id, this.securityService.getUser().getUsername(), socCode));
+                            }
                             break;
 
                         case "fournisseur":
-                            result.set(this.geoFunctionOrdreRepository.onChangeFouCode(id, this.securityService.getUser().getUsername(), socCode));
+                            if(this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(id).getRes() != RESULT_UNKNOWN) {
+                                result.set(this.geoFunctionOrdreRepository.onChangeFouCode(id, this.securityService.getUser().getUsername(), socCode));
+                            }
                             break;
 
                         case "ventePrixUnitaire":
@@ -155,9 +160,10 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                             break;
                     }
 
-                    final GeoOrdreLigne ordreLigne = this.repository.getOne(id);
-
-                    result.get().setData(Map.of(ordreLigne.getId(), ordreLigne));
+                    // Si le résultat est bon, on retourne la ligne de commande dans la réponse.
+                    if(result.get().getRes() != RESULT_UNKNOWN) {
+                        result.get().setCursorData(List.of(this.repository.getOne(id)));
+                    }
                 } catch (NoSuchFieldException e) {
                     log.error("Impossible de récupérer le champ \"{}\" dans l'objet GeoOrdreLigne avec l'id \"{}\".", fieldName, id);
                     throw new RuntimeException(e);
