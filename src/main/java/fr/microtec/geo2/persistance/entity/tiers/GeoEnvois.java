@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,9 +22,8 @@ import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.common.StringUtils;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
-import fr.microtec.geo2.persistance.entity.etiquette.DocumentAuditingListener;
-import fr.microtec.geo2.persistance.entity.etiquette.GeoAsDocument;
-import fr.microtec.geo2.persistance.entity.etiquette.GeoDocument;
+import fr.microtec.geo2.persistance.repository.event.document.GeoAsDocument;
+import fr.microtec.geo2.persistance.repository.event.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.ordres.GeoImprimante;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
@@ -32,7 +32,6 @@ import lombok.Data;
 @Data
 @Table(name = "geo_envois")
 @Entity
-@EntityListeners(DocumentAuditingListener.class)
 public class GeoEnvois implements GeoAsDocument {
 
 	@Id
@@ -127,12 +126,17 @@ public class GeoEnvois implements GeoAsDocument {
 		}
 
 		// If date envoie, file is in subpath
-		if (this.getDateEnvoi() != null) {
+		if (this.getDateDemande() != null) {
 			path = path
-					.resolve(Integer.toString(this.getDateEnvoi().getYear()))
-					.resolve(StringUtils.padLeft(Integer.toString(this.getDateEnvoi().getMonthValue()), "0", 2));
+					.resolve(Integer.toString(this.getDateDemande().getYear()))
+					.resolve(StringUtils.padLeft(Integer.toString(this.getDateDemande().getMonthValue()), "0", 2));
 		}
 
 		return path.resolve(filename).toString();
 	}
+
+    public static void defaultGraphQLFields(Set<String> fields) {
+        fields.add("nomFichier");
+        fields.add("dateDemande");
+    }
 }

@@ -16,11 +16,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
-import fr.microtec.geo2.persistance.repository.CustomRepositoryImpl;
+import fr.microtec.geo2.persistance.repository.GeoCustomRepositoryImpl;
 import lombok.val;
 
 @DataJpaTest
-@EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
+@EnableJpaRepositories(repositoryBaseClass = GeoCustomRepositoryImpl.class)
 class CustomUtilsTest
 {
     @Autowired

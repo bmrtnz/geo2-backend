@@ -30,109 +30,116 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntrepot, String> {
 
-	private final EntrepotService entrepotService;
+    private final EntrepotService entrepotService;
 
-	public GeoEntrepotGraphQLService(
-			GeoEntrepotRepository repository,
-			EntrepotService entrepotService) {
-		super(repository, GeoEntrepot.class);
-		this.entrepotService = entrepotService;
-	}
+    public GeoEntrepotGraphQLService(
+            GeoEntrepotRepository repository,
+            EntrepotService entrepotService) {
+        super(repository, GeoEntrepot.class);
+        this.entrepotService = entrepotService;
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoEntrepot> allEntrepot(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoEntrepot> allEntrepot(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoEntrepot> getEntrepot(
-			@GraphQLArgument(name = "id") String id) {
-		return this.getOne(id);
-	}
+    @GraphQLQuery
+    public Optional<GeoEntrepot> getEntrepot(
+            @GraphQLArgument(name = "id") String id) {
+        return this.getOne(id);
+    }
 
-	@GraphQLMutation
-	public GeoEntrepot saveEntrepot(GeoEntrepot entrepot, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(entrepot, env);
-	}
+    @GraphQLMutation
+    public GeoEntrepot saveEntrepot(GeoEntrepot entrepot, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(entrepot, env);
+    }
 
-	@GraphQLMutation
-	public void deleteEntrepot(String id) {
-		this.delete(id);
-	}
+    @GraphQLMutation
+    public void deleteEntrepot(String id) {
+        this.delete(id);
+    }
 
-	@GraphQLQuery
-	public long countEntrepot(
-			@GraphQLArgument(name = "search") String search) {
-		return this.count(search);
-	}
+    @GraphQLQuery
+    public long countEntrepot(
+            @GraphQLArgument(name = "search") String search) {
+        return this.count(search);
+    }
 
-	@GraphQLQuery
-	public List<GeoMouvementFournisseur> allMouvementFournisseur(
-			@GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
-			@GraphQLArgument(name = "codeSociete") String codeSociete,
-			@GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
-			@GraphQLArgument(name = "codeCommercial") String codeCommercial,
-			@GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
-		return this.entrepotService.allMouvementFournisseur(
-				dateMaxMouvements,
-				codeSociete,
-				Optional.ofNullable(codeEntrepot).orElse("%"),
-				Optional.ofNullable(codeCommercial).orElse("%"),
-				Optional.ofNullable(codeFournisseur).orElse("%"));
-	}
+    @GraphQLQuery
+    public List<GeoMouvementFournisseur> allMouvementFournisseur(
+            @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+            @GraphQLArgument(name = "codeSociete") String codeSociete,
+            @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+            @GraphQLArgument(name = "codeCommercial") String codeCommercial,
+            @GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
+        return this.entrepotService.allMouvementFournisseur(
+                dateMaxMouvements,
+                codeSociete,
+                Optional.ofNullable(codeEntrepot).orElse("%"),
+                Optional.ofNullable(codeCommercial).orElse("%"),
+                Optional.ofNullable(codeFournisseur).orElse("%"));
+    }
 
-	@GraphQLQuery
-	public List<GeoMouvementEntrepot> allMouvementEntrepot(
-			@GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
-			@GraphQLArgument(name = "codeSociete") String codeSociete,
-			@GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
-			@GraphQLArgument(name = "codeCommercial") String codeCommercial,
-			@GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
-		return this.entrepotService.allMouvementEntrepot(
-				dateMaxMouvements,
-				codeSociete,
-				Optional.ofNullable(codeEntrepot).orElse("%"),
-				Optional.ofNullable(codeCommercial).orElse("%"),
-				Optional.ofNullable(codeFournisseur).orElse("%"));
-	}
+    @GraphQLQuery
+    public List<GeoMouvementEntrepot> allMouvementEntrepot(
+            @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+            @GraphQLArgument(name = "codeSociete") String codeSociete,
+            @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+            @GraphQLArgument(name = "codeCommercial") String codeCommercial,
+            @GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
+        return this.entrepotService.allMouvementEntrepot(
+                dateMaxMouvements,
+                codeSociete,
+                Optional.ofNullable(codeEntrepot).orElse("%"),
+                Optional.ofNullable(codeCommercial).orElse("%"),
+                Optional.ofNullable(codeFournisseur).orElse("%"));
+    }
 
-	@GraphQLQuery
-	public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
-			@GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
-			@GraphQLArgument(name = "codeSociete") String codeSociete,
-			@GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
-			@GraphQLArgument(name = "codeCommercial") String codeCommercial,
-			@GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
-		return this.entrepotService.allRecapitulatifFournisseur(
-				dateMaxMouvements,
-				codeSociete,
-				Optional.ofNullable(codeEntrepot).orElse("%"),
-				Optional.ofNullable(codeCommercial).orElse("%"),
-				Optional.ofNullable(codeFournisseur).orElse("%"));
-	}
+    @GraphQLQuery
+    public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
+            @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+            @GraphQLArgument(name = "codeSociete") String codeSociete,
+            @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+            @GraphQLArgument(name = "codeCommercial") String codeCommercial,
+            @GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
+        return this.entrepotService.allRecapitulatifFournisseur(
+                dateMaxMouvements,
+                codeSociete,
+                Optional.ofNullable(codeEntrepot).orElse("%"),
+                Optional.ofNullable(codeCommercial).orElse("%"),
+                Optional.ofNullable(codeFournisseur).orElse("%"));
+    }
 
-	@GraphQLQuery
-	public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
-			@GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
-			@GraphQLArgument(name = "codeSociete") String codeSociete,
-			@GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
-			@GraphQLArgument(name = "codeCommercial") String codeCommercial,
-			@GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
-		return this.entrepotService.allRecapitulatifEntrepot(
-				dateMaxMouvements,
-				codeSociete,
-				Optional.ofNullable(codeEntrepot).orElse("%"),
-				Optional.ofNullable(codeCommercial).orElse("%"),
-				Optional.ofNullable(codeFournisseur).orElse("%"));
-	}
+    @GraphQLQuery
+    public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
+            @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
+            @GraphQLArgument(name = "codeSociete") String codeSociete,
+            @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+            @GraphQLArgument(name = "codeCommercial") String codeCommercial,
+            @GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
+        return this.entrepotService.allRecapitulatifEntrepot(
+                dateMaxMouvements,
+                codeSociete,
+                Optional.ofNullable(codeEntrepot).orElse("%"),
+                Optional.ofNullable(codeCommercial).orElse("%"),
+                Optional.ofNullable(codeFournisseur).orElse("%"));
+    }
 
-	@GraphQLQuery
-	public Optional<GeoEntrepot> getEntrepotByCode(
-			@GraphQLArgument(name = "code") String code) {
-		return ((GeoEntrepotRepository) this.repository).getOneByCode(code);
-	}
+    @GraphQLQuery
+    public Optional<GeoEntrepot> getEntrepotByCode(
+            @GraphQLArgument(name = "code") String code) {
+        return ((GeoEntrepotRepository) this.repository).getOneByCode(code);
+    }
+
+    @GraphQLQuery
+    public Optional<GeoEntrepot> getEntrepotByCodeAndsocieteId(
+            @GraphQLArgument(name = "code") String code,
+            @GraphQLArgument(name = "societeId") String societeId) {
+        return ((GeoEntrepotRepository) this.repository).getOneByCodeAndSocieteId(code, societeId);
+    }
 
 }

@@ -155,10 +155,8 @@ public class FileManagerController {
 
 		if (FsDocumentType.ETIQUETTE.equals(type)) {
 			downloadFile = this.fileSystemService.getEtiquette(filename);
-		} else if (FsDocumentType.DOCUMENT.equals(type)) {
-			downloadFile = this.fileSystemService.getDocument(type.getPath(), filename, true);
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			downloadFile = this.fileSystemService.getDocument(type.getPath(), filename, true);
 		}
 
 		return buildDownload(downloadFile.getFileName().toString(), downloadFile, false);

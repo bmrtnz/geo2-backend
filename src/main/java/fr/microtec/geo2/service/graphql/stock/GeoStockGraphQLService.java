@@ -9,9 +9,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockMouvement;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
+import fr.microtec.geo2.service.StockService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLContext;
@@ -26,8 +29,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, String> {
 
-    public GeoStockGraphQLService(GeoStockRepository stockRepository) {
+    private final StockService stockService;
+
+    public GeoStockGraphQLService(
+            GeoStockRepository stockRepository,
+            StockService stockService) {
         super(stockRepository, GeoStock.class);
+        this.stockService = stockService;
     }
 
     @GraphQLQuery
@@ -42,6 +50,17 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
     public Optional<GeoStock> getStock(
             @GraphQLArgument(name = "id") String id) {
         return this.getOne(id);
+    }
+
+    @GraphQLQuery
+    public FunctionResult reservationStock(
+            @GraphQLArgument(name = "ordreId") String ordreId,
+            @GraphQLArgument(name = "articleId") String articleId,
+            @GraphQLArgument(name = "societeId") String societeId,
+            @GraphQLArgument(name = "stockId") String stockId,
+            @GraphQLArgument(name = "quantite") Integer quantite,
+            @GraphQLArgument(name = "commentaire") String commentaire) {
+        return this.stockService.reservationStock(ordreId, articleId, societeId, stockId, quantite, commentaire);
     }
 
     @GraphQLQuery
