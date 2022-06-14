@@ -14,9 +14,13 @@ import java.util.Set;
 
 import javax.persistence.criteria.JoinType;
 
+import fr.microtec.geo2.configuration.PersistanceConfiguration;
+import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -28,9 +32,8 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 import lombok.val;
 
 @DataJpaTest
-@ContextConfiguration(classes = Geo2Application.class)
-@EnableJpaRepositories(repositoryBaseClass = CustomRepositoryImpl.class)
-class CustomRepositoryImplTest
+@Import(PersistanceTestConfiguration.class)
+class GeoCustomRepositoryImplTest
 {
     @Autowired
     private GeoClientRepository geoClientRepository;

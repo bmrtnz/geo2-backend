@@ -2,6 +2,7 @@ package fr.microtec.geo2.controller;
 
 import fr.microtec.geo2.persistance.StringEnum;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+import jdk.jfr.MemoryAddress;
 import lombok.Getter;
 
 /**
@@ -10,7 +11,8 @@ import lombok.Getter;
 @Getter
 public enum FsDocumentType implements StringEnum {
 	DOCUMENT("document", Maddog2FileSystemService.PATH_KEY.GEO_DOC),
-	ETIQUETTE("etiquette", Maddog2FileSystemService.PATH_KEY.GEO_IMG);
+	ETIQUETTE("etiquette", Maddog2FileSystemService.PATH_KEY.GEO_IMG),
+    IMAGE("image", Maddog2FileSystemService.PATH_KEY.GEO_IMG);
 
 	private final String key;
 	private final Maddog2FileSystemService.PATH_KEY path;

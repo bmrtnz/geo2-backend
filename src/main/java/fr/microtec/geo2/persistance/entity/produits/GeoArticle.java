@@ -3,16 +3,11 @@ package fr.microtec.geo2.persistance.entity.produits;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import fr.microtec.geo2.persistance.repository.event.document.GeoAsDocument;
+import fr.microtec.geo2.persistance.repository.event.document.GeoDocument;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -26,7 +21,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_gestion")
-public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Duplicable<GeoArticle> {
+public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Duplicable<GeoArticle>, GeoAsDocument {
 
 	@Id
 	@Column(name = "art_ref")
@@ -119,8 +114,20 @@ public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Dupl
 		clone.normalisation = this.normalisation;
 		if(this.historique != null)
 			clone.historique = new ArrayList<GeoHistoriqueArticle>(this.historique);
-		
+
 		return clone;
 	}
 
+    @Transient
+    private GeoDocument document;
+
+    @Override
+    public String getDocumentName() {
+        return this.getId().concat(".pdf");
+    }
+
+    @Override
+    public Maddog2FileSystemService.PATH_KEY getDocumentPathKey() {
+        return Maddog2FileSystemService.PATH_KEY.GEO_IMG;
+    }
 }
