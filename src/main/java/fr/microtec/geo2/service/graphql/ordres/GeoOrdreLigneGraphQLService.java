@@ -8,6 +8,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.service.OrdreLigneService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.security.SecurityService;
+import graphql.GraphQLException;
 import io.leangen.graphql.annotations.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -99,78 +102,92 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 
 
     @GraphQLMutation
-    public FunctionResult updateField(final String fieldName, final String id, final Object value, final String socCode) {
+    public GeoOrdreLigne updateField(final String fieldName, final String id, final Object value, final String socCode) {
 
-        AtomicReference<FunctionResult> result = new AtomicReference<>(new FunctionResult());
+        final AtomicReference<GeoOrdreLigne> result = new AtomicReference<>();
+        final AtomicReference<Object> newValue = new AtomicReference<>(value);
+
+        final Field field = ReflectionUtils.findField(GeoOrdreLigne.class, fieldName);
+        Assert.notNull(field, String.format("Le champ \"%s\" n'a pas été trouvé dans l'objet \"GeoOrdreLigne\".", fieldName));
+        field.setAccessible(true);
+
+        if(value instanceof Number) {
+            final Class<?> type = field.getType();
+            if (type.equals(Double.class)) {
+                newValue.set(((Number) value).doubleValue());
+            } else if (type.equals(Float.class)) {
+                newValue.set(((Number) value).floatValue());
+            }
+        }
 
         this.getOne(id)
             .ifPresent(geoOrdreLigne -> {
-                try {
-                    final Field field = GeoOrdreLigne.class.getField(fieldName);
-                    field.set(geoOrdreLigne, value);
-                    this.repository.save(geoOrdreLigne);
+                ReflectionUtils.setField(field, geoOrdreLigne, newValue.get());
 
-                    switch (fieldName) {
-                        case "nombrePalettesCommandees":
-                            result.set(this.geoFunctionOrdreRepository.onChangeCdeNbPal(id, socCode));
-                            break;
+                this.repository.save(geoOrdreLigne);
 
-                        case "nombreColisPalette":
-                            result.set(this.geoFunctionOrdreRepository.onChangePalNbCol(id, this.securityService.getUser().getUsername()));
-                            break;
+                FunctionResult functionResult = null;
+                switch (fieldName) {
+                    case "nombrePalettesCommandees":
+                        functionResult = this.geoFunctionOrdreRepository.onChangeCdeNbPal(id, socCode);
+                        break;
 
-                        case "nombreColisCommandes":
-                            result.set(this.geoFunctionOrdreRepository.onChangeCdeNbCol(id, this.securityService.getUser().getUsername()));
-                            break;
+                    case "nombreColisPalette":
+                        functionResult = this.geoFunctionOrdreRepository.onChangePalNbCol(id, this.securityService.getUser().getUsername());
+                        break;
 
-                        case "proprietaireMarchandise":
-                            if(this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(id).getRes() != RESULT_UNKNOWN) {
-                                result.set(this.geoFunctionOrdreRepository.onChangeProprCode(id, this.securityService.getUser().getUsername(), socCode));
-                            }
-                            break;
+                    case "nombreColisCommandes":
+                        functionResult = this.geoFunctionOrdreRepository.onChangeCdeNbCol(id, this.securityService.getUser().getUsername());
+                        break;
 
-                        case "fournisseur":
-                            if(this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(id).getRes() != RESULT_UNKNOWN) {
-                                result.set(this.geoFunctionOrdreRepository.onChangeFouCode(id, this.securityService.getUser().getUsername(), socCode));
-                            }
-                            break;
+                    case "proprietaireMarchandise":
+                        if(this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(id).getRes() != RESULT_UNKNOWN) {
+                            functionResult = this.geoFunctionOrdreRepository.onChangeProprCode(id, this.securityService.getUser().getUsername(), socCode);
+                        }
+                        break;
 
-                        case "ventePrixUnitaire":
-                            result.set(this.geoFunctionOrdreRepository.onChangeVtePu(id));
-                            break;
+                    case "fournisseur":
+                        if(this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(id).getRes() != RESULT_UNKNOWN) {
+                            functionResult = this.geoFunctionOrdreRepository.onChangeFouCode(id, this.securityService.getUser().getUsername(), socCode);
+                        }
+                        break;
 
-                        case "gratuit":
-                            result.set(this.geoFunctionOrdreRepository.onChangeIndGratuit(id));
-                            break;
+                    case "ventePrixUnitaire":
+                        functionResult = this.geoFunctionOrdreRepository.onChangeVtePu(id);
+                        break;
 
-                        case "achatDevisePrixUnitaire":
-                            result.set(this.geoFunctionOrdreRepository.onChangeAchDevPu(id, socCode));
-                            break;
+                    case "gratuit":
+                        functionResult = this.geoFunctionOrdreRepository.onChangeIndGratuit(id);
+                        break;
 
-                        case "typePalette":
-                            result.set(this.geoFunctionOrdreRepository.onChangePalCode(id, this.securityService.getUser().getUsername(), socCode));
-                            break;
+                    case "achatDevisePrixUnitaire":
+                        functionResult = this.geoFunctionOrdreRepository.onChangeAchDevPu(id, socCode);
+                        break;
 
-                        case "paletteInter":
-                            result.set(this.geoFunctionOrdreRepository.onChangePalinterCode(id));
-                            break;
+                    case "typePalette":
+                        functionResult = this.geoFunctionOrdreRepository.onChangePalCode(id, this.securityService.getUser().getUsername(), socCode);
+                        break;
 
-                        case "nombrePalettesIntermediaires":
-                            result.set(this.geoFunctionOrdreRepository.onChangePalNbPalinter(id, this.securityService.getUser().getUsername()));
-                            break;
-                    }
+                    case "paletteInter":
+                        functionResult = this.geoFunctionOrdreRepository.onChangePalinterCode(id);
+                        break;
 
-                    // Si le résultat est bon, on retourne la ligne de commande dans la réponse.
-                    if(result.get().getRes() != RESULT_UNKNOWN) {
-                        result.get().setCursorData(List.of(this.repository.getOne(id)));
-                    }
-                } catch (NoSuchFieldException e) {
-                    log.error("Impossible de récupérer le champ \"{}\" dans l'objet GeoOrdreLigne avec l'id \"{}\".", fieldName, id);
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    log.error("Impossible d'accédez au setter du champ \"{}\" de l'objet GeoOrdreLigne", fieldName);
-                    throw new RuntimeException(e);
+                    case "nombrePalettesIntermediaires":
+                        functionResult = this.geoFunctionOrdreRepository.onChangePalNbPalinter(id, this.securityService.getUser().getUsername());
+                        break;
                 }
+
+                // Si le résultat est bon, on retourne la ligne de commande dans la réponse.
+
+                if(functionResult == null || functionResult.getRes() == RESULT_UNKNOWN) {
+                    String msg = functionResult != null ?
+                        functionResult.getMsg() :
+                        String.format("Le champ \"%s\" n'est pas supporté !!!", fieldName);
+
+                    throw new GraphQLException(msg);
+                }
+
+                this.repository.findById(id).ifPresent(result::set);
             });
 
         return result.get();
