@@ -37,6 +37,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fCalculMargePrevi(String refOrdre, String codeSociete) {
+        FunctionQuery query = this.build("F_CALCUL_MARGE_PREVI");
+
+        query.attachInput("is_ord_ref", String.class, refOrdre);
+        query.attachInput("is_soc_code", String.class, codeSociete);
+        query.attachOutput("result", Float.class);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult fRecupFrais(String varCode, String catCode, String scoCode, String tvtCode,
             Integer modeCulture, String origine) {
         FunctionQuery query = this.build("F_RECUP_FRAIS");

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import fr.microtec.geo2.Geo2Application;
-import fr.microtec.geo2.configuration.PersistanceConfiguration;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
@@ -95,6 +94,15 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
         Assertions.assertTrue(StringUtils.isEmpty(result.getMsg()));
         Assertions.assertTrue(result.getData().isEmpty());
+    }
+
+    @Test
+    public void testFCalculMargePrevi() {
+        FunctionResult result = this.functionOrdreRepository
+                .fCalculMargePrevi("1218222", SOCIETE_SA);
+
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertNotNull(result.getData().get("result"));
     }
 
     @Test
