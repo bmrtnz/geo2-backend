@@ -74,6 +74,8 @@ public interface GeoFunctionOrdreRepository {
 
     FunctionResult fCalculPerequation(String refOrdre, String codeSociete);
 
+    FunctionResult fCalculMargePrevi(String refOrdre, String codeSociete);
+
     FunctionResult fVerifOrdreWarning(String refOrdre, String socCode);
 
     FunctionResult fGenereDluo(String input, LocalDate dateExp, LocalDate dateLiv);

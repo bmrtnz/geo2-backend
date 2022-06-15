@@ -11,24 +11,10 @@ import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 @Service()
 public class OrdreLogistiqueService extends GeoAbstractGraphQLService<GeoOrdreLogistique, String> {
 
-  public OrdreLogistiqueService(
-      GeoOrdreLogistiqueRepository ordreLogistiqueRepository,
-      EntityManager entityManager) {
-    super(ordreLogistiqueRepository, GeoOrdreLogistique.class);
-  }
-
-  /**
-   * It sets the default values for the fields that are null.
-   * 
-   * @param ordreLogistique the GeoOrdreLogistique object to be updated
-   * @return The updated object.
-   */
-  public GeoOrdreLogistique withDefaults(GeoOrdreLogistique ordreLogistique) {
-    if (ordreLogistique.getExpedieStation() == null)
-      ordreLogistique.setExpedieStation(false);
-    if (ordreLogistique.getExpedieLieuGroupage() == null)
-      ordreLogistique.setExpedieLieuGroupage(false);
-    return ordreLogistique;
-  }
+    public OrdreLogistiqueService(
+            GeoOrdreLogistiqueRepository ordreLogistiqueRepository,
+            EntityManager entityManager) {
+        super(ordreLogistiqueRepository, GeoOrdreLogistique.class);
+    }
 
 }

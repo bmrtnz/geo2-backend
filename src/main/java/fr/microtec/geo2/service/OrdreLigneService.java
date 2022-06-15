@@ -233,6 +233,19 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
             t.setAchatPrixUnitaire(original.getAchatPrixUnitaire());
             t.setVenteUnite(original.getVenteUnite());
             t.setAchatUnite(original.getAchatUnite());
+            t.setGratuit(original.getGratuit());
+            t.setCodePromo(original.getCodePromo());
+            t.setAchatDevise(original.getAchatDevise());
+            t.setTypePalette(original.getTypePalette());
+            t.setPaletteInter(original.getPaletteInter());
+            t.setLibelleDLV(original.getLibelleDLV());
+            t.setFraisPrixUnitaire(original.getFraisPrixUnitaire());
+            t.setFraisUnite(original.getFraisUnite());
+            t.setFraisCommentaires(original.getFraisCommentaires());
+            t.setTauxRemiseSurFacture(original.getTauxRemiseSurFacture());
+            t.setTauxRemiseHorsFacture(original.getTauxRemiseHorsFacture());
+            t.setArticleKit(original.getArticleKit());
+            t.setGtinColisKit(original.getGtinColisKit());
             this.repository.save(t);
         });
 

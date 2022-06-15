@@ -106,6 +106,13 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fCalculMargePrevi(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "socCode") String socCode) {
+        return this.repository.fCalculMargePrevi(ordreRef, socCode);
+    }
+
+    @GraphQLQuery
     public FunctionResult fVerifLogistiqueOrdre(
             @GraphQLArgument(name = "ordreRef") String ordreRef) {
         return this.repository.fVerifLogistiqueOrdre(ordreRef);
