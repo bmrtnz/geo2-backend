@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
+import fr.microtec.geo2.persistance.repository.tiers.GeoBaseTarifRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoTypePaletteRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -37,16 +43,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
 
+    private final GeoBaseTarifRepository geoBaseTarifRepository;
+    private final GeoFournisseurRepository geoFournisseurRepository;
     private final GeoFunctionOrdreRepository geoFunctionOrdreRepository;
+    private final GeoTypePaletteRepository geoTypePaletteRepository;
     private final OrdreLigneService ordreLigneService;
     private final SecurityService securityService;
 
     public GeoOrdreLigneGraphQLService(
-            GeoOrdreLigneRepository repository,
-            GeoFunctionOrdreRepository geoFunctionOrdreRepository, OrdreLigneService ordreLigneService,
-            SecurityService securityService) {
+        GeoOrdreLigneRepository repository, GeoBaseTarifRepository geoBaseTarifRepository,
+        GeoFournisseurRepository geoFournisseurRepository, GeoFunctionOrdreRepository geoFunctionOrdreRepository, GeoTypePaletteRepository geoTypePaletteRepository, OrdreLigneService ordreLigneService,
+        SecurityService securityService) {
         super(repository, GeoOrdreLigne.class);
+        this.geoBaseTarifRepository = geoBaseTarifRepository;
+        this.geoFournisseurRepository = geoFournisseurRepository;
         this.geoFunctionOrdreRepository = geoFunctionOrdreRepository;
+        this.geoTypePaletteRepository = geoTypePaletteRepository;
         this.ordreLigneService = ordreLigneService;
         this.securityService = securityService;
     }
@@ -118,12 +130,21 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                 String.format("Le champ \"%s\" n'a pas été trouvé dans l'objet \"GeoOrdreLigne\".", fieldName));
         field.setAccessible(true);
 
+        final Class<?> type = field.getType();
         if (value instanceof Number) {
-            final Class<?> type = field.getType();
             if (type.equals(Double.class)) {
                 newValue.set(((Number) value).doubleValue());
             } else if (type.equals(Float.class)) {
                 newValue.set(((Number) value).floatValue());
+            }
+        }
+        else {
+            if (type.equals(GeoBaseTarif.class)) {
+                this.geoBaseTarifRepository.findById(id).ifPresent(newValue::set);
+            } else if (type.equals(GeoFournisseur.class)) {
+                this.geoFournisseurRepository.findById(id).ifPresent(newValue::set);
+            } else if (type.equals(GeoTypePalette.class)) {
+                this.geoTypePaletteRepository.findById(id).ifPresent(newValue::set);
             }
         }
 
