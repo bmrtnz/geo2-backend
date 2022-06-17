@@ -131,20 +131,20 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
         field.setAccessible(true);
 
         final Class<?> type = field.getType();
-        if (value instanceof Number) {
-            if (type.equals(Double.class)) {
-                newValue.set(((Number) value).doubleValue());
-            } else if (type.equals(Float.class)) {
-                newValue.set(((Number) value).floatValue());
-            }
+        if (type.equals(GeoBaseTarif.class)) {
+            this.geoBaseTarifRepository.findById(id).ifPresent(newValue::set);
+        } else if (type.equals(GeoFournisseur.class)) {
+            this.geoFournisseurRepository.findById(id).ifPresent(newValue::set);
+        } else if (type.equals(GeoTypePalette.class)) {
+            this.geoTypePaletteRepository.findById(id).ifPresent(newValue::set);
         }
         else {
-            if (type.equals(GeoBaseTarif.class)) {
-                this.geoBaseTarifRepository.findById(id).ifPresent(newValue::set);
-            } else if (type.equals(GeoFournisseur.class)) {
-                this.geoFournisseurRepository.findById(id).ifPresent(newValue::set);
-            } else if (type.equals(GeoTypePalette.class)) {
-                this.geoTypePaletteRepository.findById(id).ifPresent(newValue::set);
+            if (value instanceof Number) {
+                if (type.equals(Double.class)) {
+                    newValue.set(((Number) value).doubleValue());
+                } else if (type.equals(Float.class)) {
+                    newValue.set(((Number) value).floatValue());
+                }
             }
         }
 
@@ -212,16 +212,16 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                             break;
                     }
 
-                    // Si le résultat est bon, on retourne la ligne de commande dans la réponse.
 
-                    if (functionResult != null && functionResult.getRes() == RESULT_UNKNOWN) {
-                        String msg = functionResult != null ? functionResult.getMsg()
+                    if (functionResult != null) {
+                        String msg = functionResult.getRes() == RESULT_UNKNOWN ? functionResult.getMsg()
                                 : String.format("Erreur lors de la mise à jour du champ \"%s\" ( %s )", fieldName,
                                         functionResult.getMsg());
 
                         throw new GraphQLException(msg);
                     }
 
+                    // Si le résultat est bon, on retourne la ligne de commande dans la réponse.
                     this.repository.findById(id).ifPresent(result::set);
                 });
 
