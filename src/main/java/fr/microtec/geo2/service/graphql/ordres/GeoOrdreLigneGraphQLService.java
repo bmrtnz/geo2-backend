@@ -132,11 +132,11 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 
         final Class<?> type = field.getType();
         if (type.equals(GeoBaseTarif.class)) {
-            this.geoBaseTarifRepository.findById(id).ifPresent(newValue::set);
+            this.geoBaseTarifRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
         } else if (type.equals(GeoFournisseur.class)) {
-            this.geoFournisseurRepository.findById(id).ifPresent(newValue::set);
+            this.geoFournisseurRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
         } else if (type.equals(GeoTypePalette.class)) {
-            this.geoTypePaletteRepository.findById(id).ifPresent(newValue::set);
+            this.geoTypePaletteRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
         }
         else {
             if (value instanceof Number) {
