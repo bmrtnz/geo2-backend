@@ -1,13 +1,17 @@
 package fr.microtec.geo2.persistance.entity;
 
-import lombok.*;
+import java.util.List;
+import java.util.Map;
 
-import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.util.List;
-import java.util.Map;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 @Data
 @Builder
@@ -22,7 +26,7 @@ public class FunctionResult {
     @Id
     private Integer res;
 
-	private String msg;
+    private String msg;
 
     @Transient
     @Singular("withData")

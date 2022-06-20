@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import static fr.microtec.geo2.persistance.entity.FunctionResult.RESULT_OK;
 import static fr.microtec.geo2.persistance.entity.FunctionResult.RESULT_UNKNOWN;
 
 import java.lang.reflect.Field;
@@ -7,12 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
-import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
-import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
-import fr.microtec.geo2.persistance.repository.tiers.GeoBaseTarifRepository;
-import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
-import fr.microtec.geo2.persistance.repository.tiers.GeoTypePaletteRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -22,8 +17,14 @@ import org.springframework.util.ReflectionUtils;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
+import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoBaseTarifRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoTypePaletteRepository;
 import fr.microtec.geo2.service.OrdreLigneService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.security.SecurityService;
@@ -51,9 +52,10 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     private final SecurityService securityService;
 
     public GeoOrdreLigneGraphQLService(
-        GeoOrdreLigneRepository repository, GeoBaseTarifRepository geoBaseTarifRepository,
-        GeoFournisseurRepository geoFournisseurRepository, GeoFunctionOrdreRepository geoFunctionOrdreRepository, GeoTypePaletteRepository geoTypePaletteRepository, OrdreLigneService ordreLigneService,
-        SecurityService securityService) {
+            GeoOrdreLigneRepository repository, GeoBaseTarifRepository geoBaseTarifRepository,
+            GeoFournisseurRepository geoFournisseurRepository, GeoFunctionOrdreRepository geoFunctionOrdreRepository,
+            GeoTypePaletteRepository geoTypePaletteRepository, OrdreLigneService ordreLigneService,
+            SecurityService securityService) {
         super(repository, GeoOrdreLigne.class);
         this.geoBaseTarifRepository = geoBaseTarifRepository;
         this.geoFournisseurRepository = geoFournisseurRepository;
@@ -137,8 +139,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
             this.geoFournisseurRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
         } else if (type.equals(GeoTypePalette.class)) {
             this.geoTypePaletteRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
-        }
-        else {
+        } else {
             if (value instanceof Number) {
                 if (type.equals(Double.class)) {
                     newValue.set(((Number) value).doubleValue());
@@ -212,8 +213,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                             break;
                     }
 
-
-                    if (functionResult != null) {
+                    if (functionResult != null && functionResult.getRes() != RESULT_OK) {
                         String msg = functionResult.getRes() == RESULT_UNKNOWN ? functionResult.getMsg()
                                 : String.format("Erreur lors de la mise à jour du champ \"%s\" ( %s )", fieldName,
                                         functionResult.getMsg());
