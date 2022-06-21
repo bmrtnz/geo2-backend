@@ -16,10 +16,12 @@ import org.springframework.util.ReflectionUtils;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoCodePromo;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
+import fr.microtec.geo2.persistance.repository.ordres.GeoCodePromoRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoBaseTarifRepository;
@@ -48,19 +50,22 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     private final GeoFournisseurRepository geoFournisseurRepository;
     private final GeoFunctionOrdreRepository geoFunctionOrdreRepository;
     private final GeoTypePaletteRepository geoTypePaletteRepository;
+    private final GeoCodePromoRepository geoCodePromoRepository;
     private final OrdreLigneService ordreLigneService;
     private final SecurityService securityService;
 
     public GeoOrdreLigneGraphQLService(
             GeoOrdreLigneRepository repository, GeoBaseTarifRepository geoBaseTarifRepository,
             GeoFournisseurRepository geoFournisseurRepository, GeoFunctionOrdreRepository geoFunctionOrdreRepository,
-            GeoTypePaletteRepository geoTypePaletteRepository, OrdreLigneService ordreLigneService,
+            GeoTypePaletteRepository geoTypePaletteRepository, GeoCodePromoRepository geoCodePromoRepository,
+            OrdreLigneService ordreLigneService,
             SecurityService securityService) {
         super(repository, GeoOrdreLigne.class);
         this.geoBaseTarifRepository = geoBaseTarifRepository;
         this.geoFournisseurRepository = geoFournisseurRepository;
         this.geoFunctionOrdreRepository = geoFunctionOrdreRepository;
         this.geoTypePaletteRepository = geoTypePaletteRepository;
+        this.geoCodePromoRepository = geoCodePromoRepository;
         this.ordreLigneService = ordreLigneService;
         this.securityService = securityService;
     }
@@ -139,6 +144,8 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
             this.geoFournisseurRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
         } else if (type.equals(GeoTypePalette.class)) {
             this.geoTypePaletteRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
+        } else if (type.equals(GeoCodePromo.class)) {
+            this.geoCodePromoRepository.findById(String.valueOf(value)).ifPresent(newValue::set);
         } else {
             if (value instanceof Number) {
                 if (type.equals(Double.class)) {
