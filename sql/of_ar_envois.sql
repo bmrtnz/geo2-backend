@@ -50,6 +50,7 @@ BEGIN
 				geo_envois.tyt_code as tyt_code,
 				geo_envois.LAN_CODE as lan_code,
 				geo_envois.SCO_CODE as sco_code,
+				geo_envois.cam_code as cam_code,
 				geo_ordlig.fou_code as fou_code,
 				max(geo_ordre.mod_date) as date_entete,
 				max(geo_ordlig.mod_date) as date_lignes,
@@ -74,12 +75,14 @@ BEGIN
 				geo_envois.tyt_code,
 				geo_ordlig.fou_code,
 				geo_envois.lan_code,
-				geo_envois.sco_code
+				geo_envois.sco_code,
+				geo_envois.cam_code
 			UNION
 			SELECT
 				geo_envois.tyt_code as tyt_code,
 				geo_envois.LAN_CODE as lan_code,
 				geo_envois.SCO_CODE as sco_code,
+				geo_envois.cam_code as cam_code,
 				geo_envois.tie_code as fou_code,
 				max(geo_ordre.mod_date) as date_entete,
 				NULL as date_lignes,
@@ -101,12 +104,14 @@ BEGIN
 				geo_envois.tyt_code,
 				geo_envois.tie_code,
 				geo_envois.lan_code,
-				geo_envois.sco_code
+				geo_envois.sco_code,
+				geo_envois.cam_code
 			UNION
 			SELECT
 				geo_envois.tyt_code as tyt_code,
 				geo_envois.LAN_CODE as lan_code,
 				geo_envois.SCO_CODE as sco_code,
+				geo_envois.cam_code as cam_code,
 				geo_envois.tie_code as fou_code,
 				max(geo_ordre.mod_date) as date_entete,
 				NULL as date_lignes,
@@ -128,12 +133,14 @@ BEGIN
 				geo_envois.tyt_code,
 				geo_envois.tie_code,
 				geo_envois.lan_code,
-				geo_envois.sco_code
+				geo_envois.sco_code,
+				geo_envois.cam_code
 			UNION
 			SELECT
 				geo_envois.tyt_code as tyt_code,
 				geo_envois.LAN_CODE as lan_code,
 				geo_envois.SCO_CODE as sco_code,
+				geo_envois.cam_code as cam_code,
 				geo_envois.tie_code as fou_code,
 				max(geo_ordre.mod_date) as date_entete,
 				NULL as date_lignes,
@@ -152,12 +159,14 @@ BEGIN
 				geo_envois.tyt_code,
 				geo_envois.tie_code,
 				geo_envois.lan_code,
-				geo_envois.sco_code
+				geo_envois.sco_code,
+				geo_envois.cam_code
 			UNION
 			SELECT
 				geo_envois.tyt_code as tyt_code,
 				geo_envois.LAN_CODE as lan_code,
 				geo_envois.SCO_CODE as sco_code,
+				geo_envois.cam_code as cam_code,
 				geo_ordlog.grp_code as fou_code,
 				max(geo_ordre.mod_date) as date_entete,
 				NULL as date_lignes,
@@ -182,7 +191,8 @@ BEGIN
 				geo_envois.tyt_code,
 				geo_ordlog.grp_code,
 				geo_envois.lan_code,
-				geo_envois.sco_code;
+				geo_envois.sco_code,
+				geo_envois.cam_code;
 	begin
 		for r in an_date
 		loop
@@ -214,6 +224,7 @@ BEGIN
 				ord_ref,
 				lan_code,
 				sco_code,
+				cam_code,
 				tyt_code, -- tyt_code
 				tie_code, -- fou_code
 				demdat, -- date_entete
@@ -228,6 +239,7 @@ BEGIN
 				is_ord_ref,
 				r.lan_code,
 				r.sco_code,
+				r.cam_code,
 				r.tyt_code,
 				r.fou_code,
 				r.date_entete,
