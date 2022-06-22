@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
@@ -35,6 +36,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordlig")
 @Entity
+@DynamicUpdate
 public class GeoOrdreLigne extends ValidateAndModifiedEntity implements Serializable {
 
 	@Id

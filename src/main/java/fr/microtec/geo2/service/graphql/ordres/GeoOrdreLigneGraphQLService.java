@@ -40,6 +40,10 @@ import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
@@ -53,6 +57,9 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     private final GeoCodePromoRepository geoCodePromoRepository;
     private final OrdreLigneService ordreLigneService;
     private final SecurityService securityService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public GeoOrdreLigneGraphQLService(
             GeoOrdreLigneRepository repository, GeoBaseTarifRepository geoBaseTarifRepository,
@@ -126,6 +133,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     }
 
     @GraphQLMutation
+    @Transactional
     public GeoOrdreLigne updateField(final String fieldName, final String id, final Object value,
             final String socCode) {
 
@@ -161,7 +169,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                     ReflectionUtils.setField(field, geoOrdreLigne, newValue.get());
                     String scoCode = geoOrdreLigne.getOrdre().getSecteurCommercial().getId();
 
-                    this.repository.save(geoOrdreLigne);
+                    this.repository.saveAndFlush(geoOrdreLigne); // Flush est obligatoire
 
                     FunctionResult functionResult = null;
                     switch (fieldName) {
@@ -231,7 +239,9 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                     }
 
                     // Si le résultat est bon, on retourne la ligne de commande dans la réponse.
-                    this.repository.findById(id).ifPresent(result::set);
+                    // On force le refresh depuis la BDD
+                    this.entityManager.refresh(geoOrdreLigne);
+                    result.set(geoOrdreLigne);
                 });
 
         return result.get();
