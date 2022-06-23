@@ -82,6 +82,9 @@ public class GeoStockArticle extends ValidateEntity {
     @Column(name = "pal_code")
     private String typePaletteID;
 
+    @Column(name = "commentaire")
+    private String commentaire;
+
     @Column(name = "qte_ini_1")
     private Integer quantiteInitiale1;
     @Column(name = "qte_res_1")
