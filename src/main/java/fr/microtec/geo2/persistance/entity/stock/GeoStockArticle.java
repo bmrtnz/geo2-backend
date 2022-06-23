@@ -24,7 +24,7 @@ public class GeoStockArticle extends ValidateEntity {
     @Column(name = "art_ref")
     private String articleID;
 
-    @Column(name = "art_desc_long")
+    @Column(name = "art_desc_long_ref")
     private String articleDescription;
 
     @ManyToOne

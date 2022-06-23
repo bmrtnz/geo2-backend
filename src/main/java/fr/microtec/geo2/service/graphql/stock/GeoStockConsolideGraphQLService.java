@@ -4,10 +4,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockConsolide;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockConsolideRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import io.leangen.graphql.annotations.GraphQLArgument;
-import io.leangen.graphql.annotations.GraphQLEnvironment;
-import io.leangen.graphql.annotations.GraphQLNonNull;
-import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.annotations.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +36,11 @@ public class GeoStockConsolideGraphQLService extends GeoAbstractGraphQLService<G
 			@GraphQLArgument(name = "id") String id
 	) {
 		return super.getOne(id);
-  }
+    }
+
+    @GraphQLMutation
+    public void saveStockConsolide(GeoStockConsolide stockConsolide, @GraphQLEnvironment ResolutionEnvironment env) {
+        this.saveEntity(stockConsolide, env);
+    }
 
 }
