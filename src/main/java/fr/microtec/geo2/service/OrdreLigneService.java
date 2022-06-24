@@ -239,6 +239,7 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
             t.setGratuit(original.getGratuit());
             t.setCodePromo(original.getCodePromo());
             t.setAchatDevise(original.getAchatDevise());
+            t.setAchatDevisePrixUnitaire(original.getAchatDevisePrixUnitaire());
             t.setTypePalette(original.getTypePalette());
             t.setPaletteInter(original.getPaletteInter());
             t.setLibelleDLV(original.getLibelleDLV());

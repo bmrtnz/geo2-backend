@@ -24,7 +24,7 @@ public class GeoStockArticle extends ValidateEntity {
     @Column(name = "art_ref")
     private String articleID;
 
-    @Column(name = "art_desc_long")
+    @Column(name = "art_desc_long_ref")
     private String articleDescription;
 
     @ManyToOne
@@ -81,6 +81,9 @@ public class GeoStockArticle extends ValidateEntity {
 
     @Column(name = "pal_code")
     private String typePaletteID;
+
+    @Column(name = "commentaire")
+    private String commentaire;
 
     @Column(name = "qte_ini_1")
     private Integer quantiteInitiale1;

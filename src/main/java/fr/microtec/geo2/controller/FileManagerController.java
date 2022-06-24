@@ -14,11 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -213,6 +216,12 @@ public class FileManagerController {
 		String key;
 		String id;
 		List<String> files;
+
+        public void setFiles(List<String> files) {
+            this.files = files.stream()
+                .map(f -> URLDecoder.decode(f, Charset.defaultCharset()))
+                .collect(Collectors.toList());
+        }
 	}
 
 }
