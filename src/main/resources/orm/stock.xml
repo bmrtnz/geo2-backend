@@ -14,7 +14,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       SELECT
         rownum,
         geo_stock.art_ref,
-        geo2_art_desc.art_desc_long,
+        geo2_art_desc.art_desc_long_ref,
         geo2_art_desc.art_bio,
         geo_stock.age,
         avi_art_gestion.valide,
@@ -33,6 +33,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         geo_stock.sto_statut,
         geo_stock.date_statut,
         geo_stock.pal_code,
+        geo_stock_consolid.commentaire,
         DECODE (geo_stock.age,
         '1',
         SUM (geo_stock.qte_ini),
@@ -91,6 +92,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     "qte_opt_4"
       FROM
         geo_stock,
+        geo_stock_consolid,
         geo_article,
         geo_fourni,
         avi_art_gestion,
@@ -108,6 +110,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_emballage.ref_emballage (+) = avi_art_gestion.ref_emballage
         AND avi_art_normalisation.ref_normalisation (+) = avi_art_gestion.ref_normalisation
         AND geo_article.art_ref (+) = geo2_art_desc.art_ref
+        AND geo_stock_consolid.art_ref (+) = geo_stock.art_ref
         AND geo_stock.STO_REF_FROM IS NULL
         AND avi_art_cdc.esp_code LIKE :arg_espece
         AND avi_art_mat_prem.var_code LIKE :arg_variete
@@ -118,7 +121,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       GROUP BY
         rownum,
         geo_stock.art_ref,
-        geo2_art_desc.art_desc_long,
+        geo2_art_desc.art_desc_long_ref,
         geo2_art_desc.art_bio,
         geo_stock.age,
         avi_art_gestion.valide,
@@ -136,7 +139,8 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         geo_stock.DATE_FAB,
         geo_stock.STO_STATUT,
         geo_stock.DATE_STATUT,
-        geo_stock.PAL_CODE
+        geo_stock.PAL_CODE,
+        geo_stock_consolid.commentaire
     ]]>
     </query>
   </named-native-query>

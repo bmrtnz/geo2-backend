@@ -159,65 +159,68 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
      * fields that are null
      * filled with default values
      *
-     * @param ordreLigne the object to be updated
+     * @param chunkOrdreLigne the object to be updated
      * @return the updated object.
      */
-    public GeoOrdreLigne withDefaults(GeoOrdreLigne ordreLigne) {
-        if (ordreLigne.getNombrePalettesExpediees() == null)
-            ordreLigne.setNombrePalettesExpediees(0f);
-        if (ordreLigne.getNombreColisExpedies() == null)
-            ordreLigne.setNombreColisExpedies(0f);
-        if (ordreLigne.getPoidsNetExpedie() == null)
-            ordreLigne.setPoidsNetExpedie(0f);
-        if (ordreLigne.getPoidsBrutExpedie() == null)
-            ordreLigne.setPoidsBrutExpedie(0d);
-        if (ordreLigne.getVenteQuantite() == null)
-            ordreLigne.setVenteQuantite(0d);
-        if (ordreLigne.getAchatQuantite() == null)
-            ordreLigne.setAchatQuantite(0d);
-        if (ordreLigne.getTotalVenteBrut() == null)
-            ordreLigne.setTotalVenteBrut(0d);
-        if (ordreLigne.getTotalRemise() == null)
-            ordreLigne.setTotalRemise(0f);
-        if (ordreLigne.getTotalRestitue() == null)
-            ordreLigne.setTotalRestitue(0f);
-        if (ordreLigne.getTotalFraisMarketing() == null)
-            ordreLigne.setTotalFraisMarketing(0d);
-        if (ordreLigne.getTotalAchat() == null)
-            ordreLigne.setTotalAchat(0d);
-        if (ordreLigne.getTotalObjectifMarge() == null)
-            ordreLigne.setTotalObjectifMarge(0f);
-        if (ordreLigne.getTotalTransport() == null)
-            ordreLigne.setTotalTransport(0f);
-        if (ordreLigne.getTotalTransit() == null)
-            ordreLigne.setTotalTransit(0f);
-        if (ordreLigne.getTotalCourtage() == null)
-            ordreLigne.setTotalCourtage(0f);
-        if (ordreLigne.getTotalFraisAdditionnels() == null)
-            ordreLigne.setTotalFraisAdditionnels(0f);
-        if (ordreLigne.getTotalFraisPlateforme() == null)
-            ordreLigne.setTotalFraisPlateforme(0f);
-        if (ordreLigne.getIndicateurPalette() == null)
-            ordreLigne.setIndicateurPalette(0f);
-        if (ordreLigne.getGratuit() == null)
-            ordreLigne.setGratuit(false);
-        if (ordreLigne.getExpedie() == null)
-            ordreLigne.setExpedie(false);
-        if (ordreLigne.getLivre() == null)
-            ordreLigne.setLivre(false);
-        if (ordreLigne.getBonAFacturer() == null)
-            ordreLigne.setBonAFacturer(false);
-        if (ordreLigne.getFacture() == null)
-            ordreLigne.setFacture(false);
-        if (ordreLigne.getVerificationFournisseur() == null)
-            ordreLigne.setVerificationFournisseur(false);
-        if (ordreLigne.getTauxRemiseSurFacture() == null)
-            ordreLigne.setTauxRemiseSurFacture(0f);
-        if (ordreLigne.getTauxRemiseHorsFacture() == null)
-            ordreLigne.setTauxRemiseHorsFacture(0f);
-        if (ordreLigne.getNombreColisManquant() == null)
-            ordreLigne.setNombreColisManquant(0);
-        return ordreLigne;
+    public GeoOrdreLigne withDefaults(GeoOrdreLigne chunkOrdreLigne) {
+        if (chunkOrdreLigne.getId() != null)
+            return chunkOrdreLigne;
+
+        if (chunkOrdreLigne.getNombrePalettesExpediees() == null)
+            chunkOrdreLigne.setNombrePalettesExpediees(0f);
+        if (chunkOrdreLigne.getNombreColisExpedies() == null)
+            chunkOrdreLigne.setNombreColisExpedies(0f);
+        if (chunkOrdreLigne.getPoidsNetExpedie() == null)
+            chunkOrdreLigne.setPoidsNetExpedie(0f);
+        if (chunkOrdreLigne.getPoidsBrutExpedie() == null)
+            chunkOrdreLigne.setPoidsBrutExpedie(0d);
+        if (chunkOrdreLigne.getVenteQuantite() == null)
+            chunkOrdreLigne.setVenteQuantite(0d);
+        if (chunkOrdreLigne.getAchatQuantite() == null)
+            chunkOrdreLigne.setAchatQuantite(0d);
+        if (chunkOrdreLigne.getTotalVenteBrut() == null)
+            chunkOrdreLigne.setTotalVenteBrut(0d);
+        if (chunkOrdreLigne.getTotalRemise() == null)
+            chunkOrdreLigne.setTotalRemise(0f);
+        if (chunkOrdreLigne.getTotalRestitue() == null)
+            chunkOrdreLigne.setTotalRestitue(0f);
+        if (chunkOrdreLigne.getTotalFraisMarketing() == null)
+            chunkOrdreLigne.setTotalFraisMarketing(0d);
+        if (chunkOrdreLigne.getTotalAchat() == null)
+            chunkOrdreLigne.setTotalAchat(0d);
+        if (chunkOrdreLigne.getTotalObjectifMarge() == null)
+            chunkOrdreLigne.setTotalObjectifMarge(0f);
+        if (chunkOrdreLigne.getTotalTransport() == null)
+            chunkOrdreLigne.setTotalTransport(0f);
+        if (chunkOrdreLigne.getTotalTransit() == null)
+            chunkOrdreLigne.setTotalTransit(0f);
+        if (chunkOrdreLigne.getTotalCourtage() == null)
+            chunkOrdreLigne.setTotalCourtage(0f);
+        if (chunkOrdreLigne.getTotalFraisAdditionnels() == null)
+            chunkOrdreLigne.setTotalFraisAdditionnels(0f);
+        if (chunkOrdreLigne.getTotalFraisPlateforme() == null)
+            chunkOrdreLigne.setTotalFraisPlateforme(0f);
+        if (chunkOrdreLigne.getIndicateurPalette() == null)
+            chunkOrdreLigne.setIndicateurPalette(0f);
+        if (chunkOrdreLigne.getGratuit() == null)
+            chunkOrdreLigne.setGratuit(false);
+        if (chunkOrdreLigne.getExpedie() == null)
+            chunkOrdreLigne.setExpedie(false);
+        if (chunkOrdreLigne.getLivre() == null)
+            chunkOrdreLigne.setLivre(false);
+        if (chunkOrdreLigne.getBonAFacturer() == null)
+            chunkOrdreLigne.setBonAFacturer(false);
+        if (chunkOrdreLigne.getFacture() == null)
+            chunkOrdreLigne.setFacture(false);
+        if (chunkOrdreLigne.getVerificationFournisseur() == null)
+            chunkOrdreLigne.setVerificationFournisseur(false);
+        if (chunkOrdreLigne.getTauxRemiseSurFacture() == null)
+            chunkOrdreLigne.setTauxRemiseSurFacture(0f);
+        if (chunkOrdreLigne.getTauxRemiseHorsFacture() == null)
+            chunkOrdreLigne.setTauxRemiseHorsFacture(0f);
+        if (chunkOrdreLigne.getNombreColisManquant() == null)
+            chunkOrdreLigne.setNombreColisManquant(0);
+        return chunkOrdreLigne;
     }
 
     public void updateFromHistory(
@@ -236,6 +239,7 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
             t.setGratuit(original.getGratuit());
             t.setCodePromo(original.getCodePromo());
             t.setAchatDevise(original.getAchatDevise());
+            t.setAchatDevisePrixUnitaire(original.getAchatDevisePrixUnitaire());
             t.setTypePalette(original.getTypePalette());
             t.setPaletteInter(original.getPaletteInter());
             t.setLibelleDLV(original.getLibelleDLV());
