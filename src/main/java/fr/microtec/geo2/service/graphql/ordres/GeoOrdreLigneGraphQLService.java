@@ -188,11 +188,8 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
                             break;
 
                         case "proprietaireMarchandise":
-                            if (this.geoFunctionOrdreRepository.fVerifLogistiqueOrdre(geoOrdreLigne.getOrdre().getId())
-                                    .getRes() != RESULT_UNKNOWN) {
-                                functionResult = this.geoFunctionOrdreRepository.onChangeProprCode(id,
-                                        this.securityService.getUser().getUsername(), socCode);
-                            }
+                            functionResult = this.geoFunctionOrdreRepository.onChangeProprCode(id,
+                                    this.securityService.getUser().getUsername(), socCode);
                             break;
 
                         case "fournisseur":
