@@ -4,6 +4,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
 import fr.microtec.geo2.service.ArticleService;
+import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
@@ -20,11 +21,13 @@ import java.util.Optional;
 public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArticle, String> {
 
 	private final ArticleService articleService;
+    private final DocumentService documentService;
 
-	public GeoArticleGraphQLService(GeoArticleRepository repository, ArticleService articleService) {
+	public GeoArticleGraphQLService(GeoArticleRepository repository, ArticleService articleService, DocumentService documentService) {
 		super(repository, GeoArticle.class);
 		this.articleService = articleService;
-	}
+        this.documentService = documentService;
+    }
 
 	@GraphQLQuery
 	public RelayPage<GeoArticle> allArticle(
@@ -39,7 +42,7 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 	public Optional<GeoArticle> getArticle(
 			@GraphQLArgument(name = "id") String id
 	) {
-		return super.getOne(id);
+		return this.documentService.loadDocument(super.getOne(id));
 	}
 
 	@GraphQLMutation

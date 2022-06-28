@@ -28,7 +28,8 @@ public class Maddog2FileSystemService extends FileSystemService {
 		ARTICLES("/Geo2_doc/articles/"),
 		ORDRES("/Geo2_doc/ordres/"),
 		GEO_IMG("/geo_img/"),
-		GEO_DOC("/geo_doc/");
+		GEO_DOC("/geo_doc/"),
+        GEO_FACTURE("/geo_factures/");
 
 		private String path;
 		PATH_KEY(String basePath) { this.path = basePath; }

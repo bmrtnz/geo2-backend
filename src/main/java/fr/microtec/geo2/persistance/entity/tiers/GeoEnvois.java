@@ -8,7 +8,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,8 +21,8 @@ import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.common.StringUtils;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
-import fr.microtec.geo2.persistance.repository.event.document.GeoAsDocument;
-import fr.microtec.geo2.persistance.repository.event.document.GeoDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.ordres.GeoImprimante;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;

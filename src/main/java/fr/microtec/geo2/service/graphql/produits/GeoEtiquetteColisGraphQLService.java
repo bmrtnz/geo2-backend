@@ -4,6 +4,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoEtiquetteColis;
 import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoEtiquetteColisRepository;
+import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -23,9 +24,11 @@ import java.util.Optional;
 public class GeoEtiquetteColisGraphQLService
 		extends GeoAbstractGraphQLService<GeoEtiquetteColis, GeoProduitWithEspeceId> {
 
-	public GeoEtiquetteColisGraphQLService(GeoEtiquetteColisRepository repository) {
+    private final DocumentService documentService;
+	public GeoEtiquetteColisGraphQLService(GeoEtiquetteColisRepository repository, DocumentService documentService) {
 		super(repository, GeoEtiquetteColis.class);
-	}
+        this.documentService = documentService;
+    }
 
 	@GraphQLQuery
 	public RelayPage<GeoEtiquetteColis> allEtiquetteColis(
@@ -40,7 +43,7 @@ public class GeoEtiquetteColisGraphQLService
 	public Optional<GeoEtiquetteColis> getEtiquetteColis(
 			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
 	) {
-		return super.getOne(id);
+		return this.documentService.loadDocument(super.getOne(id));
 	}
 
 }

@@ -4,6 +4,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoEtiquetteUc;
 import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoEtiquetteUcRepository;
+import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -22,9 +23,11 @@ import java.util.Optional;
 @Secured("ROLE_USER")
 public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoEtiquetteUc, GeoProduitWithEspeceId> {
 
-	public GeoEtiquetteUcGraphQLService(GeoEtiquetteUcRepository repository) {
+    private final DocumentService documentService;
+	public GeoEtiquetteUcGraphQLService(GeoEtiquetteUcRepository repository, DocumentService documentService) {
 		super(repository, GeoEtiquetteUc.class);
-	}
+        this.documentService = documentService;
+    }
 
 	@GraphQLQuery
 	public RelayPage<GeoEtiquetteUc> allEtiquetteUc(
@@ -39,7 +42,7 @@ public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoE
 	public Optional<GeoEtiquetteUc> getEtiquetteUc(
 			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
 	) {
-		return super.getOne(id);
+		return this.documentService.loadDocument(super.getOne(id));
 	}
 
 }

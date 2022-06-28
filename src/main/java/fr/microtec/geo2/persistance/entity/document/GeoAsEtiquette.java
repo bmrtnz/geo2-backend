@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.repository.event.document;
+package fr.microtec.geo2.persistance.entity.document;
 
 import fr.microtec.geo2.persistance.entity.produits.*;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;

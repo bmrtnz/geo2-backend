@@ -29,20 +29,9 @@ public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJ
         implements GeoCustomRepository<T> {
     private final EntityManager entityManager;
 
-    private GeoRepositoryEvent geoRepositoryEvent;
-
     public GeoCustomRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.entityManager = entityManager;
-    }
-
-    @Override
-    public Optional<T> findById(ID id) {
-        Optional<T> entity = super.findById(id);
-
-        entity.ifPresent(this.geoRepositoryEvent::fireLoad);
-
-        return entity;
     }
 
     /**
@@ -111,9 +100,7 @@ public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJ
                     this.setData(newClass, alias, tuple);
                 });
 
-                this.geoRepositoryEvent.fireLoad(newClass);
                 result.add(newClass);
-
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException
                     | NoSuchMethodException e) {
                 log.error(e.getMessage());
@@ -307,10 +294,8 @@ public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJ
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error(e.getMessage());
         }
+
         return super.saveAll(entities);
     }
 
-    public void setRepositoryEvent(GeoRepositoryEvent repositoryEvent) {
-        this.geoRepositoryEvent = repositoryEvent;
-    }
 }

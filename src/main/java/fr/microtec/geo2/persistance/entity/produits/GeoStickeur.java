@@ -1,8 +1,8 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import fr.microtec.geo2.persistance.repository.event.document.GeoAsEtiquette;
-import fr.microtec.geo2.persistance.repository.event.document.GeoDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoAsEtiquette;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

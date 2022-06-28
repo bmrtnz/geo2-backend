@@ -4,6 +4,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.entity.produits.GeoStickeur;
 import fr.microtec.geo2.persistance.repository.produits.GeoStickerRepository;
+import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -22,9 +23,12 @@ import java.util.Optional;
 @Secured("ROLE_USER")
 public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStickeur, GeoProduitWithEspeceId> {
 
-	public GeoStickerGraphQLService(GeoStickerRepository repository) {
+    private final DocumentService documentService;
+
+	public GeoStickerGraphQLService(GeoStickerRepository repository, DocumentService documentService) {
 		super(repository, GeoStickeur.class);
-	}
+        this.documentService = documentService;
+    }
 
 	@GraphQLQuery
 	public RelayPage<GeoStickeur> allStickeur(
@@ -39,7 +43,7 @@ public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStick
 	public Optional<GeoStickeur> getStickeur(
 			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
 	) {
-		return super.getOne(id);
+		return this.documentService.loadDocument(super.getOne(id));
 	}
 
 }

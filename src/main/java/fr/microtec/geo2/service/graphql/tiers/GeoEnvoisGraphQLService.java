@@ -2,9 +2,9 @@ package fr.microtec.geo2.service.graphql.tiers;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import fr.microtec.geo2.service.DocumentService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
@@ -31,20 +31,24 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois, String> {
 
 	private final EnvoisService envoisService;
+    private final DocumentService documentService;
 
 	public GeoEnvoisGraphQLService(
-			GeoEnvoisRepository envoisRepository,
-			EnvoisService envoisService) {
+        GeoEnvoisRepository envoisRepository,
+        EnvoisService envoisService, DocumentService documentService) {
 		super(envoisRepository, GeoEnvois.class);
 		this.envoisService = envoisService;
-	}
+        this.documentService = documentService;
+    }
 
 	@GraphQLQuery
 	public RelayPage<GeoEnvois> allEnvois(
 			@GraphQLArgument(name = "search") String search,
 			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
 			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getPage(search, pageable, env);
+		return this.documentService.loadDocument(
+            this.getPage(search, pageable, env)
+        );
 	}
 
 	@GraphQLQuery
@@ -80,7 +84,7 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 
 	/**
 	 * > Count the number of GeoEnvois that have the given GeoOrdre and GeoFlux
-	 * 
+	 *
 	 * @param ordre The GeoOrdre object to search for
 	 * @param flux  The name of the parameter.
 	 * @return A long
@@ -95,7 +99,7 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 
 	/**
 	 * > Count the number of GeoEnvois that have a given ordre, flux, and traite
-	 * 
+	 *
 	 * @param ordre  The GeoOrdre object to search for
 	 * @param flux   the flux to filter on
 	 * @param traite a list of characters, each character is a status of the order.
@@ -112,7 +116,7 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 
 	/**
 	 * It counts the number of GeoEnvois entities that match the search criteria
-	 * 
+	 *
 	 * @param search The search string to use to filter the results.
 	 * @return The number of GeoEnvois that match the search criteria.
 	 */
@@ -127,7 +131,7 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 	/**
 	 * > Delete all the temporary envois (those with a status of 'A' or 'R') from
 	 * the database
-	 * 
+	 *
 	 * @param allEnvois The list of all envois
 	 */
 	@GraphQLMutation

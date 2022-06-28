@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import fr.microtec.geo2.persistance.repository.event.document.GeoAsDocument;
-import fr.microtec.geo2.persistance.repository.event.document.GeoDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;

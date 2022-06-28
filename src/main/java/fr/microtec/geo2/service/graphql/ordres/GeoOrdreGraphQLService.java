@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import fr.microtec.geo2.service.DocumentService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,12 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
     private final OrdreService ordreService;
+    private final DocumentService documentService;
 
-    public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService) {
+    public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService, DocumentService documentService) {
         super(repository, GeoOrdre.class);
         this.ordreService = ordreService;
+        this.documentService = documentService;
     }
 
     @GraphQLQuery
@@ -92,7 +95,9 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLArgument(name = "numero") String numero,
             @GraphQLArgument(name = "societe") String societeID,
             @GraphQLArgument(name = "campagne") String campagneID) {
-        return this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID);
+        return this.documentService.loadDocument(
+            this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID)
+        );
     }
 
     @GraphQLMutation

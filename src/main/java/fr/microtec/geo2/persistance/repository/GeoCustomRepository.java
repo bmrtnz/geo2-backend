@@ -17,5 +17,4 @@ public interface GeoCustomRepository<T> {
     Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields);
     Page<T> findAllWithPagination(final Specification<T> specs, final Pageable pageable, final Class<T> clazz, final Set<String> fields, JoinType joinType);
 
-    void setRepositoryEvent(GeoRepositoryEvent repositoryEvent);
 }
