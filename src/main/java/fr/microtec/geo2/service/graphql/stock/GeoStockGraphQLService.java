@@ -12,7 +12,6 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
-import fr.microtec.geo2.persistance.entity.stock.GeoStockMouvement;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.service.StockService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -127,7 +126,7 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
         if (quantite.isPresent())
             if (quantite.get() >= 0) {
                 value += " initial=" + stockArticle.getQuantiteInitiale();
-                value += " réservé=" + stockArticle.getQuantiteReservee();
+                value += " destocké=" + stockArticle.getQuantiteReservee();
             } else
                 value += " réappro=" + quantite.get();
 
