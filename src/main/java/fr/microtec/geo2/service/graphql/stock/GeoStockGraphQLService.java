@@ -12,6 +12,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockQuantite;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockReservation;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.service.StockService;
@@ -89,28 +90,28 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
     }
 
     @GraphQLQuery
-    public Integer quantiteCalculee1(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee1(@GraphQLContext GeoStockQuantite stockArticle) {
         return stockArticle.getQuantiteInitiale1()
                 - stockArticle.getQuantiteReservee1()
                 - stockArticle.getQuantiteOptionnelle1();
     }
 
     @GraphQLQuery
-    public Integer quantiteCalculee2(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee2(@GraphQLContext GeoStockQuantite stockArticle) {
         return stockArticle.getQuantiteInitiale2()
                 - stockArticle.getQuantiteReservee2()
                 - stockArticle.getQuantiteOptionnelle2();
     }
 
     @GraphQLQuery
-    public Integer quantiteCalculee3(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee3(@GraphQLContext GeoStockQuantite stockArticle) {
         return stockArticle.getQuantiteInitiale3()
                 - stockArticle.getQuantiteReservee3()
                 - stockArticle.getQuantiteOptionnelle3();
     }
 
     @GraphQLQuery
-    public Integer quantiteCalculee4(@GraphQLContext GeoStockArticle stockArticle) {
+    public Integer quantiteCalculee4(@GraphQLContext GeoStockQuantite stockArticle) {
         return stockArticle.getQuantiteInitiale4()
                 - stockArticle.getQuantiteReservee4()
                 - stockArticle.getQuantiteOptionnelle4();

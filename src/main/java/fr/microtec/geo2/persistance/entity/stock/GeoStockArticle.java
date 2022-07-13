@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class GeoStockArticle extends ValidateEntity {
+public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite {
     @Id
     @Column(name = "rownum")
     private Integer id;
