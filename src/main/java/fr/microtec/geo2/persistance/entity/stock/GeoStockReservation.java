@@ -5,14 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Entity
-public class GeoStockReservation extends ValidateAndModifiedEntity implements GeoStockQuantite {
+public class GeoStockReservation implements GeoStockQuantite {
     @Id
     @Column(name = "rownum")
     private Integer id;
