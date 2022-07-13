@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Import;
 import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
-import fr.microtec.geo2.persistance.entity.stock.GeoStockReservation;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 
@@ -54,10 +53,14 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllStockReservation() {
-        List<GeoStockReservation> list = this.stockRepository
+        this.stockRepository
                 .allStockReservationList("002021");
+    }
 
-        Assertions.assertTrue(list.isEmpty());
+    @Test
+    public void testAllLigneReservation() {
+        this.stockRepository
+                .allLigneReservationList("9F2FDC");
     }
 
 }
