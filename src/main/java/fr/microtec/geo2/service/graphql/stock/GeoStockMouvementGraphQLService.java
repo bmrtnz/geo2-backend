@@ -42,6 +42,12 @@ public class GeoStockMouvementGraphQLService extends GeoAbstractGraphQLService<G
     }
 
     @GraphQLMutation
+    public GeoStockMouvement saveStockMouvement(GeoStockMouvement stockMouvement,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(stockMouvement, env);
+    }
+
+    @GraphQLMutation
     public void deleteStockMouvement(String id) {
         this.delete(id);
     }
