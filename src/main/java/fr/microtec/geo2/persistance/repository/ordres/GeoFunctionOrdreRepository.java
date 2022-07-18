@@ -1,9 +1,10 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
-import fr.microtec.geo2.persistance.entity.FunctionResult;
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
 
 @Repository
 public interface GeoFunctionOrdreRepository {
@@ -93,7 +94,7 @@ public interface GeoFunctionOrdreRepository {
             String arg_prop_code,
             String arg_art_ref,
             String arg_username,
-            String arg_qte_resa,
+            Integer arg_qte_resa,
             String arg_ord_ref,
             String arg_orl_ref,
             String arg_desc,

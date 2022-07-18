@@ -39,7 +39,7 @@ AS
     ls_pal_code varchar2(50);
     ll_qtt_ini number;
     ll_qtt_res number;
-    ls_sql varchar2(50);
+    ls_sql varchar2(500);
     type tabNumber is table of number;
     ll_qtt tabNumber := tabNumber();
     -- long ll_i
@@ -52,10 +52,10 @@ BEGIN
     -- Si pal_code est non null on l'inclut dans les critères
 
     if arg_pal_code is null then
-        ls_sql := 'select sto_ref, qte_ini, qte_res, age, sto_desc, sto_statut, pal_code from geo_stock where fou_code = ' || arg_fou_code || ' and prop_code = ' || arg_prop_code || ' and art_ref = ' || arg_art_ref || ' order by age desc';
+        ls_sql := 'select sto_ref, qte_ini, qte_res, age, sto_desc, sto_statut, pal_code from geo_stock where fou_code = ''' || arg_fou_code || ''' and prop_code = ''' || arg_prop_code || ''' and art_ref = ''' || arg_art_ref || ''' order by age desc';
         select count(*) into ll_nb_stock from geo_stock where fou_code = arg_fou_code and prop_code = arg_prop_code and art_ref = arg_art_ref;
     else
-        ls_sql := 'select sto_ref, qte_ini, qte_res, age, sto_desc, sto_statut, pal_code from geo_stock where fou_code = ' || arg_fou_code || ' and prop_code = ' || arg_prop_code || ' and art_ref = ' || arg_art_ref || ' and pal_code = ' || arg_pal_code || ' order by age desc';
+        ls_sql := 'select sto_ref, qte_ini, qte_res, age, sto_desc, sto_statut, pal_code from geo_stock where fou_code = ''' || arg_fou_code || ''' and prop_code = ''' || arg_prop_code || ''' and art_ref = ''' || arg_art_ref || ''' and pal_code = ''' || arg_pal_code || ''' order by age desc';
         select count(*) into ll_nb_stock from geo_stock where fou_code = arg_fou_code and prop_code = arg_prop_code and art_ref = arg_art_ref and pal_code = arg_pal_code;
     end if;
 
@@ -70,6 +70,7 @@ BEGIN
         open co for ls_sql;
         loop
             ls_sto_ref.extend(1);
+            ll_qtt.extend(1);
             fetch co into ls_sto_ref(ll_ind), ll_qtt_ini, ll_qtt_res, ls_age, ls_sto_desc, ls_sto_statut, ls_pal_code;
             exit when co%notfound;
 
@@ -107,6 +108,7 @@ BEGIN
         open co for ls_sql;
         loop
             ls_sto_ref.extend(1);
+            ll_qtt.extend(1);
             fetch co into ls_sto_ref(ll_ind), ll_qtt_ini, ll_qtt_res, ls_age, ls_sto_desc, ls_sto_statut, ls_pal_code;
             exit when co%notfound;
 

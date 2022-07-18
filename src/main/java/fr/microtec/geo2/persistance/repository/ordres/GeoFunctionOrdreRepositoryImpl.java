@@ -209,7 +209,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
             String arg_prop_code,
             String arg_art_ref,
             String arg_username,
-            String arg_qte_resa,
+            Integer arg_qte_resa,
             String arg_ord_ref,
             String arg_orl_ref,
             String arg_desc,
@@ -220,7 +220,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_prop_code", String.class, arg_prop_code);
         query.attachInput("arg_art_ref", String.class, arg_art_ref);
         query.attachInput("arg_username", String.class, arg_username);
-        query.attachInput("arg_qte_resa", String.class, arg_qte_resa);
+        query.attachInput("arg_qte_resa", Integer.class, arg_qte_resa);
         query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
         query.attachInput("arg_orl_ref", String.class, arg_orl_ref);
         query.attachInput("arg_desc", String.class, arg_desc);
