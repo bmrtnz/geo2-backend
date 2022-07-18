@@ -52,4 +52,9 @@ public class GeoStockMouvementGraphQLService extends GeoAbstractGraphQLService<G
         this.delete(id);
     }
 
+    @GraphQLMutation
+    public void deleteAllByOrdreLigneId(String id) {
+        ((GeoStockMouvementRepository) this.repository).deleteAllByOrdreLigneId(id);
+    }
+
 }
