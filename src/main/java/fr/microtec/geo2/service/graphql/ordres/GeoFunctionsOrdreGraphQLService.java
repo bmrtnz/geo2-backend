@@ -127,6 +127,21 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fResaUneLigne(
+            @GraphQLArgument(name = "fouCode") String arg_fou_code,
+            @GraphQLArgument(name = "propCode") String arg_prop_code,
+            @GraphQLArgument(name = "artRef") String arg_art_ref,
+            @GraphQLArgument(name = "username") String arg_username,
+            @GraphQLArgument(name = "qteResa") Integer arg_qte_resa,
+            @GraphQLArgument(name = "ordRef") String arg_ord_ref,
+            @GraphQLArgument(name = "orlRef") String arg_orl_ref,
+            @GraphQLArgument(name = "desc") String arg_desc,
+            @GraphQLArgument(name = "palCode") String arg_pal_code) {
+        return this.repository.fResaUneLigne(arg_fou_code, arg_prop_code, arg_art_ref, arg_username, arg_qte_resa,
+                arg_ord_ref, arg_orl_ref, arg_desc, arg_pal_code);
+    }
+
+    @GraphQLQuery
     public FunctionResult geoPrepareEnvois(
             @GraphQLArgument(name = "ordRef") String ordRef,
             @GraphQLArgument(name = "fluCode") String fluCode,
