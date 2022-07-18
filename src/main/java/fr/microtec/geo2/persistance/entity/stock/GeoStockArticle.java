@@ -4,12 +4,17 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinFormula;
+
 import fr.microtec.geo2.persistance.entity.ValidateEntity;
+import fr.microtec.geo2.persistance.entity.produits.GeoCalibreFournisseur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -43,8 +48,13 @@ public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite 
     @Column(name = "var_code")
     private String varieteID;
 
-    @Column(name = "caf_code")
+    @Column(name = "caf_code", insertable = false, updatable = false)
     private String calibreFournisseurID;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+    @JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
+    private GeoCalibreFournisseur calibreFournisseur;
 
     @Column(name = "cam_code")
     private String calibreMarquageID;
