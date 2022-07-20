@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 /**
  * Configure project security.
  */
-@Profile("!dev")
+@Profile("!(dev | devbw)")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {

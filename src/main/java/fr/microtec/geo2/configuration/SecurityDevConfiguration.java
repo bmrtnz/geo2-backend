@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 /**
  * Configure project security for dev.
  */
-@Profile("dev")
+@Profile({"dev | devbw"})
 @Configuration
 @EnableWebSecurity
 public class SecurityDevConfiguration extends SecurityConfiguration {
