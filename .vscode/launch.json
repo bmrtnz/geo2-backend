@@ -6,15 +6,15 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug Geo2Application",
+            "name": "DEV-BW Geo2Application",
             "request": "launch",
             "mainClass": "fr.microtec.geo2.Geo2Application",
             "projectName": "geo2",
-            "args": "--spring.profiles.active=dev"
+            "args": "--spring.profiles.active=devbw"
         },
         {
             "type": "java",
-            "name": "Launch Geo2Application",
+            "name": "DEV Geo2Application",
             "request": "launch",
             "mainClass": "fr.microtec.geo2.Geo2Application",
             "projectName": "geo2",
