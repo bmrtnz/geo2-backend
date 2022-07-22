@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
+import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueTransporteur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -106,5 +107,9 @@ public class GeoTransporteur extends ValidateModifiedPrewrittedEntity implements
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "transporteur")
 	@Where(clause = "entite = 'Transporteur'")
 	private Set<GeoModification> modifications;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "transporteur")
+	private List<GeoHistoriqueTransporteur> historique;
+
 
 }
