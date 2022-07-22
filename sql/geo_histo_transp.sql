@@ -87,3 +87,5 @@ ALTER TABLE GEO_ADMIN.GEO_HISTO_TRANSP ADD (
                 MAXEXTENTS       UNLIMITED
                 PCTINCREASE      0
                ));
+/
+
