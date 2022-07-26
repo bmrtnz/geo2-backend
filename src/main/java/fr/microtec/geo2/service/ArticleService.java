@@ -1,22 +1,16 @@
 package fr.microtec.geo2.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
-
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import cz.jirutka.rsql.parser.RSQLParser;
+import fr.microtec.geo2.common.CustomUtils;
+import fr.microtec.geo2.configuration.graphql.PageFactory;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.CriteriaUtils;
+import fr.microtec.geo2.persistance.entity.Duplicable;
+import fr.microtec.geo2.persistance.entity.produits.*;
+import fr.microtec.geo2.persistance.repository.produits.*;
+import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
+import fr.microtec.geo2.service.graphql.produits.GeoArticleGraphQLService;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,27 +18,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import cz.jirutka.rsql.parser.RSQLParser;
-import fr.microtec.geo2.common.CustomUtils;
-import fr.microtec.geo2.configuration.graphql.PageFactory;
-import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.CriteriaUtils;
-import fr.microtec.geo2.persistance.entity.Duplicable;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleCahierDesCharge;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleEmballage;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleMatierePremiere;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticleNormalisation;
-import fr.microtec.geo2.persistance.entity.produits.GeoVariete;
-import fr.microtec.geo2.persistance.repository.GeoRepository;
-import fr.microtec.geo2.persistance.repository.produits.GeoArticleCahierDesChargeRepository;
-import fr.microtec.geo2.persistance.repository.produits.GeoArticleEmballageRepository;
-import fr.microtec.geo2.persistance.repository.produits.GeoArticleMatierePremiereRepository;
-import fr.microtec.geo2.persistance.repository.produits.GeoArticleNormalisationRepository;
-import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
-import fr.microtec.geo2.persistance.rsql.GeoCustomVisitor;
-import fr.microtec.geo2.service.graphql.produits.GeoArticleGraphQLService;
-import io.leangen.graphql.execution.ResolutionEnvironment;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -160,11 +140,8 @@ public class ArticleService {
 		return saved;
 	}
 
-	private <T extends Duplicable<T>> T fetch(GeoRepository<T, String> repository, T entity) {
-		ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("id", "dateCreation", "dateModification",
-				"userCreation", "userModification", "valide");
-		Example<T> example = Example.of(entity, matcher);
-		List<T> entitiesFound = repository.findAll(example);
+	private <T extends Duplicable<T>, R extends GeoArticlePartRepository<T, String>> T fetch(R repository, T entity) {
+        List<T> entitiesFound = repository.findAll(repository.getArticleMatchSpecification(entity));
 
 		if (entitiesFound.isEmpty())
 			return repository.save(entity.duplicate());

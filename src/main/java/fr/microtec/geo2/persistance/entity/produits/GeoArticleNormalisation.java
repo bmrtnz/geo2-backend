@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
+import fr.microtec.geo2.persistance.repository.produits.matcher.GeoArticlePartMatch;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;
@@ -30,55 +31,72 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity im
 	)
 	private String id;
 
+    @GeoArticlePartMatch
 	@Column(name = "gtin_colis")
 	private String gtinColis;
 
+    @GeoArticlePartMatch
+    @Column(name = "gtin_palette")
+    private String gtinPalette;
+
+    @GeoArticlePartMatch
 	@Column(name = "gtin_uc")
 	private String gtinUc;
 
+    @GeoArticlePartMatch
 	@Column(name = "com_client")
 	private String descriptionCalibreClient;
 
+    @GeoArticlePartMatch
 	@Column(name = "mdd")
 	private Boolean produitMdd;
 
+    @GeoArticlePartMatch
 	@Column(name = "pde_cliart")
 	private String articleClient;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "cam_code"))
 	private GeoCalibreMarquage calibreMarquage;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etf_code"))
 	private GeoStickeur stickeur;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etc_code"))
 	private GeoEtiquetteColis etiquetteColis;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etp_code"))
 	private GeoEtiquetteUc etiquetteUc;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etv_code"))
 	private GeoEtiquetteEvenementielle etiquetteEvenementielle;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "ids_code"))
 	private GeoIdentificationSymbolique identificationSymbolique;
 
+    @GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "maq_code"))
@@ -99,7 +117,8 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity im
 		clone.descriptionCalibreClient = this.descriptionCalibreClient;
 		clone.produitMdd = this.produitMdd;
 		clone.articleClient = this.articleClient;
-		
+        clone.gtinPalette = this.gtinPalette;
+
 		return clone;
 	}
 

@@ -8,6 +8,8 @@ import javax.persistence.*;
 import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -21,6 +23,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_gestion")
+@DynamicUpdate
+@DynamicInsert
 public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Duplicable<GeoArticle>, GeoAsDocument {
 
     @Id
