@@ -67,6 +67,9 @@ public interface GeoArticlePartMatchable<T> {
                     // If is null bind isNull operator and join if needed
                     try {
                         Object value = entityWrapper.getPropertyValue(localProperty);
+                        if (value == null) {
+                            throw new NullValueInNestedPathException(entityWrapper.getPropertyType(property), property);
+                        }
 
                         return criteriaBuilder.equal(expression, value);
                     } catch (NullValueInNestedPathException ex) {

@@ -38,7 +38,7 @@ public class GeoArticleMatierePremiere extends ValidateCreatedAndModifiedEntity 
 	private String codePlu;
 
     @GeoArticlePartMatch
-    @Column(name = "tvp_code")
+    @Column(name = "typ_code")
     private String codeTvp;
 
     @GeoArticlePartMatch
