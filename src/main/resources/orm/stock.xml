@@ -145,4 +145,86 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+   <!-- SELECTION POUR RESERVATION A LA LIGNE -->
+  <named-native-query
+    name="Stock.allStockReservation"
+    result-class="fr.microtec.geo2.persistance.entity.stock.GeoStockReservation"
+  >
+    <query>
+    <![CDATA[
+      SELECT
+        rownum,
+        STV.fou_code,
+        STV.prop_code,
+        SUM(STV.qte_ini) as qte_ini,
+        SUM(STV.qte_res) as qte_res,
+        STV.desc_stat as option_stock,
+        STV.pal_code,
+        SUM(STV.qte_ini_1) as ini1,
+        SUM(STV.qte_res_1) as res1,
+        SUM(STV.qte_ini_2) as ini2,
+        SUM(STV.qte_res_2) as res2,
+        SUM(STV.qte_ini_3) as ini3,
+        SUM(STV.qte_res_3) as res3,
+        SUM(STV.qte_ini_4) as ini4,
+        SUM(STV.qte_res_4) as res4
+    FROM
+    (
+        SELECT
+            GEO_STOCK.fou_code,
+            GEO_STOCK.prop_code,
+            SUM(GEO_STOCK.qte_ini) AS qte_ini,
+            SUM(GEO_STOCK.qte_res) AS qte_res,
+            DECODE(sto_statut,'O',sto_desc,'') AS desc_stat,
+            GEO_STOCK.pal_code,
+            DECODE(GEO_STOCK.age, '1', SUM(GEO_STOCK.qte_ini), 0) AS qte_ini_1,
+            DECODE(GEO_STOCK.age, '1', SUM(GEO_STOCK.qte_res), 0) AS qte_res_1,
+            DECODE(GEO_STOCK.age, '2', SUM(GEO_STOCK.qte_ini), 0) AS qte_ini_2,
+            DECODE(GEO_STOCK.age, '2', SUM(GEO_STOCK.qte_res), 0) AS qte_res_2,
+            DECODE(GEO_STOCK.age, '3', SUM(GEO_STOCK.qte_ini), 0) AS qte_ini_3,
+            DECODE(GEO_STOCK.age, '3', SUM(GEO_STOCK.qte_res), 0) AS qte_res_3,
+            DECODE(GEO_STOCK.age, '4', SUM(GEO_STOCK.qte_ini), 0) AS qte_ini_4,
+            DECODE(GEO_STOCK.age, '4', SUM(GEO_STOCK.qte_res), 0) AS qte_res_4
+        FROM
+            GEO_STOCK
+        WHERE
+            GEO_STOCK.art_ref = :arg_art_ref and
+            GEO_STOCK.valide ='O'
+        GROUP BY
+            GEO_STOCK.fou_code,GEO_STOCK.pal_code, DECODE(sto_statut,'O',sto_desc,''), GEO_STOCK.age, GEO_STOCK.prop_code
+    )  STV
+    GROUP BY
+        rownum,
+        STV.fou_code,
+        STV.desc_stat,
+        STV.pal_code,
+        STV.prop_code
+    ]]>
+    </query>
+  </named-native-query>
+
+   <!-- SELECTION DES RESERVATIONS ACTIVE D'UNE LIGNE -->
+  <named-native-query
+    name="Stock.allLigneReservation"
+    result-class="fr.microtec.geo2.persistance.entity.stock.GeoLigneReservation"
+  >
+    <query>
+    <![CDATA[
+      	select
+            rownum,
+            sum(mvt_qte) as mvt_qte,
+            geo_stock.fou_code,
+            geo_stock.prop_code
+		from geo_stomvt, geo_stock
+		where geo_stomvt.orl_ref = :arg_orl_ref
+		and geo_stomvt.sto_ref = geo_stock.sto_ref
+		and geo_stock.valide = 'O'
+		group by
+            rownum,
+            geo_stock.fou_code,
+            geo_stock.prop_code
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

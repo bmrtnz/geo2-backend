@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "DEV-BW Geo2Application",
+            "request": "launch",
+            "mainClass": "fr.microtec.geo2.Geo2Application",
+            "projectName": "geo2",
+            "args": "--spring.profiles.active=devbw"
+        },
+        {
+            "type": "java",
+            "name": "DEV Geo2Application",
+            "request": "launch",
+            "mainClass": "fr.microtec.geo2.Geo2Application",
+            "projectName": "geo2",
+            "args": "--spring.profiles.active=dev"
+        }
+    ]
+}

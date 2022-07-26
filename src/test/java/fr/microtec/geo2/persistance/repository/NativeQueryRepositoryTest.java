@@ -3,18 +3,14 @@ package fr.microtec.geo2.persistance.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.ContextConfiguration;
 
-import fr.microtec.geo2.Geo2Application;
+import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
@@ -53,6 +49,18 @@ public class NativeQueryRepositoryTest {
                         "%");
 
         Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllStockReservation() {
+        this.stockRepository
+                .allStockReservationList("002021");
+    }
+
+    @Test
+    public void testAllLigneReservation() {
+        this.stockRepository
+                .allLigneReservationList("9F2FDC");
     }
 
 }

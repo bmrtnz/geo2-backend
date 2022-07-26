@@ -281,6 +281,23 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFResaUneLigne() {
+        FunctionResult result = this.functionOrdreRepository
+                .fResaUneLigne(
+                        "STANOR",
+                        "STANOR",
+                        "094821",
+                        "BRUNO",
+                        2,
+                        "1976111",
+                        "8B2A3D",
+                        "[arg_desc]",
+                        "P17");
+
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
     public void testOfSauveOrdre() {
         FunctionResult result = this.functionOrdreRepository
                 .ofSauveOrdre("000927");

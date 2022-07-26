@@ -204,6 +204,34 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fResaUneLigne(
+            String arg_fou_code,
+            String arg_prop_code,
+            String arg_art_ref,
+            String arg_username,
+            Integer arg_qte_resa,
+            String arg_ord_ref,
+            String arg_orl_ref,
+            String arg_desc,
+            String arg_pal_code) {
+        FunctionQuery query = this.build("F_RESA_UNE_LIGNE");
+
+        query.attachInput("arg_fou_code", String.class, arg_fou_code);
+        query.attachInput("arg_prop_code", String.class, arg_prop_code);
+        query.attachInput("arg_art_ref", String.class, arg_art_ref);
+        query.attachInput("arg_username", String.class, arg_username);
+        query.attachInput("arg_qte_resa", Integer.class, arg_qte_resa);
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+        query.attachInput("arg_orl_ref", String.class, arg_orl_ref);
+        query.attachInput("arg_desc", String.class, arg_desc);
+        query.attachInput("arg_pal_code", String.class, arg_pal_code);
+        query.attachOutput("nb_resa", Integer.class);
+        query.attachOutput("nb_dispo", Integer.class);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult ofSauveOrdre(String ordRef) {
         return this.runMono("OF_SAUVE_ORDRE", "arg_ord_ref", String.class, ordRef);
     }

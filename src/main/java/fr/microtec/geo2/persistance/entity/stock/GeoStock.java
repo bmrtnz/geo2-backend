@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,6 +27,13 @@ public class GeoStock extends GeoBaseStock {
     @JoinColumn(name = "art_ref")
     private GeoArticle article;
 
+    @Column(name = "sto_desc")
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prop_code", referencedColumnName = "fou_code", nullable = false)
+    private GeoFournisseur proprietaire;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stock")
     private List<GeoStockMouvement> mouvements;
 
@@ -33,5 +42,15 @@ public class GeoStock extends GeoBaseStock {
 
     @Column(name = "ini_date")
     private LocalDate dateInfo;
+
+    @Column(name = "qte_ini")
+    private Integer quantiteInitiale;
+
+    @Column(name = "qte_res")
+    private Integer quantiteReservee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pal_code")
+    private GeoTypePalette typePalette;
 
 }

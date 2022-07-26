@@ -15,6 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -47,6 +48,10 @@ public class GeoStockMouvement extends ValidateAndModifiedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orl_ref")
     private GeoOrdreLigne ordreLigne;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "art_ref")
+    private GeoArticle article;
 
     @Column(name = "mvt_qte")
     private Integer quantite;

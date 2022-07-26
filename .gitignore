@@ -28,5 +28,5 @@ target/
 build/
 
 ### VS Code ###
-.vscode/
+.vscode/settings.json
 sql/output.sql

@@ -1,9 +1,10 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
-import fr.microtec.geo2.persistance.entity.FunctionResult;
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
 
 @Repository
 public interface GeoFunctionOrdreRepository {
@@ -87,6 +88,17 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult ofVerifLogistiqueDepart(String ordRef);
 
     FunctionResult ofCalculRegimeTvaEncours(String ordRef, String regimeTVA);
+
+    FunctionResult fResaUneLigne(
+            String arg_fou_code,
+            String arg_prop_code,
+            String arg_art_ref,
+            String arg_username,
+            Integer arg_qte_resa,
+            String arg_ord_ref,
+            String arg_orl_ref,
+            String arg_desc,
+            String arg_pal_code);
 
     FunctionResult ofSauveOrdre(String ordRef);
 
