@@ -23,36 +23,39 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoFournisseur, String> {
 
-	public GeoFournisseurGraphQLService(GeoFournisseurRepository repository) {
-		super(repository, GeoFournisseur.class);
-	}
+    public GeoFournisseurGraphQLService(GeoFournisseurRepository repository) {
+        super(repository, GeoFournisseur.class);
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoFournisseur> allFournisseur(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoFournisseur> allFournisseur(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoFournisseur> getFournisseur(
-			@GraphQLArgument(name = "id") String id
-	) {
-		return this.getOne(id);
-	}
+    @GraphQLQuery
+    public Optional<GeoFournisseur> getFournisseur(
+            @GraphQLArgument(name = "id") String id) {
+        return this.getOne(id);
+    }
 
-	@GraphQLMutation
-	public GeoFournisseur saveFournisseur(GeoFournisseur fournisseur, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(fournisseur, env);
-	}
+    @GraphQLMutation
+    public GeoFournisseur saveFournisseur(GeoFournisseur fournisseur, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(fournisseur, env);
+    }
 
-	@GraphQLQuery
-	public long countFournisseur(
-		@GraphQLArgument(name = "search") String search
-	) {
-		return this.count(search);
-	}
+    @GraphQLQuery
+    public long countFournisseur(
+            @GraphQLArgument(name = "search") String search) {
+        return this.count(search);
+    }
+
+    @GraphQLQuery
+    public Optional<GeoFournisseur> getFournisseurByCode(
+            @GraphQLArgument(name = "code") String code) {
+        return ((GeoFournisseurRepository) this.repository).getOneByCode(code);
+    }
 
 }
