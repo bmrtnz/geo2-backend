@@ -210,19 +210,34 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
-      	select
-            rownum,
-            sum(mvt_qte) as mvt_qte,
-            geo_stock.fou_code,
-            geo_stock.prop_code
-		from geo_stomvt, geo_stock
-		where geo_stomvt.orl_ref = :arg_orl_ref
-		and geo_stomvt.sto_ref = geo_stock.sto_ref
-		and geo_stock.valide = 'O'
-		group by
-            rownum,
-            geo_stock.fou_code,
-            geo_stock.prop_code
+        SELECT
+            "GEO_STOMVT"."STM_REF",
+            "GEO_STOMVT"."STO_REF",
+            "GEO_STOMVT"."NOM_UTILISATEUR",
+            "GEO_STOMVT"."MVT_TYPE",
+            "GEO_STOMVT"."MVT_QTE",
+            "GEO_STOMVT"."ORD_REF",
+            "GEO_STOMVT"."MOD_DATE",
+            "GEO_STOMVT"."MOD_USER",
+            "GEO_STOMVT"."VALIDE",
+            "GEO_STOMVT"."ART_REF",
+            "GEO_STOMVT"."ORL_REF",
+            "GEO_STOMVT"."STM_DESC",
+            "GEO_ORDLIG"."FOU_CODE" as ligne_fournisseur_code,
+            "GEO_STOCK"."FOU_CODE" as stock_fournisseur_code,
+            "GEO_STOCK"."PROP_CODE",
+            "GEO_STOCK"."STO_DESC",
+            "GEO_STOCK"."QTE_INI",
+            "GEO_STOCK"."QTE_RES",
+            "GEO_STOCK"."PAL_CODE"
+        FROM
+            "GEO_ORDLIG",
+            "GEO_STOMVT",
+            "GEO_STOCK"
+        WHERE
+            ( geo_stomvt.orl_ref (+) = geo_ordlig.orl_ref) and
+            ( "GEO_STOMVT"."STO_REF" = "GEO_STOCK"."STO_REF" ) and
+            ( ( geo_ordlig.orl_ref = :arg_orl_ref ) )
     ]]>
     </query>
   </named-native-query>
