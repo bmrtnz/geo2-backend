@@ -151,6 +151,8 @@ BEGIN
         declare
             ll_stm_ref number;
         begin
+            if ls_sto_ref(i) is null then exit; end if;
+
             select seq_stm_num.nextval into ll_stm_ref from dual;
             ll_stm_ref	:= to_char(ll_stm_ref,'000000');
 
