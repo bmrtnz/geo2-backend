@@ -298,6 +298,16 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFGetInfoResa() {
+        FunctionResult result = this.functionOrdreRepository
+                .fGetInfoResa("F2230C");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+        Assertions.assertFalse(result.getData().isEmpty());
+    }
+
+    @Test
     public void testOfSauveOrdre() {
         FunctionResult result = this.functionOrdreRepository
                 .ofSauveOrdre("000927");
