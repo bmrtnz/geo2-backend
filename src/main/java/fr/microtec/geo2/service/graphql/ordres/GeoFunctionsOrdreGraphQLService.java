@@ -156,6 +156,11 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fGetInfoResa(@GraphQLArgument(name = "orlRef") String orlRef) {
+        return this.repository.fGetInfoResa(orlRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult ofAREnvois(@GraphQLArgument(name = "ordRef") String ordRef) {
         return this.repository.ofAREnvois(ordRef);
     }
