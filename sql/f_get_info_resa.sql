@@ -30,6 +30,11 @@ BEGIN
 	res := 1;
 	msg := '';
 
+    ll_tot_qte_ini := 0;
+    ll_tot_qte_res := 0;
+    ll_tot_mvt_qte := 0;
+    ll_tot_nb_resa := 0;
+
     for r in C1
     loop
         ll_tot_qte_ini	:= ll_tot_qte_ini + r.qte_ini;
