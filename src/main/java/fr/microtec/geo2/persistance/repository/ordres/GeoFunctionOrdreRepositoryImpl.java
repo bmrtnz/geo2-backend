@@ -232,6 +232,19 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
+    public FunctionResult fGetInfoResa(String orlRef) {
+        FunctionQuery query = this.build("F_GET_INFO_RESA");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachOutput("ll_tot_qte_ini", Integer.class);
+        query.attachOutput("ll_tot_qte_res", Integer.class);
+        query.attachOutput("ll_tot_mvt_qte", Integer.class);
+        query.attachOutput("ll_tot_nb_resa", Integer.class);
+
+        return query.fetch();
+    }
+
+    @Override
     public FunctionResult ofSauveOrdre(String ordRef) {
         return this.runMono("OF_SAUVE_ORDRE", "arg_ord_ref", String.class, ordRef);
     }

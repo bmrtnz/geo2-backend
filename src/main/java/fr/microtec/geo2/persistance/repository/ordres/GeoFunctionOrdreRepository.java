@@ -100,6 +100,8 @@ public interface GeoFunctionOrdreRepository {
             String arg_desc,
             String arg_pal_code);
 
+    FunctionResult fGetInfoResa(String orlRef);
+
     FunctionResult ofSauveOrdre(String ordRef);
 
     // FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float
