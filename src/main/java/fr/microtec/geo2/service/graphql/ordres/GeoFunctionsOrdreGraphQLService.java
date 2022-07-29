@@ -336,4 +336,18 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDetailsExpOnCheckCloturer(orxRef, devalexpRef, username, socCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fBonAFacturerPrepare(
+        @GraphQLArgument(name = "ordreRef") String ordRef,
+        @GraphQLArgument(name = "socCode") String socCode) {
+        return this.repository.fBonAFacturerPrepare(ordRef, socCode);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fBonAFacturer(
+        @GraphQLArgument(name = "ordreRef") String ordRef,
+        @GraphQLArgument(name = "socCode") String socCode) {
+        return this.repository.fBonAFacturer(ordRef, socCode);
+    }
+
 }
