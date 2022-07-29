@@ -175,4 +175,8 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult fTracabiliteCloturer(String ordRef, Character cloturer);
 
     FunctionResult fDetailsExpOnCheckCloturer(String orxRef, String devalexpRef, String username, String socCode);
+
+    FunctionResult fBonAFacturerPrepare(String ordRef, String socCode);
+
+    FunctionResult fBonAFacturer(String ordRef, String socCode);
 }

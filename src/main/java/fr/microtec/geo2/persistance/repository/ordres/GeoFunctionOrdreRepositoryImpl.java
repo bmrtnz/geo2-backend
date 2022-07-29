@@ -581,4 +581,24 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fBonAFacturerPrepare(String ordRef, String socCode) {
+        FunctionQuery query = this.build("F_BON_A_FACTURER_PREPARE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fBonAFacturer(String ordRef, String socCode) {
+        FunctionQuery query = this.build("F_BON_A_FACTURER");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
 }

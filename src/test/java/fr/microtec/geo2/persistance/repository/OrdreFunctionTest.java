@@ -659,4 +659,23 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
+
+    @Test
+    public void testFBonAFacturerPrepareDejaFacture() {
+        FunctionResult result = this.functionOrdreRepository.fBonAFacturerPrepare("001864", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertTrue(result.getMsg().contains("l'ordre est déja bon à facturer"));
+    }
+
+    @Test
+    public void testFBonAFacturerDejaFacture() {
+        FunctionResult result = this.functionOrdreRepository.fBonAFacturer("001864", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertEquals("problème technique validation bon à facturer : l'ordre est déja bon à facturer !", result.getMsg(), result.getMsg());
+    }
+
 }
