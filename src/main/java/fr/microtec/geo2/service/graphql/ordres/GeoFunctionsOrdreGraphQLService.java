@@ -355,4 +355,12 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fBonAFacturer(ordRef, socCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fSuppressionOrdre(
+        @GraphQLArgument(name = "ordreRef") String ordRef,
+        @GraphQLArgument(name = "username") String username,
+        @GraphQLArgument(name = "commentaire") String commentaire) {
+        return this.repository.fSuppressionOrdre(ordRef, username, commentaire);
+    }
+
 }

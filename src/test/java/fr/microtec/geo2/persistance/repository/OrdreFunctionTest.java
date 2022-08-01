@@ -678,4 +678,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals("problème technique validation bon à facturer : l'ordre est déja bon à facturer !", result.getMsg(), result.getMsg());
     }
 
+    @Test
+    public void testFSuppressionOrdreAvecEnvoie() {
+        FunctionResult result = this.functionOrdreRepository.fSuppressionOrdre("001864", "STEPHANE", "Un commentaire");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertTrue(result.getMsg().contains("Impossible de supprimer l'ordre car des flux ont été générés"), result.getMsg());
+    }
+
 }
