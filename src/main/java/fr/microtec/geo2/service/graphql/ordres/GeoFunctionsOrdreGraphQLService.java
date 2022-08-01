@@ -8,7 +8,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
-import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.service.OrdreLigneService;
@@ -87,11 +86,8 @@ public class GeoFunctionsOrdreGraphQLService {
         if (res.getRes() == 1) {
             this.ordreLigneService.updateFromHistory(newligneRef, historyLigneRef);
 
-            // Manually calling on_change_fou_code procedure to generate logistique
-            GeoUtilisateur currentUser = this.securityService.getUser();
+            // Manually generate logistique
             this.repository.fVerifLogistiqueOrdre(ordreRef);
-            this.repository.onChangeProprCode(newligneRef, currentUser.getNomUtilisateur(), societeCode);
-            this.repository.onChangeFouCode(newligneRef, currentUser.getNomUtilisateur(), societeCode);
         }
 
         return res;
@@ -343,15 +339,15 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult fBonAFacturerPrepare(
-        @GraphQLArgument(name = "ordreRef") String ordRef,
-        @GraphQLArgument(name = "socCode") String socCode) {
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "socCode") String socCode) {
         return this.repository.fBonAFacturerPrepare(ordRef, socCode);
     }
 
     @GraphQLQuery
     public FunctionResult fBonAFacturer(
-        @GraphQLArgument(name = "ordreRef") String ordRef,
-        @GraphQLArgument(name = "socCode") String socCode) {
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "socCode") String socCode) {
         return this.repository.fBonAFacturer(ordRef, socCode);
     }
 
