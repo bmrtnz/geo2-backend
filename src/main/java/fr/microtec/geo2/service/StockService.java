@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
@@ -104,6 +105,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
         if (res.getRes() == 1) {
             GeoOrdreLigne ligne = this.ordreLigneRepo.getOne(newligneRef);
             GeoStock stock = this.stockRepository.getOne(stockId);
+            GeoUtilisateur utilisateur = this.securityService.getUser();
 
             // Create mouvement
             GeoStockMouvement mouvement = new GeoStockMouvement();
@@ -112,7 +114,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             mouvement.setOrdre(this.ordreRepo.getOne(ordreId));
             mouvement.setStock(stock);
             mouvement.setOrdreLigne(ligne);
-            mouvement.setNomUtilisateur(this.securityService.getUser().getUsername());
+            mouvement.setNomUtilisateur(utilisateur.getUsername());
             mouvement.setType('R');
             mouvement = stockMouvementRepo.save(mouvement);
 
@@ -123,6 +125,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             ligne.setFournisseur(stock.getFournisseur());
             this.ordreLigneRepo.save(ligne);
 
+            res = this.functionRepo.onChangeCdeNbCol(newligneRef, utilisateur.getUsername());
             res = this.functionRepo.fVerifLogistiqueOrdre(ordreId);
         }
 
