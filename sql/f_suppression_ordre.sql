@@ -7,6 +7,8 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_SUPPRESSION_ORDRE (
 )
 AS
     ls_noordre GEO_ORDRE.NORDRE%TYPE;
+    ls_flfac GEO_ORDRE.FLFAC%TYPE;
+    ls_flbaf GEO_ORDRE.FLBAF%TYPE;
     ll_nbenvoie number;
 BEGIN
     -- correspond à la suppression d'un ordre (Pas de PBL)
@@ -24,7 +26,12 @@ BEGIN
             return;
         end if;
 
-        SELECT NORDRE INTO ls_noordre FROM GEO_ORDRE where ORD_REF = arg_ord_ref;
+        SELECT NORDRE, FLFAC, FLBAF INTO ls_noordre, ls_flfac, ls_flbaf FROM GEO_ORDRE where ORD_REF = arg_ord_ref;
+
+        if (ls_flfac = 'O' or ls_flbaf = 'O') then
+            msg := 'Impossible de supprimer l''ordre car il est facturé';
+            return;
+        end if;
 
         DELETE FROM GEO_ORDRE WHERE ORD_REF = arg_ord_ref;
         INSERT INTO GEO_ORDRE_DELETE_LOG (ORD_REF, NORDRE, COMMENTAIRE, MOD_USER, MOD_DATE)
