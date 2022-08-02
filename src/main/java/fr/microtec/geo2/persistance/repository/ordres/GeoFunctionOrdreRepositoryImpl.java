@@ -601,4 +601,30 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fSuppressionOrdre(String ordRef, String username, String commentaire) {
+        FunctionQuery query = this.build("F_SUPPRESSION_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_username", String.class, username);
+        query.attachInput("arg_commentaire", String.class, commentaire);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fTestAnnuleOrdre(String ordRef) {
+        return this.runMono("F_TEST_ANNULE_ORDRE", "arg_ord_ref", String.class, ordRef);
+    }
+
+    @Override
+    public FunctionResult fAnnulationOrdre(String ordRef, String motif) {
+        FunctionQuery query = this.build("F_ANNULATION_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_motif", String.class, motif);
+
+        return query.fetch();
+    }
 }
