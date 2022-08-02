@@ -687,4 +687,21 @@ public class OrdreFunctionTest {
         Assertions.assertTrue(result.getMsg().contains("Impossible de supprimer l'ordre car des flux ont été générés"), result.getMsg());
     }
 
+    @Test
+    public void testFTestAnnuleOrdreDejaCloture() {
+        FunctionResult result = this.functionOrdreRepository.fTestAnnuleOrdre("001864");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertTrue(result.getMsg().contains("ordre 092000 détail(s) déjà clôturé(s)"), result.getMsg());
+    }
+
+    @Test
+    public void testFTestAnnulationOrdreDejaCloture() {
+        FunctionResult result = this.functionOrdreRepository.fAnnulationOrdre("001864", "BW");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

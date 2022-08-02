@@ -181,4 +181,8 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult fBonAFacturer(String ordRef, String socCode);
 
     FunctionResult fSuppressionOrdre(String ordRef, String username, String commentaire);
+
+    FunctionResult fTestAnnuleOrdre(String ordRef);
+
+    FunctionResult fAnnulationOrdre(String ordRef, String motif);
 }

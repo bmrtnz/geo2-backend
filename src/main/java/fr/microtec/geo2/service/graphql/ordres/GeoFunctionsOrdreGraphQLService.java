@@ -359,4 +359,16 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fSuppressionOrdre(ordRef, username, commentaire);
     }
 
+    @GraphQLQuery
+    public FunctionResult fTestAnnuleOrdre(@GraphQLArgument(name = "ordreRef") String ordRef) {
+        return this.repository.fTestAnnuleOrdre(ordRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fAnnulationOrdre(
+        @GraphQLArgument(name = "ordreRef") String ordRef,
+        @GraphQLArgument(name = "motif") String motif) {
+        return this.repository.fAnnulationOrdre(ordRef, motif);
+    }
+
 }
