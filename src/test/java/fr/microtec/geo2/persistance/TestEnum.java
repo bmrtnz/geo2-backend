@@ -1,9 +1,12 @@
 package fr.microtec.geo2.persistance;
 
-import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
-import lombok.SneakyThrows;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
+import lombok.SneakyThrows;
 
 public class TestEnum {
 
@@ -14,7 +17,8 @@ public class TestEnum {
 
     @Test
     public void testGetValueOfWithBadData() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> StringEnum.getValueOf(GeoFactureAvoir.class, "!"));
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> StringEnum.getValueOf(GeoFactureAvoir.class, "!"));
     }
 
     @Test
@@ -26,11 +30,17 @@ public class TestEnum {
 
         for (Class<?> inter : interfaces) {
             if (StringEnum.class.equals(inter)) {
-                actual = (GeoFactureAvoir) inter.getMethod("getValueOf", Class.class, String.class).invoke(null, clazz, "A");
+                actual = (GeoFactureAvoir) inter.getMethod("getValueOf", Class.class, String.class).invoke(null, clazz,
+                        "A");
             }
         }
 
         Assertions.assertEquals(GeoFactureAvoir.AVOIR, actual);
+    }
+
+    @Test
+    public void testGetKeys() {
+        Assertions.assertEquals(ArrayList.class, StringEnum.getKeys(GeoFactureAvoir.class).getClass());
     }
 
 }
