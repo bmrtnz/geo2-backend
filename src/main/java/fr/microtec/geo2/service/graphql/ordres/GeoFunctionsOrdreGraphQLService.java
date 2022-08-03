@@ -146,8 +146,12 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "user") String user) {
         FunctionResult res = this.repository.geoPrepareEnvois(ordRef, fluCode, modeAuto ? 'O' : 'N',
                 annOrdre ? 'O' : 'N', user);
-        List<Object> contacts = res.getCursorData();
-        res.setData(Map.of("contacts", contacts));
+
+        if (res.getCursorData() != null) {
+            List<Object> contacts = res.getCursorData();
+            res.setData(Map.of("contacts", contacts));
+        }
+
         return res;
     }
 

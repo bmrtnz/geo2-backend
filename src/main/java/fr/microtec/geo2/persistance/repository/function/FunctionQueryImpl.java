@@ -94,7 +94,11 @@ public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements Functi
                 });
 
         if (StringUtils.hasText(this.outputCursor)) {
-            builder.cursorData((List<Object>) this.getResultList());
+            try {
+                builder.cursorData((List<Object>) this.getResultList());
+            } catch (NullPointerException ex) {
+                // NPE can pop with none open cursor
+            }
         }
 
         return builder.build();
