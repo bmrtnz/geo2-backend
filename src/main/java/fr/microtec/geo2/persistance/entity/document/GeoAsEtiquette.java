@@ -6,7 +6,7 @@ import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import java.nio.file.Path;
 
 /**
- * Interface a rajouter sur les entités qui peuvent avoir une étiquette de rattacher.
+ * Interface à rajouter sur les entités qui peuvent avoir une étiquette de rattacher.
  */
 public interface GeoAsEtiquette extends GeoAsDocument {
 
