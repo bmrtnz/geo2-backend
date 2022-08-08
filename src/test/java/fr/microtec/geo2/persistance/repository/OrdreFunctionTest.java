@@ -704,4 +704,22 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFCreeOrdreComplementaireOrdreV2() {
+        FunctionResult result = this.functionOrdreRepository.fCreeOrdreComplementaire("001864", SOCIETE_SA, "STEPHANE");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertNotNull(result.getData().get("ls_ord_ref_compl"));
+    }
+
+    @Test
+    public void testFCreeOrdreComplementaireOrdreV3() {
+        FunctionResult result = this.functionOrdreRepository.fCreeOrdreComplementaire("1972625", SOCIETE_SA, "STEPHANE");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertNotNull(result.getData().get("ls_ord_ref_compl"));
+    }
+
 }

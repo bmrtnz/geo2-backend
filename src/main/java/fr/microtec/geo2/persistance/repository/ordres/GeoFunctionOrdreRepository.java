@@ -185,4 +185,6 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult fTestAnnuleOrdre(String ordRef);
 
     FunctionResult fAnnulationOrdre(String ordRef, String motif);
+
+    FunctionResult fCreeOrdreComplementaire(String ordRef, String socCode, String username);
 }
