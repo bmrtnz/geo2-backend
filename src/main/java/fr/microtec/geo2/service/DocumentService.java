@@ -89,7 +89,7 @@ public class DocumentService {
     }
 
     private static final List<Class<? extends GeoBaseDocument>> managedClasses = Arrays.asList(
-        GeoAsDocument.class, GeoAsFacture.class, GeoAsCRM.class
+        GeoAsDocument.class, GeoAsFacture.class, GeoAsCMR.class
     );
     private List<Class<?>> findDocumentClass(GeoBaseDocument entity) {
         return managedClasses.stream()
@@ -104,8 +104,8 @@ public class DocumentService {
             path = ((GeoAsFacture) entity).getDocumentFactureWithMaddogService(this.maddog2FileSystemService);
         } else if (GeoAsDocument.class.equals(clazz)) {
             path = ((GeoAsDocument) entity).getDocumentWithMaddogService(this.maddog2FileSystemService);
-        } else if (GeoAsCRM.class.equals(clazz)) {
-            path = ((GeoAsCRM) entity).getDocumentCRMWithMaddogService(this.maddog2FileSystemService);
+        } else if (GeoAsCMR.class.equals(clazz)) {
+            path = ((GeoAsCMR) entity).getDocumentCRMWithMaddogService(this.maddog2FileSystemService);
         } else {
             throw new RuntimeException("DocumentService can't load document on entity %s, please map this new document type");
         }
@@ -120,8 +120,8 @@ public class DocumentService {
             name = ((GeoAsFacture) entity).getDocumentFactureName();
         } else if (GeoAsDocument.class.equals(clazz)) {
             name = ((GeoAsDocument) entity).getDocumentName();
-        } else if (GeoAsCRM.class.equals(clazz)) {
-            name = ((GeoAsCRM) entity).getDocumentCRMName();
+        } else if (GeoAsCMR.class.equals(clazz)) {
+            name = ((GeoAsCMR) entity).getDocumentCMRName();
         } else {
             throw new RuntimeException("DocumentService can't load document on entity %s, please map this new document type");
         }
@@ -134,8 +134,8 @@ public class DocumentService {
             ((GeoAsFacture) entity).setDocumentFacture(doc);
         } else if (GeoAsDocument.class.equals(clazz)) {
             ((GeoAsDocument) entity).setDocument(doc);
-        } else if (GeoAsCRM.class.equals(clazz)) {
-            ((GeoAsCRM) entity).setDocumentCRM(doc);
+        } else if (GeoAsCMR.class.equals(clazz)) {
+            ((GeoAsCMR) entity).setDocumentCMR(doc);
         } else {
             throw new RuntimeException("DocumentService can't set document on entity %s, please map this new document type");
         }
@@ -148,8 +148,8 @@ public class DocumentService {
             key = ((GeoAsFacture) entity).getDocumentFacturePathKey();
         } else if (GeoAsDocument.class.equals(clazz)) {
             key = ((GeoAsDocument) entity).getDocumentPathKey();
-        } else if (GeoAsCRM.class.equals(clazz)) {
-            key = ((GeoAsCRM) entity).getDocumentCRMPathKey();
+        } else if (GeoAsCMR.class.equals(clazz)) {
+            key = ((GeoAsCMR) entity).getDocumentCMRPathKey();
         } else {
             throw new RuntimeException("DocumentService can't load document type on entity %s, please map this new document type");
         }
