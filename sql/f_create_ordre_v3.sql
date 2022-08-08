@@ -94,7 +94,7 @@ BEGIN
     end if;
 
     select seq_ord_num.nextval into ll_ord_ref from dual;
-    ls_ord_ref := to_char(ll_ord_ref, '000000');
+    ls_ord_ref := to_char(ll_ord_ref);
 
     begin
         select cli_code, fldet_autom into ls_cli_code, ls_fldet_autom  from geo_client where cli_ref = arg_cli_ref and soc_code = arg_soc_code;

@@ -74,7 +74,8 @@ BEGIN
     end if;
 
     -- Prise en compte d'un potentiel retour de code erreur
-    if substr(ls_ord_ref_compl, 1, 3) = '%%%' then
+    if substr(msg, 1, 3) = '%%%' then
+        res := 0;
         msg := 'Anomalie lors de la création de l''ordre EDI: ' || ls_ord_ref_compl;
     else
         ls_comm_interne := 'COMPLEMENT O/ ' || ls_nordre_ori;
@@ -104,3 +105,5 @@ BEGIN
     end if;
 
 end F_CREE_ORDRE_COMPLEMENTAIRE;
+/
+

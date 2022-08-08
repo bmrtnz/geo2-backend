@@ -86,7 +86,7 @@ BEGIN
     end if;
 
     select seq_ord_num.nextval into ll_ord_ref from dual;
-    ls_ord_ref := to_char(ll_ord_ref, '000000');
+    ls_ord_ref := to_char(ll_ord_ref);
 
     begin
         select cli_ref into ls_cli_ref
@@ -210,7 +210,7 @@ BEGIN
             FLAG_QP,FLAG_UDC,ACK_TRANSP,FLAG_PUBLIC,VENTE_COMMISSION,FLBAGQP,FLGENQP,FBAGUDC,FLGENUDC,INVOIC,REM_SF_TX_MDD,PAL_NB_SOL,
             INVOIC_DEMAT,CAME_CODE,TOTFAD,TOT_CDE_NB_PAL,TOT_EXP_NB_PAL,TYP_ORDRE, TRP_BAC_CODE
         ) VALUES (
-            ls_ord_ref, arg_soc_code, ls_soc_cam_code, ls_nordre, 'GW', 'GW', ls_cli_ref, arg_cli_code, arg_bon_retour, ls_cen_ref, arg_cen_code, ls_sco_code, ls_pays_code_entrepot,
+            ls_ord_ref, arg_soc_code, ls_soc_cam_code, ls_nordre, ls_per_code_ass, ls_per_code_com, ls_cli_ref, arg_cli_code, arg_bon_retour, ls_cen_ref, arg_cen_code, ls_sco_code, ls_pays_code_entrepot,
             ls_dev_code,ld_dev_tx,ls_inc_code,ls_trp_code,'0','N','N','N',ldate_dep,ldate_liv,ldate_dep,
             ls_tvt_code,ls_tvr_code,ls_mpm_code,ls_bpm_code,ls_echnbj,ls_echle,ld_remsf_tx,ld_remhf_tx,
             ls_tot_vte, '0','0','0', ls_tot_vte,ls_marge,'0','0','0','N','N',ls_flagbaf,ls_flagfac,
