@@ -375,4 +375,12 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fAnnulationOrdre(ordRef, motif);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreComplementaire(
+        @GraphQLArgument(name = "ordreRef") String ordRef,
+        @GraphQLArgument(name = "socCode") String socCode,
+        @GraphQLArgument(name = "username") String username) {
+        return this.repository.fCreeOrdreComplementaire(ordRef, socCode, username);
+    }
+
 }
