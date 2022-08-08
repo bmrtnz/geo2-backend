@@ -29,10 +29,12 @@ public class Maddog2FileSystemService extends FileSystemService {
 		ORDRES("/Geo2_doc/ordres/"),
 		GEO_IMG("/geo_img/"),
 		GEO_DOC("/geo_doc/"),
-        GEO_FACTURE("/geo_factures/");
+        GEO_FACTURE("/geo_factures/"),
+        GEO_RETOUR_PALOX("/geo_retour_palox/");
 
 		private String path;
-		PATH_KEY(String basePath) { this.path = basePath; }
+        //private String urlPath;
+		PATH_KEY(String basePath/*, String urlPath*/) { this.path = basePath; /*this.urlPath = urlPath;*/ }
 
 		public static PATH_KEY from(String s) {
 			for (PATH_KEY pathKey : PATH_KEY.values()) {

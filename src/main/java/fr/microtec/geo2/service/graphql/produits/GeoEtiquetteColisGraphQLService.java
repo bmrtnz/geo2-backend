@@ -43,7 +43,7 @@ public class GeoEtiquetteColisGraphQLService
 	public Optional<GeoEtiquetteColis> getEtiquetteColis(
 			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
 	) {
-		return this.documentService.loadDocument(super.getOne(id));
+		return this.documentService.loadDocuments(super.getOne(id));
 	}
 
 }

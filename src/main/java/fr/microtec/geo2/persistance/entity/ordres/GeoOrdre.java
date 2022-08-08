@@ -4,6 +4,7 @@ import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCMR;
 import fr.microtec.geo2.persistance.entity.logistique.GeoPort;
 import fr.microtec.geo2.persistance.entity.tiers.*;
 import fr.microtec.geo2.persistance.entity.document.GeoAsFacture;
@@ -32,7 +33,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<GeoOrdre>, GeoAsFacture {
+public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<GeoOrdre>, GeoAsFacture, GeoAsCMR {
 
 	// constructor to fetch statut
 	public GeoOrdre(
@@ -463,6 +464,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Transient
     private GeoDocument documentFacture;
 
+    @Transient
+    private GeoDocument documentCMR;
+
 	public GeoOrdre duplicate() {
 		GeoOrdre clone = new GeoOrdre();
 		clone.societe = this.societe;
@@ -518,6 +522,11 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     public String getDocumentFactureOldName() {
         // 'F' + FAC_NUM + '.pdf'
         return String.format("F%s.pdf", this.getNumeroFacture());
+    }
+
+    @Override
+    public String getDocumentCMRName() {
+        return this.getFileCMR();
     }
 
     public static void defaultGraphQLFields(Set<String> fields) {

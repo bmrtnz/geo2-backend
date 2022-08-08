@@ -627,4 +627,16 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fCreeOrdreComplementaire(String ordRef, String socCode, String username) {
+        FunctionQuery query = this.build("F_CREE_ORDRE_COMPLEMENTAIRE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("arg_username", String.class, username);
+        query.attachOutput("ls_ord_ref_compl", String.class);
+
+        return query.fetch();
+    }
 }
