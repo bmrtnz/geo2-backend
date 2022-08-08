@@ -2,7 +2,8 @@ package fr.microtec.geo2.service.graphql.ordres;
 
 import java.util.Optional;
 
-import io.leangen.graphql.annotations.GraphQLEnvironment;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import io.leangen.graphql.annotations.*;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -13,9 +14,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoCommentaireOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommentaireOrdre;
 import fr.microtec.geo2.persistance.repository.ordres.GeoCommentaireOrdreRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
-import io.leangen.graphql.annotations.GraphQLArgument;
-import io.leangen.graphql.annotations.GraphQLNonNull;
-import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 @Service
@@ -41,6 +39,10 @@ public class GeoCommentaireOrdreGraphQLService extends GeoAbstractGraphQLService
 			@GraphQLArgument(name = "id") String id
 	) {
 		return super.getOne(id);
-  }
+    }
 
+    @GraphQLMutation
+    public GeoCommentaireOrdre saveCommentaireOrdre(GeoCommentaireOrdre commentaire, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(commentaire, env);
+    }
 }
