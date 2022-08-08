@@ -4,7 +4,10 @@ import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 
 import java.nio.file.Path;
 
-public interface GeoAsDocument {
+/**
+ * Interface à rajouter sur les entités qui peuvent avoir une étiquette de rattacher.
+ */
+public interface GeoAsDocument extends GeoBaseDocument {
 
 	// Getter / Setter pour ajouter l'objet etiquette sur les entités.
 	void setDocument(GeoDocument document);

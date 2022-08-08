@@ -95,7 +95,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLArgument(name = "numero") String numero,
             @GraphQLArgument(name = "societe") String societeID,
             @GraphQLArgument(name = "campagne") String campagneID) {
-        return this.documentService.loadDocument(
+        return this.documentService.loadDocuments(
             this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID)
         );
     }
