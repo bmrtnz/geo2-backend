@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.tiers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -23,41 +24,44 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoTransporteurGraphQLService extends GeoAbstractGraphQLService<GeoTransporteur, String> {
 
-	public GeoTransporteurGraphQLService(GeoTransporteurRepository repository) {
-		super(repository, GeoTransporteur.class);
-	}
+    public GeoTransporteurGraphQLService(GeoTransporteurRepository repository) {
+        super(repository, GeoTransporteur.class);
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoTransporteur> allTransporteur(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoTransporteur> allTransporteur(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoTransporteur> getTransporteur(
-			@GraphQLArgument(name = "id") String id
-	) {
-		return this.getOne(id);
-	}
+    @GraphQLQuery
+    public Optional<GeoTransporteur> getTransporteur(
+            @GraphQLArgument(name = "id") String id) {
+        return this.getOne(id);
+    }
 
-	@GraphQLMutation
-	public GeoTransporteur saveTransporteur(GeoTransporteur transporteur, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(transporteur, env);
-	}
+    @GraphQLMutation
+    public GeoTransporteur saveTransporteur(GeoTransporteur transporteur,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(transporteur, env);
+    }
 
-	@GraphQLMutation
-	public void deleteTransporteur(String id) {
-		this.delete(id);
-	}
+    @GraphQLMutation
+    public void deleteTransporteur(String id) {
+        this.delete(id);
+    }
 
-	@GraphQLQuery
-	public long countTransporteur(
-		@GraphQLArgument(name = "search") String search
-	) {
-		return this.count(search);
-	}
+    @GraphQLQuery
+    public long countTransporteur(
+            @GraphQLArgument(name = "search") String search) {
+        return this.count(search);
+    }
+
+    @GraphQLQuery
+    public List<GeoTransporteur> allTransporteurList(@GraphQLArgument(name = "search") String search) {
+        return this.getAll(search);
+    }
 
 }
