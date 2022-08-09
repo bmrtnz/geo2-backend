@@ -42,7 +42,7 @@ public class GeoCommentaireOrdreGraphQLService extends GeoAbstractGraphQLService
     }
 
     @GraphQLMutation
-    public GeoCommentaireOrdre saveCommentaireOrdre(GeoCommentaireOrdre commentaire, @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(commentaire, env);
+    public GeoCommentaireOrdre saveCommentaireOrdre(GeoCommentaireOrdre commentaireOrdre, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(commentaireOrdre, env);
     }
 }
