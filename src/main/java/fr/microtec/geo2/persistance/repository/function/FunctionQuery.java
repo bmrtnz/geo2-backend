@@ -10,12 +10,12 @@ import java.util.function.Function;
 public interface FunctionQuery extends StoredProcedureQuery {
 
     List<String> getOutputParameters();
-    <T> FunctionQuery attachInput(String name, Class<T> type, T value);
-    <T> FunctionQuery attachInputOutput(String name, Class<T> type, T value);
+    <T> FunctionQuery attachInput(String name, Class<T> type, Object value);
+    <T> FunctionQuery attachInputOutput(String name, Class<T> type, Object value);
     FunctionQuery attachOutput(String name, Class<?> type);
     FunctionQuery attachOutput(String name, Class<?> type, Function<Object, ?> mapper);
     FunctionQuery attachCursor(String name);
-    <T> FunctionQuery attach(String name, Class<T> type, ParameterMode mode, T value);
+    <T> FunctionQuery attach(String name, Class<T> type, ParameterMode mode, Object value);
 
     FunctionResult fetch();
 

@@ -383,4 +383,17 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fCreeOrdreComplementaire(ordRef, socCode, username);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreRegularisation(
+        @GraphQLArgument(name = "ordreRef") String ordRef,
+        @GraphQLArgument(name = "socCode") String socCode,
+        @GraphQLArgument(name = "lcaCode") String lcaCode,
+        @GraphQLArgument(name = "typeReg") String typeReg,
+        @GraphQLArgument(name = "indDetail") Boolean indDetail,
+        @GraphQLArgument(name = "username") String username,
+        @GraphQLArgument(name = "listOrlRef") String[] listOrlRef
+    ) {
+        return this.repository.fCreeOrdreRegularisation(ordRef, socCode, lcaCode, typeReg, indDetail, username, listOrlRef);
+    }
+
 }

@@ -14,12 +14,15 @@ import lombok.EqualsAndHashCode;
 @Table(name = "geo_litcau")
 @Entity
 public class GeoLitigeCause extends ValidateAndModifiedEntity {
-  
-  @Id
+
+    @Id
 	@Column(name = "lca_code")
 	private String id;
 
 	@Column(name = "lca_desc")
 	private String description;
-  
+
+    @Column(name = "ind_regul")
+    private Boolean indicateurRegularisation;
+
 }

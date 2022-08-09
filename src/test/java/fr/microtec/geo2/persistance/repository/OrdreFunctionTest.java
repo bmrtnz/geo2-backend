@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.repository;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -720,6 +721,16 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
         Assertions.assertNotNull(result.getData().get("ls_ord_ref_compl"));
+    }
+
+    @Test
+    public void testFCreeOrdreRegularisation() {
+        String[] listOrlRef = new String[]{ "9CA9FB", "9CAA0B", "9CAA2B" };
+        FunctionResult result = this.functionOrdreRepository.fCreeOrdreRegularisation("1038117", SOCIETE_SA, "F28", "RPR", true, "STEPHANE", listOrlRef);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertNotNull(result.getData().get("ls_ord_ref_regul"));
     }
 
 }

@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.repository.ordres;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import fr.microtec.geo2.persistance.GeoStringArrayType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -636,6 +637,22 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_soc_code", String.class, socCode);
         query.attachInput("arg_username", String.class, username);
         query.attachOutput("ls_ord_ref_compl", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreeOrdreRegularisation(String ordRef, String socCode, String lcaCode, String typReg, Boolean indDetail, String username, String[] listOrlRef) {
+        FunctionQuery query = this.build("F_CREE_ORDRE_REGULARISATION");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("arg_lca_code", String.class, lcaCode);
+        query.attachInput("arg_typ_reg", String.class, typReg);
+        query.attachInput("arg_ind_detail", String.class, indDetail ? "O" : "N");
+        query.attachInput("arg_username", String.class, username);
+        query.attachInput("arg_list_orl_ref", GeoStringArrayType.class, listOrlRef);
+        query.attachOutput("ls_ord_ref_regul", String.class);
 
         return query.fetch();
     }

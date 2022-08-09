@@ -8,8 +8,14 @@ import java.util.function.Function;
 
 import javax.persistence.ParameterMode;
 
+import fr.microtec.geo2.persistance.GeoStringArrayType;
+import oracle.jdbc.OraclePreparedStatement;
+import oracle.sql.ARRAY;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.procedure.internal.ProcedureCallImpl;
+import org.hibernate.type.CustomType;
+import org.hibernate.usertype.UserType;
+import org.hibernate.validator.internal.util.TypeHelper;
 import org.springframework.util.StringUtils;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
@@ -32,12 +38,12 @@ public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements Functi
     }
 
     @Override
-    public <T> FunctionQuery attachInput(String name, Class<T> type, T value) {
+    public <T> FunctionQuery attachInput(String name, Class<T> type, Object value) {
         return this.attach(name, type, ParameterMode.IN, value);
     }
 
     @Override
-    public <T> FunctionQuery attachInputOutput(String name, Class<T> type, T value) {
+    public <T> FunctionQuery attachInputOutput(String name, Class<T> type, Object value) {
         return this.attach(name, type, ParameterMode.INOUT, value);
     }
 
@@ -58,7 +64,7 @@ public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements Functi
     }
 
     @Override
-    public <T> FunctionQuery attach(String name, Class<T> type, ParameterMode mode, T value) {
+    public <T> FunctionQuery attach(String name, Class<T> type, ParameterMode mode, Object value) {
         this.registerStoredProcedureParameter(name, type, mode);
 
         if (mode.equals(ParameterMode.IN) || mode.equals(ParameterMode.INOUT)) {
