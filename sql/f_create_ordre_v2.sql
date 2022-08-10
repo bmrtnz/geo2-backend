@@ -181,7 +181,7 @@ BEGIN
     ldate_dep := sysdate;
     ldate_liv := sysdate + 1;
 
-    if arg_dat_dep <> '' then
+    if arg_dat_dep is not null or arg_dat_dep <> '' then
         ldate_dep := to_date(arg_dat_dep);
         ldate_liv := ldate_dep + 1;
     end if;
