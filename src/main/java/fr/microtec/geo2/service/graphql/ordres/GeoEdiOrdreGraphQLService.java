@@ -23,7 +23,7 @@ public class GeoEdiOrdreGraphQLService {
     }
 
     @GraphQLQuery
-    public List<GeoCommandeEdi> allCommandeEdit(
+    public List<GeoCommandeEdi> allCommandeEdi(
         @GraphQLArgument(name = "secteurId") String secteurId,
         @GraphQLArgument(name = "clientId") String clientId,
         @GraphQLArgument(name = "status") String status,
