@@ -149,7 +149,7 @@ BEGIN
             FLEXP, FLLIV, FLBAF, FLFAC, FOU_FLVER, VAR_RISTOURNE, FRAIS_PU, FLVERFOU, FLVERTRP, BAC_CODE, REMSF_TX,
             REMHF_TX, ART_REF, ESP_CODE, TOTFAD, ACH_DEV_TAUX, ACH_DEV_PU,PROPR_CODE,PAL_NB_PALINTER)
         VALUES (
-               ls_orl_ref, arg_ord_ref, ls_orl_lig,ls_pal_code_ori,ll_pal_nb_col, ls_CDE_NB_PAL, ls_CDE_NB_COL, ls_EXP_NB_PAL, ls_EXP_NB_COL, ls_EXP_PDS_BRUT,
+               ls_orl_ref, arg_ord_ref_regul, ls_orl_lig,ls_pal_code_ori,ll_pal_nb_col, ls_CDE_NB_PAL, ls_CDE_NB_COL, ls_EXP_NB_PAL, ls_EXP_NB_COL, ls_EXP_PDS_BRUT,
                ls_EXP_PDS_NET, ls_ACH_PU, ls_ACH_DEV_CODE,ls_ACH_BTA_CODE, ld_ACH_QTE, ls_VTE_PU, ls_VTE_BTA_CODE, ld_VTE_QTE, ls_FOU_CODE,
                0, 0, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0,
                'N', 'N', 'N', 'N', 'N', ls_var_ristourne, ldc_frais_pu_ori, 'N', 'N', ls_bac_code,ldc_remsf_tx, ldc_remhf_tx, ls_ART_REF_ori , ls_ESP_CODE, 0, ld_ACH_DEV_TAUX, ls_ACH_DEV_PU,ls_PROPR_CODE,ll_pal_nb_inter_ori
