@@ -37,7 +37,7 @@ BEGIN
         end;
 
         If ls_flag_exped_fournni <> 'O'	 THEN
-            msg := 'La station '  || ls_fou_code || ' n''a pas clôturée, la régularisation n''est pas possible.';
+            msg := 'La station '  || ls_fou_code || ' n''a pas clôturé, la régularisation n''est pas possible.';
             return;
         End If;
     end loop;
