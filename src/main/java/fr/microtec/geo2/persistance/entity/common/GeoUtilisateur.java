@@ -48,6 +48,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 	@Column(name = "geo_facture", insertable = false, updatable = false)
 	private Boolean accessGeoFacture;
 
+    @Column(name = "acces_cde_edi")
+    private Boolean accessCommandeEdi;
+
 	@Column(name = "admin_client", insertable = false, updatable = false)
 	private Boolean adminClient;
 
