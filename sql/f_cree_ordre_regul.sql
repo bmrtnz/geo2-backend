@@ -13,7 +13,7 @@ AS
     ls_dat_dep varchar2(20);
     ls_ordre_percode_ass GEO_ORDRE.PER_CODEASS%TYPE;
     ls_ordre_percode_com GEO_ORDRE.PER_CODECOM%TYPE;
-    ls_list_nordre_regul GEO_ORDRE.LIST_NORDRE_REGUL%TYPE;
+    ls_list_nordre_regul varchar2(100);
     ls_cli_ref GEO_ORDRE.CLI_REF%TYPE;
     ls_cli_code GEO_ORDRE.CLI_CODE%TYPE;
     ls_cen_code GEO_ORDRE.CEN_CODE%TYPE;
@@ -46,8 +46,8 @@ BEGIN
            REF_CLI
     into ls_nordre_ori,
          ls_dat_dep,
-         ls_ordre_percode_ass,
          ls_ordre_percode_com,
+         ls_ordre_percode_ass,
          ls_list_nordre_regul,
          ls_cli_ref,
          ls_cli_code,
@@ -88,20 +88,27 @@ BEGIN
     from GEO_ORDRE
     where ORD_REF = ls_ord_ref_regul;
 
-    Update GEO_ORDRE
-    SET    PER_CODEASS = ls_ordre_percode_com,
-           PER_CODECOM = ls_ordre_percode_ass,
-           COMM_INTERNE = ls_comm_intern,
-           REF_CLI = ls_ref_cli,
-           LIVDATP = ldate_liv,
-           INC_CODE = 'EXW',
-           TRP_CODE = 'CLIENT'
-    where ORD_REF = ls_ord_ref_regul;
+    begin
+        Update GEO_ORDRE
+        SET    PER_CODEASS = ls_ordre_percode_ass,
+               PER_CODECOM = ls_ordre_percode_com,
+               COMM_INTERNE = substr(ls_comm_intern, 1, 128),
+               REF_CLI = ls_ref_cli,
+               LIVDATP = ldate_liv,
+               INC_CODE = 'EXW',
+               TRP_CODE = 'CLIENT'
+        where ORD_REF = ls_ord_ref_regul;
+    exception when others then
+        raise_application_error(-20001, SQLERRM);
+    end;
 
     f_insert_mru_ordre(ls_ord_ref_regul,arg_username, res, msg);
 
-
-    ls_list_nordre_regul := ls_list_nordre_regul || ls_nordre || ';';
+    if (ls_list_nordre_regul is null) then
+        ls_list_nordre_regul := ls_nordre || ';';
+    else
+        ls_list_nordre_regul := ls_list_nordre_regul || ls_nordre || ';';
+    end if;
 
     UPDATE GEO_ORDRE
     SET LIST_NORDRE_REGUL = ls_list_nordre_regul

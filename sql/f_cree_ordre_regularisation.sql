@@ -75,7 +75,15 @@ BEGIN
     end;
 
     ls_list_ordre_regul := ls_list_ordre_regul || ls_nordre_regul || ',';
+
     update geo_ordre set LIST_NORDRE_REGUL = ls_list_ordre_regul where ord_ref = arg_ord_ref;
+
+    -- set mod_user on all
+    UPDATE GEO_ORDRE SET MOD_USER = arg_username, MOd_DATE = SYSDATE WHERE ORD_REF = ls_ord_ref_regul;
+    UPDATE GEO_ORDLOG SET MOD_USER = arg_username, MOD_DATE = SYSDATE WHERE ORD_REF = ls_ord_ref_regul;
+    UPDATE GEO_ORDLIG SET MOD_USER = arg_username, MOD_DATE = SYSDATE WHERE ORD_REF = ls_ord_ref_regul;
+
+    commit;
 
     res := 1;
 
