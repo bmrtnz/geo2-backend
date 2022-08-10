@@ -91,7 +91,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         geo_ordre.trp_code = :arg_trp_code
         or geo_ordlog.trp_code = :arg_trp_code
       )
-      and geo_ordlog.fou_code =geo_fourni.fou_code                                                 
+      and geo_ordlog.fou_code =geo_fourni.fou_code
     GROUP by
       ROWNUM,
       geo_ordre.ord_ref,
@@ -118,5 +118,36 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     ]]>
     </query>
   </named-native-query>
+
+  <named-native-query
+      name="OrdreEdi.allCommandeEdi"
+      result-class="fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi"
+  >
+    <query>
+        <![CDATA[
+        select
+            O.REF_EDI_ORDRE, O.REF_CMD_CLI, C.RAISOC as CLI_RAISOC, E.RAISOC as ENT_RAISOC, O.CLI_REF, O.CEN_REF,
+            O.DATE_LIV, O.SRC_FILE, O.VERSION, L.NUM_LIGNE, L.LIBELLE_PRODUIT, L.PAR_COMBIEN,
+            L.QUANTITE, L.QUANTITE_COLIS, L.UNITE_QTT, L.TYPE_COLIS, O.MASK_MODIF AS MASK_ORDRE,
+            L.MASK_MODIF AS MASK_LIGNE, L.LIST_REF_ART, L.EAN_PROD_CLIENT, O.STATUS, O.ORD_REF,
+            O.DATE_DOC, O.STATUS_GEO
+        from
+            geo_edi_ordre O, geo_client C, geo_entrep E, geo_edi_ligne L
+        where
+            O.CLI_REF = C.CLI_REF AND
+            E.CEN_REF (+)= O.CEN_REF AND
+            L.REF_EDI_ORDRE = O.REF_EDI_ORDRE AND
+            C.SCO_CODE = :arg_sco_code and
+            C.CLI_CODE LIKE :arg_cli_code AND
+            O.STATUS_GEO LIKE :arg_status AND
+            O.DATE_LIV >= :arg_date_min AND
+            O.DATE_LIV <= :arg_date_max AND
+            C.PER_CODE_ASS LIKE :arg_assist AND
+            C.PER_CODE_COM LIKE :arg_com
+        order by
+            O.REF_CMD_CLI, O.DATE_LIV
+        ]]>
+    </query>
+</named-native-query>
 
 </entity-mappings>

@@ -3,6 +3,8 @@ package fr.microtec.geo2.persistance.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class NativeQueryRepositoryTest {
     private GeoOrdreRepository ordreRepository;
     @Autowired
     private GeoStockRepository stockRepository;
+
+    @Autowired
+    private GeoEdiOrdreRepository geoEdiOrdreRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -61,6 +66,17 @@ public class NativeQueryRepositoryTest {
     public void testAllLigneReservation() {
         this.stockRepository
                 .allLigneReservationList("9F2FDC");
+    }
+
+    @Test
+    public void testAllCommandeEdi() {
+        List<GeoCommandeEdi> list = this.geoEdiOrdreRepository.allCommandeEdi("F", "%", "%",
+            LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+            LocalDateTime.of(2021, 1, 1, 23, 59, 59),
+            "%", "%"
+        );
+
+        Assertions.assertFalse(list.isEmpty());
     }
 
 }

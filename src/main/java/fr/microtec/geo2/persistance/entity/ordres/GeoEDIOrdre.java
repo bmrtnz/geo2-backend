@@ -12,12 +12,12 @@ import lombok.Data;
 @Table(name = "geo_edi_ordre")
 @Entity
 public class GeoEDIOrdre {
-  
-  @Id
+
+    @Id
 	@Column(name = "ref_edi_ordre")
 	private Integer id;
 
-  @NotNull
+    @NotNull
 	@Column(name = "status_geo", nullable = false)
 	private GeoStatusGEO statusGEO;
 
