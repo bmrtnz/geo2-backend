@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLQuery;
@@ -33,6 +34,15 @@ public class GeoEdiOrdreGraphQLService {
         @GraphQLArgument(name = "commercialId") String commercialId
     ) {
         return this.repository.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId, commercialId);
+    }
+
+    @GraphQLQuery
+    public List<GeoClient> allClientEdi(
+        @GraphQLArgument(name = "secteurId") String secteurId,
+        @GraphQLArgument(name = "assistantId") String assistantId,
+        @GraphQLArgument(name = "commercialId") String commercialId
+    ) {
+        return this.repository.allClientEdi(secteurId, assistantId, commercialId);
     }
 
 }

@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.repository.ordres;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoEDIOrdre;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +23,13 @@ public interface GeoEdiOrdreRepository extends GeoRepository<GeoEDIOrdre, String
         @Param("arg_date_max") LocalDateTime dateMax,
         @Param("arg_assist") String assistante,
         @Param("arg_com") String commercial
+    );
+
+    @Query(name = "OrdreEdi.allClientEdi", nativeQuery = true)
+    List<GeoClient> allClientEdi(
+        @Param("arg_sco_code") String scoCode,
+        @Param("arg_ass_code") String assCode,
+        @Param("arg_com_code") String comCode
     );
 
 }

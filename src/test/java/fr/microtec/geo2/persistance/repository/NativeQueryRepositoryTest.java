@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,13 @@ public class NativeQueryRepositoryTest {
             LocalDateTime.of(2021, 1, 1, 23, 59, 59),
             "%", "%"
         );
+
+        Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllClientEdi() {
+        List<GeoClient> list = this.geoEdiOrdreRepository.allClientEdi("F", "%", "%");
 
         Assertions.assertFalse(list.isEmpty());
     }

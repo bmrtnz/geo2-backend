@@ -147,7 +147,23 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         order by
             O.REF_CMD_CLI, O.DATE_LIV
         ]]>
-    </query>
-</named-native-query>
+        </query>
+    </named-native-query>
+    <named-native-query
+        name="OrdreEdi.allClientEdi"
+        result-class="fr.microtec.geo2.persistance.entity.tiers.GeoClient"
+    >
+        <query>
+            <![CDATA[
+            Select distinct C.*
+            from  geo_edi_ordre O, geo_client C
+            where O.CLI_REF = C.CLI_REF AND
+                  C.SCO_CODE = :arg_sco_code AND
+                  C.PER_CODE_ASS like :arg_ass_code AND
+                  C.PER_CODE_COM like :arg_com_code
+            order by C.CLI_CODE
+            ]]>
+        </query>
+    </named-native-query>
 
 </entity-mappings>
