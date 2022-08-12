@@ -20,12 +20,9 @@ public class GeoCommandeEdi {
     @Column(name = "ref_cmd_cli")
     private String refCmdClient;
 
-    @Column(name = "cli_raisoc")
-    private String clientRaisonSocial;
-
     @Column(name = "ent_raisoc")
     private String entrepotRaisonSocial;
-    
+
     @ManyToOne
     @JoinColumn(name = "cli_ref")
     private GeoClient client;
