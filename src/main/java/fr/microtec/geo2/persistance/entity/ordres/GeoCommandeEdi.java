@@ -1,10 +1,9 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,8 +11,11 @@ import java.time.LocalDateTime;
 public class GeoCommandeEdi {
 
     @Id
+    @Column(name = "rownum")
+    private Integer id;
+
     @Column(name = "ref_edi_ordre")
-    private String id;
+    private String refEdiOrdre;
 
     @Column(name = "ref_cmd_cli")
     private String refCmdClient;
@@ -23,9 +25,10 @@ public class GeoCommandeEdi {
 
     @Column(name = "ent_raisoc")
     private String entrepotRaisonSocial;
-
-    @Column(name = "cli_ref")
-    private String clientId;
+    
+    @ManyToOne
+    @JoinColumn(name = "cli_ref")
+    private GeoClient client;
 
     @Column(name = "cen_ref")
     private String entrepotId;
