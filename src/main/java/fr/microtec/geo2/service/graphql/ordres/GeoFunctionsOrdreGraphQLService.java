@@ -402,12 +402,12 @@ public class GeoFunctionsOrdreGraphQLService {
         @GraphQLArgument(name = "campagneId") String campagneId,
         @GraphQLArgument(name = "societeId") String societeId,
         @GraphQLArgument(name = "referenceClient") String referenceClient,
-        @GraphQLArgument(name = "transporteurId") String transporteurId,
+        @GraphQLArgument(name = "entrepotId") String entrepotId,
         @GraphQLArgument(name = "referenceCommande") String referenceCommande,
         @GraphQLArgument(name = "dateLivraison") String dateLivraison,
         @GraphQLArgument(name = "username") String username
     ) {
-        return this.repository.fCreateOrdresEdi(ediOrdreId, campagneId, societeId, referenceClient, transporteurId, referenceCommande, dateLivraison, username);
+        return this.repository.fCreateOrdresEdi(ediOrdreId, campagneId, societeId, referenceClient, entrepotId, referenceCommande, dateLivraison, username);
     }
 
 }
