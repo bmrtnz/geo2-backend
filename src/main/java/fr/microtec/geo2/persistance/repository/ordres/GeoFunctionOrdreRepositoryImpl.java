@@ -656,4 +656,21 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
 
         return query.fetch();
     }
+
+    @Override
+    public FunctionResult fCreateOrdresEdi(String ediOrdre, String camCode, String socCode, String cliRef, String cenRef, String refCmd, String dateLiv, String username) {
+        FunctionQuery query = this.build("F_CREATE_ORDRES_EDI");
+
+        query.attachInput("arg_edi_ordre", String.class, ediOrdre);
+        query.attachInput("arg_cam_code", String.class, camCode);
+        query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("arg_cli_ref", String.class, cliRef);
+        query.attachInput("arg_cen_ref", String.class, cenRef);
+        query.attachInput("arg_ref_cmd", String.class, refCmd);
+        query.attachInput("arg_date_liv", String.class, dateLiv);
+        query.attachInput("arg_username", String.class, username);
+        query.attachOutput("ls_nordre_tot", String.class);
+
+        return query.fetch();
+    }
 }

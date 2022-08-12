@@ -726,11 +726,24 @@ public class OrdreFunctionTest {
     @Disabled("This test fail after running many time, need reset GEO_ORDRE.LIST_NORDRE_REGUL field")
     public void testFCreeOrdreRegularisation() {
         String[] listOrlRef = new String[]{ "9CA9FB", "9CAA0B", "9CAA2B" };
-        FunctionResult result = this.functionOrdreRepository.fCreeOrdreRegularisation("1038117", SOCIETE_SA, "F28", "RPR", true, "STEPHANE", listOrlRef);
+        FunctionResult result = this.functionOrdreRepository.fCreeOrdreRegularisation(
+            "1038117", SOCIETE_SA, "F28", "RPR", true, "STEPHANE", listOrlRef
+        );
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
         Assertions.assertNotNull(result.getData().get("ls_ord_ref_regul"));
+    }
+
+    @Test
+    public void testFCreeOrdreEdi() {
+        FunctionResult result = this.functionOrdreRepository.fCreateOrdresEdi(
+            "16689", "21", SOCIETE_SA, "005548", "001316", "93044872115", "28/02/2022", "STEPHANE"
+        );
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        // Assertions.assertNotNull(result.getData().get("ls_nordre_tot"));
     }
 
 }
