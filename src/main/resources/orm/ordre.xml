@@ -129,7 +129,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             ROWNUM, O.REF_EDI_ORDRE, O.REF_CMD_CLI, O.CLI_REF, O.CEN_REF,
             O.DATE_LIV, O.SRC_FILE, O.VERSION, L.NUM_LIGNE, L.LIBELLE_PRODUIT, L.PAR_COMBIEN,
             L.QUANTITE, L.QUANTITE_COLIS, L.UNITE_QTT, L.TYPE_COLIS, O.MASK_MODIF AS MASK_ORDRE,
-            L.MASK_MODIF AS MASK_LIGNE, L.LIST_REF_ART, L.EAN_PROD_CLIENT, O.STATUS, O.ORD_REF,
+            L.MASK_MODIF AS MASK_LIGNE, L.LIST_REF_ART, L.EAN_PROD_CLIENT, L.PRIX_VENTE, O.STATUS, O.ORD_REF,
             O.DATE_DOC, O.STATUS_GEO
         from
             geo_edi_ordre O, geo_client C, geo_entrep E, geo_edi_ligne L
@@ -143,7 +143,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             O.DATE_LIV >= :arg_date_min AND
             O.DATE_LIV <= :arg_date_max AND
             C.PER_CODE_ASS LIKE :arg_assist AND
-            C.PER_CODE_COM LIKE :arg_com
+            C.PER_CODE_COM LIKE :arg_com AND
+            O.REF_EDI_ORDRE LIKE :arg_ref_edi_ord
         order by
             O.REF_CMD_CLI, O.DATE_LIV
         ]]>

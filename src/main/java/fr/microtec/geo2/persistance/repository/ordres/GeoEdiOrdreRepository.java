@@ -22,7 +22,8 @@ public interface GeoEdiOrdreRepository extends GeoRepository<GeoEDIOrdre, String
         @Param("arg_date_min") LocalDateTime dateMin,
         @Param("arg_date_max") LocalDateTime dateMax,
         @Param("arg_assist") String assistante,
-        @Param("arg_com") String commercial
+        @Param("arg_com") String commercial,
+        @Param("arg_ref_edi_ord") String arg_ref_edi_ord
     );
 
     @Query(name = "OrdreEdi.allClientEdi", nativeQuery = true)
