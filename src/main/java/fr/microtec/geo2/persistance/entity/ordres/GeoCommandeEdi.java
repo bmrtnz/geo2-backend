@@ -28,10 +28,13 @@ public class GeoCommandeEdi {
     @JoinColumn(name = "cli_ref")
     private GeoClient client;
 
-    @NotFound(action = NotFoundAction.IGNORE)
-    @ManyToOne(fetch = FetchType.EAGER)
+    //@NotFound(action = NotFoundAction.IGNORE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cen_ref")
     private GeoEntrepot entrepot;
+
+    @Column(name = "cen_ref", updatable = false, insertable = false)
+    private String entrepotId;
 
     @Column(name = "date_liv")
     private LocalDateTime dateLivraison;
@@ -75,15 +78,28 @@ public class GeoCommandeEdi {
     @Column(name = "ean_prod_client")
     private String eanProduitClient;
 
+    @Column(name = "ean_prod_bw")
+    private String eanProduitBw;
+
+    @Column(name = "ean_colis_client")
+    private String eanColisClient;
+
+    @Column(name = "ean_colis_bw")
+    private String eanColisBw;
+
     @Column(name = "prix_vente")
     private BigDecimal prixVente;
 
     @Column(name = "status")
     private String status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @ManyToOne
     @JoinColumn(name = "ord_ref")
     private GeoOrdre ordre;
+
+    @Column(name = "ord_ref", insertable = false, updatable = false)
+    private String ordreId;
 
     @Column(name = "date_doc")
     private LocalDateTime dateDocument;
@@ -91,6 +107,8 @@ public class GeoCommandeEdi {
     @Column(name = "status_geo")
     private String statusGeo;
 
+    @Column(name = "op_marketing")
+    private String operationMarketing;
 
 
 

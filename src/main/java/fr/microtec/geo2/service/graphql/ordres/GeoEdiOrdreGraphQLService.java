@@ -12,8 +12,11 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,8 +45,17 @@ public class GeoEdiOrdreGraphQLService {
     ) {
         List<GeoCommandeEdi> commandeEdiList = this.repository.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId, commercialId, ediOrdreId);
 
-        /*commandeEdiList.stream()
+        // Load entrepot only if not '-' (Speed loading)
+        for (GeoCommandeEdi geoCommandeEdi : commandeEdiList) {
+            if (geoCommandeEdi.getEntrepotId() != null && "-".equals(geoCommandeEdi.getEntrepotId())) {
+                geoCommandeEdi.getEntrepot();
+            }
+        }
+
+        /*Instant start = Instant.now();
+        commandeEdiList.stream()
             .map(GeoCommandeEdi::getOrdreId)
+            .filter(Objects::nonNull)
             .distinct()
             .collect(Collectors.toList())
             .forEach(ref -> {
@@ -52,10 +64,14 @@ public class GeoEdiOrdreGraphQLService {
                 System.out.println(ref);
                 System.out.println("Résultat bloquer : " + resultInitBlocage.getData().get("bloquer"));
                 commandeEdiList.stream()
-                    .filter(c -> c.getOrdreId() != null && c.getOrdreId().equals(ref))
+                    .filter(c -> Objects.nonNull(c.getOrdreId()) && c.getOrdreId().equals(ref))
                     .forEach(c -> c.setInitBlocageOrdre(Boolean.TRUE.equals(resultInitBlocage.getData().get("bloquer"))));
             });
 
+        long time = Duration.between(start, Instant.now()).toMillis();
+        System.out.println("Time : " + time);
+
+        start = Instant.now();
         commandeEdiList.stream()
             .map(GeoCommandeEdi::getRefEdiOrdre)
             .distinct()
@@ -64,10 +80,14 @@ public class GeoEdiOrdreGraphQLService {
                 FunctionResult resultVerifStatus = this.functionOrdreRepository.fVerifStatusLigEdi(ref);
 
                 System.out.println(ref);
+                System.out.println("Résultat bloquer : " + resultVerifStatus.getData().get("status"));
                 commandeEdiList.stream()
                     .filter(c -> c.getRefEdiOrdre().equals(ref))
                     .forEach(c -> c.setVerifStatusEdi("O".equals(resultVerifStatus.getData().get("status"))));
-            });*/
+            });
+
+        time = Duration.between(start, Instant.now()).toMillis();
+        System.out.println("Time : " + time);*/
 
         return commandeEdiList;
     }
