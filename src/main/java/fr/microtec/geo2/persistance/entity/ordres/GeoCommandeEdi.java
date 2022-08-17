@@ -28,8 +28,8 @@ public class GeoCommandeEdi {
     @JoinColumn(name = "cli_ref")
     private GeoClient client;
 
-    //@NotFound(action = NotFoundAction.IGNORE)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @ManyToOne
     @JoinColumn(name = "cen_ref")
     private GeoEntrepot entrepot;
 

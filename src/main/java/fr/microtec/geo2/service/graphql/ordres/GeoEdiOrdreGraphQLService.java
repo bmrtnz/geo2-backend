@@ -45,13 +45,6 @@ public class GeoEdiOrdreGraphQLService {
     ) {
         List<GeoCommandeEdi> commandeEdiList = this.repository.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId, commercialId, ediOrdreId);
 
-        // Load entrepot only if not '-' (Speed loading)
-        for (GeoCommandeEdi geoCommandeEdi : commandeEdiList) {
-            if (geoCommandeEdi.getEntrepotId() != null && "-".equals(geoCommandeEdi.getEntrepotId())) {
-                geoCommandeEdi.getEntrepot();
-            }
-        }
-
         /*Instant start = Instant.now();
         commandeEdiList.stream()
             .map(GeoCommandeEdi::getOrdreId)
