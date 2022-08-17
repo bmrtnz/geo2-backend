@@ -81,8 +81,9 @@ public class GeoCommandeEdi {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "ord_ref")
-    private String ordreId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref")
+    private GeoOrdre ordre;
 
     @Column(name = "date_doc")
     private LocalDateTime dateDocument;
