@@ -5,6 +5,7 @@ import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.type.ProcedureParameterExtractionAware;
 import org.hibernate.type.ProcedureParameterNamedBinder;
 import org.hibernate.usertype.UserType;
 
@@ -13,9 +14,9 @@ import java.sql.*;
 import java.util.Arrays;
 
 /**
- * Hibernate Type for converting Oracle 'P_STR_TAB_TYPE' to String[] in JAVA.
+ * Hibernate Type for converting Oracle 'P_STR_TAB_TYPE' to String[] in JAVA and vis-versa.
  */
-public class GeoStringArrayType implements UserType, ProcedureParameterNamedBinder {
+public class GeoStringArrayType implements UserType, ProcedureParameterNamedBinder, ProcedureParameterExtractionAware<String[]> {
 
     @Override
     public int[] sqlTypes() {
@@ -52,7 +53,7 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
     public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
         if (value != null) {
             // Create Oracle array
-            ARRAY array = this.convertToArray(session, (String []) value);
+            ARRAY array = this.convertToClobArray(session, (String []) value);
 
             // bind array
             st.setArray(index, array);
@@ -99,7 +100,7 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
 
         if (value != null) {
             // Create Oracle array
-            ARRAY array = this.convertToArray(session, (String []) value);
+            ARRAY array = this.convertToClobArray(session, (String []) value);
 
             // bind array
             stmt.setArray(name, array);
@@ -108,7 +109,7 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
         }
     }
 
-    private ARRAY convertToArray(SharedSessionContractImplementor session, String[] values) throws SQLException {
+    private ARRAY convertToClobArray(SharedSessionContractImplementor session, String[] values) throws SQLException {
         OracleConnection connection = session.connection().unwrap(OracleConnection.class);
 
         Clob[] clobValues = Arrays.stream((String[]) values)
@@ -127,5 +128,30 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
 
         // Create Oracle array
         return connection.createARRAY("P_STR_TAB_TYPE", clobValues);
+    }
+
+    @Override
+    public boolean canDoExtraction() {
+        return true;
+    }
+
+    @Override
+    public String[] extract(CallableStatement statement, int startIndex, SharedSessionContractImplementor session) throws SQLException {
+        return this.convertToStringArray(statement.getArray(startIndex));
+    }
+
+    @Override
+    public String[] extract(CallableStatement statement, String[] paramNames, SharedSessionContractImplementor session) throws SQLException {
+        return this.convertToStringArray(statement.getArray(paramNames[0]));
+    }
+
+    private String[] convertToStringArray(Array values) throws SQLException {
+        Clob[] clobValues = (Clob[]) values.getArray();
+
+        if (clobValues == null) return null;
+
+        return Arrays.stream(clobValues)
+            .map(Clob::toString)
+            .toArray(String[]::new);
     }
 }

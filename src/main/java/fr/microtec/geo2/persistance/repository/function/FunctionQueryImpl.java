@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository.function;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +10,14 @@ import java.util.function.Function;
 import javax.persistence.ParameterMode;
 
 import fr.microtec.geo2.persistance.GeoStringArrayType;
+import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OraclePreparedStatement;
+import oracle.jdbc.OracleTypes;
 import oracle.sql.ARRAY;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.procedure.ParameterRegistration;
 import org.hibernate.procedure.internal.ProcedureCallImpl;
+import org.hibernate.query.procedure.internal.ProcedureParameterImpl;
 import org.hibernate.type.CustomType;
 import org.hibernate.usertype.UserType;
 import org.hibernate.validator.internal.util.TypeHelper;
@@ -114,4 +119,25 @@ public class FunctionQueryImpl<R> extends ProcedureCallImpl<R> implements Functi
     public List<String> getOutputParameters() {
         return this.outputParameters;
     }
+
+    /**
+     * Register own ProcedureParameter for fix compatibility with Oracle Array.
+     */
+    @Override
+    public <T> ParameterRegistration<T> registerParameter(String name, Class<T> type, ParameterMode mode) {
+        final ProcedureParameterImpl<T> parameter = new GeoProcedureParameterArrayImpl<T>(
+            this,
+            name,
+            mode,
+            type,
+            getSession().getFactory().getTypeResolver().heuristicType( type.getName() ),
+            getSession().getFactory().getSessionFactoryOptions().isProcedureParameterNullPassingEnabled()
+        );
+
+        // Register parameter
+        getParameterMetadata().registerParameter(parameter);
+
+        return parameter;
+    }
+
 }

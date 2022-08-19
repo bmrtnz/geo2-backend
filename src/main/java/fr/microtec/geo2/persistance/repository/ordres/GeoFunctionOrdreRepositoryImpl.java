@@ -670,6 +670,10 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_date_liv", String.class, dateLiv);
         query.attachInput("arg_username", String.class, username);
         query.attachOutput("ls_nordre_tot", String.class);
+        query.attachOutput("tab_ordre_cree", GeoStringArrayType.class);
+
+        return query.fetch();
+    }
 
         return query.fetch();
     }
