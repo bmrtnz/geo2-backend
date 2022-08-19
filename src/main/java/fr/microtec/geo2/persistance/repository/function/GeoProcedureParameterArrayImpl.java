@@ -21,9 +21,9 @@ public class GeoProcedureParameterArrayImpl<T> extends ProcedureParameterImpl<T>
 
     @Override
     public void prepare(CallableStatement statement, int startIndex) throws SQLException {
-        int[] sqlTypesToUse = getSqlTypes();
-
         if (getParameterType().equals(GeoStringArrayType.class)) {
+            int[] sqlTypesToUse = getSqlTypes();
+
             statement.registerOutParameter( getName(), sqlTypesToUse[0], "P_STR_TAB_TYPE" );
         } else {
             super.prepare(statement, startIndex);
