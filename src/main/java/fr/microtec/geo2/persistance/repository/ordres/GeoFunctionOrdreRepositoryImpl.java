@@ -675,6 +675,4 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
-        return query.fetch();
-    }
 }
