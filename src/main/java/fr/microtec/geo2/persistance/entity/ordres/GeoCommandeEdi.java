@@ -110,6 +110,8 @@ public class GeoCommandeEdi {
     @Column(name = "op_marketing")
     private String operationMarketing;
 
+    @Column(name = "ref_edi_ligne")
+    private String refEdiLigne;
 
 
 

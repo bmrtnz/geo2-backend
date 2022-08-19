@@ -130,7 +130,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             O.DATE_LIV, O.SRC_FILE, O.VERSION, L.NUM_LIGNE, L.LIBELLE_PRODUIT, L.PAR_COMBIEN,
             L.QUANTITE, L.QUANTITE_COLIS, L.UNITE_QTT, L.TYPE_COLIS, O.MASK_MODIF AS MASK_ORDRE,
             L.MASK_MODIF AS MASK_LIGNE, L.LIST_REF_ART, L.EAN_PROD_CLIENT, L.PRIX_VENTE, O.STATUS, O.ORD_REF,
-            O.DATE_DOC, O.STATUS_GEO, L.EAN_PROD_BW, L.EAN_COLIS_CLIENT, L.EAN_COLIS_BW, L.OP_MARKETING
+            O.DATE_DOC, O.STATUS_GEO, L.EAN_PROD_BW, L.EAN_COLIS_CLIENT, L.EAN_COLIS_BW, L.OP_MARKETING, L.REF_EDI_LIGNE
         from
             geo_edi_ordre O, geo_client C, geo_entrep E, geo_edi_ligne L
         where
