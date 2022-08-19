@@ -1,38 +1,54 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
-import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEDIOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
-import fr.microtec.geo2.service.OrdreService;
-import io.leangen.graphql.annotations.GraphQLArgument;
-import io.leangen.graphql.annotations.GraphQLQuery;
+import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
+import fr.microtec.geo2.service.EdiOrdreService;
+import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import io.leangen.graphql.annotations.*;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoEdiOrdreGraphQLService {
+public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEDIOrdre, String> {
 
     private final GeoEdiOrdreRepository repository;
-    private final GeoFunctionOrdreRepository functionOrdreRepository;
+    private final EdiOrdreService ediOrdreService;
 
-    public GeoEdiOrdreGraphQLService(GeoEdiOrdreRepository repository, GeoFunctionOrdreRepository functionOrdreRepository) {
+    public GeoEdiOrdreGraphQLService(GeoEdiOrdreRepository repository, EdiOrdreService ediOrdreService) {
+        super(repository, GeoEDIOrdre.class);
         this.repository = repository;
-        this.functionOrdreRepository = functionOrdreRepository;
+        this.ediOrdreService = ediOrdreService;
     }
 
     @GraphQLQuery
+    public RelayPage<GeoEDIOrdre> allEdiOrdre(
+        @GraphQLArgument(name = "search") String search,
+        @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+        @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
+
+    @GraphQLMutation
+    public GeoEDIOrdre saveEdiOrdre(GeoEDIOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(ordre, env);
+    }
+
+    @GraphQLQuery
+    @Transactional
     public List<GeoCommandeEdi> allCommandeEdi(
         @GraphQLArgument(name = "secteurId") String secteurId,
         @GraphQLArgument(name = "clientId") String clientId,
@@ -43,46 +59,7 @@ public class GeoEdiOrdreGraphQLService {
         @GraphQLArgument(name = "commercialId") String commercialId,
         @GraphQLArgument(name = "ediOrdreId") String ediOrdreId
     ) {
-        List<GeoCommandeEdi> commandeEdiList = this.repository.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId, commercialId, ediOrdreId);
-
-        /*Instant start = Instant.now();
-        commandeEdiList.stream()
-            .map(GeoCommandeEdi::getOrdreId)
-            .filter(Objects::nonNull)
-            .distinct()
-            .collect(Collectors.toList())
-            .forEach(ref -> {
-                FunctionResult resultInitBlocage = this.functionOrdreRepository.fInitBlocageOrdre(ref, "STEPHANE");
-
-                System.out.println(ref);
-                System.out.println("Résultat bloquer : " + resultInitBlocage.getData().get("bloquer"));
-                commandeEdiList.stream()
-                    .filter(c -> Objects.nonNull(c.getOrdreId()) && c.getOrdreId().equals(ref))
-                    .forEach(c -> c.setInitBlocageOrdre(Boolean.TRUE.equals(resultInitBlocage.getData().get("bloquer"))));
-            });
-
-        long time = Duration.between(start, Instant.now()).toMillis();
-        System.out.println("Time : " + time);
-
-        start = Instant.now();
-        commandeEdiList.stream()
-            .map(GeoCommandeEdi::getRefEdiOrdre)
-            .distinct()
-            .collect(Collectors.toList())
-            .forEach(ref -> {
-                FunctionResult resultVerifStatus = this.functionOrdreRepository.fVerifStatusLigEdi(ref);
-
-                System.out.println(ref);
-                System.out.println("Résultat bloquer : " + resultVerifStatus.getData().get("status"));
-                commandeEdiList.stream()
-                    .filter(c -> c.getRefEdiOrdre().equals(ref))
-                    .forEach(c -> c.setVerifStatusEdi("O".equals(resultVerifStatus.getData().get("status"))));
-            });
-
-        time = Duration.between(start, Instant.now()).toMillis();
-        System.out.println("Time : " + time);*/
-
-        return commandeEdiList;
+        return this.ediOrdreService.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId, commercialId, ediOrdreId);
     }
 
     @GraphQLQuery

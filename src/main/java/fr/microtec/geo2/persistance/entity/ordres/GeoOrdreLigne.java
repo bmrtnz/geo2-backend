@@ -284,6 +284,10 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ordreLigne")
     private List<GeoTracabiliteLigne> tracabiliteLignes;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ref_edi_ligne")
+    private GeoEDILigne ediLigne;
+
     @Transient
     private Float nombreColisPaletteByDimensions;
 

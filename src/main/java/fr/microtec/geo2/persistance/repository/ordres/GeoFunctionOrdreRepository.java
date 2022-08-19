@@ -191,4 +191,5 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult fCreeOrdreRegularisation(String ordRef, String socCode, String lcaCode, String typReg, Boolean indDetail, String username, String[] listOrlRef);
 
     FunctionResult fCreateOrdresEdi(String ediOrdre, String camCode, String socCode, String cliRef, String cenRef, String refCmd, String dateLiv, String username);
+
 }

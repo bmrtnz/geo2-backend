@@ -28,13 +28,9 @@ public class GeoCommandeEdi {
     @JoinColumn(name = "cli_ref")
     private GeoClient client;
 
-    @NotFound(action = NotFoundAction.IGNORE)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cen_ref")
     private GeoEntrepot entrepot;
-
-    @Column(name = "cen_ref", updatable = false, insertable = false)
-    private String entrepotId;
 
     @Column(name = "date_liv")
     private LocalDateTime dateLivraison;
@@ -107,12 +103,28 @@ public class GeoCommandeEdi {
     @Column(name = "status_geo")
     private String statusGeo;
 
+    @Column(name = "status_ligne")
+    private String statusLigne;
+
     @Column(name = "op_marketing")
     private String operationMarketing;
 
     @Column(name = "ref_edi_ligne")
     private String refEdiLigne;
 
+    @Column(name = "init_blocage_ordre")
+    private Boolean initBlocageOrdre;
 
+    @Transient
+    private Boolean verifStatusEdi;
+
+    /**
+     * @see fr.microtec.geo2.service.EdiOrdreService.fVerifStatusLigEdi
+     */
+    public Boolean checkVerifStatusEdiLigne() {
+        return "U".equals(this.getStatus())
+            && "C".equals(this.getStatusLigne())
+            && "N".equals(this.getStatusGeo());
+    }
 
 }
