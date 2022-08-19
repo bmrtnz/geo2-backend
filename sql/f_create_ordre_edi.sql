@@ -9,11 +9,13 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_CREATE_ORDRES_EDI" (
     arg_username in GEO_USER.NOM_UTILISATEUR%TYPE,
     res out number,
     msg out varchar2,
-    ls_nordre_tot out varchar2
+    ls_nordre_tot out varchar2,
+    tab_ordre_cree out P_STR_TAB_TYPE
 )
 AS
     ls_ord_ref GEO_ORDRE.ORD_REF%TYPE;
     ls_nordre GEO_ORDRE.NORDRE%TYPE;
+    ordre_cree_idx number := 0;
 
     CURSOR C_STOCK_ART_EDI (ref_ordre GEO_STOCK_ART_EDI_BASSIN.edi_ord%TYPE) IS
         select distinct bac_code
@@ -28,10 +30,11 @@ BEGIN
     -- corresponds à f_create_ordre_edi.pbl
     res := 0;
     msg := '';
+    tab_ordre_cree := p_str_tab_type();
 
     F_VERIF_STOCK_DISPO(arg_edi_ordre, arg_cen_ref, arg_cam_code, res, msg);
     if (res <> 1) then
-        msg := 'Anomalie lors de la création de l''ordre EDI : ' || SQLERRM;
+        msg := 'Anomalie lors de la création de l''ordre EDI : ' || msg;
         return;
     end if;
 
@@ -40,21 +43,28 @@ BEGIN
 
         F_CREATE_ORDRE_V3(arg_soc_code, arg_cli_ref, arg_cen_ref, '', arg_ref_cmd, false, false, '', 'ORD', arg_date_liv, arg_edi_ordre, res, msg, ls_ord_ref);
         if (res <> 1) then
+            msg := 'Erreur lors de la création de l''ordre : ' || msg;
             return;
         end if;
 
         F_INSERT_MRU_ORDRE(ls_ord_ref, arg_username, res, msg);
         if (res <> 1) then
+            msg := 'Erreur lors de la création du mru_ordre : ' || msg;
             return;
         end if;
 
         for s in C_LIG_EDI_L(arg_edi_ordre, r.BAC_CODE)
         loop
-                F_CREATE_LIGNE_EDI(ls_ord_ref, arg_cli_ref, arg_cen_ref, s.EDI_LIG, '', arg_soc_code, arg_username, res, msg);
+                F_CREATE_LIGNE_EDI_2(ls_ord_ref, arg_cli_ref, arg_cen_ref, s.EDI_LIG, '', arg_soc_code, arg_username, res, msg);
                 if (res <> 1) then
+                    msg := 'Erreur lors de la création de la ligne d''ordre : ' || msg;
                     return;
                 end if;
         end loop;
+
+        tab_ordre_cree.extend();
+        tab_ordre_cree(ordre_cree_idx) := ls_ord_ref;
+        ordre_cree_idx := ordre_cree_idx + 1;
 
         select nordre into ls_nordre from geo_ordre where ord_ref = ls_ord_ref;
         ls_nordre_tot := ls_nordre_tot || ls_nordre || ',';

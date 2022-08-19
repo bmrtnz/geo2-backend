@@ -102,7 +102,7 @@ BEGIN
 
         -- Contrôle si l'ean_prod_client existe dans la table de référence du client
 		-- Si aucune référence alors on supprime toutes les précédentes ref et on return pour erreur
-        for ll_ind IN 0 .. 4
+        for ll_ind IN 1 .. 4
         LOOP
             /*
                 1: stock sur la plateforme ==> VDL : Terryloire, SO : Quercy Soleil, 	SE : Chantegrillet pour les leclerc
@@ -158,7 +158,7 @@ BEGIN
                                     if ls_bassin = '%' then
                                         ls_sql := ls_sql || ' and F.bac_code like ''' || ls_bassin || '''';
                                     else
-                                        ls_sql := ls_sql || ' and F.bac_code not in (''' || ls_bassin || ')';
+                                        ls_sql := ls_sql || ' and F.bac_code not in (' || ls_bassin || ')';
                                     end if;
                             end case;
                             ls_sql := ls_sql || ' and S.valide = ''O'' ';
@@ -204,10 +204,11 @@ BEGIN
 
                                     begin
                                         insert into GEO_STOCK_ART_EDI_BASSIN (EDI_ORD, EDI_LIG, CLI_REF, CAM_CODE, ART_REF, GTIN, FOU_CODE, BAC_CODE, QTE_RES, AGE, PROP_CODE, ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, VTE_PU_NET, ACH_DEV_TAUX)
-                                        values(arg_num_cde_edi, r.REF_EDI_LIGNE, ls_cli_ref, arg_cam_code, a.ART_REF, r.EAN_PROD_CLIENT, ls_fou_code, ls_bac_code_station, ll_qte_res, ls_age, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ld_ach_dev_taux);
+                                        values (arg_num_cde_edi, r.REF_EDI_LIGNE, ls_cli_ref, arg_cam_code, a.ART_REF, r.EAN_PROD_CLIENT, ls_fou_code, ls_bac_code_station, ll_qte_res, ls_age, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ld_ach_dev_taux);
 
                                         ls_ya_art_bassin := 'O';
                                     exception when others then
+                                        msg := 'Erreur a la creation des lignes GEO_STOCK_ART_EDI_BASSIN : ' || SQLERRM;
                                         rollback;
                                         return;
                                     end;
@@ -239,10 +240,11 @@ BEGIN
 
                             begin
                                 insert into GEO_STOCK_ART_EDI_BASSIN (EDI_ORD, EDI_LIG, CLI_REF, CAM_CODE, ART_REF, GTIN, FOU_CODE, BAC_CODE, QTE_RES, AGE, PROP_CODE, ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, VTE_PU_NET)
-                                values(arg_num_cde_edi, r.REF_EDI_LIGNE, ls_cli_ref, arg_cam_code, a.ART_REF, r.EAN_PROD_CLIENT, ls_fou_code, ls_bac_code_station, ll_qte_res, ls_age, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET);
+                                values (arg_num_cde_edi, r.REF_EDI_LIGNE, ls_cli_ref, arg_cam_code, a.ART_REF, r.EAN_PROD_CLIENT, ls_fou_code, ls_bac_code_station, ll_qte_res, ls_age, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET);
 
                                 ls_ya_art_bassin := 'O';
                             exception when others then
+                                msg := 'Erreur a la creation des lignes GEO_STOCK_ART_EDI_BASSIN : ' || SQLERRM;
                                 rollback;
                                 return;
                             end;
@@ -252,7 +254,7 @@ BEGIN
                 end loop;
             exception when others then
                 delete from GEO_STOCK_ART_EDI_BASSIN where edi_ord = arg_num_cde_edi;
-                -- return ls_ean_prod_client
+                msg := 'GTIN: ' || r.EAN_PROD_CLIENT || ' inexistant pour ce client';
                 return;
             end;
         end loop;

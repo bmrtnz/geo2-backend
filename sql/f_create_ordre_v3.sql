@@ -86,6 +86,8 @@ BEGIN
     msg := '';
     res := 0;
 
+    select CAM_CODE into ls_soc_cam_code from GEO_SOCIETE where soc_code = arg_soc_code;
+
     -- Pour la création des commandes EDI dans GEO_ORDRE
     f_nouvel_ordre(arg_soc_code, res, msg, ls_nordre);
 
