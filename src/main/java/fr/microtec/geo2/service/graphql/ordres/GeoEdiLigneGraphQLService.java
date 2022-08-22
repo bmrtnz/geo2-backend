@@ -29,8 +29,8 @@ public class GeoEdiLigneGraphQLService extends GeoAbstractGraphQLService<GeoEdiL
     }
 
     @GraphQLMutation
-    public GeoEdiLigne saveEdiLigne(GeoEdiLigne ligne, @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(ligne, env);
+    public GeoEdiLigne saveEdiLigne(GeoEdiLigne ediLigne, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(ediLigne, env);
     }
 
 }

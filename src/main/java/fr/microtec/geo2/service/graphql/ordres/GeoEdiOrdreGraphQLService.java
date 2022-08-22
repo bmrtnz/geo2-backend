@@ -41,8 +41,8 @@ public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiO
     }
 
     @GraphQLMutation
-    public GeoEdiOrdre saveEdiOrdre(GeoEdiOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(ordre, env);
+    public GeoEdiOrdre saveEdiOrdre(GeoEdiOrdre ediOrdre, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(ediOrdre, env);
     }
 
     @GraphQLQuery
