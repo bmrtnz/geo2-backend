@@ -2,11 +2,9 @@ package fr.microtec.geo2.service.graphql.ordres;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
-import fr.microtec.geo2.persistance.entity.ordres.GeoEDIOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEdiOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
-import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
-import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
 import fr.microtec.geo2.service.EdiOrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.*;
@@ -23,19 +21,19 @@ import java.util.*;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEDIOrdre, String> {
+public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiOrdre, String> {
 
     private final GeoEdiOrdreRepository repository;
     private final EdiOrdreService ediOrdreService;
 
     public GeoEdiOrdreGraphQLService(GeoEdiOrdreRepository repository, EdiOrdreService ediOrdreService) {
-        super(repository, GeoEDIOrdre.class);
+        super(repository, GeoEdiOrdre.class);
         this.repository = repository;
         this.ediOrdreService = ediOrdreService;
     }
 
     @GraphQLQuery
-    public RelayPage<GeoEDIOrdre> allEdiOrdre(
+    public RelayPage<GeoEdiOrdre> allEdiOrdre(
         @GraphQLArgument(name = "search") String search,
         @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
         @GraphQLEnvironment ResolutionEnvironment env) {
@@ -43,7 +41,7 @@ public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEDIO
     }
 
     @GraphQLMutation
-    public GeoEDIOrdre saveEdiOrdre(GeoEDIOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
+    public GeoEdiOrdre saveEdiOrdre(GeoEdiOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
         return this.saveEntity(ordre, env);
     }
 

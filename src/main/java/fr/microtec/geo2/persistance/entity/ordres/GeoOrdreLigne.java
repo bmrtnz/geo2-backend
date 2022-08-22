@@ -286,7 +286,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ref_edi_ligne")
-    private GeoEDILigne ediLigne;
+    private GeoEdiLigne ediLigne;
 
     @Transient
     private Float nombreColisPaletteByDimensions;

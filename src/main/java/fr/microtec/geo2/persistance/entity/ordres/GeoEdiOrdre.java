@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "geo_edi_ordre")
 @Entity
 @DynamicUpdate
-public class GeoEDIOrdre {
+public class GeoEdiOrdre {
 
     @Id
 	@Column(name = "ref_edi_ordre")

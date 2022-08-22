@@ -1,7 +1,7 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
-import fr.microtec.geo2.persistance.entity.ordres.GeoEDIOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEdiOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface GeoEdiOrdreRepository extends GeoRepository<GeoEDIOrdre, String> {
+public interface GeoEdiOrdreRepository extends GeoRepository<GeoEdiOrdre, String> {
 
     @Query(name = "OrdreEdi.allCommandeEdi", nativeQuery = true)
     List<GeoCommandeEdi> allCommandeEdi(

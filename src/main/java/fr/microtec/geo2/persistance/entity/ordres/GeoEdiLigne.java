@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Data
 @Table(name = "geo_edi_ligne")
 @Entity
-public class GeoEDILigne {
+public class GeoEdiLigne {
 
     @Id
     @Column(name = "ref_edi_ligne")
@@ -16,7 +16,7 @@ public class GeoEDILigne {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ref_edi_ordre")
-    private GeoEDIOrdre ediOrdre;
+    private GeoEdiOrdre ediOrdre;
 
     @Column(name = "num_ligne")
     private Integer numeroLigne;

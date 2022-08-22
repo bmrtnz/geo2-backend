@@ -149,7 +149,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ref_edi_ordre")
-	private GeoEDIOrdre ordreEDI;
+	private GeoEdiOrdre ordreEDI;
 
 	@Column(name = "invoic")
 	private Boolean factureEDIFACT;
