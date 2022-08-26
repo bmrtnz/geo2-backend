@@ -45,9 +45,9 @@ public class GeoEntrepotTransporteurBassinGraphQLService
 
     @GraphQLMutation
     public GeoEntrepotTransporteurBassin saveEntrepotTransporteurBassin(
-            GeoEntrepotTransporteurBassin EntrepotTransporteurBassin,
+            GeoEntrepotTransporteurBassin entrepotTransporteurBassin,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(EntrepotTransporteurBassin, env);
+        return this.saveEntity(entrepotTransporteurBassin, env);
     }
 
 }
