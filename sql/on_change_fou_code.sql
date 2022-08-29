@@ -162,49 +162,55 @@ begin
     --DEB TRANSPORT PAR DEFAUT
     --Vérification que le bassin de la station est en phase avec le bassin du transport par défaut souhaité par l'entrepôt
     --Table GEO_ENT_TRP_BASSIN
-    -- declare
-    --     ls_bac_code varchar2(50);
-    --     is_bassin varchar2(50);
-    --     ls_trp_code varchar2(50);
-    --     ls_trp_bta_code varchar2(50);
-    --     ls_trp_dev_code varchar2(50);
-    --     ld_trp_dev_pu number;
-    --     ld_dev_tx number;
-    --     ld_trp_pu number;
-    -- begin
-    --     select bac_code into ls_bac_code from geo_ordlig where orl_ref = arg_orl_ref;
-    --     If arg_soc_code <> 'BUK' and  ls_typ_ordre <>'RGP' Then
+    declare
+        ls_bac_code varchar2(50);
+        is_bassin varchar2(50);
+        ls_trp_code varchar2(50);
+        ls_trp_bta_code varchar2(50);
+        ls_trp_dev_code varchar2(50);
+        ld_trp_dev_pu number;
+        ld_dev_tx number;
+        ld_trp_pu number;
+    begin
+        select bac_code into ls_bac_code from geo_ordlig where orl_ref = arg_orl_ref;
+        If arg_soc_code <> 'BUK' and  ls_typ_ordre <>'RGP' Then
 
-    --         if  is_bassin is null or is_bassin = '' then
-    --             select trp_code, trp_bta_code, trp_dev_code, trp_pu, dev_tx
-    --             into ls_trp_code, ls_trp_bta_code, ls_trp_dev_code, ld_trp_dev_pu, ld_dev_tx
-    --             from 	geo_ent_trp_bassin,
-    --                     geo_devise_ref
-    --             where 	cen_ref = ls_cen_ref and
-    --                         bac_code = ls_bac_code and
-    --                         trp_dev_code = dev_code and
-    --                         dev_code_ref =ls_soc_dev_code;
-    --             ld_trp_pu := ld_dev_tx * ld_trp_dev_pu;
+            if  is_bassin is null or is_bassin = '' then
 
-    --             update geo_ordre
-    --             set
-    --                 trp_pu = ld_trp_pu,
-    --                 trp_code = ls_trp_code,
-    --                 trp_bta_code = ls_trp_bta_code,
-    --                 trp_dev_code = ls_trp_dev_code,
-    --                 trp_dev_pu = ld_trp_dev_pu,
-    --                 trp_dev_taux = ld_dev_tx,
-    --                 trp_bac_code = ls_bac_code
-    --             where ord_ref = ls_ord_ref;
-    --             commit;
-    --             is_bassin := ls_bac_code;
-    --         end if;
-    --             --FIN TRANSPORT PAR DEFAUT
-    --     End  If;
-    -- exception when others then
-    --     msg := 'Impossible d''assigner un transporteur par défaut ' || SQLERRM;
-    --     return;
-    -- end;
+                begin
+                    select trp_code, trp_bta_code, trp_dev_code, trp_pu, dev_tx
+                    into ls_trp_code, ls_trp_bta_code, ls_trp_dev_code, ld_trp_dev_pu, ld_dev_tx
+                    from 	geo_ent_trp_bassin,
+                            geo_devise_ref
+                    where 	cen_ref = ls_cen_ref and
+                                bac_code = ls_bac_code and
+                                trp_dev_code = dev_code and
+                                dev_code_ref = ls_soc_dev_code;
+                exception when others then
+                    msg := msg || ' Pas de transporteur par défaut pour ce bassin/entrepôt';
+                end;
+                ld_trp_pu := ld_dev_tx * ld_trp_dev_pu;
+
+                update geo_ordre
+                set
+                    trp_pu = ld_trp_pu,
+                    trp_code = ls_trp_code,
+                    trp_bta_code = ls_trp_bta_code,
+                    trp_dev_code = ls_trp_dev_code,
+                    trp_dev_pu = ld_trp_dev_pu,
+                    trp_dev_taux = ld_dev_tx,
+                    trp_bac_code = ls_bac_code
+                where ord_ref = ls_ord_ref;
+                commit;
+                is_bassin := ls_bac_code;
+
+            end if;
+        End  If;
+    exception when others then
+        msg := 'Impossible d''assigner un transporteur par défaut ' || SQLERRM;
+        return;
+    end;
+    --FIN TRANSPORT PAR DEFAUT
 
     msg := 'OK';
     res := 1;
