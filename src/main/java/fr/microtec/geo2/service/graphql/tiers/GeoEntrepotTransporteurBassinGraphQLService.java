@@ -56,4 +56,9 @@ public class GeoEntrepotTransporteurBassinGraphQLService
         return this.saveEntity(this.etbService.affecte(entrepotTransporteurBassin), env);
     }
 
+    @GraphQLMutation
+    public void deleteEntrepotTransporteurBassin(BigDecimal id) {
+        this.delete(id);
+    }
+
 }
