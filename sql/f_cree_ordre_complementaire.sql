@@ -83,7 +83,7 @@ BEGIN
         Update GEO_ORDRE
         SET 	PER_CODEASS = ls_ordre_per_code_ass,
                PER_CODECOM = ls_ordre_per_code_com,
-               COMM_INTERNE = ls_comm_interne
+               COMM_INTERNE = substr(ls_comm_interne, 1, 128)
         where ORD_REF = ls_ord_ref_compl;
         f_insert_mru_ordre(ls_ord_ref_compl, arg_username, res, msg);
 
