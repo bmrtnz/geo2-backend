@@ -364,3 +364,5 @@ BEGIN
 end;
 -- Creation des lignes articles en automatique pour les commandes EDI
 -- avec réservation de stock
+/
+
