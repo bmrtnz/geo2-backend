@@ -1,30 +1,30 @@
 package fr.microtec.geo2.service;
 
-import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
-import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
+
 @Service
 public class EdiOrdreService {
 
     private final GeoEdiOrdreRepository ediOrdreRepository;
-
 
     public EdiOrdreService(GeoEdiOrdreRepository ediOrdreRepository) {
         this.ediOrdreRepository = ediOrdreRepository;
     }
 
     public List<GeoCommandeEdi> allCommandeEdi(
-        String secteurId, String clientId, String status, LocalDateTime dateMin,
-        LocalDateTime dateMax, String assistantId, String commercialId, String ediOrdreId
-    ) {
-        List<GeoCommandeEdi> commandeEdiList = this.ediOrdreRepository.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId, commercialId, ediOrdreId);
+            String secteurId, String clientId, String status, LocalDateTime dateMin,
+            LocalDateTime dateMax, String assistantId, String commercialId, String ediOrdreId, String nomUtilisateur) {
+        List<GeoCommandeEdi> commandeEdiList = this.ediOrdreRepository.allCommandeEdi(secteurId, clientId, status,
+                dateMin, dateMax, assistantId, commercialId, ediOrdreId, nomUtilisateur);
 
         this.fVerifStatusLigEdi(commandeEdiList);
 
@@ -49,7 +49,7 @@ public class EdiOrdreService {
         // Set value
         map.forEach((key, geoCommandeEdis) -> {
             Boolean asValidLine = geoCommandeEdis.stream()
-                .anyMatch(GeoCommandeEdi::checkVerifStatusEdiLigne);
+                    .anyMatch(GeoCommandeEdi::checkVerifStatusEdiLigne);
 
             geoCommandeEdis.forEach(geoCommandeEdi -> geoCommandeEdi.setVerifStatusEdi(asValidLine));
         });
