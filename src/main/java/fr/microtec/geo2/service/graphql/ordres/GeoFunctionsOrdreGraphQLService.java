@@ -357,9 +357,9 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult fSuppressionOrdre(
-        @GraphQLArgument(name = "ordreRef") String ordRef,
-        @GraphQLArgument(name = "username") String username,
-        @GraphQLArgument(name = "commentaire") String commentaire) {
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "commentaire") String commentaire) {
         return this.repository.fSuppressionOrdre(ordRef, username, commentaire);
     }
 
@@ -370,44 +370,50 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult fAnnulationOrdre(
-        @GraphQLArgument(name = "ordreRef") String ordRef,
-        @GraphQLArgument(name = "motif") String motif) {
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "motif") String motif) {
         return this.repository.fAnnulationOrdre(ordRef, motif);
     }
 
     @GraphQLQuery
     public FunctionResult fCreeOrdreComplementaire(
-        @GraphQLArgument(name = "ordreRef") String ordRef,
-        @GraphQLArgument(name = "socCode") String socCode,
-        @GraphQLArgument(name = "username") String username) {
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "socCode") String socCode,
+            @GraphQLArgument(name = "username") String username) {
         return this.repository.fCreeOrdreComplementaire(ordRef, socCode, username);
     }
 
     @GraphQLQuery
     public FunctionResult fCreeOrdreRegularisation(
-        @GraphQLArgument(name = "ordreRef") String ordRef,
-        @GraphQLArgument(name = "socCode") String socCode,
-        @GraphQLArgument(name = "lcaCode") String lcaCode,
-        @GraphQLArgument(name = "typeReg") String typeReg,
-        @GraphQLArgument(name = "indDetail") Boolean indDetail,
-        @GraphQLArgument(name = "username") String username,
-        @GraphQLArgument(name = "listOrlRef") String[] listOrlRef
-    ) {
-        return this.repository.fCreeOrdreRegularisation(ordRef, socCode, lcaCode, typeReg, indDetail, username, listOrlRef);
+            @GraphQLArgument(name = "ordreRef") String ordRef,
+            @GraphQLArgument(name = "socCode") String socCode,
+            @GraphQLArgument(name = "lcaCode") String lcaCode,
+            @GraphQLArgument(name = "typeReg") String typeReg,
+            @GraphQLArgument(name = "indDetail") Boolean indDetail,
+            @GraphQLArgument(name = "username") String username,
+            @GraphQLArgument(name = "listOrlRef") String[] listOrlRef) {
+        return this.repository.fCreeOrdreRegularisation(ordRef, socCode, lcaCode, typeReg, indDetail, username,
+                listOrlRef);
     }
 
     @GraphQLQuery
     public FunctionResult fCreeOrdresEdi(
-        @GraphQLArgument(name = "ediOrdreId") String ediOrdreId,
-        @GraphQLArgument(name = "campagneId") String campagneId,
-        @GraphQLArgument(name = "societeId") String societeId,
-        @GraphQLArgument(name = "referenceClient") String referenceClient,
-        @GraphQLArgument(name = "entrepotId") String entrepotId,
-        @GraphQLArgument(name = "referenceCommande") String referenceCommande,
-        @GraphQLArgument(name = "dateLivraison") String dateLivraison,
-        @GraphQLArgument(name = "username") String username
-    ) {
-        return this.repository.fCreateOrdresEdi(ediOrdreId, campagneId, societeId, referenceClient, entrepotId, referenceCommande, dateLivraison, username);
+            @GraphQLArgument(name = "ediOrdreId") String ediOrdreId,
+            @GraphQLArgument(name = "campagneId") String campagneId,
+            @GraphQLArgument(name = "societeId") String societeId,
+            @GraphQLArgument(name = "referenceClient") String referenceClient,
+            @GraphQLArgument(name = "entrepotId") String entrepotId,
+            @GraphQLArgument(name = "referenceCommande") String referenceCommande,
+            @GraphQLArgument(name = "dateLivraison") String dateLivraison,
+            @GraphQLArgument(name = "username") String username) {
+        return this.repository.fCreateOrdresEdi(ediOrdreId, campagneId, societeId, referenceClient, entrepotId,
+                referenceCommande, dateLivraison, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult ofSauveOrdre(
+            @GraphQLArgument(name = "ordRef") String ordRef) {
+        return this.repository.ofSauveOrdre(ordRef);
     }
 
 }
