@@ -5,11 +5,15 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Data;
@@ -23,6 +27,10 @@ public class GeoEntrepotTransporteurBassin extends ValidateAndModifiedEntity {
 
     @Id
     @Column(name = "id_ent_trp_bassin")
+    @GeneratedValue(generator = "GeoEntrepotTransporteurBassinGenerator")
+    @GenericGenerator(name = "GeoEntrepotTransporteurBassinGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "seq_id_ent_trp_bassin"),
+    })
     private BigDecimal id;
 
     @NotNull

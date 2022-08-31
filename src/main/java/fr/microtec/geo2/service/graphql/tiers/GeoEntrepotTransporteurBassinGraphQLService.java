@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepotTransporteurBassin;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotTransporteurBassinRepository;
+import fr.microtec.geo2.service.EntrepotTransporteurBassinService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -25,8 +26,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoEntrepotTransporteurBassinGraphQLService
         extends GeoAbstractGraphQLService<GeoEntrepotTransporteurBassin, BigDecimal> {
 
-    public GeoEntrepotTransporteurBassinGraphQLService(GeoEntrepotTransporteurBassinRepository repository) {
+    private final EntrepotTransporteurBassinService etbService;
+
+    public GeoEntrepotTransporteurBassinGraphQLService(
+            GeoEntrepotTransporteurBassinRepository repository,
+            EntrepotTransporteurBassinService etbService) {
         super(repository, GeoEntrepotTransporteurBassin.class);
+        this.etbService = etbService;
     }
 
     @GraphQLQuery
@@ -45,9 +51,14 @@ public class GeoEntrepotTransporteurBassinGraphQLService
 
     @GraphQLMutation
     public GeoEntrepotTransporteurBassin saveEntrepotTransporteurBassin(
-            GeoEntrepotTransporteurBassin EntrepotTransporteurBassin,
+            GeoEntrepotTransporteurBassin entrepotTransporteurBassin,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(EntrepotTransporteurBassin, env);
+        return this.saveEntity(this.etbService.affecte(entrepotTransporteurBassin), env);
+    }
+
+    @GraphQLMutation
+    public void deleteEntrepotTransporteurBassin(BigDecimal id) {
+        this.delete(id);
     }
 
 }

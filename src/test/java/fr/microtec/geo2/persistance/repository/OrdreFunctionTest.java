@@ -403,7 +403,7 @@ public class OrdreFunctionTest {
                 .onChangeFouCode("9F31AC", "ADRIEN", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes());
+        Assertions.assertEquals(1, result.getRes());
     }
 
     @Test
@@ -675,7 +675,8 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.getRes(), result.getMsg());
-        Assertions.assertEquals("problème technique validation bon à facturer : l'ordre est déja bon à facturer !", result.getMsg(), result.getMsg());
+        Assertions.assertEquals("problème technique validation bon à facturer : l'ordre est déja bon à facturer !",
+                result.getMsg(), result.getMsg());
     }
 
     @Test
@@ -684,7 +685,8 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.getRes(), result.getMsg());
-        Assertions.assertTrue(result.getMsg().contains("Impossible de supprimer l'ordre car des flux ont été générés"), result.getMsg());
+        Assertions.assertTrue(result.getMsg().contains("Impossible de supprimer l'ordre car des flux ont été générés"),
+                result.getMsg());
     }
 
     @Test
@@ -715,7 +717,8 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFCreeOrdreComplementaireOrdreV3() {
-        FunctionResult result = this.functionOrdreRepository.fCreeOrdreComplementaire("1972625", SOCIETE_SA, "STEPHANE");
+        FunctionResult result = this.functionOrdreRepository.fCreeOrdreComplementaire("1972625", SOCIETE_SA,
+                "STEPHANE");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
@@ -725,10 +728,9 @@ public class OrdreFunctionTest {
     @Test
     @Disabled("This test fail after running many time, need reset GEO_ORDRE.LIST_NORDRE_REGUL field")
     public void testFCreeOrdreRegularisation() {
-        String[] listOrlRef = new String[]{ "9CA9FB", "9CAA0B", "9CAA2B" };
+        String[] listOrlRef = new String[] { "9CA9FB", "9CAA0B", "9CAA2B" };
         FunctionResult result = this.functionOrdreRepository.fCreeOrdreRegularisation(
-            "1038117", SOCIETE_SA, "F28", "RPR", true, "STEPHANE", listOrlRef
-        );
+                "1038117", SOCIETE_SA, "F28", "RPR", true, "STEPHANE", listOrlRef);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
@@ -738,8 +740,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFCreeOrdreEdi() {
         FunctionResult result = this.functionOrdreRepository.fCreateOrdresEdi(
-            "16689", "21", SOCIETE_SA, "005548", "001316", "93044872115", "28/02/2022", "STEPHANE"
-        );
+                "16689", "21", SOCIETE_SA, "005548", "001316", "93044872115", "28/02/2022", "STEPHANE");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
