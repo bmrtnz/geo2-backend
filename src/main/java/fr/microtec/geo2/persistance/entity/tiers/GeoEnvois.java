@@ -20,6 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.common.StringUtils;
+import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
@@ -33,106 +34,125 @@ import lombok.Data;
 @Entity
 public class GeoEnvois implements GeoAsDocument {
 
-	@Id
-	@Column(name = "env_code")
-	@GeneratedValue(generator = "GeoEnvoisGenerator")
-	@GenericGenerator(name = "GeoEnvoisGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-			@Parameter(name = "sequenceName", value = "F_SEQ_ENV_NUM"),
-			@Parameter(name = "isSequence", value = "false")
-	})
-	private String id;
+    @Id
+    @Column(name = "env_code")
+    @GeneratedValue(generator = "GeoEnvoisGenerator")
+    @GenericGenerator(name = "GeoEnvoisGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "F_SEQ_ENV_NUM"),
+            @Parameter(name = "isSequence", value = "false")
+    })
+    private String id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ord_ref")
-	private GeoOrdre ordre;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref")
+    private GeoOrdre ordre;
 
-	@Column(name = "nordre")
-	private String numeroOrdre;
+    @Column(name = "nordre")
+    private String numeroOrdre;
 
-	@Column(name = "version_ordre")
-	private String versionOrdre;
+    @Column(name = "end_code")
+    private String numeroDemande;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "per_codecom")
-	private GeoPersonne assistante;
+    @Column(name = "version_ordre")
+    private String versionOrdre;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "per_codeass")
-	private GeoPersonne commercial;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_codecom")
+    private GeoPersonne assistante;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "flu_code")
-	private GeoFlux flux;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_codeass")
+    private GeoPersonne commercial;
 
-	@Column(name = "tie_code")
-	private String codeTiers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "flu_code")
+    private GeoFlux flux;
 
-	@Column(name = "contact")
-	private String nomContact;
+    @Column(name = "tie_code")
+    private String codeTiers;
 
-	@Column(name = "acces1")
-	private String numeroAcces1;
+    @Column(name = "contact")
+    private String nomContact;
 
-	@Column(name = "demdat")
-	private LocalDateTime dateDemande;
+    @Column(name = "acces1")
+    private String numeroAcces1;
 
-	@Column(name = "soudat")
-	private LocalDate dateSoumission;
+    @Column(name = "demdat")
+    private LocalDateTime dateDemande;
 
-	@Column(name = "envdat")
-	private LocalDate dateEnvoi;
+    @Column(name = "soudat")
+    private LocalDate dateSoumission;
 
-	@Column(name = "ackdat")
-	private LocalDate dateAccuseReception;
+    @Column(name = "envdat")
+    private LocalDate dateEnvoi;
 
-	@Column(name = "nbtent")
-	private Integer nombreTentatives;
+    @Column(name = "ackdat")
+    private LocalDate dateAccuseReception;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "imp_id")
-	private GeoImprimante imprimante;
+    @Column(name = "nbtent")
+    private Integer nombreTentatives;
 
-	@Column(name = "env_desc")
-	private String commentairesAvancement;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "imp_id")
+    private GeoImprimante imprimante;
 
-	@Column(name = "doc_filename")
-	private String nomFichier;
+    @Column(name = "env_desc")
+    private String commentairesAvancement;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "moc_code")
-	private GeoMoyenCommunication moyenCommunication;
+    @Column(name = "doc_filename")
+    private String nomFichier;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tyt_code")
-	private GeoTypeTiers typeTiers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "moc_code")
+    private GeoMoyenCommunication moyenCommunication;
 
-	@Column(name = "trait_exp")
-	private Character traite;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tyt_code")
+    private GeoTypeTiers typeTiers;
 
-	@Transient
-	private GeoDocument document;
+    @Column(name = "trait_exp")
+    private Character traite;
 
-	@Override
-	public String getDocumentName() {
-		// return "JF7034.pdf";
+    @ManyToOne
+    @JoinColumn(name = "con_ref")
+    private GeoContact contact;
 
-		String filename = Optional.ofNullable(this.getNomFichier()).orElse("unknown");
-		Path path = Path.of("");
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sco_code")
+    private GeoSecteur secteurCommercial;
 
-		// If do not end with extension (exemple : .pdf)
-		if (!filename.matches(Maddog2FileSystemService.HAVE_EXTENSION_REGEX)) {
-			filename += ".pdf";
-		}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "soc_code")
+    private GeoSociete societe;
 
-		// If date envoie, file is in subpath
-		if (this.getDateDemande() != null) {
-			path = path
-					.resolve(Integer.toString(this.getDateDemande().getYear()))
-					.resolve(StringUtils.padLeft(Integer.toString(this.getDateDemande().getMonthValue()), "0", 2));
-		}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cam_code")
+    private GeoCampagne campagne;
 
-		return path.resolve(filename).toString();
-	}
+    @Transient
+    private GeoDocument document;
+
+    @Override
+    public String getDocumentName() {
+        // return "JF7034.pdf";
+
+        String filename = Optional.ofNullable(this.getNomFichier()).orElse("unknown");
+        Path path = Path.of("");
+
+        // If do not end with extension (exemple : .pdf)
+        if (!filename.matches(Maddog2FileSystemService.HAVE_EXTENSION_REGEX)) {
+            filename += ".pdf";
+        }
+
+        // If date envoie, file is in subpath
+        if (this.getDateDemande() != null) {
+            path = path
+                    .resolve(Integer.toString(this.getDateDemande().getYear()))
+                    .resolve(StringUtils.padLeft(Integer.toString(this.getDateDemande().getMonthValue()), "0", 2));
+        }
+
+        return path.resolve(filename).toString();
+    }
 
     public static void defaultGraphQLFields(Set<String> fields) {
         fields.add("nomFichier");
