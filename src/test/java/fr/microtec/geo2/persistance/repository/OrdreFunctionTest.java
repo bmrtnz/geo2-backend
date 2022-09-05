@@ -407,6 +407,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOnChangeFouCodeSecteurMaritime() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeFouCode("8B55BD", "BRUNO", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testOnChangeVtePu() {
         FunctionResult result = this.functionOrdreRepository
                 .onChangeVtePu("003098");

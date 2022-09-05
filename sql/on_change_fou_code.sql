@@ -186,23 +186,22 @@ begin
                                 bac_code = ls_bac_code and
                                 trp_dev_code = dev_code and
                                 dev_code_ref = ls_soc_dev_code;
+
+                    update geo_ordre
+                    set
+                        trp_pu = ld_dev_tx * ld_trp_dev_pu,
+                        trp_code = ls_trp_code,
+                        trp_bta_code = ls_trp_bta_code,
+                        trp_dev_code = ls_trp_dev_code,
+                        trp_dev_pu = ld_trp_dev_pu,
+                        trp_dev_taux = ld_dev_tx,
+                        trp_bac_code = ls_bac_code
+                    where ord_ref = ls_ord_ref;
+                    commit;
+                    is_bassin := ls_bac_code;
                 exception when others then
                     msg := msg || ' Pas de transporteur par défaut pour ce bassin/entrepôt';
                 end;
-                ld_trp_pu := ld_dev_tx * ld_trp_dev_pu;
-
-                update geo_ordre
-                set
-                    trp_pu = ld_trp_pu,
-                    trp_code = ls_trp_code,
-                    trp_bta_code = ls_trp_bta_code,
-                    trp_dev_code = ls_trp_dev_code,
-                    trp_dev_pu = ld_trp_dev_pu,
-                    trp_dev_taux = ld_dev_tx,
-                    trp_bac_code = ls_bac_code
-                where ord_ref = ls_ord_ref;
-                commit;
-                is_bassin := ls_bac_code;
 
             end if;
         End  If;
