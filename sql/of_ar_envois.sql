@@ -296,7 +296,6 @@ BEGIN
 			End If;
 
 			select F_SEQ_ORX_SEQ into ls_env_code from dual;
-            select f_seq_end_num() into ls_end_code from dual;
 			-- On se sert de la table geo_envois comme table tampon
 			insert into geo_envois (
 				env_code,
