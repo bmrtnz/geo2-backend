@@ -1,9 +1,8 @@
 package fr.microtec.geo2.persistance.repository;
 
-import fr.microtec.geo2.Geo2Application;
-import fr.microtec.geo2.persistance.entity.FunctionResult;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
-import java.util.List;
+import fr.microtec.geo2.Geo2Application;
+import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
+import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 
 @SpringBootTest(classes = Geo2Application.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -189,11 +190,35 @@ public class OrdreFunctionTest {
     }
 
     @Test
-    public void testFGenereDluo() {
+    public void testFGenereDluoExplicit() {
         FunctionResult result = this.functionOrdreRepository
-                .fGenereDluo("%DEMdd%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+                .fGenereDluo("16/07/20", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
 
-        Assertions.assertNotNull(result.getData().get("arg_dluo"));
+        Assertions.assertEquals("16/07/20", result.getData().get("arg_dluo"));
+    }
+
+    @Test
+    public void testFGenereDluoCasino() {
+        FunctionResult result = this.functionOrdreRepository
+                .fGenereDluo("%DEdd/mm/yy%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+
+        Assertions.assertEquals("16/07/20", result.getData().get("arg_dluo"));
+    }
+
+    @Test
+    public void testFGenereDluoScafruit() {
+        FunctionResult result = this.functionOrdreRepository
+                .fGenereDluo("%DLddmm%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+
+        Assertions.assertEquals("1707", result.getData().get("arg_dluo"));
+    }
+
+    @Test
+    public void testFGenereDluoCarrefour() {
+        FunctionResult result = this.functionOrdreRepository
+                .fGenereDluo("%DLMdd%", LocalDate.parse("2020-07-16"), LocalDate.parse("2020-07-17"));
+
+        Assertions.assertEquals("G17", result.getData().get("arg_dluo"));
     }
 
     @Test
