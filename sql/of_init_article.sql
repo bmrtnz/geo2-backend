@@ -88,6 +88,7 @@ begin
 	left join geo_entrep e on o.cen_ref = e.cen_ref
 	where ord_ref = arg_ord_ref;
 
+
 	-- if arg_sco_code is not null then
 	-- 	ls_sco_code := arg_sco_code;
 	-- end if;
@@ -119,7 +120,21 @@ begin
 
 		declare
 			id_remsf number;
+            x_rem_hf_tx number;
+            x_rem_sf_tx_mdd number;
+            x_rem_sf_tx number;
 		begin
+            SELECT coalesce(rem_hf_tx,0), coalesce(rem_sf_tx_mdd,0), coalesce(rem_sf_tx,0)
+            INTO x_rem_hf_tx, x_rem_sf_tx_mdd, x_rem_sf_tx
+            FROM geo_client
+            where cli_ref = is_cur_cli_ref;
+
+            if ls_mdd = 'O' then
+				id_remsf := x_rem_sf_tx_mdd;
+			else
+				id_remsf := x_rem_sf_tx;
+			end if;
+
 			insert into geo_ordlig (
 				orl_ref,
 				ord_ref,
@@ -137,8 +152,8 @@ begin
 				ls_esp_code,
 				coalesce(ls_pal_code, '-'),
 				coalesce(ls_ach_dev_code, 'EUR'),
-				0,
-				0
+				id_remsf,
+				x_rem_hf_tx
 			);
 
 			if ls_pal_code is not null then
