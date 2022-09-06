@@ -1,14 +1,14 @@
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_INSERT_MRU_ORDRE(
     arg_ord_ref IN GEO_ORDRE.ORD_REF%TYPE,
     arg_username IN GEO_SOCIETE.SOC_CODE%TYPE,
-    res OUT number,
-    msg OUT varchar2
+    res IN OUT number,
+    msg IN OUT varchar2
 )
 AS
-    ls_cen_code GEO_MRU_ORDRE.ORD_REF%TYPE;
-    ls_soc_code GEO_MRU_ORDRE.ORD_REF%TYPE;
+    ls_cen_code GEO_MRU_ORDRE.CEN_CODE%TYPE;
+    ls_soc_code GEO_MRU_ORDRE.SOC_CODE%TYPE;
     ls_ord_ref GEO_MRU_ORDRE.ORD_REF%TYPE;
-    ls_nordre GEO_MRU_ORDRE.ORD_REF%TYPE;
+    ls_nordre GEO_MRU_ORDRE.NORDRE%TYPE;
 BEGIN
     -- correspond à f_insert_mru_ordre.pbl
     msg := '';

@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_CREATE_ORDRES_EDI" (
+CREATE OR REPLACE PROCEDURE F_CREATE_ORDRES_EDI (
     arg_edi_ordre IN GEO_STOCK_ART_EDI_BASSIN.edi_ord%TYPE,
     arg_cam_code IN GEO_CAMPAG.CAM_CODE%TYPE,
     arg_soc_code IN GEO_SOCIETE.SOC_CODE%TYPE,
@@ -63,8 +63,8 @@ BEGIN
         end loop;
 
         tab_ordre_cree.extend();
-        tab_ordre_cree(ordre_cree_idx) := ls_ord_ref;
         ordre_cree_idx := ordre_cree_idx + 1;
+        tab_ordre_cree(ordre_cree_idx) := ls_ord_ref;
 
         select nordre into ls_nordre from geo_ordre where ord_ref = ls_ord_ref;
         ls_nordre_tot := ls_nordre_tot || ls_nordre || ',';
@@ -76,6 +76,6 @@ BEGIN
 
     res := 1;
 
-end F_CREATE_ORDRES_EDI;
+end;
 /
 

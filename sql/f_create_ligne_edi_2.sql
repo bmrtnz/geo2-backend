@@ -153,25 +153,30 @@ BEGIN
     end if;
 
     -- détermination du nbre de pal au sol
-    select
-        case P.dim_code
-            when '1' then case when CS.COL_XB IS NOT NULL AND CS.COL_XH IS NOT NULL THEN CS.COL_XB * CS.COL_XH ELSE C.COL_XB * C.COL_XH END
-            when '8' then case when CS.COL_YB IS NOT NULL AND CS.COL_YH IS NOT NULL THEN CS.COL_YB * CS.COL_YH ELSE C.COL_YB * C.COL_YH END
-            when '6' then case when CS.COL_ZB IS NOT NULL AND CS.COL_ZH IS NOT NULL THEN CS.COL_ZB * CS.COL_ZH ELSE C.COL_ZB * C.COL_ZH END
-            END, AC.U_PAR_COLIS, AC.pdnet_client, C.col_tare  into ll_pal_nb_col, ld_pmb_per_com, ld_pdnet_client, ld_col_tare
-    FROM
-        GEO_PALETT P,
-        GEO_COLIS C,
-        GEO_ARTICLE_COLIS AC,
-        geo_colis_secteur CS
-    where
-            P.PAL_CODE  = ls_pal_code and
-            C.COL_CODE  = AC.COL_CODE  and
-            AC.ART_REF = ls_art_ref and
-            AC.ESP_CODE = C.ESP_CODE AND
-            CS.esp_code (+)= AC.esp_code and
-            CS.col_code (+)= AC.col_code and
-            CS.SCO_CODE (+)= ls_sco_code;
+    begin
+        select
+            case P.dim_code
+                when '1' then case when CS.COL_XB IS NOT NULL AND CS.COL_XH IS NOT NULL THEN CS.COL_XB * CS.COL_XH ELSE C.COL_XB * C.COL_XH END
+                when '8' then case when CS.COL_YB IS NOT NULL AND CS.COL_YH IS NOT NULL THEN CS.COL_YB * CS.COL_YH ELSE C.COL_YB * C.COL_YH END
+                when '6' then case when CS.COL_ZB IS NOT NULL AND CS.COL_ZH IS NOT NULL THEN CS.COL_ZB * CS.COL_ZH ELSE C.COL_ZB * C.COL_ZH END
+                END, AC.U_PAR_COLIS, AC.pdnet_client, C.col_tare  into ll_pal_nb_col, ld_pmb_per_com, ld_pdnet_client, ld_col_tare
+        FROM
+            GEO_PALETT P,
+            GEO_COLIS C,
+            GEO_ARTICLE_COLIS AC,
+            geo_colis_secteur CS
+        where
+                P.PAL_CODE  = ls_pal_code and
+                C.COL_CODE  = AC.COL_CODE  and
+                AC.ART_REF = ls_art_ref and
+                AC.ESP_CODE = C.ESP_CODE AND
+                CS.esp_code (+)= AC.esp_code and
+                CS.col_code (+)= AC.col_code and
+                CS.SCO_CODE (+)= ls_sco_code;
+    exception when no_data_found then
+        msg := msg || 'Impossible de déterminer le nombre de palettes au sol ' || SQLERRM;
+        return;
+    end;
 
     if ll_pal_nb_col is not null and ll_pal_nb_col > 0 then
         ll_cde_nb_pal := ROUND( ll_qte_art_cde / ll_pal_nb_col, 1);
