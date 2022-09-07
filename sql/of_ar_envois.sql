@@ -8,6 +8,7 @@ AS
 	ll_ind number;
 	ls_fra_desc varchar2(50);
 	ls_flag_annul varchar2(50);
+	ls_mod_user varchar2(50);
 	lb_transport_en_cours boolean;
 	ll_trp_approc number;
 BEGIN
@@ -35,8 +36,8 @@ BEGIN
 	end;
 
 	--Deb LLEF recup de la valeur du flag_annul de l'ordre
-	select flannul
-	into ls_flag_annul
+	select flannul, mod_user
+	into ls_flag_annul, ls_mod_user
 	from geo_ordre
 	where ord_ref = is_ord_ref;
 	--Fin LLEF
@@ -318,7 +319,8 @@ BEGIN
                 per_codeass,
                 per_codecom,
 				con_ref,
-				doc_filename
+				doc_filename,
+                mod_user
 			)
 			values (
 				ls_env_code,
@@ -341,7 +343,8 @@ BEGIN
                 r.ass_code,
                 r.com_code,
 				r.con_ref,
-				r.doc_filename
+				r.doc_filename,
+                ls_mod_user
 			);
 			commit;
 		end loop;

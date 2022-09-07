@@ -18,8 +18,11 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import fr.microtec.geo2.common.StringUtils;
+import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
@@ -132,6 +135,14 @@ public class GeoEnvois implements GeoAsDocument {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cam_code")
     private GeoCampagne campagne;
+
+    @LastModifiedBy
+    @Column(name = "mod_user")
+    private String userModification;
+
+    @LastModifiedDate
+    @Column(name = "mod_date")
+    private String dateModification;
 
     @Transient
     private GeoDocument document;

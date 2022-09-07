@@ -15,17 +15,21 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import fr.microtec.geo2.service.security.SecurityService;
 
 @Service
 public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> {
 
     private final EntityManager entityManager;
+    private final SecurityService securityService;
 
     public EnvoisService(
             GeoEnvoisRepository paysRepository,
-            EntityManager entityManager) {
+            EntityManager entityManager,
+            SecurityService securityService) {
         super(paysRepository, GeoEnvois.class);
         this.entityManager = entityManager;
+        this.securityService = securityService;
     }
 
     /**
@@ -47,6 +51,7 @@ public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> 
                     this.entityManager.detach(original);
                     envoi.setId(null);
                     envoi.setNumeroDemande(numeroDemande);
+                    envoi.setUserModification(this.securityService.getUser().getNomUtilisateur());
                     return envoi;
                 })
                 .collect(Collectors.toList());
