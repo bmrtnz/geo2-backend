@@ -99,6 +99,10 @@ public class GeoEnvois implements GeoAsDocument {
     @Column(name = "env_desc")
     private String commentairesAvancement;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lan_code")
+    private GeoPays langue;
+
     @Column(name = "doc_filename")
     private String nomFichier;
 
