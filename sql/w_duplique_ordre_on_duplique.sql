@@ -117,19 +117,19 @@ begin
 
     ll_rc := ldt_depdatp;
 
-    if ll_rc <> 1 then
+    if ll_rc is null then
         msg := 'Date de départ invalide';
         return;
     End IF;
 
     ll_rc	:= ldt_livdatp;
 
-    if ll_rc <> 1 then
+    if ll_rc is null then
         msg := 'Date de livraison invalide';
         return;
     End If;
 
-    If trunc(ldt_depdatp) - trunc(ldt_livdatp) < 0 Then
+    If trunc(ldt_livdatp) - trunc(ldt_depdatp) < 0 Then
         msg := 'Date de livraison antérieure à la date de départ';
         return;
     End If;

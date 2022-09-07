@@ -11,20 +11,26 @@ AS
 begin
 
 	res := 0;
-	msg := '';
 
-    select  instructions_logistique into ls_ins_logistique_client
-    from GEO_CLIENT
-    where CLI_REF = arg_cli_ref;
+    begin
+        select  instructions_logistique into ls_ins_logistique_client
+        from GEO_CLIENT
+        where CLI_REF = arg_cli_ref;
+    exception when no_data_found then
+        ls_ins_logistique_client := '';
+    end;
 
-    select  instructions_logistique into ls_ins_logistique_entrep
-    from GEO_CLIENT
-    where CLI_REF = arg_cen_ref;
+    begin
+        select  instructions_logistique into ls_ins_logistique_entrep
+        from GEO_CLIENT
+        where CLI_REF = arg_cen_ref;
+    exception when no_data_found then
+        ls_ins_logistique_entrep := '';
+    end;
 
-    ls_ins_logistique := substr(ls_ins_logistique_client + ' ' + ls_ins_logistique_entrep,1,280);
+    ls_ins_logistique := substr(ls_ins_logistique_client || ' ' || ls_ins_logistique_entrep,1,280);
 
 	res := 1;
-	msg := 'OK';
 	return;
 
 end;
