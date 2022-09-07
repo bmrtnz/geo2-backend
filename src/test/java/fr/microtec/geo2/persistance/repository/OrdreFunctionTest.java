@@ -781,4 +781,25 @@ public class OrdreFunctionTest {
         // Assertions.assertNotNull(result.getData().get("ls_nordre_tot"));
     }
 
+    @Test
+    public void testWDupliqueOrdreOnDuplique() {
+        FunctionResult result = this.functionOrdreRepository.wDupliqueOrdreOnDuplique(
+                "002207",
+                "BRUNO",
+                SOCIETE_SA,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true,
+                false,
+                true);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
