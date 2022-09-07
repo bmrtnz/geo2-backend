@@ -416,4 +416,35 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.ofSauveOrdre(ordRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult wDupliqueOrdreOnDuplique(
+            @GraphQLArgument(name = "ordRef") String ordRef,
+            @GraphQLArgument(name = "user") String user,
+            @GraphQLArgument(name = "socCode") String socCode,
+            @GraphQLArgument(name = "withCodeChargement") Boolean withCodeChargement,
+            @GraphQLArgument(name = "withEtdLocation") Boolean withEtdLocation,
+            @GraphQLArgument(name = "withEtaLocation") Boolean withEtaLocation,
+            @GraphQLArgument(name = "withEtdDate") Boolean withEtdDate,
+            @GraphQLArgument(name = "withEtaDate") Boolean withEtaDate,
+            @GraphQLArgument(name = "withIncCode") Boolean withIncCode,
+            @GraphQLArgument(name = "withFourni") Boolean withFourni,
+            @GraphQLArgument(name = "withVtePu") Boolean withVtePu,
+            @GraphQLArgument(name = "withAchPu") Boolean withAchPu,
+            @GraphQLArgument(name = "withLibDlv") Boolean withLibDlv) {
+        return this.repository.wDupliqueOrdreOnDuplique(
+                ordRef,
+                user,
+                socCode,
+                withCodeChargement,
+                withEtdLocation,
+                withEtaLocation,
+                withEtdDate,
+                withEtaDate,
+                withIncCode,
+                withFourni,
+                withVtePu,
+                withAchPu,
+                withLibDlv);
+    }
+
 }
