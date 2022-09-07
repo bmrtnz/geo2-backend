@@ -3,11 +3,11 @@ package fr.microtec.geo2.persistance.repository.ordres;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import fr.microtec.geo2.persistance.GeoStringArrayType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.microtec.geo2.persistance.GeoStringArrayType;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
@@ -642,7 +642,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult fCreeOrdreRegularisation(String ordRef, String socCode, String lcaCode, String typReg, Boolean indDetail, String username, String[] listOrlRef) {
+    public FunctionResult fCreeOrdreRegularisation(String ordRef, String socCode, String lcaCode, String typReg,
+            Boolean indDetail, String username, String[] listOrlRef) {
         FunctionQuery query = this.build("F_CREE_ORDRE_REGULARISATION");
 
         query.attachInput("arg_ord_ref", String.class, ordRef);
@@ -658,7 +659,8 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult fCreateOrdresEdi(String ediOrdre, String camCode, String socCode, String cliRef, String cenRef, String refCmd, String dateLiv, String username) {
+    public FunctionResult fCreateOrdresEdi(String ediOrdre, String camCode, String socCode, String cliRef,
+            String cenRef, String refCmd, String dateLiv, String username) {
         FunctionQuery query = this.build("F_CREATE_ORDRES_EDI");
 
         query.attachInput("arg_edi_ordre", String.class, ediOrdre);
@@ -671,6 +673,40 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_username", String.class, username);
         query.attachOutput("ls_nordre_tot", String.class);
         query.attachOutput("tab_ordre_cree", GeoStringArrayType.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult wDupliqueOrdreOnDuplique(
+            String ordRef,
+            String user,
+            String socCode,
+            Boolean withCodeChargement,
+            Boolean withEtdLocation,
+            Boolean withEtaLocation,
+            Boolean withEtdDate,
+            Boolean withEtaDate,
+            Boolean withIncCode,
+            Boolean withFourni,
+            Boolean withVtePu,
+            Boolean withAchPu,
+            Boolean withLibDlv) {
+        FunctionQuery query = this.build("W_DUPLIQUE_ORDRE_ON_DUPLIQUE");
+
+        query.attachInput("arg_ord_ref", String.class, ordRef);
+        query.attachInput("arg_username", String.class, user);
+        query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("arg_code_chargement", Character.class, withCodeChargement ? 'O' : 'N');
+        query.attachInput("arg_etd_location", Character.class, withEtdLocation ? 'O' : 'N');
+        query.attachInput("arg_eta_location", Character.class, withEtaLocation ? 'O' : 'N');
+        query.attachInput("arg_etd_date", Character.class, withEtdDate ? 'O' : 'N');
+        query.attachInput("arg_eta_date", Character.class, withEtaDate ? 'O' : 'N');
+        query.attachInput("arg_inc_code", Character.class, withIncCode ? 'O' : 'N');
+        query.attachInput("arg_fourni", Character.class, withFourni ? 'O' : 'N');
+        query.attachInput("arg_vte_pu", Character.class, withVtePu ? 'O' : 'N');
+        query.attachInput("arg_ach_pu", Character.class, withAchPu ? 'O' : 'N');
+        query.attachInput("arg_lib_dlv", Character.class, withLibDlv ? 'O' : 'N');
 
         return query.fetch();
     }

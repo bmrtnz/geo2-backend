@@ -188,8 +188,25 @@ public interface GeoFunctionOrdreRepository {
 
     FunctionResult fCreeOrdreComplementaire(String ordRef, String socCode, String username);
 
-    FunctionResult fCreeOrdreRegularisation(String ordRef, String socCode, String lcaCode, String typReg, Boolean indDetail, String username, String[] listOrlRef);
+    FunctionResult fCreeOrdreRegularisation(String ordRef, String socCode, String lcaCode, String typReg,
+            Boolean indDetail, String username, String[] listOrlRef);
 
-    FunctionResult fCreateOrdresEdi(String ediOrdre, String camCode, String socCode, String cliRef, String cenRef, String refCmd, String dateLiv, String username);
+    FunctionResult fCreateOrdresEdi(String ediOrdre, String camCode, String socCode, String cliRef, String cenRef,
+            String refCmd, String dateLiv, String username);
+
+    FunctionResult wDupliqueOrdreOnDuplique(
+            String arg_ord_ref,
+            String arg_username,
+            String arg_soc_code,
+            Boolean arg_code_chargement,
+            Boolean arg_etd_location,
+            Boolean arg_eta_location,
+            Boolean arg_etd_date,
+            Boolean arg_eta_date,
+            Boolean arg_inc_code,
+            Boolean arg_fourni,
+            Boolean arg_vte_pu,
+            Boolean arg_ach_pu,
+            Boolean arg_lib_dlv);
 
 }
