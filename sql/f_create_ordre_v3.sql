@@ -10,8 +10,8 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_CREATE_ORDRE_V3(
     arg_typ_ordre GEO_ORDRE.TYP_ORDRE%TYPE,
     arg_dat_liv varchar2,
     arg_num_edi number,
-    res OUT number,
-    msg OUT varchar2,
+    res IN OUT number,
+    msg IN OUT varchar2,
     ls_ord_ref OUT GEO_ORDRE.ORD_REF%TYPE
 )
 AS
@@ -102,6 +102,7 @@ BEGIN
         select cli_code, fldet_autom into ls_cli_code, ls_fldet_autom  from geo_client where cli_ref = arg_cli_ref and soc_code = arg_soc_code;
     exception when others then
         msg := '%%% Erreur sur code client : ' || arg_cli_ref || ' pour la société : ' || arg_soc_code;
+        res := 0;
         return;
     end;
 
@@ -109,6 +110,7 @@ BEGIN
         select cen_code into ls_cen_code from geo_entrep where cen_ref = arg_cen_ref and cli_ref = arg_cli_ref;
     exception when others then
         msg := '%%% Erreur sur code entrepot : ' || arg_cen_ref || ' pour la société : ' || arg_soc_code;
+        res := 0;
         return;
     end;
 

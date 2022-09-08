@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -421,6 +422,9 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "ordRef") String ordRef,
             @GraphQLArgument(name = "user") String user,
             @GraphQLArgument(name = "socCode") String socCode,
+            @GraphQLArgument(name = "cenRef") String cenRef,
+            @GraphQLArgument(name = "depDate") LocalDateTime depDate,
+            @GraphQLArgument(name = "livDate") LocalDate livDate,
             @GraphQLArgument(name = "withCodeChargement") Boolean withCodeChargement,
             @GraphQLArgument(name = "withEtdLocation") Boolean withEtdLocation,
             @GraphQLArgument(name = "withEtaLocation") Boolean withEtaLocation,
@@ -435,6 +439,9 @@ public class GeoFunctionsOrdreGraphQLService {
                 ordRef,
                 user,
                 socCode,
+                cenRef,
+                depDate,
+                livDate,
                 withCodeChargement,
                 withEtdLocation,
                 withEtaLocation,

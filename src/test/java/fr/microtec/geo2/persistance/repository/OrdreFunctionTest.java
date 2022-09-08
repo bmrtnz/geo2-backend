@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -787,6 +788,9 @@ public class OrdreFunctionTest {
                 "002207",
                 "BRUNO",
                 SOCIETE_SA,
+                "013128",
+                LocalDateTime.of(2022, 5, 10, 8, 30, 10),
+                LocalDate.of(2022, 5, 12),
                 false,
                 true,
                 false,

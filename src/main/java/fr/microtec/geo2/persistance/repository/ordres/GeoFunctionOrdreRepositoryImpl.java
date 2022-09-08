@@ -2,6 +2,7 @@ package fr.microtec.geo2.persistance.repository.ordres;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -682,6 +683,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
             String ordRef,
             String user,
             String socCode,
+            String cenRef,
+            LocalDateTime depDate,
+            LocalDate livDate,
             Boolean withCodeChargement,
             Boolean withEtdLocation,
             Boolean withEtaLocation,
@@ -697,6 +701,9 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_username", String.class, user);
         query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("arg_cen_ref", String.class, cenRef);
+        query.attachInput("arg_depdatp", LocalDateTime.class, depDate);
+        query.attachInput("arg_livdatp", LocalDate.class, livDate);
         query.attachInput("arg_code_chargement", Character.class, withCodeChargement ? 'O' : 'N');
         query.attachInput("arg_etd_location", Character.class, withEtdLocation ? 'O' : 'N');
         query.attachInput("arg_eta_location", Character.class, withEtaLocation ? 'O' : 'N');

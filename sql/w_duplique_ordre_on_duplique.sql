@@ -2,6 +2,9 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."W_DUPLIQUE_ORDRE_ON_DUPLIQUE" (
     arg_ord_ref IN GEO_ORDRE.ORD_REF%TYPE,
     arg_username IN GEO_SOCIETE.SOC_CODE%TYPE,
     arg_soc_code IN GEO_SOCIETE.SOC_CODE%TYPE,
+    arg_cen_ref GEO_ORDRE.ORD_REF%TYPE,
+    arg_depdatp timestamp,
+    arg_livdatp date,
     arg_code_chargement IN char,
     arg_etd_location IN char,
     arg_eta_location IN char,
@@ -18,9 +21,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."W_DUPLIQUE_ORDRE_ON_DUPLIQUE" (
 )
 AS
     ll_null number;
-    ldt_depdatp timestamp;
     lt_time timestamp;
-    ldt_livdatp timestamp;
     ls_depdatp varchar2(50);
     ls_livdatp varchar2(50);
     ll_rc timestamp;
@@ -30,7 +31,6 @@ AS
     ls_instructions_logistique varchar2(280);
     is_ref_cli varchar2(50);
     is_cur_cli_ref varchar2(50);
-    is_cen_ref varchar2(50);
     is_trp_code varchar2(50);
     is_inc_code varchar2(50);
 
@@ -60,10 +60,7 @@ begin
 	msg := '';
 
     select
-        depdatp,
-        livdatp,
         cli_ref,
-        cen_ref,
         trp_code,
         CODE_CHARGEMENT,
         PER_CODECOM,
@@ -87,10 +84,7 @@ begin
         INSTRUCTIONS_LOGISTIQUE,
         INC_CODE
     into
-        ldt_depdatp,
-        ldt_livdatp,
         is_cur_cli_ref,
-        is_cen_ref,
         is_trp_code,
         val_code_chargement,
         is_per_codecom,
@@ -116,29 +110,29 @@ begin
     from GEO_ORDRE
     where ORD_REF = arg_ord_ref;
 
-    ll_rc := ldt_depdatp;
+    ll_rc := arg_depdatp;
 
     if ll_rc is null then
         msg := 'Date de départ invalide';
         return;
     End IF;
 
-    ll_rc	:= ldt_livdatp;
+    ll_rc	:= arg_livdatp;
 
     if ll_rc is null then
         msg := 'Date de livraison invalide';
         return;
     End If;
 
-    If trunc(ldt_livdatp) - trunc(ldt_depdatp) < 0 Then
+    If trunc(arg_livdatp) - trunc(arg_depdatp) < 0 Then
         msg := 'Date de livraison antérieure à la date de départ';
         return;
     End If;
 
-    ls_depdatp := to_char(ldt_depdatp);
-    ls_livdatp := to_char(ldt_livdatp);
+    ls_depdatp := to_char(arg_depdatp);
+    ls_livdatp := to_char(arg_livdatp);
 
-    f_create_ordre_v3(arg_soc_code, is_cur_cli_ref,is_cen_ref,is_trp_code,is_ref_cli, false, false, ls_depdatp, 'ORD', ls_livdatp, ll_null, res, msg, ls_ord_ref_new);
+    f_create_ordre_v3(arg_soc_code, is_cur_cli_ref,arg_cen_ref,is_trp_code,is_ref_cli, false, false, ls_depdatp, 'ORD', ls_livdatp, ll_null, res, msg, ls_ord_ref_new);
     if (res <> 1) then
         msg := 'Erreur lors de la création de l''ordre : ' || msg;
         return;
@@ -170,7 +164,7 @@ begin
         val_eta_date := null;
     End IF;
 
-    f_get_instruction_logistique(is_cur_cli_ref,is_cen_ref, res, msg, ls_instructions_logistique);
+    f_get_instruction_logistique(is_cur_cli_ref,arg_cen_ref, res, msg, ls_instructions_logistique);
     if (res <> 1) then
         msg := 'Erreur lors de la récupération des instructions logistiques : ' || msg;
         return;

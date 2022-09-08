@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Repository;
 
@@ -198,6 +199,9 @@ public interface GeoFunctionOrdreRepository {
             String arg_ord_ref,
             String arg_username,
             String arg_soc_code,
+            String arg_cen_ref,
+            LocalDateTime arg_depdatp,
+            LocalDate arg_livdatp,
             Boolean arg_code_chargement,
             Boolean arg_etd_location,
             Boolean arg_eta_location,
