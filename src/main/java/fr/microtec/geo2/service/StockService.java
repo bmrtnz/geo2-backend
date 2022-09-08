@@ -115,6 +115,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             mouvement.setStock(stock);
             mouvement.setOrdreLigne(ligne);
             mouvement.setNomUtilisateur(utilisateur.getUsername());
+            mouvement.setArticle(ligne.getArticle());
             mouvement.setType('R');
             mouvement = stockMouvementRepo.save(mouvement);
 
@@ -123,7 +124,9 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             ligne.setNombreColisCommandes(quantite.floatValue());
             ligne.setProprietaireMarchandise(stock.getProprietaire());
             ligne.setFournisseur(stock.getFournisseur());
-            this.ordreLigneRepo.save(ligne);
+            ligne.setNombreReservationsSurStock(quantite.floatValue());
+            ligne.setBureauAchat(ligne.getFournisseur().getBureauAchat());
+            ligne = this.ordreLigneRepo.save(ligne);
 
             res = this.functionRepo.onChangeCdeNbCol(newligneRef, utilisateur.getUsername());
             res = this.functionRepo.fVerifLogistiqueOrdre(ordreId);

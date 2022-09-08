@@ -18,16 +18,16 @@ import lombok.EqualsAndHashCode;
 @MappedSuperclass
 public class GeoBaseStock extends ValidateAndModifiedEntity {
 
-	@Id
-	@Column(name = "sto_ref")
-	private String id;
+    @Id
+    @Column(name = "sto_ref")
+    private String id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
-	private GeoFournisseur fournisseur;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+    private GeoFournisseur fournisseur;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code")
-	private GeoEspece espece;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "esp_code")
+    private GeoEspece espece;
 
 }

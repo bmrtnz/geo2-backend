@@ -218,7 +218,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity {
     @Column(name = "cq_ref")
     private String referenceControleQualite;
 
-    @Column(name = "stm_ref", insertable = false, updatable = false)
+    @Column(name = "stm_ref")
     private String stockMouvement;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ordreLigne")
