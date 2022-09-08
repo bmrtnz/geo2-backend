@@ -800,6 +800,7 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertNotNull(result.getData().get("nordre"));
     }
 
 }

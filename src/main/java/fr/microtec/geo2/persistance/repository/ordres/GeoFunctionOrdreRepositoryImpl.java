@@ -707,6 +707,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_vte_pu", Character.class, withVtePu ? 'O' : 'N');
         query.attachInput("arg_ach_pu", Character.class, withAchPu ? 'O' : 'N');
         query.attachInput("arg_lib_dlv", Character.class, withLibDlv ? 'O' : 'N');
+        query.attachOutput("nordre", String.class);
 
         return query.fetch();
     }

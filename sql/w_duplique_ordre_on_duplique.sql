@@ -13,7 +13,8 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."W_DUPLIQUE_ORDRE_ON_DUPLIQUE" (
     arg_ach_pu IN char,
     arg_lib_dlv IN char,
 	res out number,
-    msg out varchar2
+    msg out varchar2,
+    nordre out GEO_ORDRE.NORDRE%TYPE
 )
 AS
     ll_null number;
@@ -227,6 +228,7 @@ begin
 
 	res := 1;
 	msg := 'OK';
+    nordre := ls_nordre_new;
 	return;
 
 end;
