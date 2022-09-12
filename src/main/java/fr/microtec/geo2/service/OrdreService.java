@@ -185,6 +185,12 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
                 return cb.notEqual(sccSubquery, sceSubquery);
             };
 
+        // distinct rows
+        spec = spec.and((root, query, cb) -> {
+            query.distinct(true);
+            return cb.conjunction();
+        });
+
         if (search != null && !search.isBlank())
             spec = spec.and(this.parseSearch(search));
 
