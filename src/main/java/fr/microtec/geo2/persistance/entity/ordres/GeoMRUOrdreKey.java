@@ -13,7 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class GeoMRUOrdreKey implements Serializable {
 
-	protected String utilisateur;
-	protected String ordre;
+    protected String utilisateur;
+    protected String ordreRef;
 
 }
