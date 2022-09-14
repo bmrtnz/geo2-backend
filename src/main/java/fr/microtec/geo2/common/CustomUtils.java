@@ -257,25 +257,35 @@ public class CustomUtils {
      * classes enfants.
      * Si l’on ne trouve rien, l’optional sera null, sinon il contiendra le champ
      * trouvé.
-     * 
-     * @param clazz     La classe dans laquelle on doit chercher la propriété.
-     * @param fieldName le nom de la propriété que l’on cherche.
+     *
+     * @param clazz La classe dans laquelle on doit chercher la propriété.
+     * @param path  le chemin de la propriété que l’on cherche.
      * @return Un optional de la propriété ou null.
      */
-    private static Optional<Field> getField(final Class<?> clazz, final String fieldName) {
+    public static Optional<Field> getField(final Class<?> clazz, final String path) {
         if (clazz == null)
             return Optional.empty();
 
-        try {
-            return Optional.of(clazz.getDeclaredField(fieldName));
-        } catch (NoSuchFieldException e) {
-            return getField(clazz.getSuperclass(), fieldName);
-        }
+        List<String> fields = Arrays.asList(path.split("\\."));
+        if (fields.size() > 1) {
+            try {
+                Class<?> nextClass = clazz.getDeclaredField(fields.get(0)).getType();
+                String nextPath = String.join(".", fields.subList(1, fields.size()));
+                return getField(nextClass, nextPath);
+            } catch (NoSuchFieldException ex) {
+                return getField(clazz.getSuperclass(), path);
+            }
+        } else
+            try {
+                return Optional.of(clazz.getDeclaredField(path));
+            } catch (NoSuchFieldException e) {
+                return getField(clazz.getSuperclass(), path);
+            }
     }
 
     /**
      * Build paths from GraphQL Field
-     * 
+     *
      * @param field Root field
      * @return Stream of paths (as String)
      */

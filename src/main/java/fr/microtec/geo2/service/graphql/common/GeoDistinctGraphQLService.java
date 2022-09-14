@@ -1,14 +1,15 @@
 package fr.microtec.geo2.service.graphql.common;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -83,12 +84,10 @@ public class GeoDistinctGraphQLService {
                 criteriaBuilder, entityClass, requestedField, spec);
 
         // Handle enum types
-        Expression<?> distinctExpr = CriteriaUtils
-                .toExpressionRecursively(criteriaQuery.from(entityClass), requestedField, true);
-        Class<?> type = distinctExpr.getJavaType();
-        if (StringEnum.class.isAssignableFrom(type)) {
-            return readEnumPage(type, pageable);
-        }
+        Optional<Field> field = CustomUtils.getField(entityClass, requestedField);
+        if (field.isPresent())
+            if (StringEnum.class.isAssignableFrom(field.get().getType()))
+                return readEnumPage(field.get().getType(), pageable);
 
         // Order
         Sort sort = pageable.isPaged() ? pageable.getSort() : Sort.unsorted();
