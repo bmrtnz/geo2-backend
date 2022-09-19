@@ -33,12 +33,13 @@ public class GeoGridConfig extends ModifiedEntity {
     @Column(name = "grid")
     private String grid;
 
-    @Lob
-    @Column(name = "config", columnDefinition = "BLOB")
-    private HashMap<String, Object> config;
-
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "soc_code")
     private GeoSociete societe;
+
+    @Lob
+    @Column(name = "config", columnDefinition = "BLOB")
+    private HashMap<String, Object> config;
 
 }

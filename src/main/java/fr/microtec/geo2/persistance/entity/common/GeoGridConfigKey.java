@@ -1,11 +1,11 @@
 package fr.microtec.geo2.persistance.entity.common;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +13,8 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class GeoGridConfigKey implements Serializable {
 
-	protected String utilisateur;
-	protected String grid;
+    protected String utilisateur;
+    protected String grid;
+    protected String societe;
 
 }

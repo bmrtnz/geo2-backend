@@ -42,15 +42,6 @@ public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGr
         return super.getOne(id);
     }
 
-    @GraphQLQuery
-    public Optional<GeoGridConfig> getGridConfigBySociete(
-            @GraphQLArgument(name = "grid") String grid,
-            @GraphQLArgument(name = "utilisateur") String nomUtilisateur,
-            @GraphQLArgument(name = "societe") String societe) {
-        return ((GeoGridConfigRepository) super.repository)
-                .getOneByGridAndUtilisateurNomUtilisateurAndSocieteId(grid, nomUtilisateur, societe);
-    }
-
     @GraphQLMutation
     public GeoGridConfig saveGridConfig(GeoGridConfig gridConfig, @GraphQLEnvironment ResolutionEnvironment env) {
         return this.saveEntity(gridConfig, env);
