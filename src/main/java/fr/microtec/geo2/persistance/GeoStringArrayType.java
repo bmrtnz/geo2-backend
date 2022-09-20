@@ -127,7 +127,7 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
             .toArray(Clob[]::new);
 
         // Create Oracle array
-        return connection.createARRAY("P_STR_TAB_TYPE", clobValues);
+        return connection.createARRAY(getOracleTypeName(), clobValues);
     }
 
     @Override
@@ -153,5 +153,12 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
         return Arrays.stream(clobValues)
             .map(Clob::toString)
             .toArray(String[]::new);
+    }
+
+    /**
+     * Oracle type name.
+     */
+    public static String getOracleTypeName() {
+        return "P_STR_TAB_TYPE";
     }
 }
