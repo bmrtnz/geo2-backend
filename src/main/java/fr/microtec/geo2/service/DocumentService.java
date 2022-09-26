@@ -102,12 +102,12 @@ public class DocumentService {
 
         if (GeoAsFacture.class.equals(clazz)) {
             path = ((GeoAsFacture) entity).getDocumentFactureWithMaddogService(this.maddog2FileSystemService);
-        } else if (GeoAsDocument.class.equals(clazz)) {
+        } else if (GeoAsDocument.class.isAssignableFrom(clazz)) { // Handle GeoAsEtiquette
             path = ((GeoAsDocument) entity).getDocumentWithMaddogService(this.maddog2FileSystemService);
         } else if (GeoAsCMR.class.equals(clazz)) {
             path = ((GeoAsCMR) entity).getDocumentCRMWithMaddogService(this.maddog2FileSystemService);
         } else {
-            throw new RuntimeException("DocumentService can't load document on entity %s, please map this new document type");
+            throw new RuntimeException(String.format("DocumentService can't load document on entity %s, please map this new document type", clazz.getSimpleName()));
         }
 
         return path;
