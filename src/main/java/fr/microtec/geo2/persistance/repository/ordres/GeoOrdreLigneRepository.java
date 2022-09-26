@@ -33,4 +33,6 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
     Long countByOrdre(GeoOrdre ordre);
 
     Long countByOrdreAndGratuitIsTrue(GeoOrdre ordre);
+
+    List<GeoOrdreLigne> getByIdIn(List<String> lignes);
 }
