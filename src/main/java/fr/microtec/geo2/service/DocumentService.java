@@ -3,6 +3,7 @@ package fr.microtec.geo2.service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.persistance.entity.document.*;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,21 @@ public class DocumentService {
         List<Class<?>> findDocumentClass = this.findDocumentClass(entityAsDocument);
         for (Class<?> documentClass : findDocumentClass) {
             this.loadDocumentWithClass(documentClass, entityAsDocument);
+        }
+
+        if (entityAsDocument instanceof GeoArticle) {
+            if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc() != null) {
+                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc());
+            }
+            if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle() != null) {
+                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle());
+            }
+            if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis() != null) {
+                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis());
+            }
+            if (((GeoArticle) entityAsDocument).getNormalisation().getStickeur() != null) {
+                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getStickeur());
+            }
         }
 
         return entityAsDocument;
@@ -118,12 +134,12 @@ public class DocumentService {
 
         if (GeoAsFacture.class.equals(clazz)) {
             name = ((GeoAsFacture) entity).getDocumentFactureName();
-        } else if (GeoAsDocument.class.equals(clazz)) {
+        } else if (GeoAsDocument.class.isAssignableFrom(clazz)) { // Handle GeoAsEtiquette
             name = ((GeoAsDocument) entity).getDocumentName();
         } else if (GeoAsCMR.class.equals(clazz)) {
             name = ((GeoAsCMR) entity).getDocumentCMRName();
         } else {
-            throw new RuntimeException("DocumentService can't load document on entity %s, please map this new document type");
+            throw new RuntimeException(String.format("DocumentService can't load document on entity %s, please map this new document type", clazz.getSimpleName()));
         }
 
         return name;
@@ -132,12 +148,12 @@ public class DocumentService {
     private void setDocument(Class<?> clazz, GeoBaseDocument entity, GeoDocument doc) {
         if (GeoAsFacture.class.equals(clazz)) {
             ((GeoAsFacture) entity).setDocumentFacture(doc);
-        } else if (GeoAsDocument.class.equals(clazz)) {
+        } else if (GeoAsDocument.class.isAssignableFrom(clazz)) { // Handle GeoAsEtiquette
             ((GeoAsDocument) entity).setDocument(doc);
         } else if (GeoAsCMR.class.equals(clazz)) {
             ((GeoAsCMR) entity).setDocumentCMR(doc);
         } else {
-            throw new RuntimeException("DocumentService can't set document on entity %s, please map this new document type");
+            throw new RuntimeException(String.format("DocumentService can't set document on entity %s, please map this new document type", clazz.getSimpleName()));
         }
     }
 
@@ -146,12 +162,12 @@ public class DocumentService {
 
         if (GeoAsFacture.class.equals(clazz)) {
             key = ((GeoAsFacture) entity).getDocumentFacturePathKey();
-        } else if (GeoAsDocument.class.equals(clazz)) {
+        } else if (GeoAsDocument.class.isAssignableFrom(clazz)) { // Handle GeoAsEtiquette
             key = ((GeoAsDocument) entity).getDocumentPathKey();
         } else if (GeoAsCMR.class.equals(clazz)) {
             key = ((GeoAsCMR) entity).getDocumentCMRPathKey();
         } else {
-            throw new RuntimeException("DocumentService can't load document type on entity %s, please map this new document type");
+            throw new RuntimeException(String.format("DocumentService can't load document type on entity %s, please map this new document type", clazz.getSimpleName()));
         }
 
         return FsDocumentType.fromPathKey(key);

@@ -26,11 +26,11 @@ import lombok.EqualsAndHashCode;
 public class GeoMRUOrdre extends ModifiedEntity implements Serializable {
 
     @Id
-    @Column(name = "ord_ref", insertable = false, updatable = false)
+    @Column(name = "ord_ref")
     private String ordreRef;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ord_ref")
+    @JoinColumn(name = "ord_ref", insertable = false, updatable = false)
     private GeoOrdre ordre;
 
     @Id
