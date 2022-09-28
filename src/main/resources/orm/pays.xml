@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+  <named-native-query
+      name="Pays.allPaysDepassement"
+      result-class="fr.microtec.geo2.persistance.entity.tiers.GeoPaysDepassement"
+  >
+    <query>
+        <![CDATA[
+        	SELECT
+                p.pay_code,
+                sum(COALESCE(c.enc_assure, 0)) AS somme_agrement,
+                sum(COALESCE(c.enc_depasse, 0)) AS somme_en_cours_temporaire,
+                sum(COALESCE(c.enc_bw, 0)) AS somme_en_cours_blue_whale,
+                sum(COALESCE(c.enc_assure, 0) + COALESCE(c.enc_depasse, 0) + COALESCE(c.enc_bw, 0)) AS somme_autorise,
+                sum(COALESCE(c.enc_actuel, 0)) AS somme_en_cours_actuel,
+                sum(COALESCE(c.enc_actuel, 0) - COALESCE(c.enc_assure, 0) + COALESCE(c.enc_depasse, 0) + COALESCE(c.enc_bw, 0)) AS somme_depassement,
+                sum(COALESCE(c.enc_0, 0)) AS somme_en_cours_non_echu,
+                sum(COALESCE(c.enc_1, 0)) AS somme_en_cours_1a30,
+                sum(COALESCE(c.enc_2, 0)) AS somme_en_cours_31a60,
+                sum(COALESCE(c.enc_3, 0)) AS somme_en_cours_61a90,
+                sum(COALESCE(c.enc_4, 0)) AS somme_en_cours_90_plus,
+                sum(COALESCE(c.alerte_coface, 0)) AS somme_alerte_coface
+            FROM
+                    geo_pays p,
+                    geo_client c,
+                    geo_societe soc,
+                    geo_seccom sec
+            WHERE
+                    p.pay_code = c.pay_code
+                AND c.soc_code = soc.soc_code
+                AND p.sco_code = sec.sco_code
+                AND sec.sco_code like :arg_sco_code
+                AND c.valide = 'O'
+                AND COALESCE(c.enc_actuel, 0) - (COALESCE(c.enc_assure, 0) + COALESCE(c.enc_depasse, 0) + COALESCE(c.enc_bw, 0))>0
+                AND soc.soc_code = :arg_soc_code
+                AND p.valide = 'O'
+            GROUP BY
+                p.pay_code
+            ORDER BY
+                p.pay_code ASC
+        ]]>
+        </query>
+    </named-native-query>
+
+</entity-mappings>
