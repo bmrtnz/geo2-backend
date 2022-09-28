@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -377,9 +378,11 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
     @Where(clause = "entite = 'Client'")
     private Set<GeoModification> modifications;
 
+    @Transient
     @Formula("coalesce(enc_assure,0) + coalesce(enc_depasse,0) + coalesce(enc_bw,0)")
     private Float autorise;
 
+    @Transient
     @Formula("coalesce(enc_actuel,0) - (coalesce(enc_assure,0) + coalesce(enc_depasse,0) + coalesce(enc_bw,0))")
     private Float depassement;
 
