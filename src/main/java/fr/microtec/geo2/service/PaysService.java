@@ -50,7 +50,6 @@ public class PaysService extends GeoAbstractGraphQLService<GeoPays, String> {
         criteriaQuery
                 .select(criteriaBuilder.sum(exp))
                 .where(criteriaBuilder.and(equalID, isValid));
-
         if (ignoreNegative)
             criteriaQuery.where(criteriaBuilder.and(equalID, isValid, isNegative));
 
