@@ -53,6 +53,16 @@ public class GeoPaysGraphQLService extends GeoAbstractGraphQLService<GeoPays, St
     }
 
     @GraphQLQuery
+    public Long countPaysDepassement(
+            @GraphQLArgument(name = "secteurCode") String secteurCode,
+            @GraphQLArgument(name = "societeCode") String societeCode) {
+        return ((GeoPaysRepository) this.repository)
+                .countPaysDepassement(
+                        Optional.ofNullable(secteurCode).orElse("%"),
+                        societeCode);
+    }
+
+    @GraphQLQuery
     public RelayPage<GeoPays> allDistinctPays(
             @GraphQLArgument(name = "search") String search,
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable) {
