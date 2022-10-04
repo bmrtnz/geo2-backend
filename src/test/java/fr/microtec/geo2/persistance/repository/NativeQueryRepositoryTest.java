@@ -14,7 +14,7 @@ import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
-import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
@@ -81,7 +81,8 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllClientEdi() {
-        List<GeoClient> list = this.geoEdiOrdreRepository.allClientEdi("F", "%", "%");
+        List<GeoClientEdi> list = this.geoEdiOrdreRepository
+                .allClientEdi("F", "%", "%");
 
         Assertions.assertFalse(list.isEmpty());
     }

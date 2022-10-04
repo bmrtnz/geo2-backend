@@ -38,11 +38,11 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </named-native-query>
     <named-native-query
         name="OrdreEdi.allClientEdi"
-        result-class="fr.microtec.geo2.persistance.entity.tiers.GeoClient"
+        result-class="fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi"
     >
         <query>
             <![CDATA[
-            Select distinct C.*
+            Select distinct rownum, C.cli_ref, C.cli_code
             from  geo_edi_ordre O, geo_client C
             where O.CLI_REF = C.CLI_REF AND
                   C.SCO_CODE = :arg_sco_code AND
