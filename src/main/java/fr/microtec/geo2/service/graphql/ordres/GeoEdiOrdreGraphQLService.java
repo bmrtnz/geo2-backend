@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoEdiOrdre;
-import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.service.EdiOrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -67,7 +67,7 @@ public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiO
     }
 
     @GraphQLQuery
-    public List<GeoClient> allClientEdi(
+    public List<GeoClientEdi> allClientEdi(
             @GraphQLArgument(name = "secteurId") String secteurId,
             @GraphQLArgument(name = "assistantId") String assistantId,
             @GraphQLArgument(name = "commercialId") String commercialId) {
