@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.tiers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,12 @@ public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoF
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.getPage(search, pageable, env);
+    }
+
+    @GraphQLQuery
+    public List<GeoFournisseur> allFournisseurList(
+            @GraphQLArgument(name = "search") String search) {
+        return this.getAll(search);
     }
 
     @GraphQLQuery
