@@ -167,7 +167,8 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         SUM(STV.qte_ini_3) as ini3,
         SUM(STV.qte_res_3) as res3,
         SUM(STV.qte_ini_4) as ini4,
-        SUM(STV.qte_res_4) as res4
+        SUM(STV.qte_res_4) as res4,
+        STV.date_fab
     FROM
     (
         SELECT
@@ -184,21 +185,23 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             DECODE(GEO_STOCK.age, '3', SUM(GEO_STOCK.qte_ini), 0) AS qte_ini_3,
             DECODE(GEO_STOCK.age, '3', SUM(GEO_STOCK.qte_res), 0) AS qte_res_3,
             DECODE(GEO_STOCK.age, '4', SUM(GEO_STOCK.qte_ini), 0) AS qte_ini_4,
-            DECODE(GEO_STOCK.age, '4', SUM(GEO_STOCK.qte_res), 0) AS qte_res_4
+            DECODE(GEO_STOCK.age, '4', SUM(GEO_STOCK.qte_res), 0) AS qte_res_4,
+            GEO_STOCK.date_fab
         FROM
             GEO_STOCK
         WHERE
             GEO_STOCK.art_ref = :arg_art_ref and
             GEO_STOCK.valide ='O'
         GROUP BY
-            GEO_STOCK.fou_code,GEO_STOCK.pal_code, DECODE(sto_statut,'O',sto_desc,''), GEO_STOCK.age, GEO_STOCK.prop_code
+            GEO_STOCK.fou_code,GEO_STOCK.pal_code, DECODE(sto_statut,'O',sto_desc,''), GEO_STOCK.age, GEO_STOCK.prop_code, GEO_STOCK.date_fab
     )  STV
     GROUP BY
         rownum,
         STV.fou_code,
         STV.desc_stat,
         STV.pal_code,
-        STV.prop_code
+        STV.prop_code,
+        STV.date_fab
     ]]>
     </query>
   </named-native-query>

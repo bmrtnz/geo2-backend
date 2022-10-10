@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -58,6 +60,9 @@ public class GeoStockReservation implements GeoStockQuantite {
     private Integer quantiteReservee4;
     @Transient
     private Integer quantiteOptionnelle4 = 0;
+
+    @Column(name = "date_fab")
+    private LocalDate dateFabrication;
 
     @Transient
     private Integer quantiteDisponible;
