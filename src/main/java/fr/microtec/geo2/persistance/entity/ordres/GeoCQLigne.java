@@ -162,7 +162,7 @@ public class GeoCQLigne extends ModifiedEntity {
 	public void postLoad() {
 
 		// description
-		this.description = this.articleDescriptionAbrege + " par " + this.utilisateurDerniereSaisieOffline + " " + this.dateDerniereSaisieOffline.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+		this.description = this.articleDescriptionAbrege + " par " + this.utilisateurEnCharge + " " + this.dateDerniereSaisieOffline.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
 
 		// isExp
 		this.isExp = -2;
