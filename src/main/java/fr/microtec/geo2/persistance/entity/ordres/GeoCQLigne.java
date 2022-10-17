@@ -15,6 +15,8 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Formula;
+
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
@@ -27,153 +29,163 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class GeoCQLigne extends ModifiedEntity {
 
-	@Id
-	@Column(name = "cql_ref")
-	private String id;
+    @Id
+    @Column(name = "cql_ref")
+    private String id;
 
-	@Column(name = "cqc_ref")
-	private String referenceCQC;
+    @Column(name = "cqc_ref")
+    private String referenceCQC;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orl_ref")
-	private GeoOrdreLigne ordreLigne;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orl_ref")
+    private GeoOrdreLigne ordreLigne;
 
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "ligne")
-	private GeoCQExpedition expedition;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "ligne")
+    private GeoCQExpedition expedition;
 
-	@Column(name = "col_nbf")
-	private Float nombreFruitsTheoriqueParColis;
+    @Column(name = "col_nbf")
+    private Float nombreFruitsTheoriqueParColis;
 
-	@Column(name = "col_nb_ligne")
-	private Float nombreColis;
+    @Column(name = "col_nb_ligne")
+    private Float nombreColis;
 
-	@Column(name = "col_pdsnet")
-	private Float poidsNetTheoriqueParColis;
+    @Column(name = "col_pdsnet")
+    private Float poidsNetTheoriqueParColis;
 
-	@Column(name = "art_desc")
-	private String articleDescription;
+    @Column(name = "art_desc")
+    private String articleDescription;
 
-	@Column(name = "art_desc_abrege")
-	private String articleDescriptionAbrege;
+    @Column(name = "art_desc_abrege")
+    private String articleDescriptionAbrege;
 
-	@Column(name = "ok_lot")
-	private Boolean lotConforme;
+    @Column(name = "ok_lot")
+    private Boolean lotConforme;
 
-	@Column(name = "ok_colis")
-	private Boolean colisConforme;
+    @Column(name = "ok_colis")
+    private Boolean colisConforme;
 
-	@Column(name = "ok_corniere")
-	private Boolean corniereConforme;
+    @Column(name = "ok_corniere")
+    private Boolean corniereConforme;
 
-	@Column(name = "ok_feuillard")
-	private Boolean feuillardConforme;
+    @Column(name = "ok_feuillard")
+    private Boolean feuillardConforme;
 
-	@Column(name = "mar_ean128")
-	private Boolean normalisationEAN128;
+    @Column(name = "mar_ean128")
+    private Boolean normalisationEAN128;
 
-	@Column(name = "mar_trace")
-	private Boolean codeTracabilite;
+    @Column(name = "mar_trace")
+    private Boolean codeTracabilite;
 
-	@Column(name = "mar_barcode")
-	private Boolean codeBarreClient;
+    @Column(name = "mar_barcode")
+    private Boolean codeBarreClient;
 
-	@Column(name = "nok_tri")
-	private Boolean nonConformeTri;
+    @Column(name = "nok_tri")
+    private Boolean nonConformeTri;
 
-	@Column(name = "nok_autrecli")
-	private Boolean nonConformeAutreClient;
+    @Column(name = "nok_autrecli")
+    private Boolean nonConformeAutreClient;
 
-	@Column(name = "nok_derog_interne")
-	private Boolean nonConformeDerogationInterne;
+    @Column(name = "nok_derog_interne")
+    private Character nonConformeDerogationInterne;
 
-	@Column(name = "nok_derog_interne_nom")
-	private String nomResponsableDerogationInterne;
+    @Column(name = "nok_derog_interne_nom")
+    private String nomResponsableDerogationInterne;
 
-	@Column(name = "nok_cause")
-	private String causeNonConformite;
+    @Column(name = "nok_cause")
+    private String causeNonConformite;
 
-	@Column(name = "nok_tri_pal_nb")
-	private Float nombrePalettesTri;
+    @Column(name = "nok_tri_pal_nb")
+    private Float nombrePalettesTri;
 
-	@Column(name = "pal_nb_ligne")
-	private Float nombrePalettes;
+    @Column(name = "pal_nb_ligne")
+    private Float nombrePalettes;
 
-	@Column(name = "pal_nb_fou")
-	private Float nombrePalettesFournisseur;
+    @Column(name = "pal_nb_fou")
+    private Float nombrePalettesFournisseur;
 
-	@Column(name = "pal_code_reel")
-	private String codePaletteEffectif;
+    @Column(name = "pal_code_reel")
+    private String codePaletteEffectif;
 
-	@Column(name = "cq_commentaires")
-	private String commentairesControleur;
+    @Column(name = "cq_commentaires")
+    private String commentairesControleur;
 
-	@Column(name = "nok_client_ok")
-	private Boolean accepteApresAccordClient;
+    @Column(name = "nok_client_ok")
+    private Boolean accepteApresAccordClient;
 
-	@Column(name = "evalue")
-	private Boolean evalue;
+    @Column(name = "evalue")
+    private Boolean evalue;
 
-	@Column(name = "fin_date")
-	private LocalDateTime dateFinControle;
+    @Column(name = "fin_date")
+    private LocalDateTime dateFinControle;
 
-	@Column(name = "off_date")
-	private LocalDateTime dateDerniereSaisieOffline;
+    @Column(name = "off_date")
+    private LocalDateTime dateDerniereSaisieOffline;
 
-	@Column(name = "off_user")
-	private String utilisateurDerniereSaisieOffline;
+    @Column(name = "off_user")
+    private String utilisateurDerniereSaisieOffline;
 
-	@Column(name = "off_computer")
-	private String machineDerniereSaisieOffline;
+    @Column(name = "off_computer")
+    private String machineDerniereSaisieOffline;
 
-	@Column(name = "cql_user")
-	private String utilisateurEnCharge;
+    @Column(name = "cql_user")
+    private String utilisateurEnCharge;
 
-	@Column(name = "ccw_code")
-	private GeoCahierDesCharges cahierDesCharges;
+    @Column(name = "ccw_code")
+    private GeoCahierDesCharges cahierDesCharges;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
-	private GeoFournisseur fournisseur;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+    private GeoFournisseur fournisseur;
 
-	@Column(name = "ordre_desc")
-	private String ordreDescription;
+    @Column(name = "ordre_desc")
+    private String ordreDescription;
 
-	@Column(name = "art_ref")
-	private String articleReference;
+    @Column(name = "art_ref")
+    private String articleReference;
 
-	@Column(name = "nb_colis_controle")
-	private Float nombreColisControles;
+    @Column(name = "nb_colis_controle")
+    private Float nombreColisControles;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pal_code")
-	private GeoTypePalette typePalette;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pal_code")
+    private GeoTypePalette typePalette;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ord_ref")
-	private GeoOrdre ordre;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref")
+    private GeoOrdre ordre;
 
-	@Transient
-	private String description;
+    @Transient
+    private String description;
 
-	@Transient
-	private Integer isExp;
+    @Formula("if(ISEXP = -2, 'N/A', if(ISEXP = 0, 'OK', 'NON'))")
+    private String isExp;
 
-	@PostLoad
-	public void postLoad() {
+    @Formula("if(not isnull(ok_lot), if(ok_lot = 'O', 'OK', 'NON'), 'N/A')")
+    private String cq;
 
-		// description
-		this.description = this.articleDescriptionAbrege + " par " + this.utilisateurDerniereSaisieOffline + " " + this.dateDerniereSaisieOffline.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM));
+    @PostLoad
+    public void postLoad() {
 
-		// isExp
-		this.isExp = -2;
-		if (id == null)
-			this.isExp = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
-					&& expedition.getTypeColisOK() && expedition.getNombreColisOK() && expedition.getFichePaletteOK()
-					&& expedition.getEtiquetteColisOK() && expedition.getLisibiliteEtiquetteColisOK()
-					&& expedition.getTypeBoxEndLabelOK() && expedition.getLisibiliteBoxEndLabelOK() && expedition.getTypeSacOK()
-					&& expedition.getVarieteOK() && expedition.getNombreFruitsOK() && expedition.getTypeEtiquetteSacOK()
-					&& expedition.getLisibiliteEtiquetteOK() && expedition.getNombreUCColisOK()
-					&& expedition.getHomogeneiteColisOK() ? 1 : 0;
-	}
+        // description
+        this.description = this.articleDescriptionAbrege
+                + " par " + this.utilisateurEnCharge
+                + " "
+                + this.dateDerniereSaisieOffline.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+                + " ";
+        if (this.nonConformeTri)
+            this.description += "tri ";
+        if (this.nonConformeAutreClient)
+            this.description += "bloqué ";
+        if (this.accepteApresAccordClient)
+            this.description += "bloqué ";
+        if (this.nonConformeDerogationInterne.equals('O') || this.nonConformeDerogationInterne.equals('I'))
+            this.description += "derog. interne ";
+        else if (this.nonConformeDerogationInterne.equals('B'))
+            this.description += "derog. Blue Whale ";
+        this.description += this.nomResponsableDerogationInterne == null ? ""
+                : this.nomResponsableDerogationInterne + " ";
+        this.description += this.commentairesControleur == null ? "" : this.commentairesControleur + " ";
+
+    }
 
 }
