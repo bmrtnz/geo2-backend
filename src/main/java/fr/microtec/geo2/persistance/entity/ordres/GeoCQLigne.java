@@ -157,9 +157,8 @@ public class GeoCQLigne extends ModifiedEntity {
     @Transient
     private String description;
 
-    // @Formula("case when isexp = -2 then 'N/A' else (case when isexp = 0 then 'OK'
-    // else 'NON' end) end")
-    // private String isExp;
+    @Transient
+    private String isExp;
 
     @Formula("case when ok_lot is not null then (case when ok_lot = 'O' then 'OK' else 'NON' end) else 'N/A' end")
     private String cq;
@@ -186,6 +185,21 @@ public class GeoCQLigne extends ModifiedEntity {
         this.description += this.nomResponsableDerogationInterne == null ? ""
                 : this.nomResponsableDerogationInterne + " ";
         this.description += this.commentairesControleur == null ? "" : this.commentairesControleur + " ";
+
+        // isExp
+        Integer exp = -2;
+        if (id == null)
+            exp = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
+                    && expedition.getTypeColisOK() && expedition.getNombreColisOK() && expedition.getFichePaletteOK()
+                    && expedition.getEtiquetteColisOK() && expedition.getLisibiliteEtiquetteColisOK()
+                    && expedition.getTypeBoxEndLabelOK() && expedition.getLisibiliteBoxEndLabelOK()
+                    && expedition.getTypeSacOK()
+                    && expedition.getVarieteOK() && expedition.getNombreFruitsOK() && expedition.getTypeEtiquetteSacOK()
+                    && expedition.getLisibiliteEtiquetteOK() && expedition.getNombreUCColisOK()
+                    && expedition.getHomogeneiteColisOK() ? 1 : 0;
+        this.isExp = exp == -2
+                ? "N/A"
+                : exp == 0 ? "OK" : "NON";
 
     }
 
