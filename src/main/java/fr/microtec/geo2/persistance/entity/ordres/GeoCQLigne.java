@@ -157,10 +157,11 @@ public class GeoCQLigne extends ModifiedEntity {
     @Transient
     private String description;
 
-    @Formula("if(ISEXP = -2, 'N/A', if(ISEXP = 0, 'OK', 'NON'))")
-    private String isExp;
+    // @Formula("case when isexp = -2 then 'N/A' else (case when isexp = 0 then 'OK'
+    // else 'NON' end) end")
+    // private String isExp;
 
-    @Formula("if(not isnull(ok_lot), if(ok_lot = 'O', 'OK', 'NON'), 'N/A')")
+    @Formula("case when ok_lot is not null then (case when ok_lot = 'O' then 'OK' else 'NON' end) else 'N/A' end")
     private String cq;
 
     @PostLoad
