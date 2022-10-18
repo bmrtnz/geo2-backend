@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -167,28 +168,36 @@ public class GeoCQLigne extends ModifiedEntity {
     public void postLoad() {
 
         // description
-        this.description = this.articleDescriptionAbrege
-                + " par " + this.utilisateurEnCharge
-                + " "
-                + this.dateDerniereSaisieOffline.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
-                + " ";
-        if (this.nonConformeTri)
-            this.description += "tri ";
-        if (this.nonConformeAutreClient)
-            this.description += "bloqué ";
-        if (this.accepteApresAccordClient)
-            this.description += "bloqué ";
-        if (this.nonConformeDerogationInterne.equals('O') || this.nonConformeDerogationInterne.equals('I'))
-            this.description += "derog. interne ";
-        else if (this.nonConformeDerogationInterne.equals('B'))
-            this.description += "derog. Blue Whale ";
-        this.description += this.nomResponsableDerogationInterne == null ? ""
-                : this.nomResponsableDerogationInterne + " ";
-        this.description += this.commentairesControleur == null ? "" : this.commentairesControleur + " ";
+        if (this.articleDescriptionAbrege != null) {
+            this.description = this.articleDescriptionAbrege;
+            if (this.utilisateurEnCharge != null)
+                this.description += " par " + this.utilisateurEnCharge;
+            if (this.dateDerniereSaisieOffline != null)
+                this.description += " "
+                        + this.dateDerniereSaisieOffline
+                                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+                        + " ";
+            if (Optional.ofNullable(this.nonConformeTri).orElse(false))
+                this.description += "tri ";
+            if (Optional.ofNullable(this.nonConformeAutreClient).orElse(false))
+                this.description += "bloqué ";
+            if (Optional.ofNullable(this.accepteApresAccordClient).orElse(false))
+                this.description += "bloqué ";
+
+            if (this.accepteApresAccordClient != null)
+                if (this.nonConformeDerogationInterne.equals('O') || this.nonConformeDerogationInterne.equals('I'))
+                    this.description += "derog. interne ";
+                else if (this.nonConformeDerogationInterne.equals('B'))
+                    this.description += "derog. Blue Whale ";
+
+            this.description += this.nomResponsableDerogationInterne == null ? ""
+                    : this.nomResponsableDerogationInterne + " ";
+            this.description += this.commentairesControleur == null ? "" : this.commentairesControleur + " ";
+        }
 
         // isExp
         Integer exp = -2;
-        if (id == null)
+        if (this.id == null)
             exp = expedition.getTypePaletteOK() && expedition.getEtatPaletteOK() && expedition.getPCFOK()
                     && expedition.getTypeColisOK() && expedition.getNombreColisOK() && expedition.getFichePaletteOK()
                     && expedition.getEtiquetteColisOK() && expedition.getLisibiliteEtiquetteColisOK()
