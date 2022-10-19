@@ -69,13 +69,7 @@ begin
             --
     end case;
 
-    if res = 0 then
-        return;
-    end if;
-
 	res := 1;
-	msg := 'OK';
-	return;
 end;
 /
 
