@@ -720,11 +720,11 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult ofInitRegimeTva(String ordreRef, String entrepotCode) {
+    public FunctionResult ofInitRegimeTva(String ordreRef, String tvrCode) {
         FunctionQuery query = this.build("OF_INIT_REGIME_TVA");
 
         query.attachInput("is_cur_ord_ref", String.class, ordreRef);
-        query.attachInput("is_tvr_code_entrepot", String.class, entrepotCode);
+        query.attachInput("is_tvr_code_entrepot", String.class, tvrCode);
 
         return query.fetch();
     }

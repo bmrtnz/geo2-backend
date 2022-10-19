@@ -213,5 +213,5 @@ public interface GeoFunctionOrdreRepository {
             Boolean arg_ach_pu,
             Boolean arg_lib_dlv);
 
-    FunctionResult ofInitRegimeTva(String ordreRef, String entrepotCode);
+    FunctionResult ofInitRegimeTva(String ordreRef, String tvrCode);
 }
