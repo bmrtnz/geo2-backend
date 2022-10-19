@@ -17,7 +17,7 @@ public class GeoClientEnCours {
 
     @Id
     @Column(name = "rownum")
-    private Float id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "soc_code")
