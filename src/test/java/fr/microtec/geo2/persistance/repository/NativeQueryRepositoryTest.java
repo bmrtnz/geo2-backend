@@ -15,9 +15,11 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 
 @DataJpaTest
 @Import(PersistanceTestConfiguration.class)
@@ -28,9 +30,10 @@ public class NativeQueryRepositoryTest {
     private GeoOrdreRepository ordreRepository;
     @Autowired
     private GeoStockRepository stockRepository;
-
     @Autowired
     private GeoEdiOrdreRepository geoEdiOrdreRepository;
+    @Autowired
+    private GeoClientRepository geoClientRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -83,6 +86,14 @@ public class NativeQueryRepositoryTest {
     public void testAllClientEdi() {
         List<GeoClientEdi> list = this.geoEdiOrdreRepository
                 .allClientEdi("F", "%", "%");
+
+        Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllClientEnCours() {
+        List<GeoClientEnCours> list = this.geoClientRepository
+                .allClientEnCours("000150");
 
         Assertions.assertFalse(list.isEmpty());
     }
