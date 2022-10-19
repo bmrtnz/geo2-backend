@@ -43,7 +43,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                         ELSE O.DATFAC
                     END AS DATFAC,
                     E.EC_PIECE,
-                    --MAX(SUBSTR( L.REF_LOGISTIQUE, 1, INSTR(TRIM(L.REF_LOGISTIQUE), ' '))) AS NUM_IMMAT
                 CASE
                         WHEN L.immatriculation IS NOT NULL THEN L.immatriculation || ' '
                         ELSE ''
@@ -155,12 +154,10 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                         GEO_ORDRE O
                     WHERE
                         E.CLI_REF = O.CLI_REF
-                        AND
-
-                substr(E.CFC_INTITULE, 3, 6) = O.NORDRE
-                            AND
-                ( O.DATECH = E.CFC_DATE_ECHEANCE
-                                OR O.DATECH IS NULL) )
+                        AND substr(E.CFC_INTITULE, 3, 6) = O.NORDRE
+                        AND ( O.DATECH = E.CFC_DATE_ECHEANCE
+                            OR O.DATECH IS NULL)
+                )
             ]]>
         </query>
     </named-native-query>

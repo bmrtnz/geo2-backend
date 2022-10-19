@@ -17,7 +17,7 @@ public class GeoClientEnCours {
 
     @Id
     @Column(name = "rownum")
-    private Integer id;
+    private Float id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "soc_code")
@@ -77,22 +77,22 @@ public class GeoClientEnCours {
     private String paysCode;
 
     @Column(name = "enc_assure")
-    private Integer encAssure;
+    private Float encAssure;
 
     @Column(name = "enc_references")
     private String encReferences;
 
     @Column(name = "enc_depasse")
-    private Integer encDepasse;
+    private Float encDepasse;
 
     @Column(name = "enc_date_valid")
     private LocalDate encDateValid;
 
     @Column(name = "enc_bw")
-    private Integer encBw;
+    private Float encBw;
 
     @Column(name = "enc_actuel")
-    private Integer encActuel;
+    private Float encActuel;
 
     @Column(name = "cg_num")
     private String cgNum;
