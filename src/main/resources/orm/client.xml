@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+    <named-native-query
+        name="Client.allClientEnCours"
+        result-class="fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours"
+    >
+        <query>
+            <![CDATA[
+                SELECT
+                    DISTINCT
+                    ROWNUM,
+                    E.SOC_CODE,
+                    E.CLI_REF,
+                    E.DEV_CODE,
+                    E.CPT_CODE,
+                    E.CFC_DATE_ECRITURE,
+                    E.CFC_DATE_ECHEANCE,
+                    E.CFC_SENS,
+                    E.CFC_MT_EUROS,
+                    E.CFC_MT_DEVISE,
+                    E.CFC_REF_PIECE,
+                    E.CFC_INTITULE,
+                    E.CFC_RAPPEL,
+                    E.ECH_NIV,
+                    C.CLI_CODE,
+                    C.RAISOC,
+                    C.ZIP,
+                    C.VILLE,
+                    C.PAY_CODE,
+                    C.ENC_ASSURE,
+                    C.ENC_REFERENCES,
+                    C.ENC_DEPASSE,
+                    C.ENC_DATE_VALID,
+                    C.ENC_BW,
+                    C.ENC_ACTUEL,
+                    E.CG_NUM,
+                    CASE
+                        WHEN O.DATFAC IS NULL THEN E.CFC_DATE_ECRITURE
+                        ELSE O.DATFAC
+                    END AS DATFAC,
+                    E.EC_PIECE,
+                    --MAX(SUBSTR( L.REF_LOGISTIQUE, 1, INSTR(TRIM(L.REF_LOGISTIQUE), ' '))) AS NUM_IMMAT
+                CASE
+                        WHEN L.immatriculation IS NOT NULL THEN L.immatriculation || ' '
+                        ELSE ''
+                    END || CASE
+                        WHEN L.container IS NOT NULL THEN L.container
+                        ELSE ''
+                    END AS NUM_IMMAT
+                FROM
+                    GEO_CLIENT_ENCOURS E,
+                    GEO_CLIENT C,
+                    GEO_ORDRE O,
+                    GEO_ORDLOG L
+                WHERE
+                    E.CLI_REF = C.CLI_REF
+                    AND E.CLI_REF = O.CLI_REF
+                    AND E.cli_ref = :ra_cli_ref
+                    AND
+                substr(E.CFC_INTITULE, 3, 6) = O.NORDRE
+                    AND
+                L.ORD_REF = O.ORD_REF
+                    AND
+                ( O.DATECH = E.CFC_DATE_ECHEANCE
+                        OR O.DATECH IS NULL)
+                    AND
+                L.ORX_REF IN (
+                    SELECT
+                        MIN(ORX_REF)
+                    FROM
+                        GEO_ORDLOG
+                    WHERE
+                        GEO_ORDLOG.ORD_REF = O.ORD_REF)
+                GROUP BY
+                    ROWNUM,
+                    E.SOC_CODE,
+                    E.CLI_REF,
+                    E.DEV_CODE,
+                    E.CPT_CODE,
+                    E.CFC_DATE_ECRITURE,
+                    E.CFC_DATE_ECHEANCE,
+                    E.CFC_SENS,
+                    E.CFC_MT_EUROS,
+                    E.CFC_MT_DEVISE,
+                    E.CFC_REF_PIECE,
+                    E.CFC_INTITULE,
+                    E.CFC_RAPPEL,
+                    E.ECH_NIV,
+                    C.CLI_CODE,
+                    C.RAISOC,
+                    C.ZIP,
+                    C.VILLE,
+                    C.PAY_CODE,
+                    C.ENC_ASSURE,
+                    C.ENC_REFERENCES,
+                    C.ENC_DEPASSE,
+                    C.ENC_DATE_VALID,
+                    C.ENC_BW,
+                    C.ENC_ACTUEL,
+                    E.CG_NUM,
+                    CASE
+                        WHEN O.DATFAC IS NULL THEN E.CFC_DATE_ECRITURE
+                        ELSE O.DATFAC
+                    END,
+                    E.EC_PIECE,
+                    L.immatriculation,
+                    L.container
+                UNION
+                SELECT
+                    DISTINCT
+                    ROWNUM,
+                    E.SOC_CODE,
+                    E.CLI_REF,
+                    E.DEV_CODE,
+                    E.CPT_CODE,
+                    E.CFC_DATE_ECRITURE,
+                    E.CFC_DATE_ECHEANCE,
+                    E.CFC_SENS,
+                    E.CFC_MT_EUROS,
+                    E.CFC_MT_DEVISE,
+                    E.CFC_REF_PIECE,
+                    E.CFC_INTITULE,
+                    E.CFC_RAPPEL,
+                    E.ECH_NIV,
+                    C.CLI_CODE,
+                    C.RAISOC,
+                    C.ZIP,
+                    C.VILLE,
+                    C.PAY_CODE,
+                    C.ENC_ASSURE,
+                    C.ENC_REFERENCES,
+                    C.ENC_DEPASSE,
+                    C.ENC_DATE_VALID,
+                    C.ENC_BW,
+                    C.ENC_ACTUEL,
+                    E.CG_NUM,
+                    E.CFC_DATE_ECRITURE AS DATFAC,
+                    E.EC_PIECE,
+                    '' AS NUM_IMMAT
+                FROM
+                    GEO_CLIENT_ENCOURS E,
+                    GEO_CLIENT C
+                WHERE
+                    E.CLI_REF = C.CLI_REF
+                    AND E.cli_ref = :ra_cli_ref
+                    AND
+                NOT EXISTS (
+                    SELECT
+                        1
+                    FROM
+                        GEO_ORDRE O
+                    WHERE
+                        E.CLI_REF = O.CLI_REF
+                        AND
+
+                substr(E.CFC_INTITULE, 3, 6) = O.NORDRE
+                            AND
+                ( O.DATECH = E.CFC_DATE_ECHEANCE
+                                OR O.DATECH IS NULL) )
+            ]]>
+        </query>
+    </named-native-query>
+
+</entity-mappings>
