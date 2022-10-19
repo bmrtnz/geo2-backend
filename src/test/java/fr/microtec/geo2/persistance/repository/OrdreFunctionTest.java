@@ -807,4 +807,13 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result.getData().get("nordre"));
     }
 
+    @Test
+    public void testOfInitRegimeTva() {
+        FunctionResult result = this.functionOrdreRepository
+                .ofInitRegimeTva("001675", "L");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

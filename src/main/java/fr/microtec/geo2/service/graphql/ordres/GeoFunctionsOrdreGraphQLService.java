@@ -454,4 +454,11 @@ public class GeoFunctionsOrdreGraphQLService {
                 withLibDlv);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofInitRegimeTva(
+            @GraphQLArgument(name = "ordRef") String ordRef,
+            @GraphQLArgument(name = "tvrCode") String tvrCode) {
+        return this.repository.ofInitRegimeTva(ordRef, tvrCode);
+    }
+
 }
