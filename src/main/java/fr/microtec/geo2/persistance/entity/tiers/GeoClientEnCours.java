@@ -1,10 +1,12 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,10 +16,6 @@ import lombok.Data;
 @Data
 @Entity
 public class GeoClientEnCours {
-
-    @Id
-    @Column(name = "rownum")
-    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "soc_code")
@@ -31,6 +29,7 @@ public class GeoClientEnCours {
     @JoinColumn(name = "dev_code")
     private GeoDevise devise;
 
+    @Id
     @Column(name = "cpt_code")
     private String cptCode;
 

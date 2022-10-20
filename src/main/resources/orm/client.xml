@@ -12,7 +12,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             <![CDATA[
                 SELECT
                     DISTINCT
-                    ROWNUM,
                     E.SOC_CODE,
                     E.CLI_REF,
                     E.DEV_CODE,
@@ -75,7 +74,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     WHERE
                         GEO_ORDLOG.ORD_REF = O.ORD_REF)
                 GROUP BY
-                    ROWNUM,
                     E.SOC_CODE,
                     E.CLI_REF,
                     E.DEV_CODE,
@@ -111,7 +109,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 UNION
                 SELECT
                     DISTINCT
-                    ROWNUM,
                     E.SOC_CODE,
                     E.CLI_REF,
                     E.DEV_CODE,
