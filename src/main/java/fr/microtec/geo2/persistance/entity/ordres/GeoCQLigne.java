@@ -220,7 +220,7 @@ public class GeoCQLigne extends ModifiedEntity implements GeoAsCQTechnique {
     @Override
     public String getCqTechniqueName() {
         // ‘\\maddog2\geo_cq\' + control_cq_' + f_nvl_string(ls_CQL_REF) + '.pdf
-        return String.format("%s_%s.pdf", this.getReferenceCQC(), this.getId());
+        return String.format("control_cq_%s.pdf", this.getId());
     }
 
 }
