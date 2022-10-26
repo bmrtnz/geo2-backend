@@ -46,10 +46,10 @@ public class GeoDocumentNum {
     protected GeoOrdreLigne ordreLigne;
 
     @Column(name = "nom_fic")
-    protected String nomFic;
+    protected String nomFichier;
 
     @Column(name = "nom_fic_complet")
-    protected String nomFicComplet;
+    protected String nomFichierComplet;
 
     @Column(name = "commentaire")
     protected String commentaire;
