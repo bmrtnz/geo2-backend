@@ -41,4 +41,9 @@ public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoD
         return super.getOne(id);
     }
 
+    @GraphQLQuery
+    public long countDocumentNum(@GraphQLArgument(name = "search") String search) {
+        return this.count(search);
+    }
+
 }
