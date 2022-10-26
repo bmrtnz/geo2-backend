@@ -13,6 +13,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoDocumentNumRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
@@ -44,6 +45,11 @@ public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoD
     @GraphQLQuery
     public long countDocumentNum(@GraphQLArgument(name = "search") String search) {
         return this.count(search);
+    }
+
+    @GraphQLMutation
+    public void deleteDocumentNum(GeoDocumentNumKey id) {
+        this.delete(id);
     }
 
 }
