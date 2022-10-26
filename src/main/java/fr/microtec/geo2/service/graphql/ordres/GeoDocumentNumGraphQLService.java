@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDocumentNum;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDocumentNumKey;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.repository.ordres.GeoDocumentNumRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -50,6 +51,15 @@ public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoD
     @GraphQLMutation
     public void deleteDocumentNum(GeoDocumentNumKey id) {
         this.delete(id);
+    }
+
+    @GraphQLMutation
+    public void deleteByIdAndOrdreLigneAndTypeDocument(
+            String id,
+            GeoOrdreLigne ordreLigne,
+            String typeDocument) {
+        ((GeoDocumentNumRepository) this.repository)
+                .deleteByIdAndOrdreLigneAndTypeDocument(id, ordreLigne, typeDocument);
     }
 
 }
