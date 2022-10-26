@@ -62,4 +62,9 @@ public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoD
                 .deleteByIdAndOrdreLigneAndTypeDocument(id, ordreLigne, typeDocument);
     }
 
+    @GraphQLMutation
+    public GeoDocumentNum saveDocumentNum(GeoDocumentNum documentNum, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(documentNum, env);
+    }
+
 }
