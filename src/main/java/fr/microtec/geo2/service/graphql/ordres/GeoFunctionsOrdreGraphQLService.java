@@ -66,6 +66,13 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fControlBaf(
+            @GraphQLArgument(name = "ordreRef") String ordreRef,
+            @GraphQLArgument(name = "societeCode") String societeCode) {
+        return this.repository.fControlOrdreBaf(ordreRef, societeCode);
+    }
+
+    @GraphQLQuery
     public FunctionResult ofInitArticle(
             @GraphQLArgument(name = "ordreRef") String ordreRef,
             @GraphQLArgument(name = "articleRef") String articleRef,
