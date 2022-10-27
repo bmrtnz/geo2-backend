@@ -6,7 +6,7 @@ import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 
 public interface GeoAsCQTechnique extends GeoBaseDocument {
 
-    void setCqTechnique(GeoDocument facture);
+    void setCqTechnique(GeoDocument cqTechnique);
 
     GeoDocument getCqTechnique();
 

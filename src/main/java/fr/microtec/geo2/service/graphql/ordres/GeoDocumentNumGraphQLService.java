@@ -12,6 +12,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoDocumentNum;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDocumentNumKey;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.repository.ordres.GeoDocumentNumRepository;
+import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -26,8 +27,11 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoDocumentNum, GeoDocumentNumKey> {
 
-    public GeoDocumentNumGraphQLService(GeoDocumentNumRepository repository) {
+    private final DocumentService documentService;
+
+    public GeoDocumentNumGraphQLService(GeoDocumentNumRepository repository, DocumentService documentService) {
         super(repository, GeoDocumentNum.class);
+        this.documentService = documentService;
     }
 
     @GraphQLQuery
@@ -35,20 +39,20 @@ public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoD
             @GraphQLArgument(name = "search") String search,
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.getPage(search, pageable, env);
+        return this.documentService.loadDocuments(this.getPage(search, pageable, env));
     }
 
     @GraphQLQuery
     public List<GeoDocumentNum> allDocumentNumList(
             @GraphQLArgument(name = "search") String search,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.getAll(search);
+        return this.documentService.loadDocuments(this.getAll(search));
     }
 
     @GraphQLQuery
     public Optional<GeoDocumentNum> getDocumentNum(
             @GraphQLArgument(name = "id") GeoDocumentNumKey id) {
-        return super.getOne(id);
+        return this.documentService.loadDocuments(super.getOne(id));
     }
 
     @GraphQLQuery
@@ -72,7 +76,7 @@ public class GeoDocumentNumGraphQLService extends GeoAbstractGraphQLService<GeoD
 
     @GraphQLMutation
     public GeoDocumentNum saveDocumentNum(GeoDocumentNum documentNum, @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(documentNum, env);
+        return this.documentService.loadDocuments(this.saveEntity(documentNum, env));
     }
 
 }

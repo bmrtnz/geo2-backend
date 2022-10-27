@@ -8,14 +8,17 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import fr.microtec.geo2.persistance.entity.document.GeoAsCQPhoto;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import lombok.Data;
 
 @Entity
 @Table(name = "geo_docnum")
 @Data
 @IdClass(GeoDocumentNumKey.class)
-public class GeoDocumentNum {
+public class GeoDocumentNum implements GeoAsCQPhoto {
 
     @Id
     @Column(name = "ord_num")
@@ -59,4 +62,12 @@ public class GeoDocumentNum {
 
     @Column(name = "status")
     protected Integer statut;
+
+    @Transient
+    private GeoDocument cqPhoto;
+
+    @Override
+    public String getCqPhotoPath() {
+        return String.format("%s/%s/%s", this.getAnneeCreation(), this.getMoisCreation(), this.getNomFichier());
+    }
 }
