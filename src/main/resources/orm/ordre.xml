@@ -86,7 +86,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       and avi_art_emballage.ref_emballage = avi_art_gestion.ref_emballage
       and geo_ordlog.datdep_fou_p between :arg_date_min
       and :arg_date_max
-      and geo_ordre.soc_code = :arg_soc_code
+      and geo_ordre.soc_code like :arg_soc_code
       and (
         geo_ordre.trp_code = :arg_trp_code
         or geo_ordlog.trp_code = :arg_trp_code
