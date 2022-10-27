@@ -19,6 +19,8 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Formula;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCQTechnique;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
 import lombok.Data;
@@ -28,7 +30,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_cqligne")
 @Entity
-public class GeoCQLigne extends ModifiedEntity {
+public class GeoCQLigne extends ModifiedEntity implements GeoAsCQTechnique {
 
     @Id
     @Column(name = "cql_ref")
@@ -210,6 +212,15 @@ public class GeoCQLigne extends ModifiedEntity {
                 ? "N/A"
                 : exp == 0 ? "OK" : "NON";
 
+    }
+
+    @Transient
+    private GeoDocument cqTechnique;
+
+    @Override
+    public String getCqTechniqueName() {
+        // ‘\\maddog2\geo_cq\' + control_cq_' + f_nvl_string(ls_CQL_REF) + '.pdf
+        return String.format("control_cq_%s.pdf", this.getId());
     }
 
 }

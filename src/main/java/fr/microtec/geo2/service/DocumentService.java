@@ -1,19 +1,30 @@
 package fr.microtec.geo2.service;
 
-import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.controller.FsDocumentType;
-import fr.microtec.geo2.persistance.entity.document.*;
-import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
-import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.controller.FsDocumentType;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCMR;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCQPhoto;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCQTechnique;
+import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoAsEtiquette;
+import fr.microtec.geo2.persistance.entity.document.GeoAsFacture;
+import fr.microtec.geo2.persistance.entity.document.GeoBaseDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -33,9 +44,9 @@ public class DocumentService {
 
     public <T extends GeoBaseDocument> List<T> loadDocuments(List<T> listWithDocument) {
         return listWithDocument
-            .stream()
-            .map(this::loadDocuments)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::loadDocuments)
+                .collect(Collectors.toList());
     }
 
     public <T extends GeoBaseDocument> RelayPage<T> loadDocuments(RelayPage<T> pageWithDocument) {
@@ -52,16 +63,20 @@ public class DocumentService {
 
         if (entityAsDocument instanceof GeoArticle) {
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc());
+                this.loadDocumentWithClass(GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc());
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle());
+                this.loadDocumentWithClass(GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle());
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis());
+                this.loadDocumentWithClass(GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis());
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getStickeur() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class, ((GeoArticle) entityAsDocument).getNormalisation().getStickeur());
+                this.loadDocumentWithClass(GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getStickeur());
             }
         }
 
@@ -78,11 +93,11 @@ public class DocumentService {
 
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
             UriComponents uriComponents = uriBuilder
-                .path("/file-manager")
-                .path("/")
-                .path(this.getDocumentType(clazz, entityAsDocument).getKey())
-                .path("/")
-                .path(Base64.getEncoder().encodeToString(filename.getBytes())).build();
+                    .path("/file-manager")
+                    .path("/")
+                    .path(this.getDocumentType(clazz, entityAsDocument).getKey())
+                    .path("/")
+                    .path(Base64.getEncoder().encodeToString(filename.getBytes())).build();
 
             // Set document type (image as img else iframe)
             String mimeType = Files.probeContentType(doc);
@@ -96,21 +111,21 @@ public class DocumentService {
         }
 
         log.info(
-            "Search {} '{}' : {}",
-            isEtiquette ? "etiquette" : "document",
-            this.getDocumentName(clazz, entityAsDocument),
-            document.getIsPresent() ? "Found" : "Not Found");
+                "Search {} '{}' : {}",
+                isEtiquette ? "etiquette" : "document",
+                this.getDocumentName(clazz, entityAsDocument),
+                document.getIsPresent() ? "Found" : "Not Found");
 
         this.setDocument(clazz, entityAsDocument, document);
     }
 
     private static final List<Class<? extends GeoBaseDocument>> managedClasses = Arrays.asList(
-        GeoAsDocument.class, GeoAsFacture.class, GeoAsCMR.class
-    );
+            GeoAsDocument.class, GeoAsFacture.class, GeoAsCMR.class, GeoAsCQTechnique.class, GeoAsCQPhoto.class);
+
     private List<Class<?>> findDocumentClass(GeoBaseDocument entity) {
         return managedClasses.stream()
-            .filter(clazz -> clazz.isAssignableFrom(entity.getClass()))
-            .collect(Collectors.toList());
+                .filter(clazz -> clazz.isAssignableFrom(entity.getClass()))
+                .collect(Collectors.toList());
     }
 
     private Path getDocument(Class<?> clazz, GeoBaseDocument entity) {
@@ -122,8 +137,14 @@ public class DocumentService {
             path = ((GeoAsDocument) entity).getDocumentWithMaddogService(this.maddog2FileSystemService);
         } else if (GeoAsCMR.class.equals(clazz)) {
             path = ((GeoAsCMR) entity).getDocumentCRMWithMaddogService(this.maddog2FileSystemService);
+        } else if (GeoAsCQTechnique.class.equals(clazz)) {
+            path = ((GeoAsCQTechnique) entity).getCqTechniqueWithMaddogService(this.maddog2FileSystemService);
+        } else if (GeoAsCQPhoto.class.equals(clazz)) {
+            path = ((GeoAsCQPhoto) entity).getCqPhotoWithMaddogService(this.maddog2FileSystemService);
         } else {
-            throw new RuntimeException(String.format("DocumentService can't load document on entity %s, please map this new document type", clazz.getSimpleName()));
+            throw new RuntimeException(
+                    String.format("DocumentService can't load document on entity %s, please map this new document type",
+                            clazz.getSimpleName()));
         }
 
         return path;
@@ -138,8 +159,14 @@ public class DocumentService {
             name = ((GeoAsDocument) entity).getDocumentName();
         } else if (GeoAsCMR.class.equals(clazz)) {
             name = ((GeoAsCMR) entity).getDocumentCMRName();
+        } else if (GeoAsCQTechnique.class.equals(clazz)) {
+            name = ((GeoAsCQTechnique) entity).getCqTechniqueName();
+        } else if (GeoAsCQPhoto.class.equals(clazz)) {
+            name = ((GeoAsCQPhoto) entity).getCqPhotoPath();
         } else {
-            throw new RuntimeException(String.format("DocumentService can't load document on entity %s, please map this new document type", clazz.getSimpleName()));
+            throw new RuntimeException(
+                    String.format("DocumentService can't load document on entity %s, please map this new document type",
+                            clazz.getSimpleName()));
         }
 
         return name;
@@ -152,8 +179,14 @@ public class DocumentService {
             ((GeoAsDocument) entity).setDocument(doc);
         } else if (GeoAsCMR.class.equals(clazz)) {
             ((GeoAsCMR) entity).setDocumentCMR(doc);
+        } else if (GeoAsCQTechnique.class.equals(clazz)) {
+            ((GeoAsCQTechnique) entity).setCqTechnique(doc);
+        } else if (GeoAsCQPhoto.class.equals(clazz)) {
+            ((GeoAsCQPhoto) entity).setCqPhoto(doc);
         } else {
-            throw new RuntimeException(String.format("DocumentService can't set document on entity %s, please map this new document type", clazz.getSimpleName()));
+            throw new RuntimeException(
+                    String.format("DocumentService can't set document on entity %s, please map this new document type",
+                            clazz.getSimpleName()));
         }
     }
 
@@ -166,8 +199,14 @@ public class DocumentService {
             key = ((GeoAsDocument) entity).getDocumentPathKey();
         } else if (GeoAsCMR.class.equals(clazz)) {
             key = ((GeoAsCMR) entity).getDocumentCMRPathKey();
+        } else if (GeoAsCQTechnique.class.equals(clazz)) {
+            key = ((GeoAsCQTechnique) entity).getCqTechniquePathKey();
+        } else if (GeoAsCQPhoto.class.equals(clazz)) {
+            key = ((GeoAsCQPhoto) entity).getCqPhotoPathKey();
         } else {
-            throw new RuntimeException(String.format("DocumentService can't load document type on entity %s, please map this new document type", clazz.getSimpleName()));
+            throw new RuntimeException(String.format(
+                    "DocumentService can't load document type on entity %s, please map this new document type",
+                    clazz.getSimpleName()));
         }
 
         return FsDocumentType.fromPathKey(key);
