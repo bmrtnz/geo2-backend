@@ -258,9 +258,11 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     public List<GeoOrdreLigne> reindex(List<String> lignes) {
         List<GeoOrdreLigne> fetched = new ArrayList<>(lignes.size());
         for (int i = 0; i < lignes.size(); i++) {
-            GeoOrdreLigne current = ((GeoOrdreLigneRepository) this.repository).findById(lignes.get(i)).get();
-            current.setNumero(String.format("%" + 2 + "s", i + 1).replace(' ', '0'));
-            fetched.add(i, this.repository.save(current));
+            Optional<GeoOrdreLigne> current = ((GeoOrdreLigneRepository) this.repository).findById(lignes.get(i));
+            if (current.isPresent()) {
+                current.get().setNumero(String.format("%" + 2 + "s", i + 1).replace(' ', '0'));
+                fetched.add(i, this.repository.save(current.get()));
+            }
         }
         return fetched;
     }
