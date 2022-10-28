@@ -256,11 +256,11 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     }
 
     public List<GeoOrdreLigne> reindex(List<String> lignes) {
-        List<GeoOrdreLigne> fetched = ((GeoOrdreLigneRepository) this.repository).getByIdIn(lignes);
+        List<GeoOrdreLigne> fetched = new ArrayList<>(lignes.size());
         for (int i = 0; i < lignes.size(); i++) {
-            GeoOrdreLigne current = fetched.get(i);
+            GeoOrdreLigne current = ((GeoOrdreLigneRepository) this.repository).findById(lignes.get(i)).get();
             current.setNumero(String.format("%" + 2 + "s", i + 1).replace(' ', '0'));
-            fetched.set(i, this.repository.save(current));
+            fetched.add(i, this.repository.save(current));
         }
         return fetched;
     }
