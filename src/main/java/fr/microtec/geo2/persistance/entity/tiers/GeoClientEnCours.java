@@ -23,6 +23,9 @@ public class GeoClientEnCours {
     @JoinColumn(name = "soc_code")
     private GeoSociete societe;
 
+    @Column(name = "cen_ref")
+    String refEntrepot;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cli_ref")
     private GeoClient client;
