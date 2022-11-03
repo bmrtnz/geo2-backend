@@ -461,6 +461,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Formula("GEO_ORDRE_STATUS_EXPED(ord_ref)")
     private Boolean expedieAuComplet;
 
+    @Formula("(SELECT l.container FROM geo_ordlog l WHERE l.ord_ref = {alias}.ord_ref and l.container is not null and rownum = 1)")
+    private String numeroContainer;
+
     @Transient
     private Float pourcentageMargeBrut;
 
