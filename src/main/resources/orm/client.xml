@@ -40,7 +40,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 DATFAC,
                 EC_PIECE,
                 NUM_IMMAT,
-                CEN_REF
+                CEN_REF,
+                CONTAINER
             FROM
                 (
                 SELECT
@@ -82,7 +83,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                         WHEN L.container IS NOT NULL THEN L.container
                         ELSE ''
                     END AS NUM_IMMAT,
-                    O.CEN_REF
+                    O.CEN_REF,
+                    L.CONTAINER
                 FROM
                     GEO_CLIENT_ENCOURS E,
                     GEO_CLIENT C,
@@ -140,7 +142,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     E.EC_PIECE,
                     L.immatriculation,
                     L.container,
-                    O.CEN_REF
+                    O.CEN_REF,
+                    L.CONTAINER
             UNION
                 SELECT
                     DISTINCT
@@ -172,7 +175,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     E.CFC_DATE_ECRITURE AS DATFAC,
                     E.EC_PIECE,
                     '' AS NUM_IMMAT,
-                    '' AS CEN_REF
+                    '' AS CEN_REF,
+                    '' AS CONTAINER
                 FROM
                     GEO_CLIENT_ENCOURS E,
                     GEO_CLIENT C

@@ -110,4 +110,7 @@ public class GeoClientEnCours {
     @Column(name = "num_immat")
     private String numImmat;
 
+    @Column(name = "container")
+    private String numeroContainer;
+
 }
