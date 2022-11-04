@@ -14,17 +14,31 @@ import javax.persistence.Id;
 @Entity
 public class Distinct {
 
-	public Distinct(Float key, Long count) {
-		this.key = key == null
-				? "[null]"
-				: key.toString();
-		this.count = count;
+	public Distinct(Number key, Long count) {
+		this(parseKey(key), null, count);
 	}
+
+    public Distinct(String key, Long count) {
+        this(key, null, count);
+    }
+
+    public Distinct(Number key, String description, Long count) {
+        this.key = parseKey(key);
+        this.description = description;
+        this.count = count;
+    }
 
 	@Id
 	private String key;
 
+    @Column
+    private String description;
+
 	@Column
 	private Long count;
+
+    private static String parseKey(Number key) {
+        return key == null ? "[null]" : key.toString();
+    }
 
 }
