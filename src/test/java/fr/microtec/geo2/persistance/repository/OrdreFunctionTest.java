@@ -816,4 +816,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testSetTransporteurBassin() {
+        FunctionResult result = this.functionOrdreRepository
+                .setTransporteurBassin("8B8E8D", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
