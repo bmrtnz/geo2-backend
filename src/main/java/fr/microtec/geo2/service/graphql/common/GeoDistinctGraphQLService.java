@@ -50,6 +50,7 @@ public class GeoDistinctGraphQLService {
     public RelayPage<Distinct> getDistinct(
             @GraphQLArgument(name = "type") String inputType,
             @GraphQLArgument(name = "field") String requestField,
+            @GraphQLArgument(name = "descriptionField") String descriptionField,
             @GraphQLArgument(name = "search") String search,
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable) {
         Specification<?> spec = null;
@@ -58,7 +59,7 @@ public class GeoDistinctGraphQLService {
         }
 
         Page<Distinct> result = this.readPage(spec, pageable, EntityUtils.getEntityClassFromName(inputType),
-                requestField);
+                requestField, descriptionField);
 
         return PageFactory.asRelayPage(result);
     }
@@ -77,11 +78,11 @@ public class GeoDistinctGraphQLService {
      */
     private Page<Distinct> readPage(
             Specification<?> spec, Pageable pageable,
-            Class<?> entityClass, String requestedField) {
+            Class<?> entityClass, String requestedField, String descriptionField) {
 
         CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<Distinct> criteriaQuery = CriteriaUtils.selectCountDistinct(
-                criteriaBuilder, entityClass, requestedField, spec);
+                criteriaBuilder, entityClass, requestedField, descriptionField, spec);
 
         // Handle enum types
         Optional<Field> field = CustomUtils.getField(entityClass, requestedField);

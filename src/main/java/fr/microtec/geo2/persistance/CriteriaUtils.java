@@ -9,13 +9,7 @@ import static javax.persistence.metamodel.Attribute.PersistentAttributeType.ONE_
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Member;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.ManyToOne;
@@ -77,14 +71,31 @@ public class CriteriaUtils {
 	 * @param spec Specification clause.
 	 * @return Distinct count query.
 	 */
-	public static CriteriaQuery<Distinct> selectCountDistinct(CriteriaBuilder cb, Class<?> entityClass, String requestedField, Specification<?> spec) {
+	public static CriteriaQuery<Distinct> selectCountDistinct(CriteriaBuilder cb, Class<?> entityClass, String requestedField, String descriptionField, Specification<?> spec) {
+        List<Selection<?>> selectList = new ArrayList<>();
+        List<Expression<?>> distinctList = new ArrayList<>();
 		CriteriaQuery<Distinct> query = cb.createQuery(Distinct.class);
 		Root<?> root = applySpecification(cb, query, entityClass, spec);
 
 		Expression<?> distinctExpression = toExpressionRecursively(root, requestedField, true);
-		Expression<?> idExpression = getIdExpression(root);
+        Expression<?> idExpression = getIdExpression(root);
 
-		query.multiselect(distinctExpression, cb.count(idExpression)).groupBy(distinctExpression).distinct(true);
+        selectList.add(distinctExpression);
+        distinctList.add(distinctExpression);
+
+        if (descriptionField != null) {
+            Expression<?> descriptionExpression = toExpressionRecursively(root, descriptionField, true);
+
+            distinctList.add(descriptionExpression);
+            selectList.add(descriptionExpression);
+        }
+
+        selectList.add(cb.count(idExpression));
+
+        query
+            .multiselect(selectList)
+            .groupBy(distinctList)
+            .distinct(true);
 
 		return query;
 	}
@@ -110,7 +121,7 @@ public class CriteriaUtils {
       criteriaQuery.groupBy(expressions);
       return Specification.where(null)
       .toPredicate(root, criteriaQuery, criteriaBuilder);
-      
+
     };
   }
 
@@ -163,7 +174,7 @@ public class CriteriaUtils {
 		}
 		else {
 			Class<?> clazz = type.getJavaType();
-			attributeName = root.getModel().getDeclaredId(clazz).getName();
+			attributeName = root.getModel().getId(clazz).getName();
 		}
 		return root.get(attributeName);
 	}
