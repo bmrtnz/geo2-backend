@@ -214,4 +214,6 @@ public interface GeoFunctionOrdreRepository {
             Boolean arg_lib_dlv);
 
     FunctionResult ofInitRegimeTva(String ordreRef, String tvrCode);
+
+    FunctionResult setTransporteurBassin(String orlRef, String socCode);
 }

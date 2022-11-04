@@ -729,4 +729,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult setTransporteurBassin(String orlRef, String socCode) {
+        FunctionQuery query = this.build("SET_TRANSPORTEUR_BASSIN");
+
+        query.attachInput("arg_orl_ref", String.class, orlRef);
+        query.attachInput("arg_soc_code", String.class, socCode);
+
+        return query.fetch();
+    }
+
 }
