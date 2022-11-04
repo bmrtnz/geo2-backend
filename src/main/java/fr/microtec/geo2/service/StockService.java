@@ -129,6 +129,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             ligne = this.ordreLigneRepo.save(ligne);
 
             res = this.functionRepo.onChangeCdeNbCol(newligneRef, utilisateur.getUsername());
+            res = this.functionRepo.setTransporteurBassin(newligneRef, societeId);
             res = this.functionRepo.fVerifLogistiqueOrdre(ordreId);
         }
 
