@@ -94,6 +94,9 @@ public class GeoFunctionsOrdreGraphQLService {
         if (res.getRes() == 1) {
             this.ordreLigneService.updateFromHistory(newligneRef, historyLigneRef);
 
+            // set bassin
+            this.repository.setTransporteurBassin(newligneRef, societeCode);
+
             // Manually generate logistique
             this.repository.fVerifLogistiqueOrdre(ordreRef);
         }
