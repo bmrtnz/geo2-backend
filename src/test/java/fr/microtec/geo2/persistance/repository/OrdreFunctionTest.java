@@ -825,4 +825,19 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFDecomptePalox() {
+        FunctionResult result = this.functionOrdreRepository.fDecomptePalox(
+                1l,
+                "COURTO",
+                "PA120",
+                "000141",
+                "EMBALL",
+                LocalDate.now(),
+                SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

@@ -5,7 +5,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_DECOMPTE_PALOX" (
     arg_cen_ref IN varchar2,
     arg_esp_code IN varchar2,
     arg_date_application IN DATE,
-    arg_soc_code varchar2,
+    arg_soc_code IN varchar2,
     res in out number,
     msg in out varchar2
 ) AS
@@ -27,6 +27,7 @@ BEGIN
 
 exception when others then
     rollback;
+    msg := msg || ' ' || SQLERRM;
 END;
 /
 
