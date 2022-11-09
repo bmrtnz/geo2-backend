@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import fr.microtec.geo2.persistance.entity.document.GeoAsCQPhoto;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import lombok.Data;
@@ -18,6 +20,7 @@ import lombok.Data;
 @Table(name = "geo_docnum")
 @Data
 @IdClass(GeoDocumentNumKey.class)
+@DynamicUpdate
 public class GeoDocumentNum implements GeoAsCQPhoto {
 
     @Id
