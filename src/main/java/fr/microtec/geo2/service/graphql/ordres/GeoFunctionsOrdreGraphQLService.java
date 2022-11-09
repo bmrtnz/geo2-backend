@@ -471,4 +471,16 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.ofInitRegimeTva(ordRef, tvrCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDecomptePalox(
+            Long nbPallox,
+            String fouCode,
+            String colCode,
+            String cenRef,
+            String espCode,
+            LocalDate dateApplication,
+            String socCode) {
+        return this.repository.fDecomptePalox(nbPallox, fouCode, colCode, cenRef, espCode, dateApplication, socCode);
+    }
+
 }
