@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
+import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.service.security.GeoSecurityRoles;
 import lombok.Data;
@@ -151,5 +152,23 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
 
     public boolean isAdmin() {
         return this.getProfileClient() == "ADMIN";
+    }
+
+    /**
+     * Get personne by role
+     */
+    public GeoPersonne getPersonneByRole() {
+        if (this.getPersonne().getRole().equals(GeoRole.ASSISTANT))
+            return this.getAssistante();
+        if (this.getPersonne().getRole().equals(GeoRole.COMMERCIAL))
+            return this.getCommercial();
+        return this.getPersonne();
+    }
+
+    /**
+     * Get personne user by role
+     */
+    public GeoUtilisateur getUtilisateurByRole() {
+        return this.getPersonneByRole().getUtilisateur();
     }
 }
