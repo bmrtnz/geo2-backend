@@ -26,4 +26,13 @@ public class IndicatorQueriesTest {
                 .getSingleResult();
     }
 
+    @Test
+    public void testCountOrdresNonConfirmes() {
+        this.entityManager.getEntityManager()
+                .createNamedQuery("Indicateur.countOrdresNonConfirmes")
+                .setParameter("arg_sco_code", "AFA")
+                .setParameter("arg_soc_code", "SA")
+                .getSingleResult();
+    }
+
 }

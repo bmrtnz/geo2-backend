@@ -20,4 +20,15 @@ public class GeoIndicateurCountRepository {
                 .setParameter("arg_soc_code", societeCode)
                 .getSingleResult();
     }
+
+    public long countOrdresNonConfirmes(
+            String secteurCode,
+            String societeCode) {
+        return (long) this.entityManager
+                .createNamedQuery("Indicateur.countOrdresNonConfirmes")
+                .setParameter("arg_sco_code", secteurCode)
+                .setParameter("arg_soc_code", societeCode)
+                .getSingleResult();
+    }
+
 }

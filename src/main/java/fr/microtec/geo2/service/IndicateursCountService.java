@@ -24,6 +24,11 @@ public class IndicateursCountService {
                 .countClientsDepassementEncours(this.fetchSecteur(), societeCode);
     }
 
+    public long countOrdresNonConfirmes(String societeCode) {
+        return this.repository
+                .countOrdresNonConfirmes(this.fetchSecteur(), societeCode);
+    }
+
     private String fetchSecteur() {
         val user = this.securityService.getUser();
         return user.isAdmin() ? "%" : user.getUtilisateurByRole().getSecteurCommercial().getId();

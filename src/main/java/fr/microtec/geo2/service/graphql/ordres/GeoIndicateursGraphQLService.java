@@ -9,6 +9,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
 enum Indicateur {
     ClientsDepassementEncours,
+    OrdresNonConfirmes,
 }
 
 @Service
@@ -31,6 +32,8 @@ public class GeoIndicateursGraphQLService {
         switch (indicateur) {
             case ClientsDepassementEncours:
                 return this.indicateursCountService.countClientsDepassementEncours(societeCode);
+            case OrdresNonConfirmes:
+                return this.indicateursCountService.countOrdresNonConfirmes(societeCode);
             default:
                 throw new RuntimeException(String.format("Indicator %1 does not exist", indicateur));
         }
