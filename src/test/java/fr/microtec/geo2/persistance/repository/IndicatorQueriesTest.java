@@ -35,4 +35,13 @@ public class IndicatorQueriesTest {
                 .getSingleResult();
     }
 
+    @Test
+    public void testCountPlanningDepart() {
+        this.entityManager.getEntityManager()
+                .createNamedQuery("Indicateur.countPlanningDepart")
+                .setParameter("arg_sco_code", "AFA")
+                .setParameter("arg_soc_code", "SA")
+                .getSingleResult();
+    }
+
 }

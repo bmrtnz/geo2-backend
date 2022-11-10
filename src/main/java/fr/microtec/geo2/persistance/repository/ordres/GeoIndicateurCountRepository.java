@@ -31,4 +31,14 @@ public class GeoIndicateurCountRepository {
                 .getSingleResult();
     }
 
+    public long countPlanningDepart(
+            String secteurCode,
+            String societeCode) {
+        return (long) this.entityManager
+                .createNamedQuery("Indicateur.countPlanningDepart")
+                .setParameter("arg_sco_code", secteurCode)
+                .setParameter("arg_soc_code", societeCode)
+                .getSingleResult();
+    }
+
 }
