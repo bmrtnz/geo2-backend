@@ -1,11 +1,10 @@
 package fr.microtec.geo2.service;
 
-import java.math.BigDecimal;
-
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.repository.ordres.GeoIndicateurCountRepository;
 import fr.microtec.geo2.service.security.SecurityService;
+import lombok.val;
 
 @Service
 public class IndicateursCountService {
@@ -20,8 +19,14 @@ public class IndicateursCountService {
         this.securityService = securityService;
     }
 
-    public BigDecimal countClientsDepassementEncours() {
-        return this.repository.countClientsDepassementEncours();
+    public long countClientsDepassementEncours(String societeCode) {
+        return this.repository
+                .countClientsDepassementEncours(this.fetchSecteur(), societeCode);
+    }
+
+    private String fetchSecteur() {
+        val user = this.securityService.getUser();
+        return user.isAdmin() ? "%" : user.getUtilisateurByRole().getSecteurCommercial().getId();
     }
 
 }

@@ -1,7 +1,5 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
-import java.math.BigDecimal;
-
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +27,10 @@ public class GeoIndicateursGraphQLService {
      * Give entities count from specified indicator
      */
     @GraphQLQuery
-    public BigDecimal countByIndicator(Indicateur indicateur) {
+    public long countByIndicator(Indicateur indicateur, String societeCode) {
         switch (indicateur) {
             case ClientsDepassementEncours:
-                return this.indicateursCountService.countClientsDepassementEncours();
+                return this.indicateursCountService.countClientsDepassementEncours(societeCode);
             default:
                 throw new RuntimeException(String.format("Indicator %1 does not exist", indicateur));
         }
