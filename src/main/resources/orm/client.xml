@@ -224,4 +224,159 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         </query>
     </named-native-query>
 
+    <named-native-query
+        name="Client.allClientDepassementEnCours"
+        result-class="fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours"
+    >
+        <query>
+            <![CDATA[
+            SELECT
+                ROWNUM,
+                "secteur_permanent",
+                "secteur_temporaire",
+                "secteur_bw",
+                "secteur_autorise",
+                "secteur_depasst",
+                "secteur_solde",
+                "secteur_non_echu",
+                "secteur_1_30",
+                "secteur_31_60",
+                "secteur_61_90",
+                "secteur_90",
+                "secteur_COFACE",
+                "pays_permanent",
+                "pays_temporaire",
+                "pays_bw",
+                "pays_autorise",
+                "pays_depasst",
+                "pays_solde",
+                "pays_non_echu",
+                "pays_1_30",
+                "pays_31_60",
+                "pays_61_90",
+                "pays_90",
+                "pays_COFACE",
+                GEO_CLIENT.SCO_CODE,
+                GEO_PAYS.PAY_DESC,
+                GEO_CLIENT.RAISOC,
+                GEO_CLIENT.VILLE,
+                GEO_CLIENT.ENC_BW,
+                GEO_CLIENT.ENC_ACTUEL,
+                GEO_CLIENT.ENC_0,
+                GEO_CLIENT.ENC_1,
+                GEO_CLIENT.ENC_2,
+                GEO_CLIENT.ENC_3,
+                GEO_CLIENT.ENC_4,
+                GEO_CLIENT.ENC_ASSURE,
+                GEO_CLIENT.ENC_DEPASSE,
+                GEO_CLIENT.CLI_REF,
+                GEO_CLIENT.ENC_DOUTEUX,
+                GEO_CLIENT.ENC_DATE_VALID,
+                GEO_CLIENT.ALERTE_COFACE,
+                GEO_CLIENT.VALIDE
+            FROM
+                GEO_CLIENT,
+                GEO_PAYS ,
+                (
+                SELECT
+                    GEO_CLIENT.SOC_CODE,
+                    GEO_CLIENT.SCO_CODE,
+                    sum(geo_client.enc_assure) "secteur_permanent",
+                    sum(geo_client.enc_depasse) "secteur_temporaire",
+                    sum(geo_client.enc_bw) "secteur_bw",
+                    sum(geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse ) "secteur_autorise",
+                    sum(geo_client.enc_actuel - ( geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse)) "secteur_depasst",
+                    sum(geo_client.enc_actuel) "secteur_solde",
+                    sum(geo_client.enc_0) "secteur_non_echu",
+                    sum(geo_client.enc_1) "secteur_1_30",
+                    sum(geo_client.enc_2) "secteur_31_60",
+                    sum(geo_client.enc_3) "secteur_61_90",
+                    sum(geo_client.enc_4) "secteur_90",
+                    sum(geo_client.alerte_coface) "secteur_COFACE"
+                FROM
+                    GEO_CLIENT,
+                    GEO_PAYS
+                WHERE
+                    GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
+                    AND
+
+            geo_client.sco_code LIKE :secteur
+                    AND
+
+            (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+                    AND
+
+                geo_client.soc_code = :soc
+                GROUP BY
+                    GEO_CLIENT.SOC_CODE,
+                    GEO_CLIENT.SCO_CODE ) secteur,
+                (
+                SELECT
+                    GEO_CLIENT.SOC_CODE,
+                    GEO_CLIENT.SCO_CODE,
+                    GEO_CLIENT.PAY_CODE,
+                    sum(geo_client.enc_assure) "pays_permanent",
+                    sum(geo_client.enc_depasse) "pays_temporaire",
+                    sum(geo_client.enc_bw) "pays_bw",
+                    sum(geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse ) "pays_autorise",
+                    sum(geo_client.enc_actuel - ( geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse)) "pays_depasst",
+                    sum(geo_client.enc_actuel) "pays_solde",
+                    sum(geo_client.enc_0) "pays_non_echu",
+                    sum(geo_client.enc_1) "pays_1_30",
+                    sum(geo_client.enc_2) "pays_31_60",
+                    sum(geo_client.enc_3) "pays_61_90",
+                    sum(geo_client.enc_4) "pays_90",
+                    sum(geo_client.alerte_coface) "pays_COFACE"
+                FROM
+                    GEO_CLIENT,
+                    GEO_PAYS
+                WHERE
+                    GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
+                    AND
+            geo_client.sco_code LIKE :secteur
+                    AND
+
+            (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+                        AND
+
+                geo_client.soc_code = :soc
+                    GROUP BY
+                        GEO_CLIENT.SOC_CODE,
+                        GEO_CLIENT.SCO_CODE,
+                        GEO_CLIENT.pay_code) pays
+            WHERE
+                GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
+                AND
+
+            geo_client.soc_code = :soc
+                AND
+
+            geo_client.sco_code LIKE :secteur
+                AND
+
+            (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+                AND
+
+                    secteur.soc_code = geo_client.soc_code
+                AND
+
+                secteur.sco_code = geo_client.sco_code
+                AND
+
+                    pays.soc_code = geo_client.soc_code
+                AND
+
+                pays.sco_code = geo_client.sco_code
+                AND
+
+                    pays.pay_code = geo_client.PAY_CODE
+            ORDER BY
+                GEO_CLIENT.SCO_CODE ASC,
+                GEO_PAYS.PAY_DESC ASC,
+                GEO_CLIENT.RAISOC ASC,
+                GEO_CLIENT.VILLE ASC
+        ]]>
+        </query>
+    </named-native-query>
+
 </entity-mappings>

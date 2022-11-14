@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -71,5 +72,12 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
             @GraphQLArgument(name = "deviseCodeRef") String deviseCodeRef) {
         return ((GeoClientRepository) this.repository).allClientEnCours(clientRef,
                 deviseCodeRef != null ? deviseCodeRef : "%");
+    }
+
+    @GraphQLQuery
+    public List<GeoClientDepassementEnCours> allClientDepassementEnCours(
+            String secteur,
+            String societe) {
+        return ((GeoClientRepository) this.repository).allClientDepassementEnCours(secteur, societe);
     }
 }

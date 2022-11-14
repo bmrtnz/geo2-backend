@@ -14,6 +14,7 @@ import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
@@ -94,6 +95,14 @@ public class NativeQueryRepositoryTest {
     public void testAllClientEnCours() {
         List<GeoClientEnCours> list = this.geoClientRepository
                 .allClientEnCours("000150", "EUR");
+
+        Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllClientDepassementEnCours() {
+        List<GeoClientDepassementEnCours> list = this.geoClientRepository
+                .allClientDepassementEnCours("AFA", "SA");
 
         Assertions.assertFalse(list.isEmpty());
     }
