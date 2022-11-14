@@ -471,4 +471,27 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.ofInitRegimeTva(ordRef, tvrCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fAjustPallox(
+            String socCode,
+            String cenCode,
+            String fouCode,
+            String colCode,
+            String espCode,
+            Integer nbPallox,
+            LocalDate dateApplication,
+            String commentaire,
+            String cliCode) {
+        return this.repository.fAjustPallox(
+                socCode,
+                cenCode,
+                fouCode,
+                colCode,
+                espCode,
+                nbPallox,
+                dateApplication,
+                commentaire,
+                cliCode);
+    }
+
 }
