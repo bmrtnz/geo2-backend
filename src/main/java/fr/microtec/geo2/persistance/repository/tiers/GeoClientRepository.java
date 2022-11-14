@@ -17,5 +17,6 @@ public interface GeoClientRepository extends GeoRepository<GeoClient, String> {
 
     @Query(name = "Client.allClientEnCours", nativeQuery = true)
     List<GeoClientEnCours> allClientEnCours(
-            @Param("ra_cli_ref") String clientRef);
+            @Param("ra_cli_ref") String clientRef,
+            @Param("ra_dev_code_soc") String deviseCodeRef);
 }

@@ -93,7 +93,7 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllClientEnCours() {
         List<GeoClientEnCours> list = this.geoClientRepository
-                .allClientEnCours("000150");
+                .allClientEnCours("000150", "EUR");
 
         Assertions.assertFalse(list.isEmpty());
     }

@@ -67,7 +67,9 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
 
     @GraphQLQuery
     public List<GeoClientEnCours> allClientEnCours(
-            @GraphQLArgument(name = "clientRef") String clientRef) {
-        return ((GeoClientRepository) this.repository).allClientEnCours(clientRef);
+            @GraphQLArgument(name = "clientRef") String clientRef,
+            @GraphQLArgument(name = "deviseCodeRef") String deviseCodeRef) {
+        return ((GeoClientRepository) this.repository).allClientEnCours(clientRef,
+                deviseCodeRef != null ? deviseCodeRef : "%");
     }
 }
