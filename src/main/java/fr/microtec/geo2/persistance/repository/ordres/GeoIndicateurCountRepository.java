@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
+import java.math.BigDecimal;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -11,30 +13,30 @@ public class GeoIndicateurCountRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public long countClientsDepassementEncours(
+    public BigDecimal countClientsDepassementEncours(
             String secteurCode,
             String societeCode) {
-        return (long) this.entityManager
+        return (BigDecimal) this.entityManager
                 .createNamedQuery("Indicateur.countClientsDepassementEncours")
                 .setParameter("arg_sco_code", secteurCode)
                 .setParameter("arg_soc_code", societeCode)
                 .getSingleResult();
     }
 
-    public long countOrdresNonConfirmes(
+    public BigDecimal countOrdresNonConfirmes(
             String secteurCode,
             String societeCode) {
-        return (long) this.entityManager
+        return (BigDecimal) this.entityManager
                 .createNamedQuery("Indicateur.countOrdresNonConfirmes")
                 .setParameter("arg_sco_code", secteurCode)
                 .setParameter("arg_soc_code", societeCode)
                 .getSingleResult();
     }
 
-    public long countPlanningDepart(
+    public BigDecimal countPlanningDepart(
             String secteurCode,
             String societeCode) {
-        return (long) this.entityManager
+        return (BigDecimal) this.entityManager
                 .createNamedQuery("Indicateur.countPlanningDepart")
                 .setParameter("arg_sco_code", secteurCode)
                 .setParameter("arg_soc_code", societeCode)

@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.common;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -29,6 +30,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.service.security.GeoSecurityRoles;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.val;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -158,17 +160,25 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
      * Get personne by role
      */
     public GeoPersonne getPersonneByRole() {
-        if (this.getPersonne().getRole().equals(GeoRole.ASSISTANT))
-            return this.getAssistante();
-        if (this.getPersonne().getRole().equals(GeoRole.COMMERCIAL))
-            return this.getCommercial();
-        return this.getPersonne();
+        val personne = Optional.ofNullable(this.getPersonne());
+        if (personne.isPresent()) {
+            val role = Optional.ofNullable(personne.get().getRole());
+            if (role.isPresent()) {
+                if (role.get().equals(GeoRole.ASSISTANT))
+                    return this.getAssistante();
+                if (role.get().equals(GeoRole.COMMERCIAL))
+                    return this.getCommercial();
+                return personne.get();
+            }
+        }
+        return null;
     }
 
     /**
      * Get personne user by role
      */
     public GeoUtilisateur getUtilisateurByRole() {
-        return this.getPersonneByRole().getUtilisateur();
+        val personne = Optional.ofNullable(this.getPersonneByRole());
+        return personne.isPresent() ? personne.get().getUtilisateur() : null;
     }
 }
