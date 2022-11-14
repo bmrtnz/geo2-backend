@@ -49,69 +49,70 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         GEO_CLIENT C,
         GEO_PALCEN PI1,
         GEO_FOURNI F,
-        (
-          SELECT
-            PI.COL_CODE,
-            PM.FOU_CODE,
-            PM.STATION_RAISOC,
-            PI.DATE_INV,
-            PI.QTE_INV,
-            PM.NORDRE,
-            PM.DEPDATP,
-            CASE
-              WHEN PM.QTE < 0 THEN (-1) * PM.QTE
-              ELSE 0
-            END AS ENTREE,
-            CASE
-              WHEN PM.QTE > 0 THEN PM.QTE
-              ELSE 0
-            END AS SORTIE,
-            CASE
-              WHEN PM.QTE < 0 THEN PM.BON_RETOUR
-              ELSE PM.BON_RETOUR
-            END AS BON_RETOUR,
-            CASE
-              WHEN PM.QTE < 0 THEN PM.CMR
-              ELSE PM.CMR
-            END AS CMR,
-            CASE
-              WHEN PM.QTE < 0 THEN ''
-              ELSE ''
-            END AS REF_CLI,
-            CASE
-              WHEN PM.ESP_CODE IS NULL THEN 'EMBALL'
-              ELSE PM.ESP_CODE
-            END AS ESP_CODE,
-            PM.CEN_REF,
-            PM.PALOX_KO_NBR,
-            PM.PALOX_KO_CAUSE
-          FROM
-            GEO_PALCEN PI,
-            GEO_PALCEL PM
-          WHERE
-            PM.esp_code = PI.esp_code
-            and PM.col_code = PI.col_code
-            and PM.fou_code = PI.fou_code
-            and PM.cen_ref = PI.cen_ref
-            and PM.FOU_CODE IS NOT NULL
-            AND (
-              (
-                PM.depdatp >= PI.date_inv
-                and PM.depdatp <= :arg_dat_max
-                and PI.date_inv <= :arg_dat_max
-              )
-              OR PM.depdatp is null
-            )
-        ) PI2,
-        (
-          select
-            cen_ref,
-            sum(QTE_INV) AS SUM_QTT
-          from
-            GEO_PALCEN
-          GROUP BY
-            cen_ref
-        ) T
+        (SELECT
+
+                PI.COL_CODE,
+
+                PM.FOU_CODE,
+
+                PM.STATION_RAISOC,
+
+                PI.DATE_INV,
+
+                PI.QTE_INV,
+
+                sum(CASE WHEN PM.QTE < 0 THEN (-1) * PM.QTE ELSE 0 END) AS ENTREE,
+
+                sum(CASE WHEN PM.QTE > 0 THEN PM.QTE ELSE 0 END) AS SORTIE,
+
+                CASE WHEN PM.ESP_CODE IS NULL  THEN 'EMBALL' ELSE PM.ESP_CODE END AS ESP_CODE  ,
+
+                PM.CEN_REF
+
+                FROM
+
+                GEO_PALCEN PI,
+
+                GEO_PALCEL PM
+
+                WHERE
+
+                PM.esp_code = PI.esp_code and
+
+                PM.col_code = PI.col_code and
+
+                PM.fou_code = PI.fou_code and
+
+                PM.cen_ref = PI.cen_ref and
+
+                PM.FOU_CODE IS NOT NULL AND
+
+                ((PM.depdatp >= PI.date_inv and PM.depdatp <=:arg_dat_max and PI.date_inv<=:arg_dat_max)  or PM.depdatp is null)
+
+                GROUP BY
+
+                               PI.COL_CODE,
+
+                               PM.FOU_CODE,
+
+                               PM.STATION_RAISOC,
+
+                               PI.DATE_INV,
+
+                               PI.QTE_INV,
+
+                               PM.ESP_CODE,
+
+                               PM.CEN_REF
+
+                ) PI2,
+
+                (select GEO_PALCEN.cen_ref,GEO_PALCEN.fou_code,sum(QTE_INV) AS SUM_QTT from GEO_PALCEN,(select cen_ref,fou_code,col_code,max(date_inv) max_date from GEO_PALCEN where  date_inv<=:arg_dat_max  GROUP BY cen_ref,fou_code,col_code ) date_palcen
+
+                  where GEO_PALCEN.CEN_REF =  date_palcen.CEN_REF and  GEO_PALCEN.FOU_CODE =  date_palcen.FOU_CODE and  GEO_PALCEN.date_inv =  date_palcen.max_date GROUP BY GEO_PALCEN.cen_ref,GEO_PALCEN.fou_code) T,
+
+                (select cen_ref,fou_code,col_code,max(date_inv) max_date from GEO_PALCEN where  date_inv<=:arg_dat_max  GROUP BY cen_ref,fou_code,col_code ) MAXPALCEN
+
       WHERE
         PI2.esp_code (+) = PI1.esp_code
         and PI2.col_code (+) = PI1.col_code
@@ -126,6 +127,10 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND F.FOU_CODE = PI1.FOU_CODE
         AND PI1.CEN_REF = T.CEN_REF
         AND PI1.FOU_CODE like :arg_fou_code
+        AND MAXPALCEN.cen_ref =  PI1.cen_ref
+        AND MAXPALCEN.fou_code =  PI1.fou_code
+        AND MAXPALCEN.col_code =  PI1.col_code
+        MAXPALCEN.max_date = PI1.DATE_INV
       ORDER BY
         C.CLI_CODE ASC,
         E.CEN_CODE ASC,
