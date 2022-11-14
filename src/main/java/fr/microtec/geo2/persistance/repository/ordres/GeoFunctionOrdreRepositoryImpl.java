@@ -739,4 +739,26 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fAjustPallox(
+            String socCode,
+            String cenCode,
+            String fouCode,
+            String colCode,
+            Integer nbPallox,
+            LocalDate dateApplication,
+            String commentaire) {
+        FunctionQuery query = this.build("F_AJUST_PALLOX");
+
+        query.attachInput("gs_soc_code", String.class, socCode);
+        query.attachInput("arg_cen_code", String.class, cenCode);
+        query.attachInput("arg_fou_code", String.class, fouCode);
+        query.attachInput("arg_col_code", String.class, colCode);
+        query.attachInput("arg_nb_pallox", Integer.class, nbPallox);
+        query.attachInput("arg_date_application", LocalDate.class, dateApplication);
+        query.attachInput("arg_commentaire", String.class, commentaire);
+
+        return query.fetch();
+    }
+
 }
