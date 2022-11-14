@@ -745,18 +745,22 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
             String cenCode,
             String fouCode,
             String colCode,
+            String espCode,
             Integer nbPallox,
             LocalDate dateApplication,
-            String commentaire) {
+            String commentaire,
+            String cliCode) {
         FunctionQuery query = this.build("F_AJUST_PALLOX");
 
         query.attachInput("gs_soc_code", String.class, socCode);
         query.attachInput("arg_cen_code", String.class, cenCode);
         query.attachInput("arg_fou_code", String.class, fouCode);
         query.attachInput("arg_col_code", String.class, colCode);
+        query.attachInput("arg_esp_code", String.class, espCode);
         query.attachInput("arg_nb_pallox", Integer.class, nbPallox);
         query.attachInput("arg_date_application", LocalDate.class, dateApplication);
         query.attachInput("arg_commentaire", String.class, commentaire);
+        query.attachInput("arg_cli_code", String.class, cliCode);
 
         return query.fetch();
     }
