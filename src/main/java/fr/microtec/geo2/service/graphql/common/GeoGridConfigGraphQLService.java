@@ -44,7 +44,7 @@ public class GeoGridConfigGraphQLService extends GeoAbstractGraphQLService<GeoGr
 
     @GraphQLMutation
     public GeoGridConfig saveGridConfig(GeoGridConfig gridConfig, @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(gridConfig, env);
+        return this.repository.save(gridConfig);
     }
 
     @GraphQLMutation
