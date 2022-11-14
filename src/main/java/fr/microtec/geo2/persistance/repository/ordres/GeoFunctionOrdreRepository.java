@@ -225,4 +225,15 @@ public interface GeoFunctionOrdreRepository {
             String espCode,
             LocalDate dateApplication,
             String socCode);
+
+    FunctionResult fAjustPallox(
+            String gs_soc_code,
+            String arg_cen_code,
+            String arg_fou_code,
+            String arg_col_code,
+            String arg_esp_code,
+            Integer arg_nb_pallox,
+            LocalDate arg_date_application,
+            String arg_commentaire,
+            String arg_cli_code);
 }

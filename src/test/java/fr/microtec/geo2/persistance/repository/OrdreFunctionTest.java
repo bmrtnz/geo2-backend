@@ -840,4 +840,22 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFAjustPallox() {
+        FunctionResult result = this.functionOrdreRepository
+                .fAjustPallox(
+                        SOCIETE_SA,
+                        "DESFRUTAPAL",
+                        "BURATTI",
+                        "PAPL120",
+                        "POMME",
+                        1,
+                        LocalDate.now(),
+                        "YO",
+                        "DESFRUTAPAL");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

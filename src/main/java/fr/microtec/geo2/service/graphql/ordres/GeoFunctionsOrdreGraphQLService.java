@@ -483,4 +483,26 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDecomptePalox(nbPallox, fouCode, colCode, cenRef, espCode, dateApplication, socCode);
     }
 
+    public FunctionResult fAjustPallox(
+            String socCode,
+            String cenCode,
+            String fouCode,
+            String colCode,
+            String espCode,
+            Integer nbPallox,
+            LocalDate dateApplication,
+            String commentaire,
+            String cliCode) {
+        return this.repository.fAjustPallox(
+                socCode,
+                cenCode,
+                fouCode,
+                colCode,
+                espCode,
+                nbPallox,
+                dateApplication,
+                commentaire,
+                cliCode);
+    }
+
 }
