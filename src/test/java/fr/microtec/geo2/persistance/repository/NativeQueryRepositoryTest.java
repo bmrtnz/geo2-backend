@@ -16,10 +16,12 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
+import fr.microtec.geo2.persistance.entity.tiers.GeoMouvementEntrepot;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
 
 @DataJpaTest
 @Import(PersistanceTestConfiguration.class)
@@ -34,6 +36,8 @@ public class NativeQueryRepositoryTest {
     private GeoEdiOrdreRepository geoEdiOrdreRepository;
     @Autowired
     private GeoClientRepository geoClientRepository;
+    @Autowired
+    private GeoEntrepotRepository entrepotRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -96,6 +100,12 @@ public class NativeQueryRepositoryTest {
                 .allClientEnCours("000150");
 
         Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllMouvementEntrepot() {
+        this.entrepotRepository
+                .allMouvementEntrepot(LocalDateTime.now(), "SA", "004874", null, null);
     }
 
 }
