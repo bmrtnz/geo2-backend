@@ -16,7 +16,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
-import fr.microtec.geo2.persistance.entity.tiers.GeoMouvementEntrepot;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
@@ -106,6 +105,12 @@ public class NativeQueryRepositoryTest {
     public void testAllMouvementEntrepot() {
         this.entrepotRepository
                 .allMouvementEntrepot(LocalDateTime.now(), "SA", "004874", null, null);
+    }
+
+    @Test
+    public void testAllRecapitulatifFournisseur() {
+        this.entrepotRepository
+                .allRecapitulatifFournisseur(LocalDateTime.now(), "SA", "004874");
     }
 
 }

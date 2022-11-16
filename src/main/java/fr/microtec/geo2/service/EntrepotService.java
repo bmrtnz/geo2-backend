@@ -19,74 +19,70 @@ import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 @Service()
 public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, String> {
 
-  @PersistenceContext
-  private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-  private final GeoEntrepotRepository entrepotRepository;
+    private final GeoEntrepotRepository entrepotRepository;
 
-  public EntrepotService(
-      GeoEntrepotRepository entrepotRepository) {
-    super(entrepotRepository, GeoEntrepot.class);
-    this.entrepotRepository = entrepotRepository;
-  }
+    public EntrepotService(
+            GeoEntrepotRepository entrepotRepository) {
+        super(entrepotRepository, GeoEntrepot.class);
+        this.entrepotRepository = entrepotRepository;
+    }
 
-  public List<GeoMouvementFournisseur> allMouvementFournisseur(
-      LocalDateTime dateMaxMouvements,
-      String codeSociete,
-      String codeEntrepot,
-      String codeCommercial,
-      String codeFournisseur) {
-    return this.entrepotRepository
-        .allMouvementFournisseur(
-            dateMaxMouvements,
-            codeSociete,
-            codeEntrepot,
-            codeCommercial,
-            codeFournisseur);
-  }
+    public List<GeoMouvementFournisseur> allMouvementFournisseur(
+            LocalDateTime dateMaxMouvements,
+            String codeSociete,
+            String codeEntrepot,
+            String codeCommercial,
+            String codeFournisseur) {
+        return this.entrepotRepository
+                .allMouvementFournisseur(
+                        dateMaxMouvements,
+                        codeSociete,
+                        codeEntrepot,
+                        codeCommercial,
+                        codeFournisseur);
+    }
 
-  public List<GeoMouvementEntrepot> allMouvementEntrepot(
-      LocalDateTime dateMaxMouvements,
-      String codeSociete,
-      String codeEntrepot,
-      String codeCommercial,
-      String codeFournisseur) {
-    return this.entrepotRepository
-        .allMouvementEntrepot(
-            dateMaxMouvements,
-            codeSociete,
-            codeEntrepot,
-            codeCommercial,
-            codeFournisseur);
-  }
+    public List<GeoMouvementEntrepot> allMouvementEntrepot(
+            LocalDateTime dateMaxMouvements,
+            String codeSociete,
+            String codeEntrepot,
+            String codeCommercial,
+            String codeFournisseur) {
+        return this.entrepotRepository
+                .allMouvementEntrepot(
+                        dateMaxMouvements,
+                        codeSociete,
+                        codeEntrepot,
+                        codeCommercial,
+                        codeFournisseur);
+    }
 
-  public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
-      LocalDateTime dateMaxMouvements,
-      String codeSociete,
-      String codeEntrepot,
-      String codeCommercial,
-      String codeFournisseur) {
-    return this.entrepotRepository
-        .allRecapitulatifFournisseur(
-            dateMaxMouvements,
-            codeSociete,
-            codeEntrepot,
-            codeCommercial,
-            codeFournisseur);
-  }
+    public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
+            LocalDateTime dateMaxMouvements,
+            String codeSociete,
+            String codeEntrepot) {
+        return this.entrepotRepository
+                .allRecapitulatifFournisseur(
+                        dateMaxMouvements,
+                        codeSociete,
+                        codeEntrepot);
+    }
 
-  public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
-      LocalDateTime dateMaxMouvements,
-      String codeSociete,
-      String codeEntrepot,
-      String codeCommercial,
-      String codeFournisseur) {
-    return this.entrepotRepository
-        .allRecapitulatifEntrepot(
-            dateMaxMouvements,
-            codeSociete,
-            codeEntrepot,
-            codeCommercial,
-            codeFournisseur);
-  }
+    public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
+            LocalDateTime dateMaxMouvements,
+            String codeSociete,
+            String codeEntrepot,
+            String codeCommercial,
+            String codeFournisseur) {
+        return this.entrepotRepository
+                .allRecapitulatifEntrepot(
+                        dateMaxMouvements,
+                        codeSociete,
+                        codeEntrepot,
+                        codeCommercial,
+                        codeFournisseur);
+    }
 }
