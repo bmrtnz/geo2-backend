@@ -39,10 +39,10 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllPlanningTransporteurs() {
         List<GeoPlanningTransporteur> list = this.ordreRepository.allPlanningTransporteurs(
-                LocalDateTime.of(2020, 8, 1, 0, 0, 0),
-                LocalDateTime.of(2020, 8, 3, 23, 59, 59),
+                LocalDateTime.of(2021, 10, 25, 0, 0, 0),
+                LocalDateTime.of(2021, 10, 26, 23, 59, 59),
                 "SA",
-                "VERAY");
+                "TRANSI");
 
         Assertions.assertFalse(list.isEmpty());
     }

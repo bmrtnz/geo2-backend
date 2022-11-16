@@ -11,8 +11,9 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
+      SELECT ROWNUM, rest.*
+      FROM (
       SELECT
-      ROWNUM,
       CEIL(
         sum(
           case
@@ -93,7 +94,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       )
       and geo_ordlog.fou_code =geo_fourni.fou_code
     GROUP by
-      ROWNUM,
       geo_ordre.ord_ref,
       geo_ordre.code_chargement,
       geo_entrep.cen_code,
@@ -114,7 +114,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       geo_ordre.trp_code,
       geo_ordre.livdatp,
       avi_art_emballage.col_code,
-      geo_ordre.ref_cli
+      geo_ordre.ref_cli) rest
     ]]>
     </query>
   </named-native-query>
