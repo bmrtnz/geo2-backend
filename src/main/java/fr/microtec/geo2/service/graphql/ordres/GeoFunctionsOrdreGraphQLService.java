@@ -484,15 +484,15 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     public FunctionResult fAjustPallox(
-            String socCode,
-            String cenCode,
-            String fouCode,
-            String colCode,
-            String espCode,
-            Integer nbPallox,
-            LocalDate dateApplication,
-            String commentaire,
-            String cliCode) {
+            @GraphQLArgument(name = "socCode") String socCode,
+            @GraphQLArgument(name = "cenCode") String cenCode,
+            @GraphQLArgument(name = "fouCode") String fouCode,
+            @GraphQLArgument(name = "colCode") String colCode,
+            @GraphQLArgument(name = "espCode") String espCode,
+            @GraphQLArgument(name = "nbPallox") Integer nbPallox,
+            @GraphQLArgument(name = "dateApplication") LocalDate dateApplication,
+            @GraphQLArgument(name = "commentaire") String commentaire,
+            @GraphQLArgument(name = "cliCode") String cliCode) {
         return this.repository.fAjustPallox(
                 socCode,
                 cenCode,
