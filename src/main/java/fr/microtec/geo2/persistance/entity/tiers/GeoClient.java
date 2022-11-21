@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -372,6 +373,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
     @Column(name = "id_fiscal")
     private String identifiantFiscal;
+
+    @Formula("coalesce(enc_0,0) + coalesce(enc_1,0) + coalesce(enc_2,0) + coalesce(enc_3,0) + coalesce(enc_4,0)")
+    private Float enCoursAll;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     @Where(clause = "entite = 'Client'")
