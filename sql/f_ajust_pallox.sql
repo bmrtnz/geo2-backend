@@ -41,7 +41,7 @@ BEGIN
     ls_ref := substr( ls_bon_retour || '/' || ls_cmr,1,70);
     ls_transp := '-';
 
-    f_create_ordre(gs_soc_code, arg_cli_code, arg_cen_code, ls_transp, ls_ref, true, true, arg_date_application, null, res, msg, ls_ord_ref);
+    f_create_ordre(gs_soc_code, arg_cli_code, arg_cen_code, ls_transp, ls_ref, true, true, arg_date_application, res, msg, ls_ord_ref);
     if res = 0 then
         rollback;
         return;
