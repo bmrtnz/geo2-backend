@@ -124,7 +124,8 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             ligne.setNombreColisCommandes(quantite.floatValue());
             ligne.setProprietaireMarchandise(stock.getProprietaire());
             ligne.setFournisseur(stock.getFournisseur());
-            ligne.setNombreReservationsSurStock(stock.getQuantiteInitiale() - stock.getQuantiteReservee() < 0 ? -1 : 1);
+            ligne.setNombreReservationsSurStock(
+                    stock.getQuantiteInitiale() - stock.getQuantiteReservee() < 0 ? -1f : 1f);
             ligne.setBureauAchat(ligne.getFournisseur().getBureauAchat());
             ligne = this.ordreLigneRepo.save(ligne);
 
