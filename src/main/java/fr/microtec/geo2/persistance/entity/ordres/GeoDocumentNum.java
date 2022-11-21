@@ -12,8 +12,9 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import fr.microtec.geo2.persistance.entity.document.GeoAsCQPhoto;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCQDoc;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Data;
 
 @Entity
@@ -21,7 +22,7 @@ import lombok.Data;
 @Data
 @IdClass(GeoDocumentNumKey.class)
 @DynamicUpdate
-public class GeoDocumentNum implements GeoAsCQPhoto {
+public class GeoDocumentNum implements GeoAsCQDoc {
 
     @Id
     @Column(name = "ord_num")
@@ -67,10 +68,17 @@ public class GeoDocumentNum implements GeoAsCQPhoto {
     protected Integer statut;
 
     @Transient
-    private GeoDocument cqPhoto;
+    private GeoDocument cqDoc;
 
     @Override
-    public String getCqPhotoPath() {
+    public String getCqDocPath() {
         return String.format("%s/%s/%s", this.getAnneeCreation(), this.getMoisCreation(), this.getNomFichier());
+    }
+
+    @Override
+    public Maddog2FileSystemService.PATH_KEY getCqDocPathKey() {
+        return this.getTypeDocument().equals("CQPHO")
+                ? Maddog2FileSystemService.PATH_KEY.GEO_CQ_PHOTOS
+                : Maddog2FileSystemService.PATH_KEY.GEO_CQ_PDF;
     }
 }

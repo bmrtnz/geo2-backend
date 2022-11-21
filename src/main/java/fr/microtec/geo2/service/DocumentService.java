@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.controller.FsDocumentType;
 import fr.microtec.geo2.persistance.entity.document.GeoAsCMR;
-import fr.microtec.geo2.persistance.entity.document.GeoAsCQPhoto;
+import fr.microtec.geo2.persistance.entity.document.GeoAsCQDoc;
 import fr.microtec.geo2.persistance.entity.document.GeoAsCQTechnique;
 import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
 import fr.microtec.geo2.persistance.entity.document.GeoAsEtiquette;
@@ -120,7 +120,7 @@ public class DocumentService {
     }
 
     private static final List<Class<? extends GeoBaseDocument>> managedClasses = Arrays.asList(
-            GeoAsDocument.class, GeoAsFacture.class, GeoAsCMR.class, GeoAsCQTechnique.class, GeoAsCQPhoto.class);
+            GeoAsDocument.class, GeoAsFacture.class, GeoAsCMR.class, GeoAsCQTechnique.class, GeoAsCQDoc.class);
 
     private List<Class<?>> findDocumentClass(GeoBaseDocument entity) {
         return managedClasses.stream()
@@ -139,8 +139,8 @@ public class DocumentService {
             path = ((GeoAsCMR) entity).getDocumentCRMWithMaddogService(this.maddog2FileSystemService);
         } else if (GeoAsCQTechnique.class.equals(clazz)) {
             path = ((GeoAsCQTechnique) entity).getCqTechniqueWithMaddogService(this.maddog2FileSystemService);
-        } else if (GeoAsCQPhoto.class.equals(clazz)) {
-            path = ((GeoAsCQPhoto) entity).getCqPhotoWithMaddogService(this.maddog2FileSystemService);
+        } else if (GeoAsCQDoc.class.equals(clazz)) {
+            path = ((GeoAsCQDoc) entity).getCqDocWithMaddogService(this.maddog2FileSystemService);
         } else {
             throw new RuntimeException(
                     String.format("DocumentService can't load document on entity %s, please map this new document type",
@@ -161,8 +161,8 @@ public class DocumentService {
             name = ((GeoAsCMR) entity).getDocumentCMRName();
         } else if (GeoAsCQTechnique.class.equals(clazz)) {
             name = ((GeoAsCQTechnique) entity).getCqTechniqueName();
-        } else if (GeoAsCQPhoto.class.equals(clazz)) {
-            name = ((GeoAsCQPhoto) entity).getCqPhotoPath();
+        } else if (GeoAsCQDoc.class.equals(clazz)) {
+            name = ((GeoAsCQDoc) entity).getCqDocPath();
         } else {
             throw new RuntimeException(
                     String.format("DocumentService can't load document on entity %s, please map this new document type",
@@ -181,8 +181,8 @@ public class DocumentService {
             ((GeoAsCMR) entity).setDocumentCMR(doc);
         } else if (GeoAsCQTechnique.class.equals(clazz)) {
             ((GeoAsCQTechnique) entity).setCqTechnique(doc);
-        } else if (GeoAsCQPhoto.class.equals(clazz)) {
-            ((GeoAsCQPhoto) entity).setCqPhoto(doc);
+        } else if (GeoAsCQDoc.class.equals(clazz)) {
+            ((GeoAsCQDoc) entity).setCqDoc(doc);
         } else {
             throw new RuntimeException(
                     String.format("DocumentService can't set document on entity %s, please map this new document type",
@@ -201,8 +201,8 @@ public class DocumentService {
             key = ((GeoAsCMR) entity).getDocumentCMRPathKey();
         } else if (GeoAsCQTechnique.class.equals(clazz)) {
             key = ((GeoAsCQTechnique) entity).getCqTechniquePathKey();
-        } else if (GeoAsCQPhoto.class.equals(clazz)) {
-            key = ((GeoAsCQPhoto) entity).getCqPhotoPathKey();
+        } else if (GeoAsCQDoc.class.equals(clazz)) {
+            key = ((GeoAsCQDoc) entity).getCqDocPathKey();
         } else {
             throw new RuntimeException(String.format(
                     "DocumentService can't load document type on entity %s, please map this new document type",
