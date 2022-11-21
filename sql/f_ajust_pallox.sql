@@ -41,26 +41,23 @@ BEGIN
     ls_ref := substr( ls_bon_retour || '/' || ls_cmr,1,70);
     ls_transp := '-';
 
-    f_create_ordre(gs_soc_code, arg_cli_code, arg_cen_code, ls_transp, ls_ref, true, true, arg_date_application, res, msg, ls_ord_ref);
-    if substr(ls_ord_ref, 1, 3) = '%%%' then
+    f_create_ordre(gs_soc_code, arg_cli_code, arg_cen_code, ls_transp, ls_ref, true, true, arg_date_application, null, res, msg, ls_ord_ref);
+    if res = 0 then
         rollback;
-        msg := 'Info ' || SQLERRM;
         return;
     else
         SELECT nordre INTO ls_nordre FROM GEO_ORDRE WHERE ord_ref = ls_ord_ref;
     end if;
 
     f_create_ligne_retour_palox(ls_ord_ref, arg_fou_code, arg_col_code, -arg_nb_pallox, true, res, msg, ls_orl_ref);
-    if substr(ls_orl_ref, 1, 3) = '%%%' then
+    if res = 0 then
         rollback;
-        msg := 'Info ' || SQLERRM;
         return;
     end if;
 
     f_create_lgt_retour_palox(ls_ord_ref, arg_fou_code, ls_ref, res, msg, ls_orx_ref);
-    if substr(ls_orx_ref, 1, 3) = '%%%' then
+    if res = 0 then
         rollback;
-        msg := 'Info ' || SQLERRM;
         return;
     end if;
 

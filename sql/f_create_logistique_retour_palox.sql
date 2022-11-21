@@ -3,9 +3,9 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_CREATE_LGT_RETOUR_PALOX(
     arg_ord_ref IN varchar2,
     arg_fourni IN varchar2,
     arg_bon_retour IN varchar2,
-    res OUT number,
-    msg OUT varchar2,
-    ls_orx_ref OUT varchar2
+    res IN OUT number,
+    msg IN OUT varchar2,
+    ls_orx_ref IN OUT varchar2
 )
 AS
     ls_ORD_REF					 varchar2(50) := arg_ord_ref;
@@ -23,10 +23,10 @@ BEGIN
     --ls_ORX_REF = SQLCA.F_SEQ_ORX_SEQ()
     --ls_ORX_REF = ''
     ls_FOU_CODE := arg_fourni;
-    ls_DATDEP_FOU_P := to_char(CURRENT_DATE, 'dd/mm/yyyy');
-    ls_DATDEP_GRP_P := to_char(CURRENT_DATE, 'dd/mm/yyyy');
+    ls_DATDEP_FOU_P := CURRENT_DATE;
+    ls_DATDEP_GRP_P := CURRENT_DATE;
     ls_DATDEP_FOU_P_YYYYMMDD	:= to_char(CURRENT_DATE, 'yyyymmdd');
-    ls_DATDEP_FOU_R := to_char(CURRENT_DATE, 'dd/mm/yyyy');
+    ls_DATDEP_FOU_R := CURRENT_DATE;
     ls_FOU_REF_DOC := arg_bon_retour;
 
     INSERT INTO GEO_ORDLOG (
@@ -39,6 +39,7 @@ BEGIN
     res := 1;
 
 exception when others then
+    res := 0;
     msg := '%%% Erreur à la création de la ligne logistique : ' || SQLERRM;
 end;
 /
