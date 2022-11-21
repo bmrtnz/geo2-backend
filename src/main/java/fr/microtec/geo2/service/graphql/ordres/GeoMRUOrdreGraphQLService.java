@@ -76,7 +76,7 @@ public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUO
 
     @GraphQLMutation
     public GeoMRUOrdre saveMRUOrdre(GeoMRUOrdre mruOrdre, @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveEntity(mruOrdre, env);
+        return this.repository.save(mruOrdre);
     }
 
 }
