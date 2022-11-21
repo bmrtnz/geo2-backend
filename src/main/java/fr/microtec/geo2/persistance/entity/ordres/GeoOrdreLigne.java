@@ -249,7 +249,7 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity {
     private Float tauxRemiseHorsFacture;
 
     @Column(name = "stock_nb_resa")
-    private Float nombreReservationsSurStock;
+    private Integer nombreReservationsSurStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "propr_code", referencedColumnName = "fou_code")
