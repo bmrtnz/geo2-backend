@@ -7,9 +7,9 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_CREATE_ORDRE(
     arg_is_regulation boolean,
     arg_is_baf boolean,
     arg_datedep date,
-    res OUT number,
-    msg OUT varchar2,
-    ls_ord_ref OUT varchar2
+    res IN OUT number,
+    msg IN OUT varchar2,
+    ls_ord_ref IN OUT varchar2
 )
 AS
     ll_ord_ref number;
@@ -85,7 +85,7 @@ BEGIN
     end if;
 
     select seq_ord_num.nextval into ll_ord_ref from dual;
-    ls_ord_ref	:= to_char(ll_ord_ref,'000000');
+    ls_ord_ref	:= to_char(ll_ord_ref);
 
     select CAM_CODE into gs_cam_code from geo_societe where soc_code = arg_soc_code;
 
@@ -226,7 +226,7 @@ BEGIN
     res := 1;
 
 exception when others then
-    msg := '%%% Erreur à la création de l~''ordre : ' || SQLERRM;
+    msg := '%%% Erreur à la création de l~''ordre : ' || ' ' || SQLERRM;
     res := 0;
 end;
 /
