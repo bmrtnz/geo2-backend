@@ -10,34 +10,41 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
         <![CDATA[
-        	SELECT
-                p.pay_code,
-                sum(COALESCE(c.enc_assure, 0)) AS somme_agrement,
-                sum(COALESCE(c.enc_depasse, 0)) AS somme_en_cours_temporaire,
-                sum(COALESCE(c.enc_bw, 0)) AS somme_en_cours_blue_whale,
-                sum(COALESCE(c.enc_assure, 0) + COALESCE(c.enc_depasse, 0) + COALESCE(c.enc_bw, 0)) AS somme_autorise,
-                sum(COALESCE(c.enc_actuel, 0)) AS somme_en_cours_actuel,
-                sum(COALESCE(c.enc_actuel, 0) - COALESCE(c.enc_assure, 0) + COALESCE(c.enc_depasse, 0) + COALESCE(c.enc_bw, 0)) AS somme_depassement,
-                sum(COALESCE(c.enc_0, 0)) AS somme_en_cours_non_echu,
-                sum(COALESCE(c.enc_1, 0)) AS somme_en_cours_1a30,
-                sum(COALESCE(c.enc_2, 0)) AS somme_en_cours_31a60,
-                sum(COALESCE(c.enc_3, 0)) AS somme_en_cours_61a90,
-                sum(COALESCE(c.enc_4, 0)) AS somme_en_cours_90_plus,
-                sum(COALESCE(c.alerte_coface, 0)) AS somme_alerte_coface
-            FROM
-                    geo_pays p,
-                    geo_client c
-            WHERE
-                    p.pay_code = c.pay_code
-                AND p.sco_code like :arg_sco_code
-                AND c.valide = 'O'
-                AND COALESCE(c.enc_actuel, 0) - (COALESCE(c.enc_assure, 0) + COALESCE(c.enc_depasse, 0) + COALESCE(c.enc_bw, 0))>0
-                AND c.soc_code = :arg_soc_code
-                AND p.valide = 'O'
-            GROUP BY
-                p.pay_code
-            ORDER BY
-                p.pay_code ASC
+        SELECT
+                GEO_CLIENT.PAY_CODE,
+                sum(geo_client.enc_assure) "pays_permanent",
+                sum(geo_client.enc_depasse) "pays_temporaire",
+                sum(geo_client.enc_bw) "pays_bw",
+                sum(geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse ) "pays_autorise",
+                sum(geo_client.enc_actuel - ( geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse)) "pays_depasst",
+                sum(geo_client.enc_actuel) "pays_solde",
+                sum(geo_client.enc_0) "pays_non_echu",
+                sum(geo_client.enc_1) "pays_1_30",
+                sum(geo_client.enc_2) "pays_31_60",
+                sum(geo_client.enc_3) "pays_61_90",
+                sum(geo_client.enc_4) "pays_90",
+                sum(geo_client.alerte_coface) "pays_COFACE"
+        FROM
+                GEO_CLIENT,
+                GEO_PAYS
+        WHERE
+                GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
+            AND
+                    geo_client.sco_code LIKE :arg_sco_code
+            AND
+
+                    (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+            AND
+
+                    geo_client.soc_code = :arg_soc_code
+
+            AND
+
+                GEO_PAYS.sco_code = geo_client.sco_code
+        GROUP BY
+                    GEO_CLIENT.SOC_CODE,
+                    GEO_CLIENT.SCO_CODE,
+                    GEO_CLIENT.pay_code
         ]]>
         </query>
     </named-native-query>
