@@ -435,7 +435,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOnChangeFouCodeSecteurMaritime() {
         FunctionResult result = this.functionOrdreRepository
-                .onChangeFouCode("8B55BD", "BRUNO", SOCIETE_SA);
+                .onChangeFouCode("002798", "BRUNO", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
