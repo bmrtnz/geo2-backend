@@ -28,22 +28,20 @@ public class ProgramController {
     }
 
     @PostMapping("/{program}")
-    public void upload(
+    public Object upload(
             @PathVariable Program program,
             @RequestParam("chunk") MultipartFile chunk)
             throws IOException {
 
         switch (program) {
             case Orchard:
-                this.service.importOrchard(chunk.getInputStream());
-                break;
+                return this.service.importOrchard(chunk.getInputStream());
 
             case Tesco:
-                this.service.importTesco(chunk.getInputStream());
-                break;
+                return this.service.importTesco(chunk.getInputStream());
 
             default:
-                break;
+                throw new RuntimeException(String.format("Program %1 does not exist", program));
         }
     }
 }
