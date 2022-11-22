@@ -236,4 +236,17 @@ public interface GeoFunctionOrdreRepository {
             LocalDate arg_date_application,
             String arg_commentaire,
             String arg_cli_code);
+
+    FunctionResult fCreateOrdreV4(
+            String arg_societe,
+            String arg_client,
+            String arg_entrepot,
+            String arg_transporteur,
+            String arg_ref_cmd_cli,
+            Boolean arg_is_baf,
+            Boolean arg_is_regulation,
+            LocalDateTime arg_datedep,
+            String arg_type_ordre,
+            LocalDateTime arg_date_liv,
+            String arg_load_ref);
 }

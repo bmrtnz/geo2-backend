@@ -761,6 +761,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
     public FunctionResult fAjustPallox(
             String socCode,
             String cenCode,
@@ -782,6 +783,37 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_date_application", LocalDate.class, dateApplication);
         query.attachInput("arg_commentaire", String.class, commentaire);
         query.attachInput("arg_cli_code", String.class, cliCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreateOrdreV4(
+            String arg_societe,
+            String arg_client,
+            String arg_entrepot,
+            String arg_transporteur,
+            String arg_ref_cmd_cli,
+            Boolean arg_is_baf,
+            Boolean arg_is_regulation,
+            LocalDateTime arg_datedep,
+            String arg_type_ordre,
+            LocalDateTime arg_date_liv,
+            String arg_load_ref) {
+        FunctionQuery query = this.build("F_CREATE_ORDRE_V4");
+
+        query.attachInput("arg_societe", String.class, arg_societe);
+        query.attachInput("arg_client", String.class, arg_client);
+        query.attachInput("arg_entrepot", String.class, arg_entrepot);
+        query.attachInput("arg_transporteur", String.class, arg_transporteur);
+        query.attachInput("arg_ref_cmd_cli", String.class, arg_ref_cmd_cli);
+        query.attachInput("arg_is_baf", Character.class, arg_is_baf ? 'O' : 'N');
+        query.attachInput("arg_is_regulation", Character.class, arg_is_regulation ? 'O' : 'N');
+        query.attachInput("arg_datedep", LocalDateTime.class, arg_datedep);
+        query.attachInput("arg_type_ordre", String.class, arg_type_ordre);
+        query.attachInput("arg_date_liv", LocalDateTime.class, arg_date_liv);
+        query.attachInput("arg_load_ref", String.class, arg_load_ref);
+        query.attachOutput("ls_ord_ref", String.class);
 
         return query.fetch();
     }
