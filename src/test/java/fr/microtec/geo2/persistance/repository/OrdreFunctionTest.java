@@ -877,4 +877,23 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFCreateLigneOrdre() {
+        FunctionResult result = this.functionOrdreRepository.fCreateLigneOrdre(
+                "001304",
+                "000001",
+                "APIFOO",
+                "002702",
+                20d,
+                2d,
+                40d,
+                2d,
+                1.89,
+                "ORCHARD",
+                "46QSD");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

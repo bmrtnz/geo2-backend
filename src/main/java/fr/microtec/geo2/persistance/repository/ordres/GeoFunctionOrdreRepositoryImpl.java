@@ -818,4 +818,35 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fCreateLigneOrdre(
+            String arg_ord_ref,
+            String arg_art_ref,
+            String arg_fou_code,
+            String arg_cen_ref,
+            Double arg_pal_nb_col,
+            Double arg_nb_pal,
+            Double arg_nb_colis,
+            Double arg_prix_vente,
+            Double arg_prix_mini,
+            String arg_prog,
+            String arg_dluo) {
+        FunctionQuery query = this.build("F_CREATE_LIGNE_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+        query.attachInput("arg_art_ref", String.class, arg_art_ref);
+        query.attachInput("arg_fou_code", String.class, arg_fou_code);
+        query.attachInput("arg_cen_ref", String.class, arg_cen_ref);
+        query.attachInput("arg_pal_nb_col", Double.class, arg_pal_nb_col);
+        query.attachInput("arg_nb_pal", Double.class, arg_nb_pal);
+        query.attachInput("arg_nb_colis", Double.class, arg_nb_colis);
+        query.attachInput("arg_prix_vente", Double.class, arg_prix_vente);
+        query.attachInput("arg_prix_mini", Double.class, arg_prix_mini);
+        query.attachInput("arg_prog", String.class, arg_prog);
+        query.attachInput("arg_dluo", String.class, arg_dluo);
+        query.attachOutput("ls_orl_ref", String.class);
+
+        return query.fetch();
+    }
+
 }

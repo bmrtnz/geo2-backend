@@ -249,4 +249,17 @@ public interface GeoFunctionOrdreRepository {
             String arg_type_ordre,
             LocalDateTime arg_date_liv,
             String arg_load_ref);
+
+    FunctionResult fCreateLigneOrdre(
+            String arg_ord_ref,
+            String arg_art_ref,
+            String arg_fou_code,
+            String arg_cen_ref,
+            Double arg_pal_nb_col,
+            Double arg_nb_pal,
+            Double arg_nb_colis,
+            Double arg_prix_vente,
+            Double arg_prix_mini,
+            String arg_prog,
+            String arg_dluo);
 }
