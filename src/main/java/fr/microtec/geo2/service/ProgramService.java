@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -36,6 +37,9 @@ import lombok.val;
 
 @Service
 public class ProgramService {
+
+    static final String XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    static final String XLS_MIME = "application/vnd.ms-excel";
 
     private final GeoEntrepotRepository entrepotRepo;
     private final GeoOrdreRepository ordreRepo;
@@ -92,7 +96,7 @@ public class ProgramService {
         int COL_ORD_CREATE = 18;
 
         // load sheet
-        Workbook workbook = new XSSFWorkbook(chunks.getInputStream());
+        Workbook workbook = ProgramService.loadFile(chunks);
         Sheet sheet = workbook.getSheetAt(0);
 
         String ls_load_ref_prec = "";
@@ -339,6 +343,19 @@ public class ProgramService {
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession(true);
         session.setAttribute(ProgramController.GEO2_PROGRAM_OUTPUT, stream);
+    }
+
+    private static <F extends Workbook> F loadFile(MultipartFile chunks) throws IOException {
+        switch (chunks.getContentType()) {
+            case XLSX_MIME:
+                return (F) new XSSFWorkbook(chunks.getInputStream());
+
+            case XLS_MIME:
+                return (F) new HSSFWorkbook(chunks.getInputStream());
+
+            default:
+                throw new RuntimeException("Unhandled document type");
+        }
     }
 
 }
