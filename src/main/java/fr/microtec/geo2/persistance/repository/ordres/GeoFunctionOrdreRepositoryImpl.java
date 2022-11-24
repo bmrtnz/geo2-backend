@@ -761,6 +761,7 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
     public FunctionResult fAjustPallox(
             String socCode,
             String cenCode,
@@ -782,6 +783,68 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_date_application", LocalDate.class, dateApplication);
         query.attachInput("arg_commentaire", String.class, commentaire);
         query.attachInput("arg_cli_code", String.class, cliCode);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreateOrdreV4(
+            String arg_societe,
+            String arg_client,
+            String arg_entrepot,
+            String arg_transporteur,
+            String arg_ref_cmd_cli,
+            Boolean arg_is_baf,
+            Boolean arg_is_regulation,
+            LocalDateTime arg_datedep,
+            String arg_type_ordre,
+            LocalDateTime arg_date_liv,
+            String arg_load_ref) {
+        FunctionQuery query = this.build("F_CREATE_ORDRE_V4");
+
+        query.attachInput("arg_societe", String.class, arg_societe);
+        query.attachInput("arg_client", String.class, arg_client);
+        query.attachInput("arg_entrepot", String.class, arg_entrepot);
+        query.attachInput("arg_transporteur", String.class, arg_transporteur);
+        query.attachInput("arg_ref_cmd_cli", String.class, arg_ref_cmd_cli);
+        query.attachInput("arg_is_baf", Character.class, arg_is_baf ? 'O' : 'N');
+        query.attachInput("arg_is_regulation", Character.class, arg_is_regulation ? 'O' : 'N');
+        query.attachInput("arg_datedep", LocalDateTime.class, arg_datedep);
+        query.attachInput("arg_type_ordre", String.class, arg_type_ordre);
+        query.attachInput("arg_date_liv", LocalDateTime.class, arg_date_liv);
+        query.attachInput("arg_load_ref", String.class, arg_load_ref);
+        query.attachOutput("ls_ord_ref", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreateLigneOrdre(
+            String arg_ord_ref,
+            String arg_art_ref,
+            String arg_fou_code,
+            String arg_cen_ref,
+            Double arg_pal_nb_col,
+            Double arg_nb_pal,
+            Double arg_nb_colis,
+            Double arg_prix_vente,
+            Double arg_prix_mini,
+            String arg_prog,
+            String arg_dluo) {
+        FunctionQuery query = this.build("F_CREATE_LIGNE_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+        query.attachInput("arg_art_ref", String.class, arg_art_ref);
+        query.attachInput("arg_fou_code", String.class, arg_fou_code);
+        query.attachInput("arg_cen_ref", String.class, arg_cen_ref);
+        query.attachInput("arg_pal_nb_col", Double.class, arg_pal_nb_col);
+        query.attachInput("arg_nb_pal", Double.class, arg_nb_pal);
+        query.attachInput("arg_nb_colis", Double.class, arg_nb_colis);
+        query.attachInput("arg_prix_vente", Double.class, arg_prix_vente);
+        query.attachInput("arg_prix_mini", Double.class, arg_prix_mini);
+        query.attachInput("arg_prog", String.class, arg_prog);
+        query.attachInput("arg_dluo", String.class, arg_dluo);
+        query.attachOutput("ls_orl_ref", String.class);
 
         return query.fetch();
     }

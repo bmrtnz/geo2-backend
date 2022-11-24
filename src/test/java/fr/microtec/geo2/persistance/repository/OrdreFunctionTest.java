@@ -858,4 +858,42 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFCreeOrdreV4() {
+        FunctionResult result = this.functionOrdreRepository.fCreateOrdreV4(
+                SOCIETE_SA,
+                "000989",
+                "002681",
+                "CHABAS",
+                "[REF_CLI]",
+                false,
+                false,
+                LocalDateTime.now(),
+                "ORD",
+                LocalDateTime.now().plusDays(1),
+                "[LOAD_REF]");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFCreateLigneOrdre() {
+        FunctionResult result = this.functionOrdreRepository.fCreateLigneOrdre(
+                "001304",
+                "000001",
+                "APIFOO",
+                "002702",
+                20d,
+                2d,
+                40d,
+                2d,
+                1.89,
+                "ORCHARD",
+                "46QSD");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
