@@ -103,11 +103,14 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
     public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
             @GraphQLArgument(name = "dateMaxMouvements") LocalDateTime dateMaxMouvements,
             @GraphQLArgument(name = "codeSociete") String codeSociete,
-            @GraphQLArgument(name = "codeEntrepot") String codeEntrepot) {
+            @GraphQLArgument(name = "codeEntrepot") String codeEntrepot,
+            @GraphQLArgument(name = "codeCommercial") String codeCommercial,
+            @GraphQLArgument(name = "codeFournisseur") String codeFournisseur) {
         return this.entrepotService.allRecapitulatifFournisseur(
                 dateMaxMouvements,
                 codeSociete,
-                Optional.ofNullable(codeEntrepot).orElse("%"));
+                Optional.ofNullable(codeEntrepot).orElse("%"),
+                Optional.ofNullable(codeFournisseur).orElse("%"));
     }
 
     @GraphQLQuery

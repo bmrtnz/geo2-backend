@@ -63,12 +63,14 @@ public class EntrepotService extends GeoAbstractGraphQLService<GeoEntrepot, Stri
     public List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
             LocalDateTime dateMaxMouvements,
             String codeSociete,
-            String codeEntrepot) {
+            String codeEntrepot,
+            String codeFournisseur) {
         return this.entrepotRepository
                 .allRecapitulatifFournisseur(
                         dateMaxMouvements,
                         codeSociete,
-                        codeEntrepot);
+                        codeEntrepot,
+                        codeFournisseur);
     }
 
     public List<GeoRecapitulatifEntrepot> allRecapitulatifEntrepot(
