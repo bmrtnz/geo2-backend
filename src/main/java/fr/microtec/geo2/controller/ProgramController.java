@@ -15,11 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import fr.microtec.geo2.service.ProgramService;
 import lombok.Data;
 
-enum Program {
-    Tesco,
-    Orchard,
-}
-
 /** Handle programs actions, such as import */
 @RestController
 @RequestMapping("/program")
@@ -35,15 +30,15 @@ public class ProgramController {
 
     @PostMapping("/{program}")
     public ProgramResponse upload(
-            @PathVariable Program program,
+            @PathVariable String program,
             @RequestParam("chunk") MultipartFile chunk)
             throws IOException {
 
-        switch (program) {
-            case Orchard:
+        switch (Program.valueOf(program.toUpperCase())) {
+            case ORCHARD:
                 return this.service.importOrchard(chunk);
 
-            case Tesco:
+            case TESCO:
                 return this.service.importTesco(chunk);
 
             default:
