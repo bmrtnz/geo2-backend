@@ -119,7 +119,7 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllRecapitulatifFournisseur() {
         this.entrepotRepository
-                .allRecapitulatifFournisseur(LocalDateTime.now(), "SA", "004874");
+                .allRecapitulatifFournisseur(LocalDateTime.now(), "SA", "004874", null);
     }
 
 }

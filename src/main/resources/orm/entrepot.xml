@@ -566,6 +566,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 AND
 
                             MAXPALCEN.max_date = PI1.DATE_INV
+                AND
+                            PI1.FOU_CODE like :arg_fou_code
             ORDER BY
                 PI1.FOU_CODE ASC,
                 PI1.COL_CODE ASC,

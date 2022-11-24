@@ -46,7 +46,8 @@ public interface GeoEntrepotRepository extends GeoRepository<GeoEntrepot, String
     List<GeoRecapitulatifFournisseur> allRecapitulatifFournisseur(
             @Param("arg_dat_max") LocalDateTime dateMaxMouvements,
             @Param("arg_soc_code") String codeSociete,
-            @Param("arg_cen_ref") String codeEntrepot);
+            @Param("arg_cen_ref") String codeEntrepot,
+            @Param("arg_fou_code") String codeFournisseur);
 
     Optional<GeoEntrepot> getOneByCode(String code);
 
