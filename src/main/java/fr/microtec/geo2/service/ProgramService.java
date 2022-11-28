@@ -400,7 +400,7 @@ public class ProgramService {
         return MediaType.parseMediaType(type);
     }
 
-    /** Get the program file type stored in session */
+    /** Clear session program attributes */
     public static void clearSession() {
         ProgramService.getSession().removeAttribute(GEO2_PROGRAM_OUTPUT);
         ProgramService.getSession().removeAttribute(GEO2_PROGRAM_FILENAME);
