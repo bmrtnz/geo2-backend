@@ -116,7 +116,7 @@ public class ProgramService {
                 continue;
 
             // exit when no more data to consume
-            if (row.getCell(COL_LOAD_REFERENCE).getStringCellValue().isBlank())
+            if (row.getCell(COL_LOAD_REFERENCE) == null)
                 break;
 
             Character ls_create_ligne = 'N';
