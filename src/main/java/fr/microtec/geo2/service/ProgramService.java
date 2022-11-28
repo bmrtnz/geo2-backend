@@ -160,7 +160,7 @@ public class ProgramService {
             // Pas de référence client pour ORCHARD
             val ls_ref_cli = "";
             val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
-                    cb.equal(root.get("client").get("id"), ls_ref_cli),
+                    cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
                     cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
                     cb.equal(root.get("modeLivraison"),
                             StringEnum.getValueOf(GeoModeLivraison.class, ls_ind_mod_liv.get())),
