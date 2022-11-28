@@ -1,15 +1,21 @@
 package fr.microtec.geo2.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +27,6 @@ import lombok.Data;
 @Secured("ROLE_USER")
 @RequestMapping("/program")
 public class ProgramController {
-
-    public static final String GEO2_PROGRAM_OUTPUT = "GEO2_PROGRAM_OUTPUT";
 
     private final ProgramService service;
 
@@ -46,6 +50,30 @@ public class ProgramController {
             default:
                 throw new RuntimeException(String.format("Program %1 does not exist", program));
         }
+    }
+
+    /** If it exist, send the program in session, and then, free it */
+    @GetMapping("/download")
+    @ResponseBody
+    private ResponseEntity<byte[]> download() {
+        HttpHeaders headers = new HttpHeaders();
+        ByteArrayOutputStream out;
+        try {
+            headers.setContentType(ProgramService.getFileType());
+            headers.setContentDisposition(ContentDisposition
+                    .builder("attachment")
+                    .filename("retour_" + ProgramService.getFileName())
+                    .build());
+            out = ProgramService.getOutput();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve program informations !");
+        } finally {
+            ProgramService.clearSession();
+        }
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(out.toByteArray());
     }
 
     /** Program import response structure */
