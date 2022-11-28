@@ -267,7 +267,8 @@ public class ProgramService {
                     val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
 
                     val ls_art_existe = this.entityManager
-                            .createQuery("select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
+                            .createNativeQuery(
+                                    "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
                             .setParameter("ls_art", ls_art)
                             .getSingleResult().equals('O');
 
