@@ -17,13 +17,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import fr.microtec.geo2.common.StringUtils;
-import fr.microtec.geo2.controller.ProgramController;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse.ProgramRow;
 import fr.microtec.geo2.persistance.StringEnum;
@@ -44,6 +44,10 @@ public class ProgramService {
 
     static final String XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static final String XLS_MIME = "application/vnd.ms-excel";
+
+    public static final String GEO2_PROGRAM_OUTPUT = "GEO2_PROGRAM_OUTPUT";
+    public static final String GEO2_PROGRAM_FILENAME = "GEO2_PROGRAM_NAME";
+    public static final String GEO2_PROGRAM_FILETYPE = "GEO2_PROGRAM_TYPE";
 
     private final GeoEntrepotRepository entrepotRepo;
     private final GeoOrdreRepository ordreRepo;
@@ -366,18 +370,48 @@ public class ProgramService {
 
         OutputStream out = new ByteArrayOutputStream();
         workbook.write(out);
+        this.writeOutput(out, chunks);
         workbook.close();
-        this.writeOutput(out);
 
         return res;
     }
 
     /** Write a program output in session */
-    private void writeOutput(OutputStream stream) {
+    private void writeOutput(OutputStream stream, MultipartFile chunks) {
+        val session = ProgramService.getSession();
+        session.setAttribute(GEO2_PROGRAM_OUTPUT, stream);
+        session.setAttribute(GEO2_PROGRAM_FILETYPE, chunks.getContentType());
+        session.setAttribute(GEO2_PROGRAM_FILENAME, chunks.getOriginalFilename());
+    }
+
+    /** Get the program output stored in session */
+    public static ByteArrayOutputStream getOutput() {
+        return (ByteArrayOutputStream) ProgramService.getSession().getAttribute(GEO2_PROGRAM_OUTPUT);
+    }
+
+    /** Get the program file name stored in session */
+    public static String getFileName() {
+        return (String) ProgramService.getSession().getAttribute(GEO2_PROGRAM_FILENAME);
+    }
+
+    /** Get the program file type stored in session */
+    public static MediaType getFileType() {
+        String type = (String) ProgramService.getSession().getAttribute(GEO2_PROGRAM_FILETYPE);
+        return MediaType.parseMediaType(type);
+    }
+
+    /** Clear session program attributes */
+    public static void clearSession() {
+        ProgramService.getSession().removeAttribute(GEO2_PROGRAM_OUTPUT);
+        ProgramService.getSession().removeAttribute(GEO2_PROGRAM_FILENAME);
+        ProgramService.getSession().removeAttribute(GEO2_PROGRAM_FILETYPE);
+    }
+
+    /** Get current HTTP session */
+    private static HttpSession getSession() {
         RequestContextHolder.currentRequestAttributes().getSessionId();
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = attr.getRequest().getSession(true);
-        session.setAttribute(ProgramController.GEO2_PROGRAM_OUTPUT, stream);
+        return attr.getRequest().getSession(true);
     }
 
     /** Get XLX or XLSX workbook */
