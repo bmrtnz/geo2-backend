@@ -209,7 +209,6 @@ public class ProgramService {
                 if (ls_load_reference != ls_load_ref_prec && entrepot.get().getId() != ls_cen_ref_prec) {
 
                     val ls_nordre_curr = existing_ordre.get().getNumero();
-                    pRow.setOrdreNum(ls_nordre_curr);
                     if (ls_nordre_curr != ls_nordre_prec)
                         pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
 
@@ -245,6 +244,7 @@ public class ProgramService {
                 if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
                     ls_create_ligne = 'O';
                     ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
+                    pRow.setOrdreNum(ls_nordre.get());
                     pRow.pushMessage("Ordre créé");
                     res.incrementOrdreCount();
                 } else {
