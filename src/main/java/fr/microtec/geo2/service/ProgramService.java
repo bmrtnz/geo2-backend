@@ -267,11 +267,16 @@ public class ProgramService {
 
                     val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
 
-                    val ls_art_existe = this.entityManager
-                            .createNativeQuery(
-                                    "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
-                            .setParameter("ls_art", ls_art)
-                            .getSingleResult().equals('O');
+                    Boolean ls_art_existe = true;
+                    try {
+                        this.entityManager
+                                .createNativeQuery(
+                                        "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
+                                .setParameter("ls_art", ls_art)
+                                .getSingleResult();
+                    } catch (NoResultException e) {
+                        ls_art_existe = false;
+                    }
 
                     if (ls_art_existe) {
                         String ls_prog = "";
