@@ -1,12 +1,9 @@
 package fr.microtec.geo2.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -123,12 +120,16 @@ public class ProgramService {
 
             Character ls_create_ligne = 'N';
             String ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
+            pRow.setLoadRef(ls_load_reference);
             String ls_programme = ls_load_reference.split("/")[0];
             // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
             String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
+            pRow.setDepot(ls_depot_name);
             String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
             LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+            pRow.setDateDepart(ls_depart_date);
             LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
+            pRow.setDateLivraison(ls_delivery_date);
             Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
             Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
             Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
@@ -208,6 +209,7 @@ public class ProgramService {
                 if (ls_load_reference != ls_load_ref_prec && entrepot.get().getId() != ls_cen_ref_prec) {
 
                     val ls_nordre_curr = existing_ordre.get().getNumero();
+                    pRow.setOrdreNum(ls_nordre_curr);
                     if (ls_nordre_curr != ls_nordre_prec)
                         pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
 
@@ -301,7 +303,7 @@ public class ProgramService {
 
                         // HANDLE ls_rc
                         if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
-                            pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref + " -> "
+                            pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref.get() + " -> "
                                     + ls_rc.getMsg());
                             res.pushRow(pRow);
                             continue;
