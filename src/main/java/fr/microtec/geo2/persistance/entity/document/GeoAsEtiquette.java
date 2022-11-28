@@ -15,7 +15,7 @@ public interface GeoAsEtiquette extends GeoAsDocument {
     String ETIQUETTE_STICKER = "ETIFRU";
     String ETIQUETTE_CLIENT = "ETICOL";
     String ETIQUETTE_EVENEMENT = "ETIEVT";
-    String ETIQUETTE_UC = "ETIMB";
+    String ETIQUETTE_UC = "ETIPMB";
 
     // Getter utilisé par cette interface (besoin d'un id et d'une espesce)
     String getId();
