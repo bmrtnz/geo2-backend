@@ -370,8 +370,8 @@ public class ProgramService {
 
         OutputStream out = new ByteArrayOutputStream();
         workbook.write(out);
-        workbook.close();
         this.writeOutput(out, chunks);
+        workbook.close();
 
         return res;
     }
