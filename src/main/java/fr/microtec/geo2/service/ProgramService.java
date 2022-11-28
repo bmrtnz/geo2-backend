@@ -24,6 +24,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import fr.microtec.geo2.common.StringUtils;
 import fr.microtec.geo2.controller.ProgramController;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse.ProgramRow;
@@ -263,7 +264,7 @@ public class ProgramService {
                         ls_case_per_pallets = 0d;
                     }
 
-                    val ls_art = String.format("%" + 6 + "0", ls_array_art.get(ll_count));
+                    val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
 
                     val ls_art_existe = this.entityManager
                             .createQuery("select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
