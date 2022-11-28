@@ -327,7 +327,7 @@ public class ProgramService {
                         }
 
                         val ls_DATDEP_FOU_P = relDepartDate;
-                        val ls_DATDEP_FOU_P_YYYYMMDD = relDepartDate.format(DateTimeFormatter.ofPattern("yyyymmdd"));
+                        val ls_DATDEP_FOU_P_YYYYMMDD = relDepartDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
                         val ls_ordlog_existe = this.ordreLogistiqueRepo.findOne((root, cq, cb) -> cb.and(
                                 cb.equal(root.get("ordre").get("id"), ls_ord_ref.get()),
