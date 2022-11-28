@@ -125,8 +125,8 @@ public class ProgramService {
             // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
             String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
             String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
-            Double ls_depart_date = row.getCell(COL_DEPART_DATE).getNumericCellValue();
-            Double ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getNumericCellValue();
+            LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+            LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
             Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
             Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
             Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
@@ -189,7 +189,7 @@ public class ProgramService {
             // Doit être renseigné dnas le fichier Excel
             String ls_dluo;
             try {
-                ls_dluo = ((Double) row.getCell(COL_BB_DATE).getNumericCellValue()).toString();
+                ls_dluo = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue().toString();
             } catch (Exception e) {
                 ls_dluo = "/";
             }
@@ -224,15 +224,9 @@ public class ProgramService {
                         ls_ref_cli,
                         false,
                         false,
-                        LocalDateTime.of(
-                                LocalDate.parse(ls_depart_date.toString(),
-                                        DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                LocalTime.MIN),
+                        ls_depart_date,
                         "ORD",
-                        LocalDateTime.of(
-                                LocalDate.parse(ls_delivery_date.toString(),
-                                        DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                LocalTime.MIN),
+                        ls_delivery_date,
                         ls_load_reference);
                 if (functionRes.getRes() != FunctionResult.RESULT_OK) {
                     pRow.pushErreur(functionRes.getMsg());
