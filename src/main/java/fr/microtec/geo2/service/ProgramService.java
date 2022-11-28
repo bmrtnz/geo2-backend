@@ -141,7 +141,8 @@ public class ProgramService {
                 ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
             } else {
                 pRow.pushErreur("Erreur préfixe Load reference");
-                break;
+                res.pushRow(pRow);
+                continue;
             }
 
             final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
@@ -151,7 +152,8 @@ public class ProgramService {
                 ls_ind_mod_liv.set("X");
             else {
                 pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
-                break;
+                res.pushRow(pRow);
+                continue;
             }
             val ls_concat = " " + ls_ind_mod_liv + "%";
 
@@ -166,12 +168,14 @@ public class ProgramService {
                     cb.isTrue(root.get("valide"))));
             if (entrepot.isEmpty()) {
                 pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
-                break;
+                res.pushRow(pRow);
+                continue;
             }
 
             if (ls_haulier.isBlank()) {
                 pRow.pushErreur("Erreur transporteur non renseigné !!");
-                break;
+                res.pushRow(pRow);
+                continue;
             }
 
             String ls_transp_approche = "";
@@ -232,7 +236,8 @@ public class ProgramService {
                         ls_load_reference);
                 if (functionRes.getRes() != FunctionResult.RESULT_OK) {
                     pRow.pushErreur(functionRes.getMsg());
-                    break;
+                    res.pushRow(pRow);
+                    continue;
                 }
 
                 ls_ord_ref.set((String) functionRes.getData().get("ls_ord_ref"));
@@ -290,7 +295,8 @@ public class ProgramService {
                         if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
                             pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref + " -> "
                                     + ls_rc.getMsg());
-                            break;
+                            res.pushRow(pRow);
+                            continue;
                         }
 
                         row.getCell(COL_ORD_CREATE).setCellValue(ls_nordre.get());
@@ -338,7 +344,8 @@ public class ProgramService {
 
                             } catch (Exception e) {
                                 pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref);
-                                break;
+                                res.pushRow(pRow);
+                                continue;
                             }
                         }
 
@@ -348,7 +355,6 @@ public class ProgramService {
                 }
             }
 
-            res.incrementRowCount();
             res.pushRow(pRow);
         }
 

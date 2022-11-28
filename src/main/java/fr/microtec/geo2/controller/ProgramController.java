@@ -53,16 +53,13 @@ public class ProgramController {
         Integer ordreCount = 0;
         List<ProgramRow> rows = new ArrayList<>();
 
-        public void incrementRowCount() {
-            this.rowCount++;
-        }
-
         public void incrementOrdreCount() {
             this.ordreCount++;
         }
 
         public void pushRow(ProgramRow p) {
             this.rows.add(p);
+            this.rowCount = this.rows.size();
         }
 
         @Data
