@@ -78,22 +78,22 @@ public class ProgramService {
         val res = new ProgramResponse();
 
         // useful columns indexes
-        // int COL_PROGRAMME = 1;
-        int COL_LOAD_REFERENCE = 2;
-        // int COL_TPND = 3;
-        int COL_ARTS_REF = 4;
-        int COL_DEPOT_NAME = 6;
-        int COL_PRIX_VENTE = 7;
-        int COL_PRIX_MINI = 8;
-        int COL_PACKHOUSE = 9;
-        int COL_DEPART_DATE = 10;
-        int COL_DELIVERY_DATE = 11;
-        int COL_QTY_CASE = 13;
-        int COL_QTY_PALLETS = 14;
-        int COL_CASES_PER_PALLETS = 15;
-        int COL_BB_DATE = 16;
-        int COL_HAULIER = 17;
-        int COL_ORD_CREATE = 18;
+        // int COL_PROGRAMME = 0;
+        int COL_LOAD_REFERENCE = 1;
+        // int COL_TPND = 2;
+        int COL_ARTS_REF = 3;
+        int COL_DEPOT_NAME = 5;
+        int COL_PRIX_VENTE = 6;
+        int COL_PRIX_MINI = 7;
+        int COL_PACKHOUSE = 8;
+        int COL_DEPART_DATE = 9;
+        int COL_DELIVERY_DATE = 10;
+        int COL_QTY_CASE = 12;
+        int COL_QTY_PALLETS = 13;
+        int COL_CASES_PER_PALLETS = 14;
+        int COL_BB_DATE = 15;
+        int COL_HAULIER = 16;
+        int COL_ORD_CREATE = 17;
 
         // load sheet
         Workbook workbook = ProgramService.loadFile(chunks);
