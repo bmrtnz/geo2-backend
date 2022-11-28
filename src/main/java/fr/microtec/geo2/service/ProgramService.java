@@ -307,10 +307,7 @@ public class ProgramService {
 
                         LocalDateTime ls_DATLIV_GRP, ls_datdep_grp_p;
                         String ls_grp_code;
-                        val relDepartDate = LocalDateTime
-                                .of(LocalDate.parse(ls_depart_date.toString(),
-                                        DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                        LocalTime.MIN);
+                        val relDepartDate = ls_depart_date;
                         if (ls_haulier.substring(0, 8).equals("APPROCHE")) {
                             ls_DATLIV_GRP = relDepartDate.plusDays(1);
                             ls_datdep_grp_p = relDepartDate.plusDays(1);
