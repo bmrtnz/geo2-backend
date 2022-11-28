@@ -107,7 +107,7 @@ public class ProgramService {
         String ls_cen_ref_prec = "";
         String ls_nordre_prec = "";
 
-        for (Row row : sheet) {
+        outer: for (Row row : sheet) {
             ProgramRow pRow = new ProgramRow();
 
             // ignore header row
@@ -306,7 +306,7 @@ public class ProgramService {
                             pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref.get() + " -> "
                                     + ls_rc.getMsg());
                             res.pushRow(pRow);
-                            continue;
+                            continue outer;
                         }
 
                         row.getCell(COL_ORD_CREATE).setCellValue(ls_nordre.get());
@@ -348,11 +348,10 @@ public class ProgramService {
                                 ordlog.setDateLivraisonLieuGroupage(ls_DATLIV_GRP);
                                 ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
                                 ordlog = this.ordreLogistiqueRepo.save(ordlog);
-
                             } catch (Exception e) {
                                 pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref);
                                 res.pushRow(pRow);
-                                continue;
+                                continue outer;
                             }
                         }
 
