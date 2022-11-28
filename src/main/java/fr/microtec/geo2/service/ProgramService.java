@@ -1,14 +1,15 @@
 package fr.microtec.geo2.service;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,11 +22,14 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import fr.microtec.geo2.common.StringUtils;
 import fr.microtec.geo2.controller.ProgramController;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse.ProgramRow;
+import fr.microtec.geo2.persistance.StringEnum;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
+import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
@@ -78,22 +82,22 @@ public class ProgramService {
         val res = new ProgramResponse();
 
         // useful columns indexes
-        // int COL_PROGRAMME = 1;
-        int COL_LOAD_REFERENCE = 2;
-        // int COL_TPND = 3;
-        int COL_ARTS_REF = 4;
-        int COL_DEPOT_NAME = 6;
-        int COL_PRIX_VENTE = 7;
-        int COL_PRIX_MINI = 8;
-        int COL_PACKHOUSE = 9;
-        int COL_DEPART_DATE = 10;
-        int COL_DELIVERY_DATE = 11;
-        int COL_QTY_CASE = 13;
-        int COL_QTY_PALLETS = 14;
-        int COL_CASES_PER_PALLETS = 15;
-        int COL_BB_DATE = 16;
-        int COL_HAULIER = 17;
-        int COL_ORD_CREATE = 18;
+        // int COL_PROGRAMME = 0;
+        int COL_LOAD_REFERENCE = 1;
+        // int COL_TPND = 2;
+        int COL_ARTS_REF = 3;
+        int COL_DEPOT_NAME = 5;
+        int COL_PRIX_VENTE = 6;
+        int COL_PRIX_MINI = 7;
+        int COL_PACKHOUSE = 8;
+        int COL_DEPART_DATE = 9;
+        int COL_DELIVERY_DATE = 10;
+        int COL_QTY_CASE = 12;
+        int COL_QTY_PALLETS = 13;
+        int COL_CASES_PER_PALLETS = 14;
+        int COL_BB_DATE = 15;
+        int COL_HAULIER = 16;
+        int COL_ORD_CREATE = 17;
 
         // load sheet
         Workbook workbook = ProgramService.loadFile(chunks);
@@ -103,7 +107,7 @@ public class ProgramService {
         String ls_cen_ref_prec = "";
         String ls_nordre_prec = "";
 
-        for (Row row : sheet) {
+        outer: for (Row row : sheet) {
             ProgramRow pRow = new ProgramRow();
 
             // ignore header row
@@ -111,56 +115,71 @@ public class ProgramService {
                 continue;
 
             // exit when no more data to consume
-            if (row.getCell(COL_LOAD_REFERENCE).getStringCellValue().isBlank())
+            if (row.getCell(COL_LOAD_REFERENCE) == null)
                 break;
 
             Character ls_create_ligne = 'N';
-            val ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
-            val ls_programme = ls_load_reference.split("/")[0];
+            String ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
+            pRow.setLoadRef(ls_load_reference);
+            String ls_programme = ls_load_reference.split("/")[0];
             // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
-            val ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
-            val ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
-            val ls_depart_date = row.getCell(COL_DEPART_DATE).getStringCellValue();
-            val ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getStringCellValue();
-            String ls_qty_case = row.getCell(COL_QTY_CASE).getStringCellValue().trim();
-            String ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getStringCellValue().trim();
-            String ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getStringCellValue().trim();
-            val ls_bb_date = row.getCell(COL_BB_DATE).getStringCellValue();
-            val ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
-            val ls_array_art = row.getCell(COL_ARTS_REF).getStringCellValue().split("-");
-            val ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
-            val ld_prix_mini = row.getCell(COL_PRIX_MINI).getNumericCellValue();
+            String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
+            pRow.setDepot(ls_depot_name);
+            String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
+            LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+            pRow.setDateDepart(ls_depart_date);
+            LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
+            pRow.setDateLivraison(ls_delivery_date);
+            Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
+            Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
+            Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
+            String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
+            Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
+            Double ld_prix_mini = row.getCell(COL_PRIX_MINI).getNumericCellValue();
 
             final AtomicReference<String> ls_soc_code = new AtomicReference<>("");
             final AtomicReference<String> ls_cli_ref = new AtomicReference<>("");
             if (ls_load_reference.startsWith("OF")) {
                 ls_soc_code.set("BUK");
                 ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
-            } else
+            } else {
                 pRow.pushErreur("Erreur préfixe Load reference");
+                res.pushRow(pRow);
+                continue;
+            }
 
             final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
             if (ls_load_reference.startsWith("OFTRUE"))
                 ls_ind_mod_liv.set("D");
             else if (ls_load_reference.startsWith("OFXD"))
                 ls_ind_mod_liv.set("X");
-            else
+            else {
                 pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
+                res.pushRow(pRow);
+                continue;
+            }
             val ls_concat = " " + ls_ind_mod_liv + "%";
 
             // Pas de référence client pour ORCHARD
             val ls_ref_cli = "";
             val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
-                    cb.equal(root.get("client").get("id"), ls_ref_cli),
+                    cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
                     cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
-                    cb.equal(root.get("modeLivraison"), ls_ind_mod_liv.get()),
+                    cb.equal(root.get("modeLivraison"),
+                            StringEnum.getValueOf(GeoModeLivraison.class, ls_ind_mod_liv.get())),
                     cb.like(root.get("code"), ls_depot_name + ls_concat),
                     cb.isTrue(root.get("valide"))));
-            if (entrepot.isEmpty())
+            if (entrepot.isEmpty()) {
                 pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
+                res.pushRow(pRow);
+                continue;
+            }
 
-            if (ls_haulier.isBlank())
+            if (ls_haulier.isBlank()) {
                 pRow.pushErreur("Erreur transporteur non renseigné !!");
+                res.pushRow(pRow);
+                continue;
+            }
 
             String ls_transp_approche = "";
             String ls_transp_final = ls_haulier;
@@ -171,7 +190,12 @@ public class ProgramService {
 
             // EX DLUO: Toujours "/"
             // Doit être renseigné dnas le fichier Excel
-            val ls_dluo = ls_bb_date.isBlank() ? "/" : ls_bb_date.trim();
+            String ls_dluo;
+            try {
+                ls_dluo = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue().toString();
+            } catch (Exception e) {
+                ls_dluo = "/";
+            }
 
             val existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
                     cb.equal(root.get("codeChargement"), ls_load_reference),
@@ -203,18 +227,15 @@ public class ProgramService {
                         ls_ref_cli,
                         false,
                         false,
-                        LocalDateTime.of(
-                                LocalDate.parse(ls_depart_date,
-                                        DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                LocalTime.MIN),
+                        ls_depart_date,
                         "ORD",
-                        LocalDateTime.of(
-                                LocalDate.parse(ls_delivery_date,
-                                        DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                LocalTime.MIN),
+                        ls_delivery_date,
                         ls_load_reference);
-                if (functionRes.getRes() != FunctionResult.RESULT_OK)
+                if (functionRes.getRes() != FunctionResult.RESULT_OK) {
                     pRow.pushErreur(functionRes.getMsg());
+                    res.pushRow(pRow);
+                    continue;
+                }
 
                 ls_ord_ref.set((String) functionRes.getData().get("ls_ord_ref"));
                 ls_load_ref_prec = ls_load_reference;
@@ -223,6 +244,7 @@ public class ProgramService {
                 if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
                     ls_create_ligne = 'O';
                     ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
+                    pRow.setOrdreNum(ls_nordre.get());
                     pRow.pushMessage("Ordre créé");
                     res.incrementOrdreCount();
                 } else {
@@ -231,27 +253,39 @@ public class ProgramService {
                 }
             }
 
+            List<String> ls_array_art;
+            try {
+                ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().split("-"));
+            } catch (Exception e) {
+                ls_array_art = List.of(((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).toString());
+            }
             if (ls_create_ligne.equals('O')) {
-                for (int ll_count = 1; ll_count < ls_array_art.length + 1; ll_count++) {
+                for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
                     if (ll_count > 1) {
-                        ls_qty_case = "0";
-                        ls_qty_pallets = "0";
-                        ls_case_per_pallets = "0";
+                        ls_qty_case = 0d;
+                        ls_qty_pallets = 0d;
+                        ls_case_per_pallets = 0d;
                     }
 
-                    val ls_art = String.format("%" + 6 + "0", ls_array_art[ll_count]);
+                    val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
 
-                    val ls_art_existe = this.entityManager
-                            .createQuery("select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
-                            .setParameter("ls_art", ls_art)
-                            .getSingleResult().equals('O');
+                    Boolean ls_art_existe = true;
+                    try {
+                        this.entityManager
+                                .createNativeQuery(
+                                        "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
+                                .setParameter("ls_art", ls_art)
+                                .getSingleResult();
+                    } catch (NoResultException e) {
+                        ls_art_existe = false;
+                    }
 
                     if (ls_art_existe) {
                         String ls_prog = "";
-                        if (ls_programme.substring(0, 2).equals("TES")
-                                || ls_programme.substring(0, 1).equals("SP"))
+                        if (ls_programme.startsWith("TES")
+                                || ls_programme.startsWith("SP"))
                             ls_prog = "TESCO";
-                        else if (ls_programme.substring(0, 1).equals("OF"))
+                        else if (ls_programme.startsWith("OF"))
                             ls_prog = "ORCHARD";
 
                         FunctionResult ls_rc = this.functionOrdreRepo.fCreateLigneOrdre(
@@ -259,18 +293,21 @@ public class ProgramService {
                                 ls_art,
                                 ls_packhouse,
                                 entrepot.get().getId(),
-                                Double.parseDouble(ls_case_per_pallets),
-                                Double.parseDouble(ls_qty_pallets),
-                                Double.parseDouble(ls_qty_case),
+                                ls_case_per_pallets,
+                                ls_qty_pallets,
+                                ls_qty_case,
                                 ld_prix_vte,
                                 ld_prix_mini,
                                 ls_prog,
                                 ls_dluo);
 
                         // HANDLE ls_rc
-                        if (ls_rc.getRes() != FunctionResult.RESULT_OK)
-                            pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref + " -> "
+                        if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
+                            pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref.get() + " -> "
                                     + ls_rc.getMsg());
+                            res.pushRow(pRow);
+                            continue outer;
+                        }
 
                         row.getCell(COL_ORD_CREATE).setCellValue(ls_nordre.get());
 
@@ -278,10 +315,8 @@ public class ProgramService {
 
                         LocalDateTime ls_DATLIV_GRP, ls_datdep_grp_p;
                         String ls_grp_code;
-                        val relDepartDate = LocalDateTime
-                                .of(LocalDate.parse(ls_depart_date, DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                        LocalTime.MIN);
-                        if (ls_haulier.substring(0, 8).equals("APPROCHE")) {
+                        val relDepartDate = ls_depart_date;
+                        if (ls_haulier.startsWith("APPROCHE")) {
                             ls_DATLIV_GRP = relDepartDate.plusDays(1);
                             ls_datdep_grp_p = relDepartDate.plusDays(1);
                             ls_grp_code = "TERRYLOIRE";
@@ -292,7 +327,7 @@ public class ProgramService {
                         }
 
                         val ls_DATDEP_FOU_P = relDepartDate;
-                        val ls_DATDEP_FOU_P_YYYYMMDD = relDepartDate.format(DateTimeFormatter.ofPattern("yyyymmdd"));
+                        val ls_DATDEP_FOU_P_YYYYMMDD = relDepartDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
                         val ls_ordlog_existe = this.ordreLogistiqueRepo.findOne((root, cq, cb) -> cb.and(
                                 cb.equal(root.get("ordre").get("id"), ls_ord_ref.get()),
@@ -307,15 +342,16 @@ public class ProgramService {
                                 ordlog.setTransporteurGroupage(this.transporteurRepo.getOne(ls_transp_approche));
                                 ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
                                 ordlog.setDateDepartPrevueFournisseurRaw(ls_DATDEP_FOU_P_YYYYMMDD);
-                                ordlog.setTotalPalettesCommandees(Float.parseFloat(ls_qty_pallets));
+                                ordlog.setTotalPalettesCommandees(ls_qty_pallets.floatValue());
                                 ordlog.setTypeLieuGroupageArrivee('G');
                                 ordlog.setTypeLieuDepart('F');
                                 ordlog.setDateLivraisonLieuGroupage(ls_DATLIV_GRP);
                                 ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
                                 ordlog = this.ordreLogistiqueRepo.save(ordlog);
-
                             } catch (Exception e) {
                                 pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref);
+                                res.pushRow(pRow);
+                                continue outer;
                             }
                         }
 
@@ -325,11 +361,10 @@ public class ProgramService {
                 }
             }
 
-            res.incrementRowCount();
             res.pushRow(pRow);
         }
 
-        FileOutputStream out = new FileOutputStream(chunks.getOriginalFilename());
+        OutputStream out = new ByteArrayOutputStream();
         workbook.write(out);
         workbook.close();
         this.writeOutput(out);
@@ -338,13 +373,14 @@ public class ProgramService {
     }
 
     /** Write a program output in session */
-    private void writeOutput(FileOutputStream stream) {
+    private void writeOutput(OutputStream stream) {
         RequestContextHolder.currentRequestAttributes().getSessionId();
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession(true);
         session.setAttribute(ProgramController.GEO2_PROGRAM_OUTPUT, stream);
     }
 
+    /** Get XLX or XLSX workbook */
     private static <F extends Workbook> F loadFile(MultipartFile chunks) throws IOException {
         switch (chunks.getContentType()) {
             case XLSX_MIME:

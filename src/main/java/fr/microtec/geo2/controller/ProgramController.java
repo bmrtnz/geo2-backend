@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import lombok.Data;
 
 /** Handle programs actions, such as import */
 @RestController
+@Secured("ROLE_USER")
 @RequestMapping("/program")
 public class ProgramController {
 
@@ -53,16 +55,13 @@ public class ProgramController {
         Integer ordreCount = 0;
         List<ProgramRow> rows = new ArrayList<>();
 
-        public void incrementRowCount() {
-            this.rowCount++;
-        }
-
         public void incrementOrdreCount() {
             this.ordreCount++;
         }
 
         public void pushRow(ProgramRow p) {
             this.rows.add(p);
+            this.rowCount = this.rows.size();
         }
 
         @Data

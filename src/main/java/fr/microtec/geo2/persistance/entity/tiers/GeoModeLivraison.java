@@ -5,13 +5,13 @@ import lombok.Getter;
 
 @Getter
 public enum GeoModeLivraison implements StringEnum {
-	DIRECT("D"),
-	CROSS_DOCK("X"),
-	SORTIE_STOCK("S");
+    DIRECT("D"),
+    CROSS_DOCK("X"),
+    SORTIE_STOCK("S");
 
-	private String key;
+    private String key;
 
-	GeoModeLivraison(String key) {
-		this.key = key;
-	}
+    GeoModeLivraison(String key) {
+        this.key = key;
+    }
 }

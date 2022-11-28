@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
@@ -32,6 +36,11 @@ import lombok.ToString;
 public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Serializable {
 
     @Id
+    @GeneratedValue(generator = "GeoOrdreLogistiqueGenerator")
+    @GenericGenerator(name = "GeoOrdreLogistiqueGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "seq_orx_num"),
+            @Parameter(name = "mask", value = "FM099999")
+    })
     @Column(name = "orx_ref")
     private String id;
 

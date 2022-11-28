@@ -109,7 +109,12 @@ BEGIN
     msg := '';
 
     --Recup du secteur de l'ordre
-    select sco_code, soc_code into ls_sco_code, ls_soc_code from GEO_ORDRE where GEO_ORDRE.ORD_REF = arg_ord_ref;
+    begin
+        select sco_code, soc_code into ls_sco_code, ls_soc_code from GEO_ORDRE where GEO_ORDRE.ORD_REF = arg_ord_ref;
+    exception when no_data_found then
+        msg := msg || ' Impossible de recuperer le secteur de l''ordre avec la ref ' || arg_ord_ref || SQLERRM;
+        return;
+    end;
 
     --On insert la ligne article générique art_ref = '000000'
     -- Recup de ORL suivante
