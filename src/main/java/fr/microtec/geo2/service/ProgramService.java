@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.persistence.EntityManager;
@@ -130,7 +131,6 @@ public class ProgramService {
             Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
             Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
             String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
-            String[] ls_array_art = row.getCell(COL_ARTS_REF).getStringCellValue().split("-");
             Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
             Double ld_prix_mini = row.getCell(COL_PRIX_MINI).getNumericCellValue();
 
@@ -255,15 +255,21 @@ public class ProgramService {
                 }
             }
 
+            List<String> ls_array_art;
+            try {
+                ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().split("-"));
+            } catch (Exception e) {
+                ls_array_art = List.of(((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).toString());
+            }
             if (ls_create_ligne.equals('O')) {
-                for (int ll_count = 1; ll_count < ls_array_art.length + 1; ll_count++) {
+                for (int ll_count = 1; ll_count < ls_array_art.size() + 1; ll_count++) {
                     if (ll_count > 1) {
                         ls_qty_case = 0d;
                         ls_qty_pallets = 0d;
                         ls_case_per_pallets = 0d;
                     }
 
-                    val ls_art = String.format("%" + 6 + "0", ls_array_art[ll_count]);
+                    val ls_art = String.format("%" + 6 + "0", ls_array_art.get(ll_count));
 
                     val ls_art_existe = this.entityManager
                             .createQuery("select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
