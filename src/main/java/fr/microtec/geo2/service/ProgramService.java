@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -274,10 +275,10 @@ public class ProgramService {
 
                     if (ls_art_existe) {
                         String ls_prog = "";
-                        if (ls_programme.substring(0, 2).equals("TES")
-                                || ls_programme.substring(0, 1).equals("SP"))
+                        if (ls_programme.startsWith("TES")
+                                || ls_programme.startsWith("SP"))
                             ls_prog = "TESCO";
-                        else if (ls_programme.substring(0, 1).equals("OF"))
+                        else if (ls_programme.startsWith("OF"))
                             ls_prog = "ORCHARD";
 
                         FunctionResult ls_rc = this.functionOrdreRepo.fCreateLigneOrdre(
@@ -308,7 +309,7 @@ public class ProgramService {
                         LocalDateTime ls_DATLIV_GRP, ls_datdep_grp_p;
                         String ls_grp_code;
                         val relDepartDate = ls_depart_date;
-                        if (ls_haulier.substring(0, 8).equals("APPROCHE")) {
+                        if (ls_haulier.startsWith("APPROCHE")) {
                             ls_DATLIV_GRP = relDepartDate.plusDays(1);
                             ls_datdep_grp_p = relDepartDate.plusDays(1);
                             ls_grp_code = "TERRYLOIRE";
