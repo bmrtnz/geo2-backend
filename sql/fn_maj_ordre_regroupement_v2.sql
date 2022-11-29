@@ -268,7 +268,7 @@ BEGIN
 
     End If;
 
-    select substr(code_chargement,1,6),depdatp,to_char(GEO_ORDRE.DEPDATP,'dd/mm/yy hh24:mi'),trp_code,per_codecom,per_codeass,ttr_code,instructions_logistique,code_chargement,livdatp,etd_location,eta_location,etd_date,etd_date,dev_code,dev_tx
+    select substr(code_chargement,1,6),depdatp,to_char(GEO_ORDRE.DEPDATP,'dd/mm/yy'),trp_code,per_codecom,per_codeass,ttr_code,instructions_logistique,code_chargement,livdatp,etd_location,eta_location,etd_date,etd_date,dev_code,dev_tx
     into ls_code_chargement,ldt_depdatp,ls_depdatp,ls_transp,ls_per_codecom,ls_per_codeass,ls_ttr_code,ls_instructions_logistique,ls_code_chargement_complet,ldt_livdatp,ls_etd_location,ls_eta_location,ldt_etd_date,ldt_eta_date,ls_dev_code_orig,ld_dev_tx_ordre_orig
     from GEO_ORDRE
     where ORD_REF =arg_ord_ref_origine;
@@ -281,24 +281,27 @@ BEGIN
         ls_code_chargement := ls_code_chargement || '%';
     End If;
 
-    select TRS_CODE into ls_decl_doua  from GEO_TRANSI T
-    where  ls_transp like T.TRS_CODE||'%'  and
-                T.IND_DECL_DOUANIER ='O';
-
-
-    If  ls_decl_doua is null or ls_decl_doua='' Then
+    begin
+        select TRS_CODE into ls_decl_doua  from GEO_TRANSI T
+        where  ls_transp like T.TRS_CODE||'%'  and
+                    T.IND_DECL_DOUANIER ='O';
+    exception when no_data_found then
         ls_decl_doua := 'BOLLORE';
-    end if;
+    end;
 
     ls_ord_ref_regroup := null;
 
-    select ORD_REF into ls_ord_ref_regroup
-    from  GEO_ORDRE
-    where 	CODE_CHARGEMENT 		like ls_code_chargement and
+    begin
+        select ORD_REF into ls_ord_ref_regroup
+        from  GEO_ORDRE
+        where 	CODE_CHARGEMENT 		like ls_code_chargement and
                 to_date(DEPDATP)					  	=ldt_depdatp and
                 VALIDE ='O' 						and
                 CEN_REF  = ls_cen_ref_rgp and
                 rownum = 1;
+    exception when no_data_found then
+        ls_ord_ref_regroup := null;
+    end;
 
     ls_soc_code_old := arg_soc_code;
     -- arg_soc_code := 'SA';
@@ -441,10 +444,14 @@ BEGIN
                         -- Bruno  le 12/05/22
                     -- rendre compatible le nouveau et ancien monde
                     li_num_version_uk_old := null;
-                    select NUM_VERSION INTO li_num_version_uk_old
-                    FROM GEO_GEST_REGROUP
-                    where ORD_REF_RGP = ls_ord_ref_regroup and
-                            FOU_CODE_ORIG =l.fou_code;
+                    begin
+                        select NUM_VERSION INTO li_num_version_uk_old
+                        FROM GEO_GEST_REGROUP
+                        where ORD_REF_RGP = ls_ord_ref_regroup and
+                                FOU_CODE_ORIG =l.fou_code;
+                    exception when no_data_found then
+                        li_num_version_uk_old := null;
+                    end;
 
                     If li_num_version_uk_old is not null and li_num_version_uk_old <> li_num_version_uk then
                         li_num_version_uk := li_num_version_uk_old;
@@ -505,16 +512,16 @@ BEGIN
                 O.CLi_REF = C.CLI_REF;
 
 
-        select 	E.TRP_PU
-        into 		ld_trp_pu_entrep
-        from  GEO_ENTREP E,  GEO_ORDRE O
-        where O.ORD_REF =arg_ord_ref_origine and
-                O.CEN_REF =E.CEN_REF and
-                E.TRP_BTA_CODE ='KILO';
-
-        if ld_trp_pu_entrep is null  then
+        begin
+            select 	E.TRP_PU
+            into 		ld_trp_pu_entrep
+            from  GEO_ENTREP E,  GEO_ORDRE O
+            where O.ORD_REF =arg_ord_ref_origine and
+                    O.CEN_REF =E.CEN_REF and
+                    E.TRP_BTA_CODE ='KILO';
+        exception when no_data_found then
             ld_trp_pu_entrep :=0;
-        end if;
+        end;
 
         /* Frais marge + ristourne */
         declare
@@ -691,6 +698,8 @@ BEGIN
         begin
             for gr in C_GEST_REGROUP loop
 
+                li_indice := li_indice + 1;
+
                 ls_ord_ref_orig_tmp := gr.ORD_REF_ORIG;
                 ls_orl_ref_tmp := gr.ORL_REF_ORIG;
                 ls_art_ref_tmp := gr.ART_REF_ORIG;
@@ -716,14 +725,22 @@ BEGIN
                 li_pal_nb_inter_tmp := gr.PAL_NB_PALINTER;
                 ls_frais_desc_tmp := gr.FRAIS_DESC;
 
-                ls_tab_ord_ref_orig(li_indice) 		:= ls_ord_ref_orig_tmp;
-                ls_tab_orl_ref_orig(li_indice) 		:= ls_orl_ref_tmp;
-                ls_tab_art_ref_orig(li_indice)		:= ls_art_ref_tmp;
-                ls_tab_fou_code_orig(li_indice)		:= ls_fou_code_tmp;
-                li_tab_grp_orig(li_indice)				:= li_grp_orig_tmp;
-                li_tab_grp_rgp(li_indice)				:= ls_orl_lig_rgp_tmp;
-                li_tab_pal_nb_col_orig(li_indice)	:= li_pal_nb_col_tmp;
-                ls_tab_orl_ref_rgp(li_indice)			:= ls_orl_ref_rgp_tmp;
+                ls_tab_ord_ref_orig.extend();
+                ls_tab_ord_ref_orig(li_indice) := ls_ord_ref_orig_tmp;
+                ls_tab_orl_ref_orig.extend();
+                ls_tab_orl_ref_orig(li_indice) := ls_orl_ref_tmp;
+                ls_tab_art_ref_orig.extend();
+                ls_tab_art_ref_orig(li_indice) := ls_art_ref_tmp;
+                ls_tab_fou_code_orig.extend();
+                ls_tab_fou_code_orig(li_indice) := ls_fou_code_tmp;
+                li_tab_grp_orig.extend();
+                li_tab_grp_orig(li_indice) := li_grp_orig_tmp;
+                li_tab_grp_rgp.extend();
+                li_tab_grp_rgp(li_indice) := ls_orl_lig_rgp_tmp;
+                li_tab_pal_nb_col_orig.extend();
+                li_tab_pal_nb_col_orig(li_indice) := li_pal_nb_col_tmp;
+                ls_tab_orl_ref_rgp.extend();
+                ls_tab_orl_ref_rgp(li_indice) := ls_orl_ref_rgp_tmp;
 
                 If ls_lib_dlv_tmp is null then ls_lib_dlv_tmp :=''; end if;
                 ls_lib_dlv_tmp := trim(ls_lib_dlv_tmp);
@@ -736,19 +753,32 @@ BEGIN
                 If ld_ach_pu_tmp is null  Then ld_ach_pu_tmp := 0; end if;
                 If ls_ach_bta_code_tmp is null Then ls_ach_bta_code_tmp :=''; end if;
 
+                ls_tab_propr_code.extend();
                 ls_tab_propr_code(li_indice):='';
+                ls_tab_pal_code.extend();
                 ls_tab_pal_code(li_indice) := ls_pal_code_tmp;
+                ld_tab_vte_pu.extend();
                 ld_tab_vte_pu(li_indice):= ld_vte_pu_tmp;
+                ls_tab_vte_bta_code.extend();
                 ls_tab_vte_bta_code(li_indice):=ls_vte_bta_code_tmp;
+                ls_tab_ach_bta_code.extend();
                 ls_tab_ach_bta_code(li_indice)	:=ls_ach_bta_code_tmp;
 
+                ls_tab_ach_dev_taux.extend();
                 ls_tab_ach_dev_taux(li_indice)	:=ls_ach_dev_taux_tmp;
+                ls_tab_lib_dlv.extend();
                 ls_tab_lib_dlv(li_indice) :=ls_lib_dlv_tmp;
+                ls_tab_bac_code.extend();
                 ls_tab_bac_code(li_indice) :=ls_bac_code_tmp;
+                ls_tab_var_ristourne.extend();
                 ls_tab_var_ristourne(li_indice) :=ls_var_ristourne_tmp;
+                ldc_tab_frais_pu.extend();
                 ldc_tab_frais_pu(li_indice):=ldc_frais_pu_tmp;
+                ls_tab_esp_code.extend();
                 ls_tab_esp_code(li_indice):=	ls_esp_code_tmp;
+                li_tab_pal_nb_inter.extend();
                 li_tab_pal_nb_inter(li_indice):=li_pal_nb_inter_tmp;
+                ls_tab_frais_desc.extend();
                 ls_tab_frais_desc(li_indice):=ls_frais_desc_tmp;
 
             --LLEF: NEW TABLE FRAIS MARKETING/PEREQUATION
@@ -786,24 +816,28 @@ BEGIN
 
                 --If not(isnull(ld_prix_mini )) and ld_prix_mini > 0 and mid(ls_col_code,1,2) <>'CP'  and ll_article_mode_culture = 0 and ls_ori_code = 'F' then
                 If ld_prix_mini is not null and ld_prix_mini > 0 and substr(ls_col_code,1,2) <>'CP'  then
+                    ld_tab_ach_pu.extend();
                     ld_tab_ach_pu(li_indice) := ld_prix_mini;
+                    ls_tab_ach_dev_pu.extend();
                     ls_tab_ach_dev_pu(li_indice) :=	ld_prix_mini;
+                    ls_tab_ach_dev_code.extend();
                     ls_tab_ach_dev_code(li_indice) :='EUR';
                 Else
+                    ld_tab_ach_pu.extend();
                     ld_tab_ach_pu(li_indice):=ld_ach_pu_tmp;
+                    ls_tab_ach_dev_pu.extend();
                     ls_tab_ach_dev_pu(li_indice) :=	ld_ach_pu_tmp;
+                    ls_tab_ach_dev_code.extend();
                     ls_tab_ach_dev_code(li_indice)	 :=ls_ach_dev_code_tmp;
                 End If;
 
 
-            li_indice := li_indice + 1;
-
             end loop;
         end;
 
-        for li_i in 0 .. li_indice loop
+        for li_i in 1 .. li_indice loop
             If li_tab_grp_rgp(li_i) is null Then
-                For li_j in 0 .. li_indice loop
+                For li_j in 1 .. li_indice loop
 
 
                     If li_j <> li_i Then
@@ -838,7 +872,7 @@ BEGIN
             End If;
         end loop;
 
-        for li_i in 0 .. li_indice loop
+        for li_i in 1 .. li_indice loop
 
             update	GEO_GEST_REGROUP
             SET 		GRP_RGP= li_tab_grp_rgp(li_i),
@@ -887,16 +921,18 @@ BEGIN
                         where  ORD_REF_ORIG = arg_ord_ref_origine and  GRP_RGP =up.GRP_RGP;
 
                         If ll_count_nb_col_orig > 1 Then
-                            li_tab_grp_rgp(li_indice) := up.GRP_RGP;
-                            ll_tab_max_nb_col_orig(li_indice) := up.max_col;
                             li_indice := li_indice + 1;
+                            li_tab_grp_rgp.extend();
+                            li_tab_grp_rgp(li_indice) := up.GRP_RGP;
+                            ll_tab_max_nb_col_orig.extend();
+                            ll_tab_max_nb_col_orig(li_indice) := up.max_col;
                         End If;
             end loop;
         end;
 
 
 
-        for li_indice in 0 .. li_tab_grp_rgp.COUNT  loop
+        for li_indice in 1 .. li_tab_grp_rgp.COUNT  loop
 
             li_grp_rgp_tmp :=li_tab_grp_rgp(li_indice);
             ll_max_nb_col_orig:= ll_tab_max_nb_col_orig(li_indice);
@@ -1056,7 +1092,7 @@ BEGIN
 
                             li_nb_lig := li_nb_lig + 1;
                             li_orl_lig_sav := li_orl_lig_sav + 1;
-                            ls_orl_lig_sav := to_char(li_orl_lig_sav,'00');
+                            ls_orl_lig_sav := trim(to_char(li_orl_lig_sav,'00'));
                             If li_nb_lig =2  Then
                                 li_pal_nb_col_tmp :=0;
                                 li_cde_nb_col_tmp := 0;
@@ -1149,14 +1185,16 @@ BEGIN
                                     ACH_PU, ACH_DEV_CODE, ACH_BTA_CODE, VTE_PU, VTE_BTA_CODE, FOU_CODE,
                                     CDE_PDS_BRUT, CDE_PDS_NET,
                                     FLEXP, FLLIV, FLBAF, FLFAC, FOU_FLVER, VAR_RISTOURNE, FRAIS_PU, FLVERFOU, FLVERTRP, BAC_CODE, REMSF_TX,
-                                    REMHF_TX, ART_REF, ESP_CODE, TOTFAD, ACH_DEV_TAUX, ACH_DEV_PU,PROPR_CODE,PAL_NB_PALINTER,LIB_DLV,FRAIS_DESC,FRAIS_UNITE)
+                                    REMHF_TX, ART_REF, ESP_CODE, TOTFAD, ACH_DEV_TAUX, ACH_DEV_PU,PROPR_CODE,PAL_NB_PALINTER,LIB_DLV,FRAIS_DESC,FRAIS_UNITE
+                                )
                                 VALUES (
 
-                                    ls_orl_ref_tmp, ls_ord_ref_regroup, ls_orl_lig_sav,ls_pal_code_tmp,li_pal_nb_col_tmp, li_cde_nb_pal_tmp, li_cde_nb_col_tmp, ld_ach_pu_tmp,
-                                    ls_ach_dev_code_tmp,ls_ach_bta_code_tmp, ld_vte_pu_tmp,ls_vte_bta_code_tmp,  ls_fou_code_tmp,
+                                    ls_orl_ref_tmp, ls_ord_ref_regroup, ls_orl_lig_sav,ls_pal_code_tmp,li_pal_nb_col_tmp, li_cde_nb_pal_tmp, li_cde_nb_col_tmp,
+                                    ld_ach_pu_tmp, ls_ach_dev_code_tmp,ls_ach_bta_code_tmp, ld_vte_pu_tmp,ls_vte_bta_code_tmp,  ls_fou_code_tmp,
                                     ldc_cde_pds_brut_tmp,ldc_cde_pds_nett_tmp,
-                                    'N', 'N', 'N', 'N', 'N', ls_var_ristourne_tmp, ldc_frais_pu_tmp, 'N', 'N', ls_bac_code_tmp,0, 0, ls_art_ref_tmp , ls_esp_code_tmp, 0, ls_ach_dev_taux_tmp,
-                                    ls_ach_dev_pu_tmp,ls_propr_code_tmp,li_pal_nb_inter_tmp,ls_lib_dlv_tmp,ls_frais_desc_tmp,ls_frais_unite);
+                                    'N', 'N', 'N', 'N', 'N', ls_var_ristourne_tmp, ldc_frais_pu_tmp, 'N', 'N', ls_bac_code_tmp,0,
+                                    0, ls_art_ref_tmp , ls_esp_code_tmp, 0, ls_ach_dev_taux_tmp, ls_ach_dev_pu_tmp,ls_propr_code_tmp,li_pal_nb_inter_tmp,ls_lib_dlv_tmp,ls_frais_desc_tmp,ls_frais_unite
+                                );
 
 
 
