@@ -896,4 +896,16 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFnMajOrdreRegroupementV2() {
+        FunctionResult result = this.functionOrdreRepository.fnMajOrdreRegroupementV2(
+                "1139463",
+                "SA",
+                true,
+                "BRUNO");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
