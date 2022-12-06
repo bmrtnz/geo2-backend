@@ -262,4 +262,10 @@ public interface GeoFunctionOrdreRepository {
             Double arg_prix_mini,
             String arg_prog,
             String arg_dluo);
+
+    FunctionResult fnMajOrdreRegroupementV2(
+            String arg_ord_ref_origine,
+            String arg_soc_code,
+            Boolean arg_entrepot_generic,
+            String arg_username);
 }

@@ -849,4 +849,20 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fnMajOrdreRegroupementV2(
+            String arg_ord_ref_origine,
+            String arg_soc_code,
+            Boolean arg_entrepot_generic,
+            String arg_username) {
+        FunctionQuery query = this.build("FN_MAJ_ORDRE_REGROUPEMENT_V2");
+
+        query.attachInput("arg_ord_ref_origine", String.class, arg_ord_ref_origine);
+        query.attachInput("arg_soc_code", String.class, arg_soc_code);
+        query.attachInput("arg_entrepot_generic", Character.class, arg_entrepot_generic ? 'O' : 'N');
+        query.attachInput("arg_username", String.class, arg_username);
+
+        return query.fetch();
+    }
+
 }

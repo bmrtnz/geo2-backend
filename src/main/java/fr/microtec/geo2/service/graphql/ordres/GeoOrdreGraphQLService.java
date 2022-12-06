@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepartMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.DocumentService;
@@ -68,6 +69,17 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
                 dateMax,
                 societeCode,
                 transporteurCode);
+    }
+
+    @GraphQLQuery
+    public List<GeoPlanningDepartMaritime> allPlanningDepartMaritime(
+            @GraphQLArgument(name = "societeCode") String societeCode,
+            @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
+            @GraphQLArgument(name = "dateMax") LocalDateTime dateMax) {
+        return ((GeoOrdreRepository) this.repository).allPlanningDepartMaritime(
+                societeCode,
+                dateMin,
+                dateMax);
     }
 
     @GraphQLQuery
