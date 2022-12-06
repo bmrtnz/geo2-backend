@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepartMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
@@ -34,4 +35,9 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_soc_code") String societeCode,
             @Param("arg_date_min") LocalDateTime dateMin,
             @Param("arg_date_max") LocalDateTime dateMax);
+
+    @Query(name = "Ordre.allLignesChargement", nativeQuery = true)
+    List<GeoLigneChargement> allLignesChargement(
+            @Param("arg_code_chargement") String codeChargement,
+            @Param("arg_cam_code") String campagne);
 }

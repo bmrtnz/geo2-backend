@@ -10,6 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepartMaritime;
@@ -80,6 +81,15 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
                 societeCode,
                 dateMin,
                 dateMax);
+    }
+
+    @GraphQLQuery
+    public List<GeoLigneChargement> allLignesChargement(
+            @GraphQLArgument(name = "codeChargement") String codeChargement,
+            @GraphQLArgument(name = "campagne") String campagne) {
+        return ((GeoOrdreRepository) this.repository).allLignesChargement(
+                codeChargement,
+                campagne);
     }
 
     @GraphQLQuery

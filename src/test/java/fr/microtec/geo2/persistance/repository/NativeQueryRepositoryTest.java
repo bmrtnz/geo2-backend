@@ -134,4 +134,10 @@ public class NativeQueryRepositoryTest {
         Assertions.assertFalse(list.isEmpty());
     }
 
+    @Test
+    public void testAllLignesChargement() {
+        this.ordreRepository
+                .allLignesChargement("TES345/BWXD1C/TW49/22", "21");
+    }
+
 }

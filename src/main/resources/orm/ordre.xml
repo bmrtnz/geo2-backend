@@ -175,6 +175,56 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_ordlog.fou_code ASC,
                 geo_ordlog.datdep_fou_p ASC,
                 geo_ordre.nordre ASC ) rest
+            ]]>
+    </query>
+  </named-native-query>
+
+  <named-native-query
+    name="Ordre.allLignesChargement"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement"
+  >
+    <query>
+    <![CDATA[
+      SELECT ROWNUM, rest.*
+      FROM (
+      SELECT DISTINCT
+        O.CODE_CHARGEMENT,
+        O.ORD_REF,
+        O.NORDRE,
+        OL.FOU_CODE,
+        O.CEN_CODE,
+        O.DEPDATP,
+        O.LIVDATP,
+        OL.ART_REF,
+        A.ART_ALPHA,
+        C.COL_DESC,
+        OL.CDE_NB_PAL,
+        OL.CDE_NB_COL,
+        OL.PAL_NB_COL,
+        OL.ORL_REF,
+        O.NUM_CAMION,
+        O.ORDRE_CHARGEMENT,
+        OLO.DATDEP_FOU_P
+    FROM GEO_ORDRE O,
+            GEO_ORDLIG OL,
+            GEO_ARTICLE A,
+            GEO_COLIS C,
+            GEO_ORDLOG OLO
+    WHERE    O.CODE_CHARGEMENT IS NOT NULL
+    AND         O.CODE_CHARGEMENT = :arg_code_chargement
+    AND       O.ORD_REF = OL.ORD_REF
+    AND       OL.ART_REF = A.ART_REF
+    AND       C.COL_CODE = A.COL_CODE
+    AND       A.ESP_CODE = C.ESP_CODE
+    AND       OLO.ORD_REF = O.ORD_REF
+    AND     OLO.FOU_CODE = OL.FOU_CODE
+    AND OLO.TYP_FOU = 'F'
+    AND O.CAM_CODE     = :arg_cam_code
+    order by
+        O.CODE_CHARGEMENT,
+        O.DEPDATP,
+        O.NORDRE,
+        A.ART_ALPHA) rest
     ]]>
     </query>
   </named-native-query>
