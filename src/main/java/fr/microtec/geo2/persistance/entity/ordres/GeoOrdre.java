@@ -464,6 +464,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Column(name = "ordre_chargement")
     private Integer ordreChargement;
 
+    @Column(name = "nordre_rgp")
+    private String numeroRGP;
+
     @Formula("GEO_ORDRE_STATUS_EXPED(ord_ref)")
     private Boolean expedieAuComplet;
 

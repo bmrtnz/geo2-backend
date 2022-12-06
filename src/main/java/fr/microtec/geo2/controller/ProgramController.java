@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +38,10 @@ public class ProgramController {
     @PostMapping("/{program}")
     public ProgramResponse upload(
             @PathVariable String program,
-            @RequestParam("chunk") MultipartFile chunk)
+            @RequestParam("chunk") MultipartFile chunk,
+            @RequestParam(name = "societe", required = false) String societe,
+            @RequestParam(name = "utilisateur", required = false) String utilisateur,
+            @RequestParam(name = "genericEntrepot", required = false) Boolean generic)
             throws IOException {
 
         switch (Program.valueOf(program.toUpperCase())) {
@@ -45,7 +49,7 @@ public class ProgramController {
                 return this.service.importOrchard(chunk);
 
             case TESCO:
-                return this.service.importTesco(chunk);
+                return this.service.importTesco(chunk, societe, utilisateur, generic);
 
             default:
                 throw new RuntimeException(String.format("Program %1 does not exist", program));
@@ -90,6 +94,14 @@ public class ProgramController {
         public void pushRow(ProgramRow p) {
             this.rows.add(p);
             this.rowCount = this.rows.size();
+        }
+
+        /** Get program row by ordre num */
+        public Optional<ProgramRow> getRow(String numeroOrdre) {
+            return this.getRows()
+                    .stream()
+                    .filter(row -> row.ordreNum.equals(numeroOrdre))
+                    .findFirst();
         }
 
         @Data
