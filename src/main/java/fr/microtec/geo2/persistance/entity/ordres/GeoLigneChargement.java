@@ -1,6 +1,6 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,10 +37,10 @@ public class GeoLigneChargement {
     private String codeEntrepot;
 
     @Column(name = "depdatp")
-    private LocalDate dateDepartPrevue;
+    private LocalDateTime dateDepartPrevue;
 
     @Column(name = "livdatp")
-    private LocalDate dateLivraisonPrevue;
+    private LocalDateTime dateLivraisonPrevue;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_ref")
@@ -72,6 +72,6 @@ public class GeoLigneChargement {
     private Integer ordreChargement;
 
     @Column(name = "datdep_fou_p")
-    private LocalDate dateDepartPrevueFournisseur;
+    private LocalDateTime dateDepartPrevueFournisseur;
 
 }
