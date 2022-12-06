@@ -4,17 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import fr.microtec.geo2.service.DocumentService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -69,15 +68,6 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
                 dateMax,
                 societeCode,
                 transporteurCode);
-    }
-
-    @GraphQLQuery
-    public List<GeoLigneChargement> allLignesChargement(
-            @GraphQLArgument(name = "codeChargement") String codeChargement,
-            @GraphQLArgument(name = "campagne") String campagne) {
-        return ((GeoOrdreRepository) this.repository).allLignesChargement(
-                codeChargement,
-                campagne);
     }
 
     @GraphQLQuery
