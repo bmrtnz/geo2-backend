@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.graphql.ordres;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -45,7 +46,15 @@ public class GeoReferenceClientGraphQLService extends GeoAbstractGraphQLService<
     @GraphQLMutation
     public List<GeoReferenceClient> saveAllReferenceClient(List<GeoReferenceClient> allReferenceClient,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.saveAllEntities(allReferenceClient, env);
+
+        // Filter inexistants refs
+        List<GeoReferenceClient> newRefs = allReferenceClient.parallelStream().filter(elm -> {
+            return this.repository.findOne((root, cq, cb) -> cb.and(
+                    cb.equal(root.get("client").get("id"), elm.getClient().getId()),
+                    cb.equal(root.get("article").get("id"), elm.getArticle().getId()))).isPresent();
+        }).collect(Collectors.toList());
+
+        return this.saveAllEntities(newRefs, env);
     }
 
     @GraphQLMutation
