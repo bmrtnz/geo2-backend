@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
-import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
-import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import lombok.Data;
@@ -26,22 +25,19 @@ public class GeoPlanningDepartMaritime {
     private String dateDepartPrevueFournisseurRaw;
 
     @Column(name = "datdep_fou_p")
-    private String dateDepartPrevueFournisseur;
+    private LocalDate dateDepartPrevueFournisseur;
 
     @Column(name = "cde_nb_pal")
-    private String nombrePalettesCommandees;
+    private Float nombrePalettesCommandees;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
-    private GeoFournisseur fournisseur;
+    @Column(name = "fou_code")
+    private String codeFournisseur;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cli_code", referencedColumnName = "cli_code")
-    private GeoClient client;
+    @Column(name = "cli_code")
+    private String codeClient;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cen_code", referencedColumnName = "cen_code")
-    private GeoEntrepot entrepot;
+    @Column(name = "cen_code")
+    private String codeEntrepot;
 
     @Column(name = "raisoc")
     private String raisonSocial;

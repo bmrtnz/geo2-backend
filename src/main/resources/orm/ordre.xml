@@ -130,7 +130,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             SELECT
                 to_char(geo_ordlog.datdep_fou_p,'yymmdd') as datdep_fou_p_raw,
                 geo_ordlog.datdep_fou_p,
-                sum(geo_ordlig.cde_nb_pal),
+                sum(geo_ordlig.cde_nb_pal) as cde_nb_pal,
                 geo_ordlog.fou_code,
                 geo_ordre.cli_code,
                 geo_ordre.cen_code,
@@ -164,7 +164,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_entrep.ville,
                 geo_entrep.pay_code,
                 geo_ordre.ref_logistique,
-                --geo_ordlog.ref_logistique,
                 geo_ordlog.immatriculation,
                 geo_ordlog.container,
                 geo_ordlog.plomb,
