@@ -225,6 +225,11 @@ public class CustomUtils {
         return env.dataFetchingEnvironment.getArgument(argument);
     }
 
+    public static Map<String, Object> parseArgumentFromEnv(final ResolutionEnvironment env, Class<?> clazz) {
+        String argument = CustomUtils.classToArgument(clazz);
+        return env.dataFetchingEnvironment.getArgument(argument);
+    }
+
     public static <T> String classToArgument(Class<T> clazz) {
         String arg = clazz.getSimpleName();
         arg = arg.substring(3);

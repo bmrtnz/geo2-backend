@@ -211,9 +211,13 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
     }
 
     protected T saveEntity(T data, ResolutionEnvironment env) {
-        String entityArgumentKey = CustomUtils.classToArgument(this.clazz);
-        Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, entityArgumentKey);
+        Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, this.clazz);
         return this.save(data, parsedArguments);
+    }
+
+    protected List<T> saveAllEntities(List<T> data, ResolutionEnvironment env) {
+        Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, this.clazz);
+        return this.saveAll(data, parsedArguments);
     }
 
     /**
