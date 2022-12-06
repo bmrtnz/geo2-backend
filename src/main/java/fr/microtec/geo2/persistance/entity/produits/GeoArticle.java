@@ -16,6 +16,7 @@ import org.hibernate.annotations.Parameter;
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
+import fr.microtec.geo2.persistance.entity.ordres.GeoReferenceClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -99,6 +100,9 @@ public class GeoArticle extends ValidateModifiedPrewrittedEntity implements Dupl
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
     private List<GeoHistoriqueArticle> historique;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+    private List<GeoReferenceClient> referencesClient;
 
     public GeoArticle duplicate() {
         GeoArticle clone = new GeoArticle();
