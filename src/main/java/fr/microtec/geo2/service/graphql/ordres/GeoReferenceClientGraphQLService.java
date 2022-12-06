@@ -51,7 +51,7 @@ public class GeoReferenceClientGraphQLService extends GeoAbstractGraphQLService<
         List<GeoReferenceClient> newRefs = allReferenceClient.parallelStream().filter(elm -> {
             return this.repository.findOne((root, cq, cb) -> cb.and(
                     cb.equal(root.get("client").get("id"), elm.getClient().getId()),
-                    cb.equal(root.get("article").get("id"), elm.getArticle().getId()))).isPresent();
+                    cb.equal(root.get("article").get("id"), elm.getArticle().getId()))).isEmpty();
         }).collect(Collectors.toList());
 
         return this.saveAllEntities(newRefs, env);
