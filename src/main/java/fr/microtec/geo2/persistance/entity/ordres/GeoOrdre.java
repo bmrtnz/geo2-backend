@@ -458,6 +458,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Column(name = "ind_exclu_frais_pu")
     private Boolean exclusionFraisPU;
 
+    @Column(name = "nordre_rgp")
+    private String numeroRGP;
+
     @Formula("GEO_ORDRE_STATUS_EXPED(ord_ref)")
     private Boolean expedieAuComplet;
 
