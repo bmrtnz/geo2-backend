@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class GeoPlanningDepartMaritime {
     private String dateDepartPrevueFournisseurRaw;
 
     @Column(name = "datdep_fou_p")
-    private LocalDate dateDepartPrevueFournisseur;
+    private LocalDateTime dateDepartPrevueFournisseur;
 
     @Column(name = "cde_nb_pal")
     private Float nombrePalettesCommandees;
