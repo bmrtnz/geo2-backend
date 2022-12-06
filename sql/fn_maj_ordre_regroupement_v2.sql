@@ -381,11 +381,15 @@ BEGIN
             lb_nouv := TRUE;
 
         Else
-            select  distinct 'KO',O.LIST_NORDRE_ORIG into ls_version,ls_list_nordre_orig
-            from GEO_GEST_REGROUP R , GEO_ORDRE O
-            where R.ORD_REF_RGP =ls_ord_ref_regroup and
-                    R.NUM_VERSION IS NULL and
-                    O.ORD_REF =ls_ord_ref_regroup;
+            begin
+                select  distinct 'KO',O.LIST_NORDRE_ORIG into ls_version,ls_list_nordre_orig
+                from GEO_GEST_REGROUP R , GEO_ORDRE O
+                where R.ORD_REF_RGP =ls_ord_ref_regroup and
+                        R.NUM_VERSION IS NULL and
+                        O.ORD_REF =ls_ord_ref_regroup;
+            exception when no_data_found then
+                null;
+            end;
 
             If ls_version ='KO' Then
                 msg := msg || ' Rénitialisation de l''ordre de REGROUPEMENT. Veuillez redupliquer le(s) ordre(s) ' || ls_list_nordre_orig || ' car il(s) n''étai(t)(ent) pas compatible(s)';
