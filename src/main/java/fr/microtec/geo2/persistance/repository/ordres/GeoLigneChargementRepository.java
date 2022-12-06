@@ -10,7 +10,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
-public interface GeoLigneChargementRepository extends GeoRepository<GeoLigneChargement, Integer> {
+public interface GeoLigneChargementRepository extends GeoRepository<GeoLigneChargement, String> {
     @Query(name = "Ordre.allLignesChargement", nativeQuery = true)
     List<GeoLigneChargement> allLignesChargement(
             @Param("arg_code_chargement") String codeChargement,

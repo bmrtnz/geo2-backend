@@ -17,8 +17,8 @@ import lombok.Data;
 public class GeoLigneChargement {
 
     @Id
-    @Column(name = "rownum")
-    Integer id;
+    @Column(name = "orl_ref")
+    String id;
 
     @Column(name = "code_chargement")
     private String codeChargement;
@@ -62,7 +62,7 @@ public class GeoLigneChargement {
     private Float nombreColisPalette;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orl_ref")
+    @JoinColumn(name = "orl_ref", insertable = false, updatable = false)
     private GeoOrdreLigne ligne;
 
     @Column(name = "num_camion")
