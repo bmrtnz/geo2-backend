@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepartMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.OrdreService;
@@ -33,7 +34,8 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     private final OrdreService ordreService;
     private final DocumentService documentService;
 
-    public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService, DocumentService documentService) {
+    public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService,
+            DocumentService documentService) {
         super(repository, GeoOrdre.class);
         this.ordreService = ordreService;
         this.documentService = documentService;
@@ -70,6 +72,17 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     }
 
     @GraphQLQuery
+    public List<GeoPlanningDepartMaritime> allPlanningDepartMaritime(
+            @GraphQLArgument(name = "societeCode") String societeCode,
+            @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
+            @GraphQLArgument(name = "dateMax") LocalDateTime dateMax) {
+        return ((GeoOrdreRepository) this.repository).allPlanningDepartMaritime(
+                societeCode,
+                dateMin,
+                dateMax);
+    }
+
+    @GraphQLQuery
     public Float sommeColisCommandes(@GraphQLContext GeoOrdre ordre) {
         return this.ordreService.fetchSommeColisCommandes(ordre);
     }
@@ -96,8 +109,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLArgument(name = "societe") String societeID,
             @GraphQLArgument(name = "campagne") String campagneID) {
         return this.documentService.loadDocuments(
-            this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID)
-        );
+                this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID));
     }
 
     @GraphQLMutation
