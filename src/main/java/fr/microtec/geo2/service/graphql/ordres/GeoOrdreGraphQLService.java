@@ -10,6 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
@@ -33,7 +34,8 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     private final OrdreService ordreService;
     private final DocumentService documentService;
 
-    public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService, DocumentService documentService) {
+    public GeoOrdreGraphQLService(GeoOrdreRepository repository, OrdreService ordreService,
+            DocumentService documentService) {
         super(repository, GeoOrdre.class);
         this.ordreService = ordreService;
         this.documentService = documentService;
@@ -70,6 +72,15 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     }
 
     @GraphQLQuery
+    public List<GeoLigneChargement> allLignesChargement(
+            @GraphQLArgument(name = "codeChargement") String codeChargement,
+            @GraphQLArgument(name = "campagne") String campagne) {
+        return ((GeoOrdreRepository) this.repository).allLignesChargement(
+                codeChargement,
+                campagne);
+    }
+
+    @GraphQLQuery
     public Float sommeColisCommandes(@GraphQLContext GeoOrdre ordre) {
         return this.ordreService.fetchSommeColisCommandes(ordre);
     }
@@ -96,8 +107,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLArgument(name = "societe") String societeID,
             @GraphQLArgument(name = "campagne") String campagneID) {
         return this.documentService.loadDocuments(
-            this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID)
-        );
+                this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID));
     }
 
     @GraphQLMutation
