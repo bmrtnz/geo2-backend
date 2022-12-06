@@ -122,4 +122,10 @@ public class NativeQueryRepositoryTest {
                 .allRecapitulatifFournisseur(LocalDateTime.now(), "SA", "004874", null);
     }
 
+    @Test
+    public void testAllLignesChargement() {
+        this.ordreRepository
+                .allLignesChargement("TES345/BWXD1C/TW49/22", "21");
+    }
+
 }
