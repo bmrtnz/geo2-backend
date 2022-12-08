@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -66,9 +65,7 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
     @Column(name = "raisoc", nullable = false)
     private String raisonSocial;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "con_tiers", referencedColumnName = "cli_code")
-    @JoinColumn(name = "con_tyt", referencedColumnName = "tyt_code")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     private List<GeoContact> contacts;
 
     @OneToMany(fetch = FetchType.LAZY)
