@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,8 +16,10 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
@@ -41,6 +44,11 @@ public class GeoOrdreLigne extends ValidateAndModifiedEntity {
 
     @Id
     @Column(name = "orl_ref")
+    @GeneratedValue(generator = "GeoOrdreLigneGenerator")
+    @GenericGenerator(name = "GeoOrdreLigneGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "F_SEQ_ORL_SEQ"),
+            @Parameter(name = "isSequence", value = "false")
+    })
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)

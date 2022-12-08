@@ -13,7 +13,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
-import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
