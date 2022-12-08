@@ -8,15 +8,19 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 
@@ -29,6 +33,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
     private final GeoFunctionOrdreRepository functionOrdreRepository;
     private final GeoEnvoisRepository envoisRepository;
     private final GeoFluxRepository fluxRepository;
+    private final GeoSocieteRepository societeRepository;
 
     public LigneChargementService(GeoLigneChargementRepository ligneChargementRepository,
             GeoOrdreLigneRepository ordreLigneRepository,
@@ -36,7 +41,8 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
             EntityManager entityManager,
             GeoFunctionOrdreRepository functionOrdreRepository,
             GeoEnvoisRepository envoisRepository,
-            GeoFluxRepository fluxRepository) {
+            GeoFluxRepository fluxRepository,
+            GeoSocieteRepository societeRepository) {
         super(ligneChargementRepository, GeoLigneChargement.class);
         this.ordreLigneRepository = ordreLigneRepository;
         this.ordreRepository = ordreRepository;
@@ -44,6 +50,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
         this.functionOrdreRepository = functionOrdreRepository;
         this.envoisRepository = envoisRepository;
         this.fluxRepository = fluxRepository;
+        this.societeRepository = societeRepository;
     }
 
     public List<GeoLigneChargement> saveAll(List<GeoLigneChargement> inputs,
@@ -69,18 +76,18 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
     }
 
     private GeoOrdre createOrdreChargement(String codeChargement, String originalOrdreId, String societeId) {
-        GeoOrdre ordreChargement = this.ordreRepository.getOne(originalOrdreId);
 
         FunctionResult result = this.functionOrdreRepository.fNouvelOrdre(societeId);
         if (!result.getRes().equals(FunctionResult.RESULT_OK))
             throw new RuntimeException("Erreur de génération d'un ordre de chargement" + result.getMsg());
 
-        this.entityManager.detach(ordreChargement);
-        ordreChargement.setCodeChargement(codeChargement);
-        ordreChargement.setId(null);
-        ordreChargement.setNumero(result.getData().get("ls_nordre").toString());
+        String numero = result.getData().get("ls_nordre").toString();
+        this.ordreRepository.createChargement(numero, codeChargement, originalOrdreId);
 
-        return this.ordreRepository.save(ordreChargement);
+        GeoCampagne campagne = this.ordreRepository.getOne(originalOrdreId).getCampagne();
+        GeoSociete societe = this.societeRepository.getOne(societeId);
+        return this.ordreRepository.findByNumeroAndSocieteAndCampagne(numero, societe, campagne).get();
+
     }
 
     /** Apply control on each ordre-lignes, throw exception on failure */

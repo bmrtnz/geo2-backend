@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -34,5 +36,13 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_soc_code") String societeCode,
             @Param("arg_date_min") LocalDateTime dateMin,
             @Param("arg_date_max") LocalDateTime dateMax);
+
+    @Query(name = "Ordre.createChargement", nativeQuery = true)
+    @Modifying
+    @Transactional
+    void createChargement(
+            @Param("arg_nordre") String numeroOrdre,
+            @Param("arg_code_chargement") String codeChargement,
+            @Param("arg_ord_original_ref") String ordreOriginal);
 
 }
