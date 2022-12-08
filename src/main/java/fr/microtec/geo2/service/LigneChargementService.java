@@ -14,6 +14,8 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 
@@ -24,17 +26,23 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
     private final GeoOrdreRepository ordreRepository;
     private final GeoOrdreLigneRepository ordreLigneRepository;
     private final GeoFunctionOrdreRepository functionOrdreRepository;
+    private final GeoEnvoisRepository envoisRepository;
+    private final GeoFluxRepository fluxRepository;
 
     public LigneChargementService(GeoLigneChargementRepository ligneChargementRepository,
             GeoOrdreLigneRepository ordreLigneRepository,
             GeoOrdreRepository ordreRepository,
             EntityManager entityManager,
-            GeoFunctionOrdreRepository functionOrdreRepository) {
+            GeoFunctionOrdreRepository functionOrdreRepository,
+            GeoEnvoisRepository envoisRepository,
+            GeoFluxRepository fluxRepository) {
         super(ligneChargementRepository, GeoLigneChargement.class);
         this.ordreLigneRepository = ordreLigneRepository;
         this.ordreRepository = ordreRepository;
         this.entityManager = entityManager;
         this.functionOrdreRepository = functionOrdreRepository;
+        this.envoisRepository = envoisRepository;
+        this.fluxRepository = fluxRepository;
     }
 
     public List<GeoLigneChargement> saveAll(List<GeoLigneChargement> inputs,
@@ -59,7 +67,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
         return inputs;
     }
 
-    public GeoOrdre createOrdreChargement(String codeChargement, String originalOrdreId, String societeId) {
+    private GeoOrdre createOrdreChargement(String codeChargement, String originalOrdreId, String societeId) {
         GeoOrdre ordreChargement = this.ordreRepository.getOne(originalOrdreId);
 
         FunctionResult result = this.functionOrdreRepository.fNouvelOrdre(societeId);
@@ -72,6 +80,25 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
 
         this.entityManager.detach(ordreChargement);
         return this.ordreRepository.save(ordreChargement);
+    }
+
+    /** Apply control on each ordre-lignes, throw exception on failure */
+    private void controlLignes(List<String> ol) {
+        List<GeoOrdreLigne> fetched = this.ordreLigneRepository
+                .findAll((root, cq, cb) -> root.get("id").in(ol));
+
+        // Verifying for common entrepots
+        String entrepotReferent = fetched.get(0).getOrdre().getEntrepot().getId();
+        if (fetched.parallelStream()
+                .anyMatch(ligne -> !ligne.getOrdre().getEntrepot().getId().equals(entrepotReferent)))
+            throw new RuntimeException("Les entrepôts sont différents !");
+
+        // Check for nonexisting "command confirmation"
+        if (fetched.parallelStream().anyMatch(
+                ligne -> this.envoisRepository.countByOrdreAndFlux(ligne.getOrdre(),
+                        this.fluxRepository.getOne("ORDRE")) > 0))
+            throw new RuntimeException("Des \"confirmations de commande\" sont déjà présents pour ces ordres !");
+
     }
 
 }
