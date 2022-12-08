@@ -75,11 +75,11 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
         if (!result.getRes().equals(FunctionResult.RESULT_OK))
             throw new RuntimeException("Erreur de génération d'un ordre de chargement" + result.getMsg());
 
+        this.entityManager.detach(ordreChargement);
         ordreChargement.setCodeChargement(codeChargement);
         ordreChargement.setId(new GeoOrdre().getId());
         ordreChargement.setNumero(result.getData().get("ls_nordre").toString());
 
-        this.entityManager.detach(ordreChargement);
         return this.ordreRepository.save(ordreChargement);
     }
 
@@ -115,6 +115,29 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
                 .findAll((root, cq, cb) -> root.get("id").in(inputs))
                 .parallelStream()
                 .map(ligne -> {
+                    ligne.setOrdre(target);
+                    return ligne;
+                })
+                .collect(Collectors.toList());
+
+        return this.ordreLigneRepository.saveAll(fetched);
+    }
+
+    /** Duplicate ordre-lignes input to a chargement */
+    public List<GeoOrdreLigne> duplicate(
+            List<String> inputs,
+            String codeChargement,
+            String originalOrdreId,
+            String societeId) {
+        this.controlLignes(inputs);
+        GeoOrdre target = this.createOrdreChargement(codeChargement, originalOrdreId, societeId);
+
+        List<GeoOrdreLigne> fetched = this.ordreLigneRepository
+                .findAll((root, cq, cb) -> root.get("id").in(inputs))
+                .parallelStream()
+                .map(ligne -> {
+                    this.entityManager.detach(ligne);
+                    ligne.setId(new GeoOrdreLigne().getId());
                     ligne.setOrdre(target);
                     return ligne;
                 })
