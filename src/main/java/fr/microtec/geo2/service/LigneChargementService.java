@@ -77,7 +77,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
 
         this.entityManager.detach(ordreChargement);
         ordreChargement.setCodeChargement(codeChargement);
-        ordreChargement.setId(new GeoOrdre().getId());
+        ordreChargement.setId(null);
         ordreChargement.setNumero(result.getData().get("ls_nordre").toString());
 
         return this.ordreRepository.save(ordreChargement);
@@ -137,7 +137,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
                 .parallelStream()
                 .map(ligne -> {
                     this.entityManager.detach(ligne);
-                    ligne.setId(new GeoOrdreLigne().getId());
+                    ligne.setId(null);
                     ligne.setOrdre(target);
                     return ligne;
                 })
