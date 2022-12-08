@@ -185,8 +185,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
-      SELECT ROWNUM, rest.*
-      FROM (
       SELECT DISTINCT
         O.CODE_CHARGEMENT,
         O.ORD_REF,
@@ -224,7 +222,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         O.CODE_CHARGEMENT,
         O.DEPDATP,
         O.NORDRE,
-        A.ART_ALPHA) rest
+        A.ART_ALPHA
     ]]>
     </query>
   </named-native-query>

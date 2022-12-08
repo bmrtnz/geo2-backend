@@ -19,6 +19,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
@@ -31,6 +32,8 @@ public class NativeQueryRepositoryTest {
 
     @Autowired
     private GeoOrdreRepository ordreRepository;
+    @Autowired
+    private GeoLigneChargementRepository ligneChargementRepository;
     @Autowired
     private GeoStockRepository stockRepository;
     @Autowired
@@ -136,7 +139,7 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllLignesChargement() {
-        this.ordreRepository
+        this.ligneChargementRepository
                 .allLignesChargement("TES345/BWXD1C/TW49/22", "21");
     }
 
