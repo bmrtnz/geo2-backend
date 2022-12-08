@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -99,6 +100,27 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
                         this.fluxRepository.getOne("ORDRE")) > 0))
             throw new RuntimeException("Des \"confirmations de commande\" sont déjà présents pour ces ordres !");
 
+    }
+
+    /** Transfer ordre-lignes input to a chargement */
+    public List<GeoOrdreLigne> transfer(
+            List<String> inputs,
+            String codeChargement,
+            String originalOrdreId,
+            String societeId) {
+        this.controlLignes(inputs);
+        GeoOrdre target = this.createOrdreChargement(codeChargement, originalOrdreId, societeId);
+
+        List<GeoOrdreLigne> fetched = this.ordreLigneRepository
+                .findAll((root, cq, cb) -> root.get("id").in(inputs))
+                .parallelStream()
+                .map(ligne -> {
+                    ligne.setOrdre(target);
+                    return ligne;
+                })
+                .collect(Collectors.toList());
+
+        return this.ordreLigneRepository.saveAll(fetched);
     }
 
 }
