@@ -6,6 +6,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoLigneChargement;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.service.LigneChargementService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -42,6 +43,26 @@ public class GeoLigneChargementGraphQLService extends GeoAbstractGraphQLService<
     public List<GeoLigneChargement> saveAllLigneChargement(List<GeoLigneChargement> allLigneChargement,
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.ligneChargementService.saveAll(allLigneChargement, env);
+    }
+
+    @GraphQLQuery
+    public List<GeoOrdreLigne> transfer(
+            List<String> ordreLignesID,
+            String codeChargement,
+            String originalOrdreId,
+            String societeId) {
+        return this.ligneChargementService
+                .transfer(ordreLignesID, codeChargement, originalOrdreId, societeId);
+    }
+
+    @GraphQLQuery
+    public List<GeoOrdreLigne> duplicate(
+            List<String> ordreLignesID,
+            String codeChargement,
+            String originalOrdreId,
+            String societeId) {
+        return this.ligneChargementService
+                .duplicate(ordreLignesID, codeChargement, originalOrdreId, societeId);
     }
 
 }
