@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
@@ -27,6 +28,8 @@ import io.leangen.graphql.execution.ResolutionEnvironment;
 public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneChargement, String> {
 
     private final EntityManager entityManager;
+    private final OrdreLigneService ordreLigneService;
+
     private final GeoOrdreRepository ordreRepository;
     private final GeoOrdreLigneRepository ordreLigneRepository;
     private final GeoFunctionOrdreRepository functionOrdreRepository;
@@ -35,6 +38,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
     private final GeoSocieteRepository societeRepository;
 
     public LigneChargementService(GeoLigneChargementRepository ligneChargementRepository,
+            OrdreLigneService ordreLigneService,
             GeoOrdreLigneRepository ordreLigneRepository,
             GeoOrdreRepository ordreRepository,
             EntityManager entityManager,
@@ -43,6 +47,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
             GeoFluxRepository fluxRepository,
             GeoSocieteRepository societeRepository) {
         super(ligneChargementRepository, GeoLigneChargement.class);
+        this.ordreLigneService = ordreLigneService;
         this.ordreLigneRepository = ordreLigneRepository;
         this.ordreRepository = ordreRepository;
         this.entityManager = entityManager;
@@ -68,7 +73,8 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
                 ol.getOrdre().setNumeroCamion(ligne.getNumeroCamion());
             if (ligne.getOrdreChargement() != null)
                 ol.getOrdre().setOrdreChargement(ligne.getOrdreChargement());
-            this.ordreLigneRepository.save(ol);
+            this.ordreLigneRepository.save(Hibernate.unproxy(ol, GeoOrdreLigne.class));
+            ligne.setLigne(ol);
         }
 
         return inputs;
