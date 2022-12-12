@@ -3,8 +3,11 @@ package fr.microtec.geo2.persistance.repository.ordres;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
@@ -35,4 +38,13 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
     Long countByOrdreAndGratuitIsTrue(GeoOrdre ordre);
 
     List<GeoOrdreLigne> getByIdIn(List<String> lignes);
+
+    @Query(name = "OrdreLigne.duplicateForChargement", nativeQuery = true)
+    @Modifying
+    @Transactional
+    void duplicateForChargement(
+            @Param("arg_orl_ref") String id,
+            @Param("arg_ord_ref") String ordreRef,
+            @Param("arg_orl_ref_orig") String ordreLigneOriginale);
+
 }

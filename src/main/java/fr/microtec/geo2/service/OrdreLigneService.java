@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.configuration.graphql.Summary;
 import fr.microtec.geo2.persistance.CriteriaUtils;
+import fr.microtec.geo2.persistance.GeoSequenceGenerator;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -265,6 +267,15 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
             }
         }
         return fetched;
+    }
+
+    public String generateId() {
+        Properties params = new Properties();
+
+        params.put("sequenceName", "F_SEQ_ORL_SEQ");
+        params.put("isSequence", false);
+
+        return (String) GeoSequenceGenerator.generate(this.entityManager, params);
     }
 
 }

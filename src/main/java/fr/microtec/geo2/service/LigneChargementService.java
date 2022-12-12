@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
@@ -136,6 +137,7 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
     }
 
     /** Duplicate ordre-lignes input to a chargement */
+    @Transactional
     public List<GeoOrdreLigne> duplicate(
             List<String> inputs,
             String codeChargement,
@@ -144,18 +146,15 @@ public class LigneChargementService extends GeoAbstractGraphQLService<GeoLigneCh
         this.controlLignes(inputs);
         GeoOrdre target = this.createOrdreChargement(codeChargement, originalOrdreId, societeId);
 
-        List<GeoOrdreLigne> fetched = this.ordreLigneRepository
+        return this.ordreLigneRepository
                 .findAll((root, cq, cb) -> root.get("id").in(inputs))
-                .parallelStream()
+                .stream()
                 .map(ligne -> {
-                    this.entityManager.detach(ligne);
-                    ligne.setId(null);
-                    ligne.setOrdre(target);
-                    return ligne;
+                    String id = this.ordreLigneService.generateId();
+                    this.ordreLigneRepository.duplicateForChargement(id, target.getId(), ligne.getId());
+                    return this.ordreLigneRepository.getOne(id);
                 })
                 .collect(Collectors.toList());
-
-        return this.ordreLigneRepository.saveAll(fetched);
     }
 
 }
