@@ -101,6 +101,8 @@ public interface GeoFunctionOrdreRepository {
             String arg_desc,
             String arg_pal_code);
 
+    FunctionResult fResaAutoOrdre(String arg_ord_ref, String arg_username);
+
     FunctionResult fGetInfoResa(String orlRef);
 
     FunctionResult ofSauveOrdre(String ordRef);

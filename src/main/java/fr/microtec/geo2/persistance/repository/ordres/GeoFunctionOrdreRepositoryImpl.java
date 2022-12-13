@@ -13,6 +13,7 @@ import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.function.AbstractFunctionsRepositoryImpl;
 import fr.microtec.geo2.persistance.repository.function.FunctionQuery;
+import fr.microtec.geo2.service.FunctionOrdreService;
 
 @Repository
 public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryImpl
@@ -231,6 +232,17 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachOutput("nb_dispo", Integer.class);
 
         return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fResaAutoOrdre(String arg_ord_ref, String arg_username) {
+        FunctionQuery query = this.build("F_RESA_AUTO_ORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+        query.attachInput("arg_username", String.class, arg_username);
+        query.attachOutput("result", GeoStringArrayType.class);
+
+        return FunctionOrdreService.parseResaAutoResult(query.fetch());
     }
 
     @Override

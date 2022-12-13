@@ -149,6 +149,13 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fResaAutoOrdre(
+            @GraphQLArgument(name = "ordRef") String arg_ord_ref,
+            @GraphQLArgument(name = "username") String arg_username) {
+        return this.repository.fResaAutoOrdre(arg_ord_ref, arg_username);
+    }
+
+    @GraphQLQuery
     public FunctionResult geoPrepareEnvois(
             @GraphQLArgument(name = "ordRef") String ordRef,
             @GraphQLArgument(name = "fluCode") String fluCode,

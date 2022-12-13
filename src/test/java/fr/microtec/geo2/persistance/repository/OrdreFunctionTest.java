@@ -324,6 +324,14 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testFResaAutoOrdre() {
+        FunctionResult result = this.functionOrdreRepository
+                .fResaAutoOrdre("1976111", "BRUNO");
+
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
     public void testFGetInfoResa() {
         FunctionResult result = this.functionOrdreRepository
                 .fGetInfoResa("F2230C");
