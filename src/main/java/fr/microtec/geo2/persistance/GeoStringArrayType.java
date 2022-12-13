@@ -14,13 +14,15 @@ import java.sql.*;
 import java.util.Arrays;
 
 /**
- * Hibernate Type for converting Oracle 'P_STR_TAB_TYPE' to String[] in JAVA and vis-versa.
+ * Hibernate Type for converting Oracle 'P_STR_TAB_TYPE' to String[] in JAVA and
+ * vis-versa.
  */
-public class GeoStringArrayType implements UserType, ProcedureParameterNamedBinder, ProcedureParameterExtractionAware<String[]> {
+public class GeoStringArrayType
+        implements UserType, ProcedureParameterNamedBinder, ProcedureParameterExtractionAware<String[]> {
 
     @Override
     public int[] sqlTypes() {
-        return new int[]{ Types.ARRAY };
+        return new int[] { Types.ARRAY };
     }
 
     @Override
@@ -31,7 +33,7 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
         if (x instanceof String[] && y instanceof String[]) {
-            return Arrays.deepEquals((String[])x, (String[])y);
+            return Arrays.deepEquals((String[]) x, (String[]) y);
         } else {
             return false;
         }
@@ -43,17 +45,19 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner)
+            throws HibernateException, SQLException {
         Array array = rs.getArray(names[0]);
 
         return array != null ? array.getArray() : null;
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
+            throws HibernateException, SQLException {
         if (value != null) {
             // Create Oracle array
-            ARRAY array = this.convertToClobArray(session, (String []) value);
+            ARRAY array = this.convertToClobArray(session, (String[]) value);
 
             // bind array
             st.setArray(index, array);
@@ -64,7 +68,7 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
 
     @Override
     public Object deepCopy(Object value) throws HibernateException {
-        String[] a = (String[])value;
+        String[] a = (String[]) value;
 
         return Arrays.copyOf(a, a.length);
     }
@@ -95,12 +99,13 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
     }
 
     @Override
-    public void nullSafeSet(CallableStatement statement, Object value, String name, SharedSessionContractImplementor session) throws SQLException {
+    public void nullSafeSet(CallableStatement statement, Object value, String name,
+            SharedSessionContractImplementor session) throws SQLException {
         OracleCallableStatement stmt = statement.unwrap(OracleCallableStatement.class);
 
         if (value != null) {
             // Create Oracle array
-            ARRAY array = this.convertToClobArray(session, (String []) value);
+            ARRAY array = this.convertToClobArray(session, (String[]) value);
 
             // bind array
             stmt.setArray(name, array);
@@ -113,18 +118,18 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
         OracleConnection connection = session.connection().unwrap(OracleConnection.class);
 
         Clob[] clobValues = Arrays.stream((String[]) values)
-            .map(v -> {
-                Clob clob = null;
-                try {
-                    clob = connection.createClob();
-                    clob.setString(1, v);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                .map(v -> {
+                    Clob clob = null;
+                    try {
+                        clob = connection.createClob();
+                        clob.setString(1, v);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
 
-                return clob;
-            })
-            .toArray(Clob[]::new);
+                    return clob;
+                })
+                .toArray(Clob[]::new);
 
         // Create Oracle array
         return connection.createARRAY(getOracleTypeName(), clobValues);
@@ -136,23 +141,33 @@ public class GeoStringArrayType implements UserType, ProcedureParameterNamedBind
     }
 
     @Override
-    public String[] extract(CallableStatement statement, int startIndex, SharedSessionContractImplementor session) throws SQLException {
+    public String[] extract(CallableStatement statement, int startIndex, SharedSessionContractImplementor session)
+            throws SQLException {
         return this.convertToStringArray(statement.getArray(startIndex));
     }
 
     @Override
-    public String[] extract(CallableStatement statement, String[] paramNames, SharedSessionContractImplementor session) throws SQLException {
+    public String[] extract(CallableStatement statement, String[] paramNames, SharedSessionContractImplementor session)
+            throws SQLException {
         return this.convertToStringArray(statement.getArray(paramNames[0]));
     }
 
     private String[] convertToStringArray(Array values) throws SQLException {
         Clob[] clobValues = (Clob[]) values.getArray();
 
-        if (clobValues == null) return null;
+        if (clobValues == null)
+            return null;
 
         return Arrays.stream(clobValues)
-            .map(Clob::toString)
-            .toArray(String[]::new);
+                .map(c -> {
+                    try {
+                        return c.getSubString(1, (int) c.length());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        return e.getMessage();
+                    }
+                })
+                .toArray(String[]::new);
     }
 
     /**
