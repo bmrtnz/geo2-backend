@@ -85,10 +85,15 @@ public class ProgramController {
     public static class ProgramResponse {
         Integer rowCount = 0;
         Integer ordreCount = 0;
+        Integer prixMiniCount = 0;
         List<ProgramRow> rows = new ArrayList<>();
 
         public void incrementOrdreCount() {
             this.ordreCount++;
+        }
+
+        public void incrementPrixMiniCount() {
+            this.prixMiniCount++;
         }
 
         public void pushRow(ProgramRow p) {
