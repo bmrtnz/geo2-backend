@@ -195,7 +195,7 @@ BEGIN
         ls_flagbaf := 'O';
     end if;
 
-    f_return_forfaits_trp( arg_entrepot,ls_inc_code,ld_trp_dev_pu,ls_trp_bta_code,ls_trp_dev_code,res,msg,forfait_res);
+    f_return_forfaits_trp( arg_entrepot,ls_inc_code,ld_trp_dev_pu,ls_trp_bta_code,ls_trp_dev_code,null,res,msg,forfait_res);
     If forfait_res > 0 Then
             select   dev_tx into  ld_trp_dev_taux
             from  geo_devise_ref
