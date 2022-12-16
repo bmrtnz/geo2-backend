@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 
 import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
-import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepartMaritime;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
@@ -128,8 +128,19 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllPlanningDepartMaritime() {
-        List<GeoPlanningDepartMaritime> list = this.ordreRepository
+        List<GeoPlanningMaritime> list = this.ordreRepository
                 .allPlanningDepartMaritime(
+                        "SA",
+                        LocalDateTime.of(2021, 10, 25, 0, 0, 0),
+                        LocalDateTime.of(2021, 10, 26, 23, 59, 59));
+
+        Assertions.assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void testAllPlanningArriveMaritime() {
+        List<GeoPlanningMaritime> list = this.ordreRepository
+                .allPlanningArriveMaritime(
                         "SA",
                         LocalDateTime.of(2021, 10, 25, 0, 0, 0),
                         LocalDateTime.of(2021, 10, 26, 23, 59, 59));

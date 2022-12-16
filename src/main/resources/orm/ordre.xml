@@ -121,7 +121,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
 
   <named-native-query
     name="Ordre.allPlanningDepartMaritime"
-    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepartMaritime"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime"
   >
     <query>
     <![CDATA[
@@ -140,6 +140,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_ordre.trp_code,
                 geo_ordre.nordre,
                 geo_ordre.ref_logistique,
+                geo_ordre.livdatp,
                 CASE WHEN geo_ordlog.immatriculation IS NOT NULL THEN geo_ordlog.immatriculation || ' ' ELSE '' END ||
                 CASE WHEN geo_ordlog.container IS NOT NULL THEN geo_ordlog.container || ' ' ELSE '' END ||
                 CASE WHEN geo_ordlog.plomb IS NOT NULL THEN 'PLOMB ' || geo_ordlog.plomb  || ' ' ELSE '' END ||
@@ -156,7 +157,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 ( geo_ordlog.datdep_fou_p between :arg_date_min and :arg_date_max )
                 )   AND geo_ordre.flannul = 'N'
         GROUP BY
-                    to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
+                to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
                 geo_ordre.nordre,
                 geo_ordre.cli_code,
                 geo_ordre.cen_code,
@@ -164,6 +165,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_entrep.ville,
                 geo_entrep.pay_code,
                 geo_ordre.ref_logistique,
+                geo_ordre.livdatp,
                 geo_ordlog.immatriculation,
                 geo_ordlog.container,
                 geo_ordlog.plomb,
@@ -175,6 +177,84 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_ordlog.fou_code ASC,
                 geo_ordlog.datdep_fou_p ASC,
                 geo_ordre.nordre ASC ) rest
+            ]]>
+    </query>
+  </named-native-query>
+
+  <named-native-query
+    name="Ordre.allPlanningArriveMaritime"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime"
+  >
+    <query>
+    <![CDATA[
+        SELECT rownum, rest.*
+        FROM (
+            SELECT
+                to_char(geo_ordlog.datdep_fou_p, 'yymmdd') as datdep_fou_p_raw,
+                geo_ordlog.datdep_fou_p,
+                sum(geo_ordlig.cde_nb_pal) as cde_nb_pal,
+                geo_ordlog.fou_code,
+                geo_ordre.cli_code,
+                geo_ordre.cen_code,
+                geo_entrep.raisoc,
+                geo_entrep.ville,
+                geo_entrep.pay_code,
+                geo_ordre.trp_code,
+                geo_ordre.nordre,
+                geo_ordre.ref_logistique,
+                geo_ordre.livdatp,
+                CASE
+                    WHEN geo_ordlog.immatriculation IS NOT NULL THEN geo_ordlog.immatriculation
+                    ELSE ''
+                END || CASE
+                    WHEN geo_ordlog.container IS NOT NULL THEN geo_ordlog.container
+                    ELSE ''
+                END || CASE
+                    WHEN geo_ordlog.plomb IS NOT NULL THEN 'PLOMB ' || geo_ordlog.plomb
+                    ELSE ''
+                END || CASE
+                    WHEN geo_ordlog.DETECTEUR_TEMP IS NOT NULL THEN 'ENR. TEMP. ' || geo_ordlog.DETECTEUR_TEMP
+                    ELSE ''
+                END as full_ref_logistique
+            FROM
+                geo_ordre,
+                geo_ordlig,
+                geo_ordlog,
+                geo_entrep
+            WHERE
+                (geo_ordlig.ord_ref = geo_ordre.ord_ref)
+                and (geo_ordlog.ord_ref = geo_ordre.ord_ref)
+                and (geo_entrep.cen_ref = geo_ordre.cen_ref)
+                and (
+                    (geo_ordre.sco_code in ('MAR', 'AFA'))
+                    AND (geo_ordre.soc_code = :arg_soc_code)
+                    AND (
+                        geo_ordre.livdatp between :arg_date_min
+                        and :arg_date_max
+                    )
+                )
+                AND geo_ordre.flannul = 'N'
+            GROUP BY
+                to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
+                geo_ordre.nordre,
+                geo_ordre.cli_code,
+                geo_ordre.cen_code,
+                geo_entrep.raisoc,
+                geo_entrep.ville,
+                geo_entrep.pay_code,
+                geo_ordre.ref_logistique,
+                geo_ordre.livdatp,
+                geo_ordlog.immatriculation,
+                geo_ordlog.container,
+                geo_ordlog.plomb,
+                geo_ordlog.DETECTEUR_TEMP,
+                geo_ordlog.datdep_fou_p,
+                geo_ordlog.fou_code,
+                geo_ordre.trp_code
+            ORDER BY
+                geo_ordre.livdatp ASC,
+                geo_ordre.nordre ASC,
+                geo_ordlog.fou_code ASC ) rest
             ]]>
     </query>
   </named-native-query>
