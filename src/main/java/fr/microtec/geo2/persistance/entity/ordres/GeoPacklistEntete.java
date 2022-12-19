@@ -7,12 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
+import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import lombok.Data;
 
 @Data
@@ -22,6 +29,10 @@ public class GeoPacklistEntete {
 
     @Id
     @Column(name = "ref_packlist")
+    @GeneratedValue(generator = "GeoPacklistGenerator")
+    @GenericGenerator(name = "GeoPacklistGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "seq_pack_list"),
+    })
     private Integer id;
 
     @NotNull
@@ -45,8 +56,9 @@ public class GeoPacklistEntete {
     private String mail;
 
     @NotNull
-    @Column(name = "ind_cli_ent", nullable = false)
-    private Boolean cliEnt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ind_cli_ent", nullable = false)
+    private GeoTypeTiers typeTier;
 
     @Column(name = "ind_traite")
     @Convert(converter = BooleanIntegerConverter.class)
