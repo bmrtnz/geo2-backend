@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class GeoPacklistEntete {
     @GenericGenerator(name = "GeoPacklistGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
             @Parameter(name = "sequenceName", value = "seq_pack_list"),
     })
-    private Integer id;
+    private BigDecimal id;
 
     @NotNull
     @Column(name = "date_dep", nullable = false)

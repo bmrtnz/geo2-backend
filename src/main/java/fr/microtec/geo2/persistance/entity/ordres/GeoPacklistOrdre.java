@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +19,7 @@ public class GeoPacklistOrdre {
 
     @Id
     @Column(name = "ref_packlist")
-    private Integer id;
+    private BigDecimal id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ref_packlist", insertable = false, updatable = false)

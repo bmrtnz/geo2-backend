@@ -1,5 +1,7 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.math.BigDecimal;
+
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoPacklistGraphQLService extends GeoAbstractGraphQLService<GeoPacklistEntete, Integer> {
+public class GeoPacklistGraphQLService extends GeoAbstractGraphQLService<GeoPacklistEntete, BigDecimal> {
 
     public GeoPacklistGraphQLService(GeoPacklistRepository repository) {
         super(repository, GeoPacklistEntete.class);
