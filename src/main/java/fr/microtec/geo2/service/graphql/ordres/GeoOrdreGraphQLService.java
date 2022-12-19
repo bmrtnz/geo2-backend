@@ -83,6 +83,17 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     }
 
     @GraphQLQuery
+    public List<GeoPlanningMaritime> allPlanningArriveMaritime(
+            @GraphQLArgument(name = "societeCode") String societeCode,
+            @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
+            @GraphQLArgument(name = "dateMax") LocalDateTime dateMax) {
+        return ((GeoOrdreRepository) this.repository).allPlanningArriveMaritime(
+                societeCode,
+                dateMin,
+                dateMax);
+    }
+
+    @GraphQLQuery
     public Float sommeColisCommandes(@GraphQLContext GeoOrdre ordre) {
         return this.ordreService.fetchSommeColisCommandes(ordre);
     }
