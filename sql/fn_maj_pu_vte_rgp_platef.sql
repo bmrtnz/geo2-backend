@@ -61,8 +61,8 @@ BEGIN
 
         -- v.GRP_RGP
         for h in C_orig_pu_vente(v.GRP_RGP) loop
-            ld_pds_net			:= round(h.pdnet_client * h.cde_nb_col, 0);					-- poids net calculé
-            ld_pds_brut			:= round(ld_pds_net + (h.col_tare * h.cde_nb_col), 0);	-- poids brut calculé
+            ld_pds_net			:= round(h.pdnet_client * h.cde_nb_col, 2);					-- poids net calculé
+            ld_pds_brut			:= round(ld_pds_net + (h.col_tare * h.cde_nb_col), 2);	-- poids brut calculé
             IF h.u_par_colis =  0 or h.u_par_colis is null then
                 h.u_par_colis := 1;
             end if;

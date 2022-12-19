@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -30,11 +31,14 @@ import fr.microtec.geo2.controller.ProgramController.ProgramResponse;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse.ProgramRow;
 import fr.microtec.geo2.persistance.StringEnum;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
 import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoBaseTarifRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoGroupageRepository;
@@ -54,10 +58,12 @@ public class ProgramService {
 
     private final GeoEntrepotRepository entrepotRepo;
     private final GeoOrdreRepository ordreRepo;
+    private final GeoOrdreLigneRepository olRepo;
     private final GeoOrdreLogistiqueRepository ordreLogistiqueRepo;
     private final GeoFournisseurRepository fournisseurRepo;
     private final GeoGroupageRepository groupageRepo;
     private final GeoTransporteurRepository transporteurRepo;
+    private final GeoBaseTarifRepository baseTarifRepo;
     private final GeoFunctionOrdreRepository functionOrdreRepo;
     private final EntityManager entityManager;
 
@@ -65,18 +71,22 @@ public class ProgramService {
             EntityManager entityManager,
             GeoEntrepotRepository entrepotRepo,
             GeoOrdreRepository ordreRepo,
+            GeoOrdreLigneRepository olRepo,
             GeoOrdreLogistiqueRepository ordreLogistiqueRepo,
             GeoFournisseurRepository fournisseurRepo,
             GeoGroupageRepository groupageRepo,
             GeoTransporteurRepository transporteurRepo,
+            GeoBaseTarifRepository baseTarifRepo,
             GeoFunctionOrdreRepository functionOrdreRepo) {
         this.entityManager = entityManager;
         this.entrepotRepo = entrepotRepo;
         this.ordreRepo = ordreRepo;
+        this.olRepo = olRepo;
         this.ordreLogistiqueRepo = ordreLogistiqueRepo;
         this.fournisseurRepo = fournisseurRepo;
         this.groupageRepo = groupageRepo;
         this.transporteurRepo = transporteurRepo;
+        this.baseTarifRepo = baseTarifRepo;
         this.functionOrdreRepo = functionOrdreRepo;
     }
 
@@ -156,18 +166,19 @@ public class ProgramService {
         int COL_ARTS_REF = 3;
         int COL_DEPOT_NAME = 5;
         int COL_PRIX_VENTE = 6;
-        int COL_PACKHOUSE = 7;
-        int COL_DEPART_DATE = 9;
-        int COL_DELIVERY_DATE = 11;
-        // int COL_DEPOT_DATE = 13;
-        int COL_QTY_CASE = 15;
-        int COL_QTY_PALLETS = 16;
-        int COL_CASES_PER_PALLETS = 17;
-        int COL_BB_DATE = 18;
-        int COL_JC = 19;
-        int COL_HAULIER = 20;
-        int COL_ORD_CREATE = 21;
-        int COL_ORD_PERE_SA = 22;
+        int COL_PRIX_MINI_SA = 7;
+        int COL_PACKHOUSE = 8;
+        int COL_DEPART_DATE = 10;
+        int COL_DELIVERY_DATE = 12;
+        // int COL_DEPOT_DATE = 14;
+        int COL_QTY_CASE = 16;
+        int COL_QTY_PALLETS = 17;
+        int COL_CASES_PER_PALLETS = 18;
+        int COL_BB_DATE = 19;
+        int COL_JC = 20;
+        int COL_HAULIER = 21;
+        int COL_ORD_CREATE = 22;
+        int COL_ORD_PERE_SA = 23;
 
         // load sheet
         Workbook workbook = ProgramService.loadFile(chunks);
@@ -228,6 +239,8 @@ public class ProgramService {
             List<String> ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().split("-"));
             Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
 
+            Double ld_prix_mini_sa;
+
             for (int i = 1; i < ls_array_programme.size() + 1; i++) {
                 if (ls_array_programme.get(i) == ls_programme)
                     ls_depart_date_ordre = ls_array_date_depart_ordre.get(i);
@@ -238,7 +251,7 @@ public class ProgramService {
             if (ls_load_reference.startsWith("TES")) {
                 ls_soc_code.set("BUK");
                 ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
-            } else if (ls_load_reference.startsWith("SP")) {
+            } else if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS")) {
                 ls_soc_code.set("SA");
                 ls_cli_ref.set("007488"); // BWUK 007488
             } else {
@@ -252,7 +265,7 @@ public class ProgramService {
             String ls_concat;
             String ls_ref_cli;
 
-            if (!ls_load_reference.startsWith("SP")) { // TES......./
+            if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) { // TES......./
                 if (ls_array_load[1].startsWith("BWTRUE")) {
                     ls_ind_mod_liv.set("D");
                     ls_concat = " " + ls_ind_mod_liv.get() + "%";
@@ -322,6 +335,8 @@ public class ProgramService {
                 try {
                     if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("NO DATE/NO BB"))
                         ls_dluo = "SANS BOX ; SANS IMPRESSION";
+                    if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("SANS BOX / SANS IMPRESSION"))
+                        ls_dluo = "SANS BOX / SANS IMPRESSION";
                 } catch (Exception e2) {
                 }
             }
@@ -373,7 +388,9 @@ public class ProgramService {
                 if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
                     ls_create_ligne = 'O';
                     if (!ls_ord_ref.get().equals(ls_ordref_inscrit_prec)) {
-                        ls_ordre_cree.add(ls_ord_ref.get());
+                        if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) {
+                            ls_ordre_cree.add(ls_ord_ref.get());
+                        }
                         ls_ordref_inscrit_prec = ls_ord_ref.get();
                         ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
                         pRow.setOrdreNum(ls_nordre.get());
@@ -383,11 +400,16 @@ public class ProgramService {
                     ls_nordre.set("");
                     ls_create_ligne = 'N';
                     pRow.pushMessage("Numéro d'ordre invalide: " + ls_ord_ref);
+                    row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
+                    row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
                 }
             }
 
             if (ls_create_ligne.equals('O')) {
-                row.getCell(COL_ORD_CREATE).setCellValue(ls_nordre.get());
+                if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS"))
+                    row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(ls_nordre.get());
+                else
+                    row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(ls_nordre.get());
 
                 // Test si on est dans le cas de demi-palette
                 if ((ld_qty_pallets - ll_qty_pallets == 0) || ll_qty_pallets == 0) {
@@ -451,11 +473,19 @@ public class ProgramService {
 
                         if (ls_art_existe) {
                             String ls_prog = "";
-                            if (ls_programme.startsWith("TES")
-                                    || ls_programme.startsWith("SP"))
+                            if (ls_programme.startsWith("TES"))
                                 ls_prog = "TESCO";
+                            else if (ls_programme.startsWith("NEW") || ls_programme.startsWith("ISS"))
+                                ls_prog = "SP";
                             else if (ls_programme.startsWith("OF"))
                                 ls_prog = "ORCHARD";
+
+                            if (ls_prog.equals("TESCO"))
+                                ld_prix_mini_sa = 0d;
+                            else if (ls_prog.equals("SP")) {
+                                ld_prix_mini_sa = row.getCell(COL_PRIX_MINI_SA).getNumericCellValue();
+                            } else
+                                ld_prix_mini_sa = 0d;
 
                             FunctionResult ls_rc = this.functionOrdreRepo.fCreateLigneOrdre(
                                     ls_ord_ref.get(),
@@ -479,7 +509,8 @@ public class ProgramService {
                                 continue outer;
                             }
 
-                            row.getCell(COL_ORD_CREATE).setCellValue(ls_nordre.get());
+                            row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                    .setCellValue(ls_nordre.get());
 
                             // CREER ORDLOG
 
@@ -532,6 +563,9 @@ public class ProgramService {
                     }
 
                 } // boucle demi-palettes
+            } else {
+                row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
+                row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
             }
 
             res.pushRow(pRow);
@@ -539,6 +573,8 @@ public class ProgramService {
         }
 
         Integer ll_creation_ordre_sa = 0;
+        String ls_nordre_regroup = "";
+        String ls_nordre_regroup_prec = "";
         for (String ll_ord : ls_ordre_cree) {
             Boolean lb_no_dupplic = false;
             val ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.equal(root.get("id"), ll_ord));
@@ -551,10 +587,11 @@ public class ProgramService {
                         lb_no_dupplic = true;
                 }
                 if (lb_no_dupplic == false) {
+                    ls_nordre_regroup_prec = ls_nordre_regroup;
                     FunctionResult ll_return = this.functionOrdreRepo
                             .fnMajOrdreRegroupementV2(ll_ord, societe, generic, utilisateur);
                     if (ll_return.getRes() == FunctionResult.RESULT_OK) {
-                        String ls_nordre_regroup = this.ordreRepo.getOne(ll_ord).getNumeroRGP();
+                        ls_nordre_regroup = this.ordreRepo.getOne(ll_ord).getNumeroRGP();
                         // écriture dans le fichier du n° ordre de regroupement
                         Integer ll_row = 2;
                         Row row = sheet.getRow(ll_row);
@@ -562,10 +599,16 @@ public class ProgramService {
                         while (!ls_value.isBlank()) {
                             // do while not IsNull(ls_value) and ls_value <> ""
                             if (ls_value.equals(ls_nordre))
-                                row.getCell(COL_ORD_PERE_SA).setCellValue(ls_nordre_regroup);
+                                row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                        .setCellValue(ls_nordre_regroup);
                             ll_row++;
                             ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
-                            ll_creation_ordre_sa++;
+                        }
+                        try {
+                            if (!ls_nordre_regroup.equals(ls_nordre_regroup_prec)) {
+                                ll_creation_ordre_sa++;
+                            }
+                        } catch (Exception e) {
                         }
                     } else {
                         res.getRow(ls_nordre).get().pushErreur("Erreur création dupplication SA ORDRE " + ll_ord);
@@ -573,6 +616,93 @@ public class ProgramService {
                 }
             }
         }
+
+        // debut mise à jour des prix MINI sur les ordres SA
+        int ll_cpt_update_prix_mini = 0;
+        Integer ll_row = 2;
+
+        // st_progress.text = "Début mise à jour des prix MINI des ordres SA autre que
+        // programme 'NEW' et 'ISS'"
+        String ls_ordre_sa_prec = "";
+        String ls_programme = sheet.getRow(ll_row).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+
+        while (ls_programme != null) {
+
+            final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
+            try {
+                ls_ordre_sa.set(Double.toString(sheet.getRow(ll_row).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
+            } catch (Exception e) {
+                ls_ordre_sa.set(sheet.getRow(ll_row).getCell(COL_ORD_PERE_SA).getStringCellValue());
+            }
+            if (!ls_ordre_sa.get().isBlank()) {
+                int ll_pos = ls_programme.indexOf('/');
+                ls_programme = ls_programme.substring(1, ll_pos - 1);
+                // l'alimentation du prix MINI est faite au moment de la création de la ligne
+                if (!ls_programme.startsWith("NEW")
+                        && (ls_programme.startsWith("ISS") || ls_programme.startsWith("TES"))) {
+                    List<String> ls_array_art = List
+                            .of(sheet.getRow(ll_row).getCell(COL_ARTS_REF).getStringCellValue().split("-"));
+                    Double ld_prix_mini_sa = sheet.getRow(ll_row).getCell(COL_PRIX_MINI_SA).getNumericCellValue();
+                    List<String> ls_array_art_sa = new ArrayList<>();
+                    if (!ls_ordre_sa.get().equals(ls_ordre_sa_prec)) {
+                        ls_ordre_sa_prec = ls_ordre_sa.get();
+                        // int ll_ind = 0;
+
+                        val lignes = this.olRepo.findAll((root, cq, cb) -> cb.and(
+                                cb.equal(root.get("ordre").get("numero"), ls_ordre_sa.get()),
+                                cb.equal(root.get("societe").get("id"), "SA"),
+                                cb.isNull(root.get("achatPrixUnitaire")),
+                                cb.isNull(root.get("achatUnite").get("id")),
+                                cb.equal(root.get("ordre").get("campagne"), root.get("societe").get("campagne"))));
+
+                        for (GeoOrdreLigne ligne : lignes) {
+                            ls_array_art_sa.add(ligne.getArticle().getId());
+                            // ll_ind++;
+                        }
+                    }
+
+                    for (int ll_ind_sa = 0; ll_ind_sa < ls_array_art_sa.size(); ll_ind_sa++) {
+                        for (int ll_ind = 0; ll_ind < ls_array_art.size(); ll_ind++) {
+                            if (ls_array_art_sa.get(ll_ind_sa).equals(ls_array_art.get(ll_ind))) {
+                                val cur_art = ls_array_art.get(ll_ind);
+                                val cur_art_sa = ls_array_art_sa.get(ll_ind_sa);
+                                this.olRepo.findOne((root, cq, cb) -> cb.and(
+                                        cb.equal(root.get("ordre").get("id"), ls_ordre_sa.get()),
+                                        cb.equal(root.get("article").get("id"), cur_art)))
+                                        .ifPresent(ligne -> {
+                                            ligne.setAchatPrixUnitaire(ld_prix_mini_sa);
+                                            ligne.setAchatUnite(this.baseTarifRepo.getOne("COLIS"));
+                                            ligne.setAchatDevise("EUR");
+                                            ligne.setAchatDeviseTaux(1d);
+                                            ligne.setAchatDevisePrixUnitaire(ld_prix_mini_sa);
+                                            try {
+                                                this.olRepo.save(ligne);
+                                                res.incrementPrixMiniCount();
+                                            } catch (Exception e) {
+                                                res.getRow(ligne.getNumero())
+                                                        .ifPresent(r -> r.pushErreur(
+                                                                "Erreur update prix mini pour ORD_REF: "
+                                                                        + ls_ordre_sa.get()
+                                                                        + ", ARTICLE: "
+                                                                        + cur_art_sa));
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                }
+            }
+            ll_row++;
+            try {
+                ls_programme = sheet.getRow(ll_row).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+            } catch (Exception e) {
+                ls_programme = null;
+            }
+
+        }
+
+        // st_progress.text = "Fin mise à jour des prix MINI des ordres SA"
+        // fin mise à jour des prix MINI sur les ordres SA
 
         res.setOrdreCount(ll_creation_ordre_sa);
 
@@ -820,7 +950,8 @@ public class ProgramService {
                             continue outer;
                         }
 
-                        row.getCell(COL_ORD_CREATE).setCellValue(ls_nordre.get());
+                        row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                .setCellValue(ls_nordre.get());
 
                         // CREER ORDLOG
 

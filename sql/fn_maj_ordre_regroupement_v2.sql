@@ -189,7 +189,6 @@ AS
     ls_tvt_code_mark varchar2(50);
     ls_sco_code_mark varchar2(50);
     ls_col_code_mark varchar2(50);
-    ls_fou_code_mark varchar2(50);
     ls_frais_unite_mark varchar2(50);
     ls_ind_grossiste varchar2(50) :='N';
     ls_ccw_code varchar2(50);
@@ -285,6 +284,10 @@ BEGIN
         select TRS_CODE into ls_decl_doua  from GEO_TRANSI T
         where  ls_transp like T.TRS_CODE||'%'  and
                     T.IND_DECL_DOUANIER ='O';
+        --Demande de SQ le 31/10/2022
+        --Si transporteur PELLIET alors déclaration de douane effectué par LGLCUSTOMS
+        if ls_transp = 'PELLIET' then ls_decl_doua := 'LGLCUSTOMS'; end if;
+
     exception when no_data_found then
         ls_decl_doua := 'BOLLORE';
     end;
@@ -984,6 +987,54 @@ BEGIN
         end loop;
 
 
+        --declare C_GEN_LIG_REGROUP CURSOR FOR
+        --            select  R.GRP_RGP,
+        --				R.FOU_CODE_ORIG,
+        --				L.PROPR_CODE,
+        --				L.PAL_CODE,
+        --			     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE  L.ACH_DEV_PU  END ,
+        --				 CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE L.VTE_BTA_CODE END,
+        --				 CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE  NULL END END,
+        --				 CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'KILO' ELSE NULL END END,
+        --				CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE   NULL END END,
+        --				 CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'EUR' ELSE 'EUR' END ,
+        --			     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE  CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 1 ELSE 1 END  END,
+        --				L.LIB_DLV,L.BAC_CODE,R.PAL_NB_COL_ORIG,V.VAR_RISTOURNE,V.FRAIS_PU,
+        --				L.ESP_CODE,
+        --				L.PAL_NB_PALINTER,
+        --				L.FRAIS_DESC,
+        --				V.FRAIS_UNITE,
+        --				sum(L.CDE_NB_COL ),
+        --				sum(L.CDE_NB_PAL),
+        --				sum(CDE_PDS_BRUT),
+        --				sum(CDE_PDS_NET)
+        --            from GEO_GEST_REGROUP R, GEO_ORDLIG L, geo_article_colis A,  geo_origine O,geo_variet V, GEO_ORDRE RGP
+        --            where  R.ORD_REF_RGP =  :ls_ord_ref_regroup and
+        --					R.ORD_REF_ORIG=  L.ORD_REF and
+        --                       R.ORL_REF_ORIG = L.ORL_REF and
+        --					 L.ART_REF = A.ART_REF and
+        --					 A.esp_code = O.esp_code and
+        --			 		 A.ori_code = O.ori_code and
+        --					 A.esp_code = V.esp_code and
+        --					 A.var_code = V.var_code and
+        --					 R.ORD_REF_RGP = RGP.ORD_REF
+        --            group by R.GRP_RGP,
+        --				R.FOU_CODE_ORIG,
+        --				L.PROPR_CODE,
+        --				L.PAL_CODE,
+        --			     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE  L.ACH_DEV_PU  END ,
+        --				 CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE L.VTE_BTA_CODE END,
+        --				 CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE  NULL END END,
+        --				 CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'KILO' ELSE NULL END END,
+        --				CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE   NULL END END,
+        --				 CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'EUR' ELSE 'EUR' END ,
+        --			     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE  CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 1 ELSE 1 END  END,
+        --				L.LIB_DLV,L.BAC_CODE,R.PAL_NB_COL_ORIG,V.VAR_RISTOURNE,V.FRAIS_PU,
+        --				L.ESP_CODE,
+        --				L.PAL_NB_PALINTER,
+        --				L.FRAIS_DESC,
+        --				V.FRAIS_UNITE
+        --using sqlca;
 
 
         declare
@@ -995,11 +1046,11 @@ BEGIN
                     L.PAL_CODE,
                     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE  L.ACH_DEV_PU  END as f1,
                     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE L.VTE_BTA_CODE END as f2,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE  NULL END END as f3,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'KILO' ELSE NULL END END as f4,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE   NULL END END as f5,
-                    CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'EUR' ELSE 'EUR' END as f6,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE  CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 1 ELSE 1 END  END as f7,
+                    NULL as f3,
+                    NULL as f4,
+                    NULL as f5,
+                    'EUR' as f6,
+                    1 as f7,
                     L.LIB_DLV,
                     L.BAC_CODE,
                     R.PAL_NB_COL_ORIG,
@@ -1029,11 +1080,11 @@ BEGIN
                     L.PAL_CODE,
                     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE  L.ACH_DEV_PU  END ,
                     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE L.VTE_BTA_CODE END,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE  NULL END END,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'KILO' ELSE NULL END END,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN V.ach_pu_mini ELSE   NULL END END,
-                    CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 'EUR' ELSE 'EUR' END ,
-                    CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE')  THEN NULL ELSE  CASE WHEN (V.ach_pu_mini IS NOT NULL AND V.ach_pu_mini >0) AND A.MODE_CULTURE = 0 and O.ORI_CODE ='F'  and SUBSTR(A.COL_CODE,1,2)<> 'CP' THEN 1 ELSE 1 END  END,
+                    NULL,
+                    NULL,
+                    NULL,
+                    'EUR',
+                    1,
                     L.LIB_DLV,L.BAC_CODE,R.PAL_NB_COL_ORIG,V.VAR_RISTOURNE,V.FRAIS_PU,
                     L.ESP_CODE,
                     L.PAL_NB_PALINTER,
@@ -1107,21 +1158,31 @@ BEGIN
 
                             --LLEF: NEW table frais marketing/PEREQUATION
                             begin
-                                select L.orl_ref, A.mode_culture, A.cat_code, A.ori_code, A.var_code, O.tvt_code, O.sco_code, A.col_code, L.fou_code, A.ccw_code
-                                INTO ls_orl_ref_mark, ll_mode_culture_mark, ls_cat_code_mark, ls_ori_code_mark, ls_var_code_mark, ls_tvt_code_mark, ls_sco_code_mark, ls_col_code_mark, ls_fou_code_mark, ls_ccw_code_mark
-                                from geo_article_colis A, geo_ordlig L, geo_ordre O
-                                where L.ord_ref = arg_ord_ref_origine 	and
-                                        L.orl_ref = ls_orl_lig_rgp_tmp and
-                                        O.ord_ref = L.ord_ref			and
-                                        A.art_ref  = ls_art_ref_tmp;
-                                --	ll_k_frais = f_recup_frais(ls_var_code_mark, ls_cat_code_mark, ls_sco_code_mark, ls_tvt_code_mark, ll_mode_culture_mark, ls_ori_code_mark)
+                                -- select L.orl_ref, A.mode_culture, A.cat_code, A.ori_code, A.var_code, O.tvt_code, O.sco_code, A.col_code, L.fou_code, A.ccw_code
+                                -- INTO ls_orl_ref_mark, ll_mode_culture_mark, ls_cat_code_mark, ls_ori_code_mark, ls_var_code_mark, ls_tvt_code_mark, ls_sco_code_mark, ls_col_code_mark, ls_fou_code_mark, ls_ccw_code_mark
+                                -- from geo_article_colis A, geo_ordlig L, geo_ordre O
+                                -- where L.ord_ref = arg_ord_ref_origine 	and
+                                --         L.orl_ref = ls_orl_lig_rgp_tmp and
+                                --         O.ord_ref = L.ord_ref			and
+                                --         A.art_ref  = ls_art_ref_tmp;
+
+                                select A.mode_culture, A.cat_code, A.ori_code, A.var_code, A.col_code, A.ccw_code
+                                INTO ll_mode_culture_mark, ls_cat_code_mark, ls_ori_code_mark, ls_var_code_mark, ls_col_code_mark, ls_ccw_code_mark
+                                from geo_article_colis A
+                                where A.art_ref  = ls_art_ref_tmp;
+
+                                select  O.tvt_code, O.sco_code
+                                INTO ls_tvt_code_mark, ls_sco_code_mark
+                                from geo_ordre O
+                                where O.ord_ref = ls_ord_ref_regroup;
+
                                     f_recup_frais(ls_var_code_mark, ls_ccw_code_mark, ls_sco_code_mark, ls_tvt_code_mark, ll_mode_culture_mark, ls_ori_code_mark,ll_k_frais,msg);
 
                                     select accompte, frais_pu, frais_unite into ld_accompte, ld_frais_pu_mark, ls_frais_unite_mark
                                     from geo_attrib_frais
                                     where k_frais = ll_k_frais;
 
-                                    if (ls_fou_code_mark <> 'STEFLEMANS'  and  ls_ind_grossiste <>'O' )then
+                                    if (ls_fou_code_tmp <> 'STEFLEMANS'  and  ls_ind_grossiste <>'O' )then
                                             if (ld_accompte is not null AND ld_accompte >0) and substr(ls_col_code,1,2)<> 'CP' then
                                                 ls_ach_dev_taux_tmp		:=	1;
                                                 ls_ach_dev_code_tmp	:=	'EUR';
