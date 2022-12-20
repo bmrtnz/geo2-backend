@@ -1,7 +1,6 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,10 +49,10 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
     private GeoOrdre ordre;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fou_code", referencedColumnName = "fou_code")
+    @JoinColumn(name = "fou_code", referencedColumnName = "fou_code", insertable = false, updatable = false)
     private GeoFournisseur fournisseur;
 
-    @Column(name = "fou_code", insertable = false, updatable = false)
+    @Column(name = "fou_code")
     private String codeFournisseur;
 
     @Column(name = "flag_exped_fournni")
