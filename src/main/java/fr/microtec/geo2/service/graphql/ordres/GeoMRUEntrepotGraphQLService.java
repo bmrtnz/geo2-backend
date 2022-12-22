@@ -11,6 +11,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoMRUEntrepot;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUEntrepotKey;
 import fr.microtec.geo2.persistance.repository.ordres.GeoMRUEntrepotRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import fr.microtec.geo2.service.security.SecurityService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLMutation;
@@ -24,9 +25,12 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoMRUEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoMRUEntrepot, GeoMRUEntrepotKey> {
 
+    private final SecurityService securityService;
+
     public GeoMRUEntrepotGraphQLService(
-            GeoMRUEntrepotRepository repository) {
+            GeoMRUEntrepotRepository repository, SecurityService securityService) {
         super(repository, GeoMRUEntrepot.class);
+        this.securityService = securityService;
     }
 
     @GraphQLQuery
@@ -46,6 +50,18 @@ public class GeoMRUEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoM
     @GraphQLMutation
     public GeoMRUEntrepot saveMRUEntrepot(GeoMRUEntrepot mruEntrepot, @GraphQLEnvironment ResolutionEnvironment env) {
         return this.repository.save(mruEntrepot);
+    }
+
+    @GraphQLMutation
+    public void deleteOneMRUEntrepot(String entrepotId) {
+        ((GeoMRUEntrepotRepository) this.repository)
+                .deleteOneByEntrepotIdAndUtilisateur(entrepotId, this.securityService.getUser());
+    }
+
+    @GraphQLMutation
+    public void deleteAllMRUEntrepot() {
+        ((GeoMRUEntrepotRepository) this.repository)
+                .deleteAllByUtilisateur(this.securityService.getUser());
     }
 
 }
