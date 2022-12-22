@@ -1,6 +1,8 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -10,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.ordres.GeoPacklistEntete;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPacklistOrdre;
-import fr.microtec.geo2.persistance.repository.ordres.GeoPacklistRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoPacklistEnteteRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoPacklistOrdreRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLMutation;
@@ -23,10 +26,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoPacklistGraphQLService extends GeoAbstractGraphQLService<GeoPacklistEntete, BigDecimal> {
 
     private final EntityManager entityManager;
+    private final GeoPacklistOrdreRepository packlistOrdreRepository;
 
-    public GeoPacklistGraphQLService(GeoPacklistRepository repository, EntityManager entityManager) {
+    public GeoPacklistGraphQLService(GeoPacklistEnteteRepository repository,
+            GeoPacklistOrdreRepository packlistOrdreRepository, EntityManager entityManager) {
         super(repository, GeoPacklistEntete.class);
         this.entityManager = entityManager;
+        this.packlistOrdreRepository = packlistOrdreRepository;
     }
 
     @GraphQLMutation
@@ -35,12 +41,13 @@ public class GeoPacklistGraphQLService extends GeoAbstractGraphQLService<GeoPack
             @GraphQLEnvironment ResolutionEnvironment env) {
         GeoPacklistEntete e = this.saveEntity(packlistEntete, env);
 
-        e.getOrdres().parallelStream().forEach(o -> {
-            GeoPacklistOrdre m = new GeoPacklistOrdre();
-            m.setId(e.getId());
-            m.setOrdre(o.getOrdre());
-            this.entityManager.persist(m);
-        });
+        // saving ordres
+        List<GeoPacklistOrdre> l = e.getOrdres().stream()
+                .map(o -> {
+                    o.setId(e.getId());
+                    return o;
+                }).collect(Collectors.toList());
+        this.packlistOrdreRepository.saveAll(l);
 
         return this.repository.getOne(e.getId());
     }

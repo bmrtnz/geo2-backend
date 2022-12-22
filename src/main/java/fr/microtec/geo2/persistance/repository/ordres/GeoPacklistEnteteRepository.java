@@ -8,5 +8,5 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoPacklistEntete;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
-public interface GeoPacklistRepository extends GeoRepository<GeoPacklistEntete, BigDecimal> {
+public interface GeoPacklistEnteteRepository extends GeoRepository<GeoPacklistEntete, BigDecimal> {
 }
