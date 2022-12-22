@@ -199,6 +199,9 @@ public class ProgramService {
         Integer ll_parse;
         String ls_stock_dern_loadref = "";
 
+        final AtomicReference<String> ls_nordre = new AtomicReference<>("");
+        final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
+
         outer: for (Row row : sheet) {
             ProgramRow pRow = new ProgramRow();
 
@@ -346,14 +349,12 @@ public class ProgramService {
                     cb.equal(root.get("entrepot"), entrepot.get()),
                     cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
 
-            final AtomicReference<String> ls_nordre = new AtomicReference<>("");
-            final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
             if (existing_ordre.isPresent()) {
 
-                if (ls_load_reference != ls_load_ref_prec && entrepot.get().getId() != ls_cen_ref_prec) {
+                if (!ls_load_reference.equals(ls_load_ref_prec) && !entrepot.get().getId().equals(ls_cen_ref_prec)) {
 
                     val ls_nordre_curr = existing_ordre.get().getNumero();
-                    if (ls_nordre_curr != ls_nordre_prec)
+                    if (!ls_nordre_curr.equals(ls_nordre_prec))
                         pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
 
                     ls_create_ligne = 'N';
@@ -385,7 +386,8 @@ public class ProgramService {
                 ls_load_ref_prec = ls_load_reference;
                 ls_cen_ref_prec = entrepot.get().getId();
 
-                if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
+                if (functionRes.getRes().equals(FunctionResult.RESULT_OK)
+                        && !ls_ord_ref.get().isBlank()) {
                     ls_create_ligne = 'O';
                     if (!ls_ord_ref.get().equals(ls_ordref_inscrit_prec)) {
                         if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) {
@@ -436,7 +438,7 @@ public class ProgramService {
                     // Fin Dupplication
                 }
 
-                for (int ll_demi_pallets = 1; ll_demi_pallets < ll_parse; ll_demi_pallets++) {
+                for (int ll_demi_pallets = 1; ll_demi_pallets <= ll_parse; ll_demi_pallets++) {
                     if (ll_demi_pallets == 2) { // On modifie les qtés de colis commandé pour la demi-palette
                         // ls_case_per_pallets= ls_case_per_pallets.toString().trim();
                         ls_qty_case = (ld_qty_pallets - ll_qty_pallets) * ls_case_per_pallets;
@@ -581,7 +583,7 @@ public class ProgramService {
             if (ordre.isPresent()) {
 
                 val ls_code_chargement = ordre.get().getCodeChargement();
-                val ls_nordre = ordre.get().getNumero();
+                val ls_nordre_ = ordre.get().getNumero();
                 for (String ll_cpt : ls_loadref_no_dupplic) {
                     if (ll_cpt.equals(ls_code_chargement))
                         lb_no_dupplic = true;
@@ -591,27 +593,34 @@ public class ProgramService {
                     FunctionResult ll_return = this.functionOrdreRepo
                             .fnMajOrdreRegroupementV2(ll_ord, societe, generic, utilisateur);
                     if (ll_return.getRes() == FunctionResult.RESULT_OK) {
-                        ls_nordre_regroup = this.ordreRepo.getOne(ll_ord).getNumeroRGP();
+                        ls_nordre_regroup = this.entityManager
+                                .createNativeQuery("select nordre_rgp from GEO_ORDRE where ord_ref = :ord_ref")
+                                .setParameter("ord_ref", ll_ord)
+                                .getSingleResult()
+                                .toString();
+
                         // écriture dans le fichier du n° ordre de regroupement
                         Integer ll_row = 2;
                         Row row = sheet.getRow(ll_row);
                         String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
                         while (!ls_value.isBlank()) {
+                            row = sheet.getRow(ll_row);
                             // do while not IsNull(ls_value) and ls_value <> ""
-                            if (ls_value.equals(ls_nordre))
+                            if (ls_value.equals(ls_nordre_))
                                 row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                         .setCellValue(ls_nordre_regroup);
                             ll_row++;
-                            ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
-                        }
-                        try {
-                            if (!ls_nordre_regroup.equals(ls_nordre_regroup_prec)) {
-                                ll_creation_ordre_sa++;
+                            try {
+                                ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
+                            } catch (Exception e) {
+                                break;
                             }
-                        } catch (Exception e) {
+                        }
+                        if (!ls_nordre_regroup.equals(ls_nordre_regroup_prec)) {
+                            ll_creation_ordre_sa++;
                         }
                     } else {
-                        res.getRow(ls_nordre).get().pushErreur("Erreur création dupplication SA ORDRE " + ll_ord);
+                        res.getRow(ls_nordre_).get().pushErreur("Erreur création dupplication SA ORDRE " + ll_ord);
                     }
                 }
             }

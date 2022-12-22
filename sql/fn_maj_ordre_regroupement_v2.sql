@@ -43,7 +43,7 @@ AS
     li_nb_lig number;
     ls_orl_lig_rgp_tmp varchar2(50);
 
-    type p_vcr_tab_type is table of varchar2(8);
+    type p_vcr_tab_type is table of varchar2(64);
     ls_tab_ord_ref_orig p_vcr_tab_type := p_vcr_tab_type();
     ls_tab_orl_ref_orig p_vcr_tab_type := p_vcr_tab_type();
     ls_tab_art_ref_orig p_vcr_tab_type := p_vcr_tab_type();
@@ -456,7 +456,7 @@ BEGIN
                         FROM GEO_GEST_REGROUP
                         where ORD_REF_RGP = ls_ord_ref_regroup and
                                 FOU_CODE_ORIG =l.fou_code;
-                    exception when no_data_found then
+                    exception when others then
                         li_num_version_uk_old := null;
                     end;
 
