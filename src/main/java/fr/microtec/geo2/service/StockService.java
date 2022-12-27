@@ -144,7 +144,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             String palCode) {
 
         GeoStock stock = this.stockRepository.getOne(stockId);
-        if (stock.getStatutStock().equals('O'))
+        if (stock.getStatutStock() != null && stock.getStatutStock().equals('O'))
             throw new RuntimeException("Impossible de prendre une option sur une option");
 
         return this.functionRepo.fTakeOptionStock(quantite, stockId, propCode, palCode);
