@@ -66,6 +66,11 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
     }
 
     @GraphQLQuery
+    public FunctionResult takeOptionStock(Integer quantite, String stockId, String propCode, String palCode) {
+        return this.stockService.takeOptionStock(quantite, stockId, propCode, palCode);
+    }
+
+    @GraphQLQuery
     public List<GeoStockArticle> allStockArticleList(
             @GraphQLArgument(name = "espece") String espece,
             @GraphQLArgument(name = "variete", defaultValue = "%") String variete,
