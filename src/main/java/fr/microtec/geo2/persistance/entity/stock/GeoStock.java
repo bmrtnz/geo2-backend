@@ -53,4 +53,7 @@ public class GeoStock extends GeoBaseStock {
     @JoinColumn(name = "pal_code")
     private GeoTypePalette typePalette;
 
+    @Column(name = "sto_statut")
+    private Character statutStock;
+
 }
