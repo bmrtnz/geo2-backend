@@ -916,4 +916,16 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testCheckBLAuto() {
+        FunctionResult result = this.functionOrdreRepository.checkBLAuto(
+                "SA",
+                "F",
+                LocalDate.of(2022, 12, 26),
+                LocalDate.of(2022, 12, 27));
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
