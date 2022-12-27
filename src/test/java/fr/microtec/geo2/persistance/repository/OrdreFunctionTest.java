@@ -928,4 +928,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFTakeOptionStock() {
+        FunctionResult result = this.functionOrdreRepository
+                .fTakeOptionStock(1, "686760", "3D", "P17");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
