@@ -50,15 +50,6 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     }
 
     @GraphQLQuery
-    public RelayPage<GeoOrdre> allOrdreSuiviDeparts(
-            @GraphQLArgument(name = "search") String search,
-            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-            @GraphQLArgument(name = "onlyColisDiff") Boolean onlyColisDiff) {
-        return this.ordreService
-                .fetchOrdreSuiviDeparts(search, pageable, onlyColisDiff);
-    }
-
-    @GraphQLQuery
     public List<GeoPlanningTransporteur> allPlanningTransporteurs(
             @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
             @GraphQLArgument(name = "dateMax") LocalDateTime dateMax,

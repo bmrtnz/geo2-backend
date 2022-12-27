@@ -12,12 +12,19 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.common.CustomUtils;
+import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.configuration.graphql.Summary;
 import fr.microtec.geo2.persistance.CriteriaUtils;
@@ -276,6 +283,50 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
         params.put("isSequence", false);
 
         return (String) GeoSequenceGenerator.generate(this.entityManager, params);
+    }
+
+    public RelayPage<GeoOrdreLigne> fetchOrdreLigneSuiviDeparts(String search, Pageable pageable,
+            Boolean onlyColisDiff) {
+        if (pageable == null)
+            pageable = PageRequest.of(0, 20);
+
+        Specification<GeoOrdreLigne> spec = Specification.where(null);
+
+        if (onlyColisDiff)
+            spec = (root, query, cb) -> {
+                Path<Object> id = root.get("ordre").get("id");
+
+                Subquery<Number> sccSubquery = query.subquery(Number.class);
+                Root<GeoOrdreLigne> sccRoot = sccSubquery.from(GeoOrdreLigne.class);
+                Expression<Number> scc = cb
+                        .sum(CriteriaUtils.toExpressionRecursively(sccRoot, "nombreColisCommandes",
+                                false));
+                sccSubquery.select(scc);
+                sccSubquery.where(cb.equal(id, sccRoot.get("ordre").get("id")));
+
+                Subquery<Number> sceSubquery = query.subquery(Number.class);
+                Root<GeoOrdreLigne> sceRoot = sceSubquery.from(GeoOrdreLigne.class);
+                Expression<Number> sce = cb
+                        .sum(CriteriaUtils.toExpressionRecursively(sceRoot, "nombreColisExpedies",
+                                false));
+                sceSubquery.select(sce);
+                sceSubquery.where(cb.equal(id, sceRoot.get("ordre").get("id")));
+
+                return cb.notEqual(sccSubquery, sceSubquery);
+            };
+
+        // distinct rows
+        spec = spec.and((root, query, cb) -> {
+            query.distinct(true);
+            return cb.conjunction();
+        });
+
+        if (search != null && !search.isBlank())
+            spec = spec.and(this.parseSearch(search));
+
+        Page<GeoOrdreLigne> page = this.repository.findAll(spec, pageable);
+
+        return PageFactory.asRelayPage(page);
     }
 
 }

@@ -15,14 +15,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
-import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -46,6 +41,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoTracabiliteDetailPalette;
+import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.common.GeoCampagneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
@@ -154,49 +150,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         TypedQuery<Number> q = this.entityManager.createQuery(criteriaQuery);
         final Number singleResult = q.getSingleResult();
         return (singleResult == null) ? 0 : singleResult;
-    }
-
-    public RelayPage<GeoOrdre> fetchOrdreSuiviDeparts(String search, Pageable pageable, Boolean onlyColisDiff) {
-        if (pageable == null)
-            pageable = PageRequest.of(0, 20);
-
-        Specification<GeoOrdre> spec = Specification.where(null);
-
-        if (onlyColisDiff)
-            spec = (root, query, cb) -> {
-                Path<Object> id = root.get("id");
-
-                Subquery<Number> sccSubquery = query.subquery(Number.class);
-                Root<GeoOrdre> sccRoot = sccSubquery.from(GeoOrdre.class);
-                Expression<Number> scc = cb
-                        .sum(CriteriaUtils.toExpressionRecursively(sccRoot, "logistiques.lignes.nombreColisCommandes",
-                                false));
-                sccSubquery.select(scc);
-                sccSubquery.where(cb.equal(id, sccRoot.get("id")));
-
-                Subquery<Number> sceSubquery = query.subquery(Number.class);
-                Root<GeoOrdre> sceRoot = sceSubquery.from(GeoOrdre.class);
-                Expression<Number> sce = cb
-                        .sum(CriteriaUtils.toExpressionRecursively(sceRoot, "logistiques.lignes.nombreColisExpedies",
-                                false));
-                sceSubquery.select(sce);
-                sceSubquery.where(cb.equal(id, sceRoot.get("id")));
-
-                return cb.notEqual(sccSubquery, sceSubquery);
-            };
-
-        // distinct rows
-        spec = spec.and((root, query, cb) -> {
-            query.distinct(true);
-            return cb.conjunction();
-        });
-
-        if (search != null && !search.isBlank())
-            spec = spec.and(this.parseSearch(search));
-
-        Page<GeoOrdre> page = this.repository.findAll(spec, pageable);
-
-        return PageFactory.asRelayPage(page);
     }
 
     public RelayPage<GeoOrdre> fetchOrdresPlanningTransporteurs(String search, Pageable pageable,

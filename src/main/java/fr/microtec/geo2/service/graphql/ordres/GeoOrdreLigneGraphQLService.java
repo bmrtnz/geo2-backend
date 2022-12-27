@@ -249,4 +249,13 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
             @GraphQLArgument(name = "lignes") List<String> lignes) {
         return this.ordreLigneService.reindex(lignes);
     }
+
+    @GraphQLQuery
+    public RelayPage<GeoOrdreLigne> allOrdreLigneSuiviDeparts(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLArgument(name = "onlyColisDiff") Boolean onlyColisDiff) {
+        return this.ordreLigneService
+                .fetchOrdreLigneSuiviDeparts(search, pageable, onlyColisDiff);
+    }
 }
