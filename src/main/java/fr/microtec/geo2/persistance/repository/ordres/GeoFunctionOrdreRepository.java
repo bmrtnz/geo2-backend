@@ -270,4 +270,10 @@ public interface GeoFunctionOrdreRepository {
             String arg_soc_code,
             Boolean arg_entrepot_generic,
             String arg_username);
+
+    FunctionResult checkBLAuto(
+            String gs_soc_code,
+            String ls_sco_code,
+            LocalDate arg_date_min,
+            LocalDate arg_date_max);
 }
