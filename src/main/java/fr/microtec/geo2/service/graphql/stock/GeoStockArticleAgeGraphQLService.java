@@ -33,40 +33,36 @@ public class GeoStockArticleAgeGraphQLService
 	private final StockService stockService;
 
 	public GeoStockArticleAgeGraphQLService(
-		GeoStockArticleAgeRepository repository,
-		StockService stockService
-	) {
+			GeoStockArticleAgeRepository repository,
+			StockService stockService) {
 		super(repository, GeoStockArticleAge.class);
 		this.stockService = stockService;
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoStockArticleAge> allStockArticleAge(
-		@GraphQLArgument(name = "search") String search,
-		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-		@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.getPage(search, pageable, env);
 	}
 
 	@GraphQLQuery
 	public RelayPage<GeoStockArticleAge> fetchStock(
-		@GraphQLArgument(name = "societe") GeoSociete societe,
-		@GraphQLArgument(name = "secteurs") List<GeoSecteur> secteurs,
-		@GraphQLArgument(name = "clients") List<GeoClient> clients,
-		@GraphQLArgument(name = "fournisseurs") List<GeoFournisseur> fournisseurs,
-		@GraphQLArgument(name = "search") String search,
-		@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-		@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLArgument(name = "societe") GeoSociete societe,
+			@GraphQLArgument(name = "secteurs") List<GeoSecteur> secteurs,
+			@GraphQLArgument(name = "clients") List<GeoClient> clients,
+			@GraphQLArgument(name = "fournisseurs") List<GeoFournisseur> fournisseurs,
+			@GraphQLArgument(name = "search") String search,
+			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return this.stockService.fetchStockArticleAge(societe, secteurs, clients, fournisseurs, search, pageable);
 	}
 
 	@GraphQLQuery
 	public Optional<GeoStockArticleAge> getStockArticleAge(
-		@GraphQLArgument(name = "id") GeoStockArticleAgeKey id,
-		@GraphQLEnvironment ResolutionEnvironment env
-	) {
+			@GraphQLArgument(name = "id") GeoStockArticleAgeKey id,
+			@GraphQLEnvironment ResolutionEnvironment env) {
 		return super.getOne(id);
 	}
 

@@ -16,7 +16,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAgeKey;
-import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAgeSpecifications;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockMouvement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
@@ -67,19 +66,19 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
         if (pageable == null)
             pageable = PageRequest.of(0, 20);
 
-        Specification<GeoStockArticleAge> spec = GeoStockArticleAgeSpecifications.withDistinctArticleInOrdreLigne();
+        Specification<GeoStockArticleAge> spec = StockArticleAgeService.withDistinctArticleInOrdreLigne();
 
         if (societe != null)
-            spec = spec.and(GeoStockArticleAgeSpecifications.withArticleInSociete(societe));
+            spec = spec.and(StockArticleAgeService.withArticleInSociete(societe));
 
         if (secteurs != null)
-            spec = spec.and(GeoStockArticleAgeSpecifications.withArticleInSecteurs(secteurs));
+            spec = spec.and(StockArticleAgeService.withArticleInSecteurs(secteurs));
 
         if (clients != null)
-            spec = spec.and(GeoStockArticleAgeSpecifications.withArticleInClients(clients));
+            spec = spec.and(StockArticleAgeService.withArticleInClients(clients));
 
         if (fournisseurs != null)
-            spec = spec.and(GeoStockArticleAgeSpecifications.withArticleInFournisseurs(fournisseurs));
+            spec = spec.and(StockArticleAgeService.withArticleInFournisseurs(fournisseurs));
 
         if (search != null && !search.isBlank())
             spec = spec.and(this.parseSearch(search));
