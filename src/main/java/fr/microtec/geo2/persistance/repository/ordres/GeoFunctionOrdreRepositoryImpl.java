@@ -894,4 +894,20 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fTakeOptionStock(
+            Integer quantite,
+            String stockRef,
+            String propCode,
+            String palCode) {
+        FunctionQuery query = this.build("F_TAKE_OPTION_STOCK");
+
+        query.attachInput("em_qte_res", Integer.class, quantite);
+        query.attachInput("is_sto_ref", String.class, stockRef);
+        query.attachInput("is_prop_code", String.class, propCode);
+        query.attachInput("is_pal_code", String.class, palCode);
+
+        return query.fetch();
+    }
+
 }

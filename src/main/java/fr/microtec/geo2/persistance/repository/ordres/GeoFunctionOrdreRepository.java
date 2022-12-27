@@ -276,4 +276,10 @@ public interface GeoFunctionOrdreRepository {
             String ls_sco_code,
             LocalDate arg_date_min,
             LocalDate arg_date_max);
+
+    FunctionResult fTakeOptionStock(
+            Integer em_qte_res,
+            String is_sto_ref,
+            String is_prop_code,
+            String is_pal_code);
 }
