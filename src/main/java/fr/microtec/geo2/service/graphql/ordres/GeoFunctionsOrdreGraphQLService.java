@@ -513,4 +513,17 @@ public class GeoFunctionsOrdreGraphQLService {
                 cliCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult checkBLAuto(
+            String socCode,
+            String scoCode,
+            LocalDate dateMin,
+            LocalDate dateMax) {
+        return this.repository.checkBLAuto(
+                socCode,
+                scoCode,
+                dateMin,
+                dateMax);
+    }
+
 }
