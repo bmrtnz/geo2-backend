@@ -1,15 +1,30 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
-import fr.microtec.geo2.persistance.entity.produits.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Immutable;
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
+import fr.microtec.geo2.persistance.entity.produits.GeoCalibreFournisseur;
+import fr.microtec.geo2.persistance.entity.produits.GeoCalibreMarquage;
+import fr.microtec.geo2.persistance.entity.produits.GeoCategorie;
+import fr.microtec.geo2.persistance.entity.produits.GeoEmballage;
+import fr.microtec.geo2.persistance.entity.produits.GeoEspece;
+import fr.microtec.geo2.persistance.entity.produits.GeoOrigine;
+import fr.microtec.geo2.persistance.entity.produits.GeoVariete;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Table(name = "geo_stock_art_age")
@@ -36,29 +51,54 @@ public class GeoStockArticleAge implements Serializable {
     @JoinColumn(name = "var_code")
     private GeoVariete variete;
 
+    // https://hibernate.atlassian.net/browse/HHH-9185
+    // @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+    // @JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
-    @JoinColumnOrFormula(column = @JoinColumn(name = "caf_code"))
+    @JoinColumns({
+            @JoinColumn(name = "esp_code", insertable = false, updatable = false),
+            @JoinColumn(name = "caf_code", insertable = false, updatable = false)
+    })
     private GeoCalibreFournisseur calibreFournisseur;
 
+    // https://hibernate.atlassian.net/browse/HHH-9185
+    // @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+    // @JoinColumnOrFormula(column = @JoinColumn(name = "cam_code"))
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
-    @JoinColumnOrFormula(column = @JoinColumn(name = "cam_code"))
+    @JoinColumns({
+            @JoinColumn(name = "esp_code", insertable = false, updatable = false),
+            @JoinColumn(name = "cam_code", insertable = false, updatable = false)
+    })
     private GeoCalibreMarquage calibreMarquage;
 
+    // https://hibernate.atlassian.net/browse/HHH-9185
+    // @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+    // @JoinColumnOrFormula(column = @JoinColumn(name = "cat_code"))
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
-    @JoinColumnOrFormula(column = @JoinColumn(name = "cat_code"))
+    @JoinColumns({
+            @JoinColumn(name = "esp_code", insertable = false, updatable = false),
+            @JoinColumn(name = "cat_code", insertable = false, updatable = false)
+    })
     private GeoCategorie categorie;
 
+    // https://hibernate.atlassian.net/browse/HHH-9185
+    // @JoinColumnOrFormula(column = @JoinColumn(name = "esp_code"))
+    // @JoinColumnOrFormula(column = @JoinColumn(name = "col_code"))
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
-    @JoinColumnOrFormula(column = @JoinColumn(name = "col_code"))
+    @JoinColumns({
+            @JoinColumn(name = "esp_code", insertable = false, updatable = false),
+            @JoinColumn(name = "col_code", insertable = false, updatable = false)
+    })
     private GeoEmballage colis;
 
+    // https://hibernate.atlassian.net/browse/HHH-9185
+    // @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
+    // @JoinColumnOrFormula(column = @JoinColumn(name = "ori_code"))
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
-    @JoinColumnOrFormula(column = @JoinColumn(name = "ori_code"))
+    @JoinColumns({
+            @JoinColumn(name = "esp_code", insertable = false, updatable = false),
+            @JoinColumn(name = "ori_code", insertable = false, updatable = false)
+    })
     private GeoOrigine origine;
 
     @Formula("qte_ini_1 - qte_res_1 - qte_opt_1")

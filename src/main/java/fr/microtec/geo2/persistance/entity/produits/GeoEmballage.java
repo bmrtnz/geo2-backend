@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,9 +10,11 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -157,5 +161,8 @@ public class GeoEmballage extends ValidateAndModifiedEntity {
     @JoinColumn(name = "esp_code")
     @JoinColumn(name = "maq_code")
     private GeoMarque marque;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "colis")
+    private List<GeoStockArticleAge> stocksAge;
 
 }
