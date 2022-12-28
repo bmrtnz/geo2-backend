@@ -8,6 +8,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.produits.GeoEmballage;
+import fr.microtec.geo2.persistance.entity.produits.GeoOrigine;
+import fr.microtec.geo2.persistance.entity.produits.GeoVariete;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAgeKey;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
@@ -15,6 +18,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockArticleAgeRepository;
+import fr.microtec.geo2.service.StockArticleAgeService;
 import fr.microtec.geo2.service.StockService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -28,42 +32,60 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @GraphQLApi
 @Secured("ROLE_USER")
 public class GeoStockArticleAgeGraphQLService
-		extends GeoAbstractGraphQLService<GeoStockArticleAge, GeoStockArticleAgeKey> {
+        extends GeoAbstractGraphQLService<GeoStockArticleAge, GeoStockArticleAgeKey> {
 
-	private final StockService stockService;
+    private final StockService stockService;
+    private final StockArticleAgeService service;
 
-	public GeoStockArticleAgeGraphQLService(
-			GeoStockArticleAgeRepository repository,
-			StockService stockService) {
-		super(repository, GeoStockArticleAge.class);
-		this.stockService = stockService;
-	}
+    public GeoStockArticleAgeGraphQLService(
+            GeoStockArticleAgeRepository repository,
+            StockService stockService,
+            StockArticleAgeService service) {
+        super(repository, GeoStockArticleAge.class);
+        this.stockService = stockService;
+        this.service = service;
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoStockArticleAge> allStockArticleAge(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoStockArticleAge> allStockArticleAge(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoStockArticleAge> fetchStock(
-			@GraphQLArgument(name = "societe") GeoSociete societe,
-			@GraphQLArgument(name = "secteurs") List<GeoSecteur> secteurs,
-			@GraphQLArgument(name = "clients") List<GeoClient> clients,
-			@GraphQLArgument(name = "fournisseurs") List<GeoFournisseur> fournisseurs,
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env) {
-		return this.stockService.fetchStockArticleAge(societe, secteurs, clients, fournisseurs, search, pageable);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoStockArticleAge> fetchStock(
+            @GraphQLArgument(name = "societe") GeoSociete societe,
+            @GraphQLArgument(name = "secteurs") List<GeoSecteur> secteurs,
+            @GraphQLArgument(name = "clients") List<GeoClient> clients,
+            @GraphQLArgument(name = "fournisseurs") List<GeoFournisseur> fournisseurs,
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.stockService.fetchStockArticleAge(societe, secteurs, clients, fournisseurs, search, pageable);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoStockArticleAge> getStockArticleAge(
-			@GraphQLArgument(name = "id") GeoStockArticleAgeKey id,
-			@GraphQLEnvironment ResolutionEnvironment env) {
-		return super.getOne(id);
-	}
+    @GraphQLQuery
+    public Optional<GeoStockArticleAge> getStockArticleAge(
+            @GraphQLArgument(name = "id") GeoStockArticleAgeKey id,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return super.getOne(id);
+    }
+
+    @GraphQLQuery
+    public List<GeoVariete> subDistinctStockVariete(String especeID) {
+        return this.service.subDistinct(especeID, GeoVariete.class);
+    }
+
+    @GraphQLQuery
+    public List<GeoOrigine> subDistinctStockOrigine(String especeID) {
+        return this.service.subDistinct(especeID, GeoOrigine.class);
+    }
+
+    @GraphQLQuery
+    public List<GeoEmballage> subDistinctStockEmballage(String especeID) {
+        return this.service.subDistinct(especeID, GeoEmballage.class);
+    }
 
 }

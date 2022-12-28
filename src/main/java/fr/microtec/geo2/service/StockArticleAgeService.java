@@ -93,7 +93,9 @@ public class StockArticleAgeService {
         };
     }
 
-    /** Get distinct sub-entity list by his class, filtered by espece */
+    /**
+     * Get distinct sub-entity list from Stock by their class, filtered by espece
+     */
     public <T> List<T> subDistinct(String especeID, Class<T> clazz) {
 
         CriteriaBuilder cb = this.em.getCriteriaBuilder();
