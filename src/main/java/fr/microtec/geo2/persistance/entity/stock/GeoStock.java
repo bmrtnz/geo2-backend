@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Formula;
+
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
@@ -48,6 +50,9 @@ public class GeoStock extends GeoBaseStock {
 
     @Column(name = "qte_res")
     private Integer quantiteReservee;
+
+    @Formula("qte_ini - qte_res")
+    private Integer quantiteTotale;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pal_code")
