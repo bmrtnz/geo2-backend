@@ -2,6 +2,11 @@ package fr.microtec.geo2.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -18,6 +23,13 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 
 @Service
 public class StockArticleAgeService {
+
+    private final EntityManager em;
+
+    public StockArticleAgeService(
+            EntityManager em) {
+        this.em = em;
+    }
 
     public static Specification<GeoStockArticleAge> withDistinctArticleInOrdreLigne() {
         return (root, criteriaQuery, criteriaBuilder) -> {
@@ -79,6 +91,26 @@ public class StockArticleAgeService {
 
             return criteriaBuilder.in(root.get("article")).value(subqueryOL);
         };
+    }
+
+    /** Get distinct sub-entity list by his class, filtered by espece */
+    public <T> List<T> subDistinct(String especeID, Class<T> clazz) {
+
+        CriteriaBuilder cb = this.em.getCriteriaBuilder();
+        CriteriaQuery<T> query = cb.createQuery(clazz);
+        Root<T> root = query.from(clazz);
+
+        Path<Object> stockAgePath = root.join("stocksAge", JoinType.INNER);
+        Path<Object> especePath = stockAgePath.get("espece");
+
+        query
+                .where(cb.and(
+                        cb.equal(especePath.get("id"), especeID),
+                        cb.equal(especePath.get("valide"), true),
+                        cb.greaterThan(stockAgePath.get("total"), 0)))
+                .distinct(true);
+
+        return this.em.createQuery(query).getResultList();
     }
 
 }
