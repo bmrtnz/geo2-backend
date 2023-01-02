@@ -937,4 +937,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFDuplicationBukSa() {
+        FunctionResult result = this.functionOrdreRepository
+                .fDuplicationBukSa("1550218", "BUK", "BRUNO", "FERRYFAST");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2, result.getRes(), result.getMsg());
+    }
+
 }
