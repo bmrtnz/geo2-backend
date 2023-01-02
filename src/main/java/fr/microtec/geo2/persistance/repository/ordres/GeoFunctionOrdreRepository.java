@@ -288,4 +288,6 @@ public interface GeoFunctionOrdreRepository {
             String is_soc_code,
             String is_utilisateur,
             String is_tvr_code_entrepot);
+
+    FunctionResult fDelRegroupement(String is_ord_ref);
 }

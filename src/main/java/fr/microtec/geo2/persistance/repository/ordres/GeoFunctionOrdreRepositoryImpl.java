@@ -926,4 +926,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fDelRegroupement(String is_cur_ord_ref) {
+        FunctionQuery query = this.build("F_DEL_REGROUPEMENT");
+
+        query.attachInput("is_cur_ord_ref", String.class, is_cur_ord_ref);
+
+        return query.fetch();
+    }
+
 }
