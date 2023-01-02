@@ -539,4 +539,9 @@ public class GeoFunctionsOrdreGraphQLService {
                 codeEntrepot);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDelRegroupement(String ordreRef) {
+        return this.repository.fDelRegroupement(ordreRef);
+    }
+
 }
