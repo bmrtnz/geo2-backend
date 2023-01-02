@@ -31,14 +31,14 @@ public class GeoIndicateursGraphQLService {
      * Give entities count from specified indicator
      */
     @GraphQLQuery
-    public BigDecimal countByIndicator(Indicateur indicateur, String societeCode) {
+    public BigDecimal countByIndicator(Indicateur indicateur, String societeCode, String secteurCode) {
         switch (indicateur) {
             case ClientsDepassementEncours:
-                return this.indicateursCountService.countClientsDepassementEncours(societeCode);
+                return this.indicateursCountService.countClientsDepassementEncours(societeCode, secteurCode);
             case OrdresNonConfirmes:
-                return this.indicateursCountService.countOrdresNonConfirmes(societeCode);
+                return this.indicateursCountService.countOrdresNonConfirmes(societeCode, secteurCode);
             case PlanningDepart:
-                return this.indicateursCountService.countPlanningDepart(societeCode);
+                return this.indicateursCountService.countPlanningDepart(societeCode, secteurCode);
             default:
                 throw new RuntimeException(String.format("Indicator %1 does not exist", indicateur));
         }

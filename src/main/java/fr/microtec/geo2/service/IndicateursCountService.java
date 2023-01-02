@@ -22,19 +22,19 @@ public class IndicateursCountService {
         this.securityService = securityService;
     }
 
-    public BigDecimal countClientsDepassementEncours(String societeCode) {
+    public BigDecimal countClientsDepassementEncours(String societeCode, String secteurCode) {
         return this.repository
-                .countClientsDepassementEncours(this.fetchSecteur(), societeCode);
+                .countClientsDepassementEncours(secteurCode == null ? this.fetchSecteur() : secteurCode, societeCode);
     }
 
-    public BigDecimal countOrdresNonConfirmes(String societeCode) {
+    public BigDecimal countOrdresNonConfirmes(String societeCode, String secteurCode) {
         return this.repository
-                .countOrdresNonConfirmes(this.fetchSecteur(), societeCode);
+                .countOrdresNonConfirmes(secteurCode == null ? this.fetchSecteur() : secteurCode, societeCode);
     }
 
-    public BigDecimal countPlanningDepart(String societeCode) {
+    public BigDecimal countPlanningDepart(String societeCode, String secteurCode) {
         return this.repository
-                .countPlanningDepart(this.fetchSecteur(), societeCode);
+                .countPlanningDepart(secteurCode == null ? this.fetchSecteur() : secteurCode, societeCode);
     }
 
     private String fetchSecteur() {
