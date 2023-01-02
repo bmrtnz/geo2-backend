@@ -282,4 +282,10 @@ public interface GeoFunctionOrdreRepository {
             String is_sto_ref,
             String is_prop_code,
             String is_pal_code);
+
+    FunctionResult fDuplicationBukSa(
+            String is_ord_ref,
+            String is_soc_code,
+            String is_utilisateur,
+            String is_tvr_code_entrepot);
 }

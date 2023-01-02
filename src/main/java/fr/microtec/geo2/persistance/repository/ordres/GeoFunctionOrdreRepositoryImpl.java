@@ -910,4 +910,20 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fDuplicationBukSa(
+            String is_ord_ref,
+            String is_soc_code,
+            String is_utilisateur,
+            String is_tvr_code_entrepot) {
+        FunctionQuery query = this.build("F_DUPLICATION_BUK_SA");
+
+        query.attachInput("is_ord_ref", String.class, is_ord_ref);
+        query.attachInput("is_soc_code", String.class, is_soc_code);
+        query.attachInput("is_utilisateur", String.class, is_utilisateur);
+        query.attachInput("is_tvr_code_entrepot", String.class, is_tvr_code_entrepot);
+
+        return query.fetch();
+    }
+
 }
