@@ -526,4 +526,17 @@ public class GeoFunctionsOrdreGraphQLService {
                 dateMax);
     }
 
+    @GraphQLQuery
+    public FunctionResult fDuplicationBukSa(
+            String ordreRef,
+            String socCode,
+            String nomUtilisateur,
+            String codeEntrepot) {
+        return this.repository.fDuplicationBukSa(
+                ordreRef,
+                socCode,
+                nomUtilisateur,
+                codeEntrepot);
+    }
+
 }
