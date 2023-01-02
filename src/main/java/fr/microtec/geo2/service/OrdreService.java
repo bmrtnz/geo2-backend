@@ -33,6 +33,7 @@ import fr.microtec.geo2.persistance.GeoSequenceGenerator;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
+import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitige;
 import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -374,13 +375,91 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
     public String fetchDescriptifRegroupement(String ordreID) {
         GeoOrdre ordre = this.getOne(ordreID).orElseThrow();
+        String value = "";
+        String ls_nordre_sa = "";
+        String ls_nordre_sa_n = "";
+        String ls_nordre_buk = "";
 
         if (ordre.getType().getId().equals("RGP"))
-            return "Ordres regroupés : " + ordre.getListeNumeroOrigine();
+            value += "Ordres regroupés : " + ordre.getListeNumeroOrigine();
         if (ordre.getType().getId().equals("ORI"))
-            return "Ordre de regroupement : " + ordre.getNumeroRGP();
+            value += "Ordre de regroupement : " + ordre.getNumeroRGP();
 
-        return "";
+        // Cas clients specifiques
+        try {
+            if (ordre.getClient().getId().equals("007396")) {
+                String[] res;
+                if (ordre.getFactureAvoir().equals(GeoFactureAvoir.FACTURE))
+                    res = (String[]) this.entityManager
+                            .createNativeQuery(
+                                    "select SA.NORDRE, SA_N.NORDRE as n FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE SA, GEO_ORDRE SA_N where OBS.ORD_rEF_BUK =:arg_ord_ref and OBS.ORD_REF_SA= SA.ORD_REF  and OBS.ORD_REF_SA_N= SA_N.ORD_REF")
+                            .setParameter("arg_ord_ref", ordreID)
+                            .getSingleResult();
+                else
+                    res = (String[]) this.entityManager
+                            .createNativeQuery(
+                                    "select 	SA.NORDRE, SA_N.NORDRE as n FROM GEO_AVOIR_BUK_SA OBS,  GEO_ORDRE SA, GEO_ORDRE SA_N where OBS.ORD_rEF_BUK =:arg_ord_ref and OBS.ORD_REF_SA= SA.ORD_REF  and 	OBS.ORD_REF_SA_N= SA_N.ORD_REF")
+                            .setParameter("arg_ord_ref", ordreID)
+                            .getSingleResult();
+                ls_nordre_sa = res[0];
+                ls_nordre_sa_n = res[1];
+            }
+
+            if (ordre.getClient().getId().equals("002676")) {
+                String[] res;
+                if (ordre.getFactureAvoir().equals(GeoFactureAvoir.FACTURE))
+                    res = (String[]) this.entityManager
+                            .createNativeQuery(
+                                    "select 	BUK.NORDRE, SA_N.NORDRE as n FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA_N where OBS.ORD_REF_SA =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA_N= SA_N.ORD_REF ")
+                            .setParameter("arg_ord_ref", ordreID)
+                            .getSingleResult();
+                else
+                    res = (String[]) this.entityManager
+                            .createNativeQuery(
+                                    "select 	 BUK.NORDRE, SA_N.NORDRE as n FROM GEO_AVOIR_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA_N where OBS.ORD_rEF_SA =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA_N= SA_N.ORD_REF")
+                            .setParameter("arg_ord_ref", ordreID)
+                            .getSingleResult();
+                ls_nordre_buk = res[0];
+                ls_nordre_sa_n = res[1];
+            }
+
+            if (ordre.getClient().getId().equals("007657")) {
+                String[] res;
+                if (ordre.getFactureAvoir().equals(GeoFactureAvoir.AVOIR))
+                    res = (String[]) this.entityManager
+                            .createNativeQuery(
+                                    "select 	BUK.NORDRE, SA.NORDRE as n FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA where OBS.ORD_REF_SA_N =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA= SA.ORD_REF")
+                            .setParameter("arg_ord_ref", ordreID)
+                            .getSingleResult();
+                else
+                    res = (String[]) this.entityManager
+                            .createNativeQuery(
+                                    "select 	 BUK.NORDRE, SA.NORDRE as n FROM GEO_AVOIR_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA where OBS.ORD_rEF_SA_N =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA= SA.ORD_REF ")
+                            .setParameter("arg_ord_ref", ordreID)
+                            .getSingleResult();
+                ls_nordre_buk = res[0];
+                ls_nordre_sa = res[1];
+            }
+        } catch (Exception e) {
+        }
+
+        if (!ls_nordre_sa.isEmpty()) {
+            if (!value.isBlank())
+                value += " /";
+            value += " TESCO SA : " + ls_nordre_sa;
+        }
+        if (!ls_nordre_buk.isEmpty()) {
+            if (!value.isBlank())
+                value += " /";
+            value += " TESCO BUK : " + ls_nordre_buk;
+        }
+        if (!ls_nordre_sa_n.isEmpty()) {
+            if (!value.isBlank())
+                value += " /";
+            value += " TESCO2 SA : " + ls_nordre_sa_n;
+        }
+
+        return value;
     }
 
 }
