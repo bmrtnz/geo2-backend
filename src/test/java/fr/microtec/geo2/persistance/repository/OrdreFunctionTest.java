@@ -946,4 +946,12 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(2, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFDelRegroupement() {
+        FunctionResult result = this.functionOrdreRepository.fDelRegroupement("1550218");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
