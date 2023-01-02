@@ -372,4 +372,15 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         return ordre;
     }
 
+    public String fetchDescriptifRegroupement(String ordreID) {
+        GeoOrdre ordre = this.getOne(ordreID).orElseThrow();
+
+        if (ordre.getType().getId().equals("RGP"))
+            return "Ordres regroupés : " + ordre.getListeNumeroOrigine();
+        if (ordre.getType().getId().equals("ORI"))
+            return "Ordre de regroupement : " + ordre.getNumeroRGP();
+
+        return "";
+    }
+
 }
