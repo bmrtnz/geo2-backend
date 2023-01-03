@@ -7,7 +7,7 @@ CREATE OR REPLACE PROCEDURE FN_MAJ_ORDRE_REGROUPEMENT_V2(
     msg OUT varchar2
 )
 AS
-    ls_code_chargement varchar2(50);
+    ls_code_chargement varchar2(500);
     ldt_depdatp date;
     ldt_livdatp date;
     ldt_etd_date date;
@@ -116,9 +116,9 @@ AS
     ls_soc_code_old varchar2(50);
 
     ls_ttr_code varchar2(50);
-    ls_instructions_logistique varchar2(50);
+    ls_instructions_logistique varchar2(500);
     ls_list_nordre_orig varchar2(50);
-    ls_code_chargement_complet varchar2(50);
+    ls_code_chargement_complet varchar2(500);
 
     ls_nordre_orig varchar2(50);
     ls_etd_location varchar2(50);
