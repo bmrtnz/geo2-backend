@@ -7,7 +7,7 @@ CREATE OR REPLACE PROCEDURE FN_MAJ_ORDRE_REGROUPEMENT_V2(
     msg OUT varchar2
 )
 AS
-    ls_code_chargement varchar2(50);
+    ls_code_chargement varchar2(500);
     ldt_depdatp date;
     ldt_livdatp date;
     ldt_etd_date date;
@@ -116,9 +116,9 @@ AS
     ls_soc_code_old varchar2(50);
 
     ls_ttr_code varchar2(50);
-    ls_instructions_logistique varchar2(50);
+    ls_instructions_logistique varchar2(500);
     ls_list_nordre_orig varchar2(50);
-    ls_code_chargement_complet varchar2(50);
+    ls_code_chargement_complet varchar2(500);
 
     ls_nordre_orig varchar2(50);
     ls_etd_location varchar2(50);
@@ -233,11 +233,14 @@ BEGIN
     res := 0;
     msg := '';
 
-    select C.CEN_REF_RGP into ls_cen_ref_rgp
-    from GEO_CLIENT C, GEO_ORDRE O
-    where O.ORD_REF =arg_ord_ref_origine and
-            O.CLI_REF =	C.CLI_REf;
-
+    begin
+        select C.CEN_REF_RGP into ls_cen_ref_rgp
+        from GEO_CLIENT C, GEO_ORDRE O
+        where O.ORD_REF =arg_ord_ref_origine and
+                O.CLI_REF =	C.CLI_REf;
+    exception when no_data_found then
+        ls_cen_ref_rgp := null;
+    end;
 
 
     If ls_cen_ref_rgp is null or ls_cen_ref_rgp ='' Then

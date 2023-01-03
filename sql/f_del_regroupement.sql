@@ -16,6 +16,7 @@ BEGIN
 
     delete from GEO_GEST_REGROUP where ORD_REF_ORIG = is_cur_ord_ref;
 
+    commit;
     res := 1;
     msg := 'Suppression du regroupement terminé';
 

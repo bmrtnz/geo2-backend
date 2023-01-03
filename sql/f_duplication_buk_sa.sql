@@ -143,11 +143,6 @@ BEGIN
         return;
     end if;
 
-    fn_maj_ordre_regroupement_v2(is_ord_ref,is_soc_code,'N',is_utilisateur,res,msg);
-    If res <> 1 then
-        return;
-    end if;
-
     res := 1;
     msg := 'OK';
 END;
