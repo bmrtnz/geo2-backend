@@ -527,16 +527,26 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fnMajOrdreRegroupementV2(
+            String socCode,
+            String nomUtilisateur,
+            Boolean entrepotGeneric,
+            String codeRegimeTva) {
+        return this.repository
+                .fnMajOrdreRegroupementV2(socCode, nomUtilisateur, entrepotGeneric, codeRegimeTva);
+    }
+
+    @GraphQLQuery
     public FunctionResult fDuplicationBukSa(
             String ordreRef,
             String socCode,
             String nomUtilisateur,
-            String codeEntrepot) {
+            String codeRegimeTva) {
         return this.repository.fDuplicationBukSa(
                 ordreRef,
                 socCode,
                 nomUtilisateur,
-                codeEntrepot);
+                codeRegimeTva);
     }
 
     @GraphQLQuery

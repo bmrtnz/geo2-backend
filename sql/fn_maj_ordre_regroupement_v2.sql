@@ -233,11 +233,14 @@ BEGIN
     res := 0;
     msg := '';
 
-    select C.CEN_REF_RGP into ls_cen_ref_rgp
-    from GEO_CLIENT C, GEO_ORDRE O
-    where O.ORD_REF =arg_ord_ref_origine and
-            O.CLI_REF =	C.CLI_REf;
-
+    begin
+        select C.CEN_REF_RGP into ls_cen_ref_rgp
+        from GEO_CLIENT C, GEO_ORDRE O
+        where O.ORD_REF =arg_ord_ref_origine and
+                O.CLI_REF =	C.CLI_REf;
+    exception when no_data_found then
+        ls_cen_ref_rgp := null;
+    end;
 
 
     If ls_cen_ref_rgp is null or ls_cen_ref_rgp ='' Then
