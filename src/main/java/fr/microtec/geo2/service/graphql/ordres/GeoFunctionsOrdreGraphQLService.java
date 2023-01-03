@@ -528,12 +528,12 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult fnMajOrdreRegroupementV2(
+            String ordreRef,
             String socCode,
-            String nomUtilisateur,
             Boolean entrepotGeneric,
-            String codeRegimeTva) {
+            String nomUtilisateur) {
         return this.repository
-                .fnMajOrdreRegroupementV2(socCode, nomUtilisateur, entrepotGeneric, codeRegimeTva);
+                .fnMajOrdreRegroupementV2(ordreRef, socCode, entrepotGeneric, nomUtilisateur);
     }
 
     @GraphQLQuery
