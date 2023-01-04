@@ -1,8 +1,10 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "geo_grpemb")
 @IdClass(GeoProduitWithEspeceId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class GeoGroupeEmballage extends ValidateAndModifiedEntity {
 
     public GeoGroupeEmballage(String especeID, String description, String id) {
