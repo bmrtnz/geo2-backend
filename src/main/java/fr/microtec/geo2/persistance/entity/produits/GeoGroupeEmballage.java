@@ -13,16 +13,23 @@ import javax.persistence.*;
 @IdClass(GeoProduitWithEspeceId.class)
 public class GeoGroupeEmballage extends ValidateAndModifiedEntity {
 
-	@Id
-	@Column(name = "gem_code")
-	private String id;
+    public GeoGroupeEmballage(String especeID, String description, String id) {
+        this.id = id;
+        this.description = description;
+        this.espece = new GeoEspece();
+        this.espece.setId(especeID);
+    }
 
-	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "esp_code")
-	private GeoEspece espece;
+    @Id
+    @Column(name = "gem_code")
+    private String id;
 
-	@Column(name = "gem_desc")
-	private String description;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "esp_code")
+    private GeoEspece espece;
+
+    @Column(name = "gem_desc")
+    private String description;
 
 }

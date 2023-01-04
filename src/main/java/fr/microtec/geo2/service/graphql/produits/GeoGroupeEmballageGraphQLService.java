@@ -4,6 +4,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.produits.GeoGroupeEmballage;
 import fr.microtec.geo2.persistance.entity.produits.GeoProduitWithEspeceId;
 import fr.microtec.geo2.persistance.repository.produits.GeoGroupeEmballageRepository;
+import fr.microtec.geo2.service.ArticleService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -21,26 +22,35 @@ import java.util.Optional;
 @GraphQLApi
 @Secured("ROLE_USER")
 public class GeoGroupeEmballageGraphQLService
-		extends GeoAbstractGraphQLService<GeoGroupeEmballage, GeoProduitWithEspeceId> {
+        extends GeoAbstractGraphQLService<GeoGroupeEmballage, GeoProduitWithEspeceId> {
 
-	public GeoGroupeEmballageGraphQLService(GeoGroupeEmballageRepository repository) {
-		super(repository, GeoGroupeEmballage.class);
-	}
+    private final ArticleService articleService;
 
-	@GraphQLQuery
-	public RelayPage<GeoGroupeEmballage> allGroupeEmballage(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getPage(search, pageable, env);
-	}
+    public GeoGroupeEmballageGraphQLService(GeoGroupeEmballageRepository repository, ArticleService articleService) {
+        super(repository, GeoGroupeEmballage.class);
+        this.articleService = articleService;
+    }
 
-	@GraphQLQuery
-	public Optional<GeoGroupeEmballage> getGroupeEmballage(
-			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
-	) {
-		return super.getOne(id);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoGroupeEmballage> allGroupeEmballage(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
+
+    @GraphQLQuery
+    public Optional<GeoGroupeEmballage> getGroupeEmballage(
+            @GraphQLArgument(name = "id") GeoProduitWithEspeceId id) {
+        return super.getOne(id);
+    }
+
+    @GraphQLQuery
+    public RelayPage<GeoGroupeEmballage> allDistinctGroupeEmballage(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.articleService.fetchDistinct(GeoGroupeEmballage.class, pageable, search, env);
+    }
 
 }
