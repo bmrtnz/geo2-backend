@@ -26,7 +26,7 @@ public class GeoStockReservation implements GeoStockQuantite {
     private String typePaletteCode;
 
     @Column(name = "sto_ref")
-    private String numeroStock;
+    private GeoStock stock;
 
     @Column(name = "option_stock")
     private String option;
