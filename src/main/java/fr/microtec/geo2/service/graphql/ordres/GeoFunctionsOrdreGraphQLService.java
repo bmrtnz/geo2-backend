@@ -514,16 +514,18 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
-    public FunctionResult checkBLAuto(
+    public FunctionResult fEnvoiBLAuto(
             String socCode,
             String scoCode,
             LocalDate dateMin,
-            LocalDate dateMax) {
-        return this.repository.checkBLAuto(
+            LocalDate dateMax,
+            String nomUtilisateur) {
+        return this.repository.fEnvoiBLAuto(
                 socCode,
                 scoCode,
                 dateMin,
-                dateMax);
+                dateMax,
+                nomUtilisateur);
     }
 
 }

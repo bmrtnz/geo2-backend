@@ -878,17 +878,19 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult checkBLAuto(
+    public FunctionResult fEnvoiBLAuto(
             String gs_soc_code,
             String ls_sco_code,
             LocalDate arg_date_min,
-            LocalDate arg_date_max) {
-        FunctionQuery query = this.build("CHECK_BL_AUTO");
+            LocalDate arg_date_max,
+            String arg_utilisateur) {
+        FunctionQuery query = this.build("F_ENVOI_BL_AUTO");
 
         query.attachInput("gs_soc_code", String.class, gs_soc_code);
         query.attachInput("ls_sco_code", String.class, ls_sco_code);
         query.attachInput("arg_date_min", LocalDate.class, arg_date_min);
         query.attachInput("arg_date_max", LocalDate.class, arg_date_max);
+        query.attachInput("arg_utilisateur", String.class, arg_utilisateur);
         query.attachOutput("array_ord_ref", GeoStringArrayType.class);
 
         return query.fetch();

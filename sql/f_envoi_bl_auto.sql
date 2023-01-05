@@ -1,8 +1,9 @@
-CREATE OR REPLACE PROCEDURE CHECK_BL_AUTO (
+CREATE OR REPLACE PROCEDURE F_ENVOI_BL_AUTO (
     gs_soc_code in varchar2,
     ls_sco_code in varchar2,
     arg_date_min in date,
     arg_date_max in date,
+    arg_utilisateur in varchar2,
     res out number,
     msg out varchar2,
     array_ord_ref out p_str_tab_type
@@ -38,7 +39,7 @@ AS
     lb_bloquer boolean;
     ll_nb_detail_non_cloturer number;
     li_nb_poids_zero number;
-    lb_ord_bloq_poids boolean;
+    lb_ord_bloq_poids boolean := False;
 
     CURSOR C_ORD_REF IS
     SELECT
@@ -181,6 +182,28 @@ begin
     end loop;
 
     CLOSE C_ORD_REF;
+
+    DECLARE
+        i number;
+        flux varchar2(50) := 'DETAIl';
+        co SYS_REFCURSOR;
+	    ls_env_code varchar2(50);
+    BEGIN
+        for i in 1 .. array_ord_ref.count
+        loop
+            OF_GENERE_ENVOIS(array_ord_ref(i), flux, 'O', arg_utilisateur, 'N', res, msg, co, ls_env_code);
+        end loop;
+    EXCEPTION when others then
+        msg := 'Echec de l''envoi automatique des BL : ' || SQLERRM;
+        return;
+    END;
+
+
+    If lb_ord_bloq_poids = False Then
+        msg := 'Envoi des détails terminé';
+    Else
+        msg := 'Envoi des détails terminé~rLes détails d''expedition avec poids non renseignés ne sont pas partis';
+    End if;
 
 	res := 1;
 

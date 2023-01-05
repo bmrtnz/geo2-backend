@@ -271,9 +271,10 @@ public interface GeoFunctionOrdreRepository {
             Boolean arg_entrepot_generic,
             String arg_username);
 
-    FunctionResult checkBLAuto(
+    FunctionResult fEnvoiBLAuto(
             String gs_soc_code,
             String ls_sco_code,
             LocalDate arg_date_min,
-            LocalDate arg_date_max);
+            LocalDate arg_date_max,
+            String arg_utilisateur);
 }

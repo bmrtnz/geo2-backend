@@ -917,12 +917,13 @@ public class OrdreFunctionTest {
     }
 
     @Test
-    public void testCheckBLAuto() {
-        FunctionResult result = this.functionOrdreRepository.checkBLAuto(
+    public void testFEnvoiBLAuto() {
+        FunctionResult result = this.functionOrdreRepository.fEnvoiBLAuto(
                 "SA",
                 "F",
                 LocalDate.of(2022, 12, 26),
-                LocalDate.of(2022, 12, 27));
+                LocalDate.of(2022, 12, 27),
+                "BRUNO");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
