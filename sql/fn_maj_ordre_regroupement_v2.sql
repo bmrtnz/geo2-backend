@@ -242,11 +242,11 @@ BEGIN
         ls_cen_ref_rgp := null;
     end;
 
-
     If ls_cen_ref_rgp is null or ls_cen_ref_rgp ='' Then
         -- li_ret = messagebox("Question","Aucun entrepot associé au client BW UK, voulez-vous prendre l'entrepôt générique BWUK ?",Question!,YesNo!)
         If arg_entrepot_generic = 'N' Then
             res := 0;
+            msg := 'Aucun entrepot associé au client BW UK, arrêt';
             return;
         ELSe
             select distinct E.CEN_REF into ls_cen_ref_rgp
@@ -265,8 +265,6 @@ BEGIN
         if ls_cen_code = 'GROSSISTE' Then
             ls_ind_grossiste := 'O';
         End IF;
-
-
 
     End If;
 
@@ -1393,8 +1391,6 @@ BEGIN
             insert INTO GEO_ORDFRA
             (ORD_REF,FRA_CODE,MONTANT,DEV_CODE,DEV_TX,TRP_CODE_PLUS) VALUES (ls_ord_ref_regroup,'DEDEXP',ld_doua_pu_tot_rgp,'EUR',1,ls_decl_doua);
         End If;
-
-
 
         update GEO_ORDRE
         SET  LIST_NORDRE_ORIG =ls_list_nordre_orig
