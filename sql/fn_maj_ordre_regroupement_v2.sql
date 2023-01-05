@@ -1414,9 +1414,9 @@ BEGIN
         fn_maj_pu_vte_rgp_platef(res,msg,ls_ord_ref_regroup);
         COMMIT;
 
-        msg := msg || 'Réussi, L''ordre de regroupement est le : ' || ls_nordre_regroup;
-
         f_insert_mru_ordre(ls_ord_ref_regroup,arg_username,res ,msg);
+
+        msg := 'Réussi, L''ordre de regroupement est le : ' || ls_nordre_regroup;
 
     end loop;
 
