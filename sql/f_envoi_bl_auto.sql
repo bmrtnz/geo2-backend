@@ -185,7 +185,7 @@ begin
 
     DECLARE
         i number;
-        flux varchar2(50) := 'DETAIl';
+        flux varchar2(50) := 'DETAIL';
         co SYS_REFCURSOR;
 	    ls_env_code varchar2(50);
     BEGIN
