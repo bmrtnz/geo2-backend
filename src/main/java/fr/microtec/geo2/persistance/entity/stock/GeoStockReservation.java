@@ -5,7 +5,10 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import lombok.Data;
@@ -26,7 +29,8 @@ public class GeoStockReservation implements GeoStockQuantite, Serializable {
     @Column(name = "pal_code")
     private String typePaletteCode;
 
-    @Column(name = "sto_ref")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sto_ref")
     private GeoStock stock;
 
     @Column(name = "option_stock")
