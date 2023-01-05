@@ -282,7 +282,8 @@ public interface GeoFunctionOrdreRepository {
             Integer em_qte_res,
             String is_sto_ref,
             String is_prop_code,
-            String is_pal_code);
+            String is_pal_code,
+            String is_sto_desc);
 
     FunctionResult fDuplicationBukSa(
             String is_ord_ref,

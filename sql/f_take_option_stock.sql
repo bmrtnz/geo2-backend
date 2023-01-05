@@ -3,6 +3,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_TAKE_OPTION_STOCK(
 	is_sto_ref IN varchar2,
 	is_prop_code IN varchar2,
 	is_pal_code IN varchar2,
+	is_sto_desc IN varchar2,
     res OUT number,
     msg OUT varchar2
 )
@@ -19,7 +20,6 @@ AS
     ll_qte_res_futur number;
     is_fou_code varchar2(50);
     is_art_ref varchar2(50);
-    is_sto_desc varchar2(50);
     is_age varchar2(50);
     id_qte_ini number;
     id_qte_res number;
@@ -35,8 +35,8 @@ BEGIN
     end if;
 
     begin
-        select fou_code,art_ref,sto_desc,age,qte_ini,qte_res
-        into is_fou_code,is_art_ref,is_sto_desc,is_age,id_qte_ini,id_qte_res
+        select fou_code,art_ref,age,qte_ini,qte_res
+        into is_fou_code,is_art_ref,is_age,id_qte_ini,id_qte_res
         from geo_stock
         where sto_ref = is_sto_ref;
     exception when no_data_found then

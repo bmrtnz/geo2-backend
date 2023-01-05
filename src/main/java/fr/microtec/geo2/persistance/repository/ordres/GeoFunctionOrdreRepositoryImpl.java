@@ -901,13 +901,15 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
             Integer quantite,
             String stockRef,
             String propCode,
-            String palCode) {
+            String palCode,
+            String stockDescription) {
         FunctionQuery query = this.build("F_TAKE_OPTION_STOCK");
 
         query.attachInput("em_qte_res", Integer.class, quantite);
         query.attachInput("is_sto_ref", String.class, stockRef);
         query.attachInput("is_prop_code", String.class, propCode);
         query.attachInput("is_pal_code", String.class, palCode);
+        query.attachInput("is_sto_desc", String.class, stockDescription);
 
         return query.fetch();
     }

@@ -932,7 +932,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFTakeOptionStock() {
         FunctionResult result = this.functionOrdreRepository
-                .fTakeOptionStock(1, "686760", "3D", "P17");
+                .fTakeOptionStock(1, "686760", "3D", "P17", "YO");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
