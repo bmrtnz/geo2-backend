@@ -3,6 +3,8 @@ package fr.microtec.geo2.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,6 +45,8 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoFournisseurRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoGroupageRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoTransporteurRepository;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService.PATH_KEY;
 import lombok.Data;
 import lombok.val;
 
@@ -66,6 +70,7 @@ public class ProgramService {
     private final GeoBaseTarifRepository baseTarifRepo;
     private final GeoFunctionOrdreRepository functionOrdreRepo;
     private final EntityManager entityManager;
+    private final Maddog2FileSystemService md2Service;
 
     public ProgramService(
             EntityManager entityManager,
@@ -77,7 +82,8 @@ public class ProgramService {
             GeoGroupageRepository groupageRepo,
             GeoTransporteurRepository transporteurRepo,
             GeoBaseTarifRepository baseTarifRepo,
-            GeoFunctionOrdreRepository functionOrdreRepo) {
+            GeoFunctionOrdreRepository functionOrdreRepo,
+            Maddog2FileSystemService md2Service) {
         this.entityManager = entityManager;
         this.entrepotRepo = entrepotRepo;
         this.ordreRepo = ordreRepo;
@@ -88,6 +94,19 @@ public class ProgramService {
         this.transporteurRepo = transporteurRepo;
         this.baseTarifRepo = baseTarifRepo;
         this.functionOrdreRepo = functionOrdreRepo;
+        this.md2Service = md2Service;
+    }
+
+    /** Save program file to Maddog2 system */
+    public void archive(String societe, String utilisateur, MultipartFile chunk) throws IOException {
+        Path dest = this.md2Service.createDirectory("/", PATH_KEY.GEO_IMPORT_GB.toString().toLowerCase());
+        this.md2Service.save(
+                dest.resolve(societe + "_" +
+                        utilisateur + "_" +
+                        LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "_" +
+                        chunk.getOriginalFilename()),
+                chunk.getBytes(),
+                StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 
     @Data
