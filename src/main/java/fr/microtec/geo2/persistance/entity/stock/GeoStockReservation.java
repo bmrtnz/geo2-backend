@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -11,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class GeoStockReservation implements GeoStockQuantite {
+public class GeoStockReservation implements GeoStockQuantite, Serializable {
     @Id
     @Column(name = "rownum")
     private Integer id;
