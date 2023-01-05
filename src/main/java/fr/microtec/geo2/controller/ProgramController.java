@@ -44,6 +44,8 @@ public class ProgramController {
             @RequestParam(name = "genericEntrepot", required = false) Boolean generic)
             throws IOException {
 
+        this.service.archive(societe, utilisateur, chunk);
+
         switch (Program.valueOf(program.toUpperCase())) {
             case ORCHARD:
                 return this.service.importOrchard(chunk);
