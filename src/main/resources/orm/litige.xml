@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+  <!-- PLANNING TRANSPORTEUR -->
+  <named-native-query
+    name="Litige.allLitigeAPayer"
+    result-class="fr.microtec.geo2.persistance.entity.litige.GeoLitigeAPayer"
+  >
+    <query>
+    <![CDATA[
+      SELECT rownum, data.* FROM(
+        select 'C/' "TYPE", C.CLI_CODE "CODE", C.RAISOC "RAISOC", 1 "NUM_TRI"
+        FROM   GEO_LITIGE L,GEO_ORDRE O,GEO_CLIENT C
+        where   L.LIT_REF =:arg_lit_ref and
+                    L.ORD_REF_ORIGINE =  O.ORD_REF and
+                    O.CLI_REF = C.CLI_REF
+        union
+        select 'F/' "TYPE",F.FOU_CODE "CODE", F.RAISOC "RAISOC", 2 "NUM_TRI"
+        FROM   GEO_LITIGE L,GEO_ORDLIG OL, GEO_LITLIG LL,GEO_FOURNI F
+        where   LL.LIT_REF =:arg_lit_ref                     and
+                    L.LIT_REF = LL.LIT_REF        			and
+                    L.ORD_REF_ORIGINE =  OL.ORD_REF  and
+                    OL.FOU_CODE = F.FOU_CODE
+        union
+        select  'T/' "TYPE",T.TRP_CODE "CODE", T.RAISOC "RAISOC", 3 "NUM_TRI"
+        FROM   GEO_TRANSP  T
+        where  T.VALIDE ='O') data
+    ]]>
+    </query>
+  </named-native-query>
+
+</entity-mappings>

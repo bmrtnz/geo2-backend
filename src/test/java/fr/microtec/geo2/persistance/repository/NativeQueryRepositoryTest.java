@@ -18,6 +18,7 @@ import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
+import fr.microtec.geo2.persistance.repository.litige.GeoLitigeRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
@@ -45,6 +46,8 @@ public class NativeQueryRepositoryTest {
     private GeoClientRepository geoClientRepository;
     @Autowired
     private GeoEntrepotRepository entrepotRepository;
+    @Autowired
+    private GeoLitigeRepository litigeRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -160,6 +163,11 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testWLitigePickOrdreOrdligV2() {
         this.ordreLigneRepository.wLitigePickOrdreOrdligV2("1691766");
+    }
+
+    @Test
+    public void testAllLitigeAPayer() {
+        this.litigeRepository.allLitigeAPayer("004915");
     }
 
 }
