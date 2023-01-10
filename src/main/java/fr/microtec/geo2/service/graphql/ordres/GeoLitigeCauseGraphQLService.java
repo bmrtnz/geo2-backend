@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,15 +28,21 @@ public class GeoLitigeCauseGraphQLService extends GeoAbstractGraphQLService<GeoL
 
     @GraphQLQuery
     public RelayPage<GeoLitigeCause> allLitigeCause(
-        @GraphQLArgument(name = "search") String search,
-        @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-        @GraphQLEnvironment ResolutionEnvironment env) {
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
         return this.getPage(search, pageable, env);
     }
 
     @GraphQLQuery
+    public List<GeoLitigeCause> allLitigeCauseList(
+            @GraphQLArgument(name = "search") String search) {
+        return this.getAll(search);
+    }
+
+    @GraphQLQuery
     public Optional<GeoLitigeCause> getLitigeCause(
-        @GraphQLArgument(name = "id") String id) {
+            @GraphQLArgument(name = "id") String id) {
         return super.getOne(id);
     }
 
