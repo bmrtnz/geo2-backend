@@ -47,4 +47,7 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
             @Param("arg_ord_ref") String ordreRef,
             @Param("arg_orl_ref_orig") String ordreLigneOriginale);
 
+    @Query(name = "OrdreLigne.w_litige_pick_ordre_ordlig_v2", nativeQuery = true)
+    List<GeoOrdreLigne> wLitigePickOrdreOrdligV2(@Param("ra_ord_ref") String ordreID);
+
 }

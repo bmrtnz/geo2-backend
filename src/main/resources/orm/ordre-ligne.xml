@@ -115,4 +115,69 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <named-native-query
+    name="OrdreLigne.w_litige_pick_ordre_ordlig_v2"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne"
+  >
+    <query>
+    <![CDATA[
+        SELECT geo_ordlig.pde_ref,
+          geo_ordlig.cde_nb_pal,
+          geo_ordlig.cde_nb_col,
+          geo_ordlig.exp_nb_pal,
+          geo_ordlig.exp_nb_col,
+          geo_ordlig.ach_pu,
+          geo_ordlig.ach_bta_code,
+          geo_ordlig.vte_pu,
+          geo_ordlig.vte_bta_code,
+          geo_ordlig.fou_code,
+          geo_article.var_code,
+          geo_article.cam_code,
+          geo_article.cat_code,
+          geo_article.col_code,
+          geo_ordre.cam_code,
+          geo_ordre.nordre,
+          geo_ordre.ord_ref,
+          geo_ordre.depdatp,
+          geo_ordre.livdatp,
+          geo_ordre.cen_ref,
+          geo_ordlig.pal_code,
+          geo_ordlig.pan_code,
+          geo_ordlig.pal_nb_col,
+          geo_ordlig.orl_ref,
+          geo_ordre.per_codeass,
+          geo_ordre.per_codecom,
+          geo_ordlig.orl_lig,
+          geo_ordlig.propr_code,
+          geo_ordlig.lib_dlv,
+          geo_ordlig.art_ref,
+          geo_ordlig.exp_pds_net,
+          litige_fait.tot_nb_col
+              FROM geo_ordlig,
+                  geo_article,
+                  geo_ordre,
+          (select 	LL.ORL_REF "ORL_REF",
+                              sum(LL.CLI_NB_COL) "TOT_NB_COL" ,
+          sum(LL.CLI_NB_PAL)  "TOT_NB_PAL"
+          from GEO_LITIGE L  ,GEO_LITLIG LL
+          where  	L.ORD_REF_ORIGINE =:ra_ord_ref and
+                              L.LIT_REF = LL.LIT_REF
+          group by ORL_REF)  litige_fait
+            WHERE ( geo_article.art_ref = geo_ordlig.art_ref ) and
+                  ( geo_ordre.ord_ref = geo_ordlig.ord_ref ) and
+                  ( ( geo_ordlig.ord_ref = :ra_ord_ref ) ) and
+          not exists (  select 1
+          from   geo_ordlig L2, GEO_ESPECE E
+          where geo_ordlig.orl_ref  = L2.orl_ref and
+                            L2.EXP_NB_COL = 0 and
+                                              L2.EXP_NB_PAL = 0 and
+                                              L2.EXP_PDS_NET = 0	and
+          E.GEN_CODE = 'F' and
+          geo_article.ESP_CODE = E.ESP_CODE) and
+          litige_fait.ORL_REF (+)= geo_ordlig.ORL_REF
+          ORDER BY geo_ordlig.orl_lig ASC
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

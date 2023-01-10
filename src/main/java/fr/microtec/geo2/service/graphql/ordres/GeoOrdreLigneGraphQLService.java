@@ -258,4 +258,9 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
         return this.ordreLigneService
                 .fetchOrdreLigneSuiviDeparts(search, pageable, onlyColisDiff);
     }
+
+    @GraphQLQuery
+    public List<GeoOrdreLigne> wLitigePickOrdreOrdligV2(String ordreID) {
+        return ((GeoOrdreLigneRepository) this.repository).wLitigePickOrdreOrdligV2(ordreID);
+    }
 }
