@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.ordres;
+package fr.microtec.geo2.persistance.entity.litige;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,12 +14,12 @@ import lombok.EqualsAndHashCode;
 @Table(name = "geo_litcon")
 @Entity
 public class GeoLitigeConsequence extends ValidateAndModifiedEntity {
-  
-  @Id
+
+	@Id
 	@Column(name = "lcq_code")
 	private String id;
 
 	@Column(name = "lcq_desc")
 	private String description;
-  
+
 }

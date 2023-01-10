@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.ordres;
+package fr.microtec.geo2.persistance.entity.litige;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,12 +18,12 @@ import lombok.EqualsAndHashCode;
 @Table(name = "geo_litlig")
 @Entity
 public class GeoLitigeLigne extends ValidateAndModifiedEntity {
-  
-  @Id
+
+	@Id
 	@Column(name = "lil_ref")
 	private String id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lit_ref")
 	private GeoLitige litige;
 
@@ -46,7 +47,7 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 
 	@Column(name = "cli_pu")
 	private Float clientPrixUnitaire;
-	
+
 	@Column(name = "cli_qte")
 	private Double clientQuantite;
 
@@ -94,10 +95,10 @@ public class GeoLitigeLigne extends ValidateAndModifiedEntity {
 
 	@Column(name = "tyt_code")
 	private String responsableTypeCode;
-	
+
 	@Column(name = "tie_code")
 	private String tiersCode;
-	
+
 	@Column(name = "lca_code", insertable = false, updatable = false)
 	private String causeLitigeCode;
 

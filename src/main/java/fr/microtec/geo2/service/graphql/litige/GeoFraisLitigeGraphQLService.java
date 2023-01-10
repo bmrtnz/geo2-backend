@@ -1,8 +1,8 @@
-package fr.microtec.geo2.service.graphql.ordres;
+package fr.microtec.geo2.service.graphql.litige;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
-import fr.microtec.geo2.persistance.entity.ordres.GeoLitigeConsequence;
-import fr.microtec.geo2.persistance.repository.ordres.GeoLitigeConsequenceRepository;
+import fr.microtec.geo2.persistance.entity.litige.GeoFraisLitige;
+import fr.microtec.geo2.persistance.repository.litige.GeoFraisLitigeRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -20,14 +20,14 @@ import java.util.Optional;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoLitigeConsequenceGraphQLService extends GeoAbstractGraphQLService<GeoLitigeConsequence, String> {
+public class GeoFraisLitigeGraphQLService extends GeoAbstractGraphQLService<GeoFraisLitige, String> {
 
-    public GeoLitigeConsequenceGraphQLService(GeoLitigeConsequenceRepository repository) {
-        super(repository, GeoLitigeConsequence.class);
+    public GeoFraisLitigeGraphQLService(GeoFraisLitigeRepository repository) {
+        super(repository, GeoFraisLitige.class);
     }
 
     @GraphQLQuery
-    public RelayPage<GeoLitigeConsequence> allLitigeConsequence(
+    public RelayPage<GeoFraisLitige> allFraisLitige(
             @GraphQLArgument(name = "search") String search,
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
             @GraphQLEnvironment ResolutionEnvironment env) {
@@ -35,13 +35,13 @@ public class GeoLitigeConsequenceGraphQLService extends GeoAbstractGraphQLServic
     }
 
     @GraphQLQuery
-    public List<GeoLitigeConsequence> allLitigeConsequenceList(
+    public List<GeoFraisLitige> allFraisLitigeList(
             @GraphQLArgument(name = "search") String search) {
         return this.getAll(search);
     }
 
     @GraphQLQuery
-    public Optional<GeoLitigeConsequence> getLitigeConsequence(
+    public Optional<GeoFraisLitige> getFraisLitige(
             @GraphQLArgument(name = "id") String id) {
         return super.getOne(id);
     }

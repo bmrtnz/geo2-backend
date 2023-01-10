@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.ordres;
+package fr.microtec.geo2.persistance.entity.litige;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ordres.GeoFrais;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

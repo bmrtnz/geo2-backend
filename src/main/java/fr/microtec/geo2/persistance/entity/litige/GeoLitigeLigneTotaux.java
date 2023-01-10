@@ -1,4 +1,4 @@
-package fr.microtec.geo2.persistance.entity.ordres;
+package fr.microtec.geo2.persistance.entity.litige;
 
 import java.io.Serializable;
 

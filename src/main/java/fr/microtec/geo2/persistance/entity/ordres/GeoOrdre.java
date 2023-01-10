@@ -9,6 +9,7 @@ import fr.microtec.geo2.persistance.entity.logistique.GeoPort;
 import fr.microtec.geo2.persistance.entity.tiers.*;
 import fr.microtec.geo2.persistance.entity.document.GeoAsFacture;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
+import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
