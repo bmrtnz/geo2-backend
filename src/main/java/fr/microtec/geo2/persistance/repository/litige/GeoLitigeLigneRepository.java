@@ -1,12 +1,15 @@
 package fr.microtec.geo2.persistance.repository.litige;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigne;
+import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneFait;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
@@ -31,4 +34,9 @@ public interface GeoLitigeLigneRepository extends GeoRepository<GeoLitigeLigne, 
       "ll.litige.totalMontantRistourne," +
       "(ll.litige.totalMontantRistourne * ll.litige.ordreOrigine.tauxDevise)")
   Optional<GeoLitigeLigneTotaux> getTotaux(GeoLitige litige);
+
+  @Query(name = "Litige.allLitigeLigneFait", nativeQuery = true)
+  List<GeoLitigeLigneFait> allLitigeLigneFait(
+      @Param("ar_lit_ref") String litigeID,
+      @Param("ar_orl_lit") String numeroLigne);
 }

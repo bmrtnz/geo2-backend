@@ -4,7 +4,6 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
 http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
 
-  <!-- PLANNING TRANSPORTEUR -->
   <named-native-query
     name="Litige.allLitigeAPayer"
     result-class="fr.microtec.geo2.persistance.entity.litige.GeoLitigeAPayer"
@@ -28,6 +27,58 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         select  'T/' "TYPE",T.TRP_CODE "CODE", T.RAISOC "RAISOC", 3 "NUM_TRI"
         FROM   GEO_TRANSP  T
         where  T.VALIDE ='O') data
+    ]]>
+    </query>
+  </named-native-query>
+
+  <named-native-query
+    name="Litige.allLitigeLigneFait"
+    result-class="fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneFait"
+  >
+    <query>
+    <![CDATA[
+      SELECT rownum, data.* FROM(
+        SELECT
+            LL.lil_ref,
+            litige_fait.TOT_NB_COL,
+            litige_fait.TOT_PDS_NET,
+            litige_fait.TOT_NB_PAL
+        FROM
+            geo_litlig LL,
+            geo_ordlig OL,
+            geo_article A,
+            geo_ordre O,
+            (
+            SELECT
+                LL1.ORL_REF "ORL_REF",
+                            sum(LL1.CLI_NB_COL) "TOT_NB_COL",
+                sum(LL1.CLI_PDS_NET) "TOT_PDS_NET",
+                sum(LL1.CLI_NB_PAL) "TOT_NB_PAL"
+            FROM
+                GEO_LITIGE L1 ,
+                GEO_LITLIG LL1
+            WHERE
+                L1.lit_ref = :ar_lit_ref
+                AND
+                            L1.LIT_REF = LL1.LIT_REF
+                AND
+        LL1.ORL_LIT <> :ar_orl_lit
+            GROUP BY
+                LL1.ORL_REF) litige_fait
+        WHERE
+            OL.orl_ref = LL.orl_ref
+            AND
+        A.art_ref = OL.art_ref
+            AND
+        LL.lit_ref = :ar_lit_ref
+            AND
+        O.ORD_REF = OL.ORD_REF
+            AND
+        LL.ORL_LIT = :ar_orl_lit
+            AND
+        litige_fait.ORL_REF(+) = LL.ORL_REF
+        ORDER BY
+            OL.orl_lig ASC) data
     ]]>
     </query>
   </named-native-query>

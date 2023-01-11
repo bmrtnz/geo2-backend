@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.graphql.litige;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigne;
+import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneFait;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeLigneRepository;
 import fr.microtec.geo2.service.OrdreService;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,6 +52,11 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
     public Optional<GeoLitigeLigne> getLitigeLigne(
             @GraphQLArgument(name = "id") String id) {
         return super.getOne(id);
+    }
+
+    @GraphQLQuery
+    public List<GeoLitigeLigneFait> allLitigeLigneFait(String litigeID, String numeroLigne) {
+        return ((GeoLitigeLigneRepository) super.repository).allLitigeLigneFait(litigeID, numeroLigne);
     }
 
 }
