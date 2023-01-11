@@ -82,9 +82,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     CASE
                         WHEN L.immatriculation IS NOT NULL THEN L.immatriculation || ' '
                         ELSE ''
-                    END || CASE
-                        WHEN L.container IS NOT NULL THEN L.container
-                        ELSE ''
                     END AS NUM_IMMAT,
                     O.CEN_REF,
                     O.ORD_REF,
