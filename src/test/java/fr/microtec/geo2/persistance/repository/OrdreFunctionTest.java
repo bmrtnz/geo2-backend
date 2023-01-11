@@ -976,4 +976,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(0, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFCreeOrdreReedFact() {
+        FunctionResult result = this.functionOrdreRepository
+                .fCreeOrdreReedFact("1685592", SOCIETE_SA, "BRUNO");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }
