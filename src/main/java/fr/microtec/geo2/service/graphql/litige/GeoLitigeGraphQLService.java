@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -46,6 +47,11 @@ public class GeoLitigeGraphQLService extends GeoAbstractGraphQLService<GeoLitige
     public List<GeoLitigeAPayer> allLitigeAPayer(
             @GraphQLArgument(name = "litigeID") String litigeID) {
         return ((GeoLitigeRepository) super.repository).allLitigeAPayer(litigeID);
+    }
+
+    @GraphQLMutation
+    public GeoLitige saveLitige(GeoLitige litige, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(litige, env);
     }
 
 }
