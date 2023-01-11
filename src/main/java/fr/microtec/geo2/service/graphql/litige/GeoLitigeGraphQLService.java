@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeAPayer;
+import fr.microtec.geo2.persistance.entity.litige.GeoLitigeSupervision;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -52,6 +53,11 @@ public class GeoLitigeGraphQLService extends GeoAbstractGraphQLService<GeoLitige
     @GraphQLMutation
     public GeoLitige saveLitige(GeoLitige litige, @GraphQLEnvironment ResolutionEnvironment env) {
         return this.saveEntity(litige, env);
+    }
+
+    @GraphQLQuery
+    public List<GeoLitigeSupervision> allSupervisionLitige(String type, String code) {
+        return ((GeoLitigeRepository) super.repository).allSupervisionLitige(type, code);
     }
 
 }

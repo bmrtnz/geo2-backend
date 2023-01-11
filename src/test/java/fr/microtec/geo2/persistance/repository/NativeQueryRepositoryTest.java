@@ -178,4 +178,9 @@ public class NativeQueryRepositoryTest {
         this.litigeLigneRepository.allLitigeLigneFait("119517", "01");
     }
 
+    @Test
+    public void testAllSupervisionLitige() {
+        this.litigeRepository.allSupervisionLitige("A", "MAR");
+    }
+
 }

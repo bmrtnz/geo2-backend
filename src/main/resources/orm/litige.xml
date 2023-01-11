@@ -83,4 +83,110 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <named-native-query
+    name="Litige.allSupervisionLitige"
+    result-class="fr.microtec.geo2.persistance.entity.litige.GeoLitigeSupervision"
+  >
+    <query>
+    <![CDATA[
+      SELECT rownum, data.* FROM(
+        SELECT
+            GEO_CLIENT.SCO_CODE,
+            GEO_PERSON.per_code ,
+            GEO_PERSON.PER_NOM ,
+            GEO_PERSON.PER_PRENOM,
+            GEO_LITIGE.LIT_REF,
+            GEO_LITIGE.lit_date_creation,
+            GEO_CLIENT.CLI_CODE,
+            GEO_ARTICLE_COLIS.VAR_DESC,
+            GEO_ORDRE.NORDRE,
+            GEO_ORDLOG.DATDEP_FOU_P,
+            GEO_FOURNI_PROPRIETAIRE.fou_code as prop_code,
+            GEO_FOURNI.FOU_CODE,
+            GEO_LITCAU.LCA_DESC,
+            GEO_LITCON.LCQ_DESC,
+            GEO_LITIGE.fl_client_clos,
+            GEO_LITIGE.FL_FOURNI_CLOS,
+            GEO_LITLIG.nordre_replace,
+            current_date - GEO_ORDRE.LIVDATP as delai,
+            GEO_LITIGE.LIT_FRAIS_ANNEXES,
+            GEO_LITLIG.CLI_PU * GEO_LITLIG.CLI_QTE as prix_client,
+            GEO_LITLIG.RES_PU * GEO_LITLIG.RES_QTE  as prix_fourni,
+            GEO_ORDRE.SOC_CODE,
+            GEO_LITLIG.RES_COMMENT,
+            GEO_ORDLOG.CONTAINER,
+            GEO_ORDLOG.IMMATRICULATION,
+            GEO_ORDRE.CODE_CHARGEMENT
+        FROM
+            GEO_CLIENT ,
+            GEO_ORDRE,
+            GEO_ORDLIG ,
+            GEO_FOURNI,
+            GEO_ORDLOG,
+            GEO_ARTICLE_COLIS,
+            GEO_LITIGE,
+            GEO_LITLIG,
+            GEO_FOURNI GEO_FOURNI_PROPRIETAIRE,
+            GEO_PERSON,
+            GEO_LITCAU,
+            GEO_LITCON,
+            GEO_SOCIETE
+        WHERE
+            ( ( :arg_typ_search = 'C'
+                AND :arg_cod_search = GEO_ORDRE.per_codeass )
+            OR ( :arg_typ_search = 'A'
+                AND :arg_cod_search = GEO_ORDRE.per_codecom )
+            OR ( :arg_typ_search = 'SECTEUR'
+                AND :arg_cod_search = GEO_ORDRE.sco_code ) )
+            AND GEO_ORDRE.ord_ref = GEO_LITIGE.ORD_REF_ORIGINE
+            AND GEO_ORDRE.ord_ref = GEO_ORDLIG.ord_ref
+            AND GEO_ORDLIG.fou_code = GEO_FOURNI.fou_code
+            AND GEO_ORDLIG.art_ref = GEO_ARTICLE_COLIS.art_ref
+            AND GEO_PERSON.PER_CODE = GEO_ORDRE.per_codeass
+            AND GEO_PERSON.VALIDE = 'O'
+            AND GEO_LITCAU.valide = 'O'
+            AND GEO_ORDLIG.ord_ref = GEO_ORDLOG.ord_ref
+            AND GEO_ORDLIG.fou_code = GEO_ORDLOG.fou_code
+            AND GEO_CLIENT.cli_ref = GEO_ORDRE.cli_ref
+            AND GEO_ORDRE.typ_ordre NOT IN ('UKT', 'UKN')
+            AND GEO_ORDLIG.orl_ref (+) = GEO_LITLIG.orl_ref
+            AND GEO_LITLIG.lit_ref = GEO_LITIGE.lit_ref
+            AND GEO_ORDLIG.propr_code = GEO_FOURNI_PROPRIETAIRE.fou_code
+            AND GEO_LITLIG.lca_code = GEO_LITCAU.lca_code
+            AND GEO_LITLIG.lcq_code = GEO_LITCON.LCQ_CODE
+            AND GEO_ORDRE.SOC_CODE = GEO_SOCIETE.SOC_CODE
+            AND (GEO_ORDRE.CAM_CODE = GEO_SOCIETE.CAM_CODE
+                OR GEO_ORDRE.CAM_CODE = GEO_SOCIETE.CAM_CODE)
+            AND EXISTS
+        (
+            SELECT
+                1
+            FROM
+                GEO_LITIGE LITIGE_NON_CLOS
+            WHERE
+                GEO_LITIGE.LIT_REF = LITIGE_NON_CLOS.LIT_REF
+                AND
+        (LITIGE_NON_CLOS.fl_client_clos = 'N'
+                    OR
+        LITIGE_NON_CLOS.FL_FOURNI_CLOS = 'N' ))
+            AND GEO_ORDLOG.ORX_REF IN (
+            SELECT
+                ORX_REF
+            FROM
+                GEO_ORDLOG G2
+            WHERE
+                ROWNUM = 1
+                AND
+        GEO_LITIGE.ORD_REF_ORIGINE = G2.ORD_REF
+                AND
+        GEO_ORDLIG.fou_code = G2.FOU_CODE)
+        ORDER BY
+            GEO_PERSON.per_code ,
+            current_date - GEO_ORDRE.LIVDATP DESC,
+            GEO_CLIENT.SCO_CODE,
+            GEO_LITIGE.LIT_REF) data
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>
