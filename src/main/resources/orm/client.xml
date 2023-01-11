@@ -41,6 +41,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 EC_PIECE,
                 NUM_IMMAT,
                 CEN_REF,
+                ORD_REF,
                 CONTAINER
             FROM
                 (
@@ -86,6 +87,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                         ELSE ''
                     END AS NUM_IMMAT,
                     O.CEN_REF,
+                    O.ORD_REF,
                     L.CONTAINER
                 FROM
                     GEO_CLIENT_ENCOURS E,
@@ -155,6 +157,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     D.DEV_TX,
                     L.immatriculation,
                     O.CEN_REF,
+                    O.ORD_REF,
                     L.CONTAINER
             UNION
                 SELECT
@@ -190,6 +193,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     D.DEV_TX,
                     '' AS NUM_IMMAT,
                     '' AS CEN_REF,
+                    '' AS ORD_REF,
                     '' AS CONTAINER
                 FROM
                     GEO_CLIENT_ENCOURS E,

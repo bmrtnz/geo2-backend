@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import lombok.Data;
 
 @Data
@@ -26,6 +27,10 @@ public class GeoClientEnCours {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cen_ref")
     private GeoEntrepot entrepot;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref")
+    private GeoOrdre ordre;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cli_ref")
