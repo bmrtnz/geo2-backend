@@ -18,6 +18,7 @@ import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
+import fr.microtec.geo2.persistance.entity.tiers.GeoPaysDepassement;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeLigneRepository;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
@@ -27,6 +28,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoPaysRepository;
 
 @DataJpaTest
 @Import(PersistanceTestConfiguration.class)
@@ -51,6 +53,8 @@ public class NativeQueryRepositoryTest {
     private GeoLitigeRepository litigeRepository;
     @Autowired
     private GeoLitigeLigneRepository litigeLigneRepository;
+    @Autowired
+    private GeoPaysRepository paysRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -181,6 +185,12 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllSupervisionLitige() {
         this.litigeRepository.allSupervisionLitige("A", "MAR");
+    }
+
+    @Test
+    public void testAllPaysDepassementEnCours() {
+        this.paysRepository
+                .allPaysDepassement("F", "SA", "BV");
     }
 
 }
