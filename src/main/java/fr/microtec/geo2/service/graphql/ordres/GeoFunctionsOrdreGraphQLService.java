@@ -556,4 +556,17 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fDelRegroupement(ordreRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreReplacement(
+            String ordreOriginID,
+            String entrepotID,
+            String nomUtilisateur,
+            String societeID) {
+        return this.repository.fCreeOrdreReplacement(
+                ordreOriginID,
+                entrepotID,
+                nomUtilisateur,
+                societeID);
+    }
+
 }
