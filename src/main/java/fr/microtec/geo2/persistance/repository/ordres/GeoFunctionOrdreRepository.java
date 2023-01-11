@@ -306,4 +306,9 @@ public interface GeoFunctionOrdreRepository {
                         String arg_orl_ref_ori,
                         String arg_soc_code);
 
+        FunctionResult fCreeOrdreReedFact(
+                        String arg_ord_ref_origine,
+                        String gs_soc_code,
+                        String gs_username);
+
 }
