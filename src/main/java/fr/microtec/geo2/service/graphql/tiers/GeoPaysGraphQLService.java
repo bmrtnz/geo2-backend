@@ -45,11 +45,13 @@ public class GeoPaysGraphQLService extends GeoAbstractGraphQLService<GeoPays, St
     @GraphQLQuery
     public List<GeoPaysDepassement> allPaysDepassementList(
             @GraphQLArgument(name = "secteurCode") String secteurCode,
-            @GraphQLArgument(name = "societeCode") String societeCode) {
+            @GraphQLArgument(name = "societeCode") String societeCode,
+            @GraphQLArgument(name = "commercialCode") String commercialCode) {
         return ((GeoPaysRepository) this.repository)
                 .allPaysDepassement(
                         Optional.ofNullable(secteurCode).orElse("%"),
-                        societeCode);
+                        societeCode,
+                        Optional.ofNullable(commercialCode).orElse("%"));
     }
 
     @GraphQLQuery

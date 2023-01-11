@@ -15,7 +15,8 @@ public interface GeoPaysRepository extends GeoRepository<GeoPays, String> {
     @Query(name = "Pays.allPaysDepassement", nativeQuery = true)
     List<GeoPaysDepassement> allPaysDepassement(
             @Param("arg_sco_code") String secteurCode,
-            @Param("arg_soc_code") String societeCode);
+            @Param("arg_soc_code") String societeCode,
+            @Param("arg_com_code") String commercialCode);
 
     @Query(name = "Pays.countPaysDepassement", nativeQuery = true)
     long countPaysDepassement(
