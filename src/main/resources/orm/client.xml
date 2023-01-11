@@ -12,37 +12,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             <![CDATA[
             SELECT
                 ROWNUM,
-                SOC_CODE,
-                CLI_REF,
-                DEV_CODE,
-                CPT_CODE,
-                CFC_DATE_ECRITURE,
-                CFC_DATE_ECHEANCE,
-                CFC_SENS,
-                CFC_MT_EUROS,
-                CFC_MT_DEVISE,
-                CFC_REF_PIECE,
-                CFC_INTITULE,
-                CFC_RAPPEL,
-                ECH_NIV,
-                CLI_CODE,
-                RAISOC,
-                ZIP,
-                VILLE,
-                PAY_CODE,
-                ENC_ASSURE,
-                ENC_REFERENCES,
-                ENC_DEPASSE,
-                ENC_DATE_VALID,
-                ENC_BW,
-                ENC_ACTUEL,
-                CG_NUM,
-                DATFAC,
-                EC_PIECE,
-                NUM_IMMAT,
-                CEN_REF,
-                ORD_REF,
-                CONTAINER
+                DATA.*
             FROM
                 (
                 SELECT
@@ -219,7 +189,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                             AND
                                 ( O.DATECH = E.CFC_DATE_ECHEANCE
                                 OR O.DATECH IS NULL) )
-                            )
+                            ) DATA
 
         ]]>
         </query>
