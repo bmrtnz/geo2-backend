@@ -569,4 +569,19 @@ public class GeoFunctionsOrdreGraphQLService {
                 societeID);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreReplacementLigne(
+            String litigeLigneID,
+            String ordreID,
+            String ordreOriginID,
+            String ordreLigneOriginID,
+            String societeID) {
+        return this.repository.fCreeOrdreReplacementLigne(
+                litigeLigneID,
+                ordreID,
+                ordreOriginID,
+                ordreLigneOriginID,
+                societeID);
+    }
+
 }

@@ -964,4 +964,16 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFCreeOrdreReplacementLigne() {
+        FunctionResult resultOR = this.functionOrdreRepository
+                .fCreeOrdreReplacement("1685592", "007683", "BRUNO", SOCIETE_SA);
+        String ordre_replacement = resultOR.getData().get("ls_ord_ref_replace").toString();
+        FunctionResult result = this.functionOrdreRepository
+                .fCreeOrdreReplacementLigne("199933", ordre_replacement, "1631127", "C64A2C", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+    }
+
 }

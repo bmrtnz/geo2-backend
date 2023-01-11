@@ -299,4 +299,11 @@ public interface GeoFunctionOrdreRepository {
                         String gs_username,
                         String gs_soc_code);
 
+        FunctionResult fCreeOrdreReplacementLigne(
+                        String arg_lil_ref,
+                        String arg_ord_ref,
+                        String arg_ord_ref_ori,
+                        String arg_orl_ref_ori,
+                        String arg_soc_code);
+
 }
