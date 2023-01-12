@@ -990,4 +990,19 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fCreeOrdreReedFactLigne(
+            String ordreID,
+            String ordreOriginID,
+            String societeID) {
+        FunctionQuery query = this.build("F_CREE_ORDRE_REED_FACT_LIGNE");
+
+        query.attachInput("arg_ord_ref", String.class, ordreID);
+        query.attachInput("arg_ord_ref_ori", String.class, ordreOriginID);
+        query.attachInput("gs_soc_code", String.class, societeID);
+        query.attachOutput("ls_orl_ref", String.class);
+
+        return query.fetch();
+    }
+
 }

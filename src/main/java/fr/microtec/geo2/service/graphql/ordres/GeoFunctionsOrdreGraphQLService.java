@@ -595,4 +595,15 @@ public class GeoFunctionsOrdreGraphQLService {
                 nomUtilisateur);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreReedFactLigne(
+            String ordreID,
+            String ordreOriginID,
+            String societeID) {
+        return this.repository.fCreeOrdreReedFactLigne(
+                ordreID,
+                ordreOriginID,
+                societeID);
+    }
+
 }
