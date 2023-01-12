@@ -112,10 +112,4 @@ public class GeoClientEnCours {
     @Column(name = "ec_piece")
     private String ecPiece;
 
-    @Column(name = "num_immat")
-    private String numImmat;
-
-    @Column(name = "container")
-    private String numeroContainer;
-
 }
