@@ -49,18 +49,12 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     E.EC_PIECE,
                     D.DEV_CODE_REF,
                     D.DEV_TX,
-                    CASE
-                        WHEN L.immatriculation IS NOT NULL THEN L.immatriculation || ' '
-                        ELSE ''
-                    END AS NUM_IMMAT,
                     O.CEN_REF,
-                    O.ORD_REF,
-                    L.CONTAINER
+                    O.ORD_REF
                 FROM
                     GEO_CLIENT_ENCOURS E,
                     GEO_CLIENT C,
                     GEO_ORDRE O,
-                    GEO_ORDLOG L,
                     GEO_DEVISE_REF D
                 WHERE
                     E.CLI_REF = C.CLI_REF
@@ -71,18 +65,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     AND
                                 substr(E.CFC_INTITULE, 3, 6) = O.NORDRE
                     AND
-                                L.ORD_REF = O.ORD_REF
-                    AND
                                 ( O.DATECH = E.CFC_DATE_ECHEANCE
                         OR O.DATECH IS NULL)
-                    AND
-                                L.ORX_REF IN (
-                    SELECT
-                        MIN(ORX_REF)
-                    FROM
-                        GEO_ORDLOG
-                    WHERE
-                        GEO_ORDLOG.ORD_REF = O.ORD_REF)
                     AND
                                 D.DEV_CODE_REF like :ra_dev_code_soc
                     AND
@@ -122,14 +106,12 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     E.EC_PIECE,
                     D.DEV_CODE_REF,
                     D.DEV_TX,
-                    L.immatriculation,
                     O.CEN_REF,
-                    O.ORD_REF,
-                    L.CONTAINER
+                    O.ORD_REF
             UNION
                 SELECT
                     DISTINCT
-                                E.SOC_CODE,
+                    E.SOC_CODE,
                     E.CLI_REF,
                     E.DEV_CODE,
                     E.CPT_CODE,
@@ -158,10 +140,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     E.EC_PIECE,
                     D.DEV_CODE_REF,
                     D.DEV_TX,
-                    '' AS NUM_IMMAT,
                     '' AS CEN_REF,
-                    '' AS ORD_REF,
-                    '' AS CONTAINER
+                    '' AS ORD_REF
                 FROM
                     GEO_CLIENT_ENCOURS E,
                     GEO_CLIENT C,
