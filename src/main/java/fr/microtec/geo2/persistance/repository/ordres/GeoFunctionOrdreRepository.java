@@ -311,4 +311,9 @@ public interface GeoFunctionOrdreRepository {
                         String gs_soc_code,
                         String gs_username);
 
+        FunctionResult fCreeOrdreReedFactLigne(
+                        String arg_ord_ref,
+                        String arg_ord_ref_ori,
+                        String gs_soc_code);
+
 }
