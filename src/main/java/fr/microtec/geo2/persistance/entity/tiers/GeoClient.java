@@ -1,6 +1,5 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +39,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoClient extends ValidateModifiedPrewrittedEntity implements Serializable {
+public class GeoClient extends ValidateModifiedPrewrittedEntity {
 
     public static final String TYPE_TIERS = "C";
 
@@ -370,9 +369,6 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity implements Seria
 
     @Column(name = "id_fiscal")
     private String identifiantFiscal;
-
-    @Formula("coalesce(enc_0,0) + coalesce(enc_1,0) + coalesce(enc_2,0) + coalesce(enc_3,0) + coalesce(enc_4,0)")
-    private Float enCoursAll;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     @Where(clause = "entite = 'Client'")
