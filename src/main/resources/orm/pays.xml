@@ -33,7 +33,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     geo_client.sco_code LIKE :arg_sco_code
             AND
 
-                    (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) > 0
+                    (geo_client.enc_actuel - ( geo_client.enc_bw + geo_client.enc_assure + geo_client.enc_depasse)) > 0
             AND
 
                     geo_client.soc_code = :arg_soc_code
