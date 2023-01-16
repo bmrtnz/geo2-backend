@@ -64,7 +64,7 @@ BEGIN
     INSERT INTO GEO_PALCEL
         ( CEN_REF, SOC_CODE, FOU_CODE, ESP_CODE, COL_CODE, ORL_REF, NORDRE, DEPDATP, DATE_CREATION, QTE, CMR, STATION_RAISOC, BON_RETOUR, REF_CLI )
     VALUES
-        (  arg_cen_ref, gs_soc_code, arg_fou_code, arg_esp_code, arg_col_code, ls_orl_ref, ls_nordre, CURRENT_DATE, CURRENT_DATE, arg_nb_pallox, ls_cmr, arg_station_raisoc , ls_bon_retour, ls_ref);
+        (  arg_cen_ref, gs_soc_code, arg_fou_code, arg_esp_code, arg_col_code, ls_orl_ref, ls_nordre, arg_date_application, arg_date_application, arg_nb_pallox, ls_cmr, arg_station_raisoc , ls_bon_retour, ls_ref);
 
     commit;
     res := 1;

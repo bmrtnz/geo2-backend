@@ -43,14 +43,20 @@ BEGIN
     --ls_ORL_REF = SQLCA.F_SEQ_ORL_SEQ()
     --ls_ORL_REF = ''
 
-    SELECT
-        A.ART_REF, A.PDNET_CLIENT, E.PU_ACHAT, E.PU_VENTE
-    INTO
-        ls_ART_REF, ll_EXP_PDS_NET, ll_ACH_PU, ll_VTE_PU
-    FROM
-        GEO_ARTICLE A, GEO_COLIS E
-    WHERE
-        A.ESP_CODE = 'EMBALL' AND A.VAR_CODE = 'PALLOX' AND A.GER_CODE = 'B' AND A.COL_CODE = E.COL_CODE AND A.ESP_CODE = E.ESP_CODE AND E.SUIVI_PALLOX = 'O' AND E.COL_CODE = arg_palox;
+    begin
+        SELECT
+            A.ART_REF, A.PDNET_CLIENT, E.PU_ACHAT, E.PU_VENTE
+        INTO
+            ls_ART_REF, ll_EXP_PDS_NET, ll_ACH_PU, ll_VTE_PU
+        FROM
+            GEO_ARTICLE A, GEO_COLIS E
+        WHERE
+            A.ESP_CODE = 'EMBALL' AND A.VAR_CODE = 'PALLOX' AND A.GER_CODE = 'B' AND A.COL_CODE = E.COL_CODE AND A.ESP_CODE = E.ESP_CODE AND E.SUIVI_PALLOX = 'O' AND E.COL_CODE = arg_palox;
+    exception when others then
+        msg := 'Erreur durant la création de la ligne de retour palox: ' || SQLERRM;
+        res := 0;
+        return;
+    end;
 
     if arg_is_regulation = true then
         ll_ACH_PU := 0;
