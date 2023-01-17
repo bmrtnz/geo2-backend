@@ -18,7 +18,7 @@ public class IndicateursCountService {
 
     @Data
     public static class IndicateurCountResponse {
-        BigDecimal count;
+        BigDecimal count = BigDecimal.valueOf(0);
         String secteur;
     }
 
