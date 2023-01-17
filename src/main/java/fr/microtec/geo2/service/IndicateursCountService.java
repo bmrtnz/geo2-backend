@@ -1,7 +1,6 @@
 package fr.microtec.geo2.service;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -52,7 +51,7 @@ public class IndicateursCountService {
 
     private String fetchSecteur() {
         val user = this.securityService.getUser();
-        val ubr = Optional.ofNullable(user.getUtilisateurByRole());
+        val ubr = user.getUtilisateurByRole();
         if (ubr.isPresent())
             return ubr.get().getSecteurCommercial().getId();
         if (user.isAdmin())
