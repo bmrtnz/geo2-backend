@@ -177,8 +177,11 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
     /**
      * Get personne user by role
      */
-    public GeoUtilisateur getUtilisateurByRole() {
-        val personne = Optional.ofNullable(this.getPersonneByRole());
-        return personne.isPresent() ? personne.get().getUtilisateur() : null;
+    public Optional<GeoUtilisateur> getUtilisateurByRole() {
+        try {
+            return Optional.ofNullable(this.getPersonneByRole().getUtilisateur());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }
