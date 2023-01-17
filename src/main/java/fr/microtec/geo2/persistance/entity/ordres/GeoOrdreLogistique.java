@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.val;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -159,8 +161,9 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 
     @PostLoad
     public void postLoad() {
+        val expedieStation = Optional.ofNullable(this.expedieStation).orElse(false);
         if (this.dateDepartReelleFournisseur == null) {
-            if (this.expedieStation
+            if (expedieStation
                     && this.totalPalettesExpediees != null
                     && this.nombrePalettesAuSol != null
                     && this.nombrePalettes100x120 != null
@@ -172,7 +175,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
                     && this.nombrePalettes80x120 == 0
                     && this.nombrePalettes60x80 == 0)
                 this.okStation = "clôturé à zéro";
-            else if (this.expedieStation)
+            else if (expedieStation)
                 this.okStation = "OK";
             else
                 this.okStation = "non clôturé";
