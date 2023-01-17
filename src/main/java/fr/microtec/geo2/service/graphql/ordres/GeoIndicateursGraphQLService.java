@@ -1,11 +1,10 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
-import java.math.BigDecimal;
-
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.service.IndicateursCountService;
+import fr.microtec.geo2.service.IndicateursCountService.IndicateurCountResponse;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
@@ -31,7 +30,7 @@ public class GeoIndicateursGraphQLService {
      * Give entities count from specified indicator
      */
     @GraphQLQuery
-    public BigDecimal countByIndicator(Indicateur indicateur, String societeCode, String secteurCode) {
+    public IndicateurCountResponse countByIndicator(Indicateur indicateur, String societeCode, String secteurCode) {
         switch (indicateur) {
             case ClientsDepassementEncours:
                 return this.indicateursCountService.countClientsDepassementEncours(societeCode, secteurCode);
