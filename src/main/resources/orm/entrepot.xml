@@ -14,126 +14,86 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     SELECT ROWNUM, rest.*
     FROM (
       SELECT
-        C.CLI_CODE,
-        E.CEN_CODE,
-        E.RAISOC as e_raisoc,
-        E.ZIP,
-        E.VILLE,
-        E.PAY_CODE,
-        PI1.COL_CODE,
-        PI1.FOU_CODE,
-        F.RAISOC,
-        PI1.DATE_INV,
-        PI1.QTE_INV,
-        PI2.NORDRE,
-        PI2.DEPDATP,
-        CASE
-          WHEN PI2.ENTREE IS NULL THEN 0
-          ELSE PI2.ENTREE
-        END AS ENTREE,
-        CASE
-          WHEN PI2.SORTIE IS NULL THEN 0
-          ELSE PI2.SORTIE
-        END AS SORTIE,
-        PI2.BON_RETOUR,
-        PI2.CMR,
-        PI2.REF_CLI,
-        PI2.ESP_CODE,
-        E.CEN_REF,
-        T.SUM_QTT,
-        C.CLI_REF,
-        PI2.PALOX_KO_NBR,
-        PI2.PALOX_KO_CAUSE,
-        F.FOU_CODE || ' - ' || F.RAISOC as STATION
+                C.CLI_CODE,
+                E.CEN_CODE,
+                E.RAISOC as e_raisoc,
+                E.ZIP,
+                E.VILLE,
+                E.PAY_CODE,
+                PI1.COL_CODE,
+                PI1.FOU_CODE,
+                F.RAISOC,
+                PI1.DATE_INV,
+                PI1.QTE_INV,
+                PI2.NORDRE,
+                PI2.DEPDATP,
+                CASE WHEN PI2.ENTREE IS NULL THEN 0 ELSE PI2.ENTREE END AS ENTREE,
+                CASE WHEN PI2.SORTIE IS NULL THEN 0 ELSE PI2.SORTIE END AS SORTIE,
+                PI2.BON_RETOUR,
+                PI2.CMR,
+                PI2.REF_CLI,
+                PI2.ESP_CODE,
+                E.CEN_REF,
+                T.SUM_QTT,
+                C.CLI_REF,
+                PI2.PALOX_KO_NBR,
+                PI2.PALOX_KO_CAUSE,
+                F.FOU_CODE || ' - ' || F.RAISOC as STATION
       FROM
-        GEO_ENTREP E,
-        GEO_CLIENT C,
-        GEO_PALCEN PI1,
-        GEO_FOURNI F,
-        (
-          SELECT
-            PI.COL_CODE,
-            PM.FOU_CODE,
-            PM.STATION_RAISOC,
-            PI.DATE_INV,
-            PI.QTE_INV,
-            PM.NORDRE,
-            PM.DEPDATP,
-            CASE
-              WHEN PM.QTE < 0 THEN (-1) * PM.QTE
-              ELSE 0
-            END AS ENTREE,
-            CASE
-              WHEN PM.QTE > 0 THEN PM.QTE
-              ELSE 0
-            END AS SORTIE,
-            CASE
-              WHEN PM.QTE < 0 THEN PM.BON_RETOUR
-              ELSE PM.BON_RETOUR
-            END AS BON_RETOUR,
-            CASE
-              WHEN PM.QTE < 0 THEN PM.CMR
-              ELSE PM.CMR
-            END AS CMR,
-            CASE
-              WHEN PM.QTE < 0 THEN ''
-              ELSE ''
-            END AS REF_CLI,
-            CASE
-              WHEN PM.ESP_CODE IS NULL THEN 'EMBALL'
-              ELSE PM.ESP_CODE
-            END AS ESP_CODE,
-            PM.CEN_REF,
-            PM.PALOX_KO_NBR,
-            PM.PALOX_KO_CAUSE
-          FROM
-            GEO_PALCEN PI,
-            GEO_PALCEL PM
-          WHERE
-            PM.esp_code = PI.esp_code
-            and PM.col_code = PI.col_code
-            and PM.fou_code = PI.fou_code
-            and PM.cen_ref = PI.cen_ref
-            and PM.FOU_CODE IS NOT NULL
-            AND (
-              (
-                PM.depdatp >= PI.date_inv
-                and PM.depdatp <= :arg_dat_max
-                and PI.date_inv <= :arg_dat_max
-              )
-              OR PM.depdatp is null
-            )
-        ) PI2,
-        (
-          select
-            cen_ref,
-            sum(QTE_INV) AS SUM_QTT
-          from
-            GEO_PALCEN
-          GROUP BY
-            cen_ref
-        ) T
+                GEO_ENTREP E,
+                GEO_CLIENT C,
+                GEO_PALCEN PI1,
+                GEO_FOURNI F,
+                (SELECT
+                PI.COL_CODE,
+                PM.FOU_CODE,
+                PM.STATION_RAISOC,
+                PI.DATE_INV,
+                PI.QTE_INV,
+                PM.NORDRE,
+                PM.DEPDATP,
+                CASE WHEN PM.QTE < 0 THEN (-1) * PM.QTE ELSE 0 END AS ENTREE,
+                CASE WHEN PM.QTE > 0 THEN PM.QTE ELSE 0 END AS SORTIE,
+                CASE WHEN PM.QTE < 0 THEN PM.BON_RETOUR ELSE PM.BON_RETOUR END AS BON_RETOUR,
+                CASE WHEN PM.QTE < 0 THEN PM.CMR ELSE PM.CMR END AS CMR,
+                CASE WHEN PM.QTE < 0 THEN '' ELSE '' END AS REF_CLI,
+                CASE WHEN PM.ESP_CODE IS NULL THEN 'EMBALL' ELSE PM.ESP_CODE END AS ESP_CODE,
+                PM.CEN_REF,
+                PM.PALOX_KO_NBR,
+                PM.PALOX_KO_CAUSE
+                FROM
+                GEO_PALCEN PI,
+                GEO_PALCEL PM
+                WHERE
+                PM.esp_code = PI.esp_code and
+                PM.col_code = PI.col_code and
+                PM.fou_code = PI.fou_code and
+                PM.cen_ref = PI.cen_ref and
+                PM.FOU_CODE IS NOT NULL AND
+                ((PM.depdatp >= PI.date_inv and PM.depdatp <=:arg_dat_max and PI.date_inv<=:arg_dat_max) OR PM.depdatp is null) ) PI2,
+                (select cen_ref, sum(QTE_INV) AS SUM_QTT from GEO_PALCEN GROUP BY cen_ref) T
       WHERE
-        PI2.esp_code (+) = PI1.esp_code
-        and PI2.col_code (+) = PI1.col_code
-        and PI2.fou_code (+) = PI1.fou_code
-        and PI2.cen_ref (+) = PI1.cen_ref
-        and PI1.soc_code = :arg_soc_code
-        AND PI1.cen_ref like :arg_cen_ref
-        AND E.CEN_REF = PI1.CEN_REF
-        and C.CLI_REF = E.CLI_REF
-        AND C.PER_CODE_COM like :arg_per_code_com
-        and C.SCO_CODE = 'PAL'
-        AND F.FOU_CODE = PI1.FOU_CODE
-        AND PI1.CEN_REF = T.CEN_REF
-        AND PI1.FOU_CODE like :arg_fou_code
+                PI2.esp_code (+)= PI1.esp_code and
+                PI2.col_code (+)= PI1.col_code and
+                PI2.fou_code (+)= PI1.fou_code and
+                PI2.cen_ref  (+)= PI1.cen_ref  and
+                PI1.soc_code = :arg_soc_code  AND
+                PI1.cen_ref like :arg_cen_ref AND
+                E.CEN_REF = PI1.CEN_REF and
+                C.CLI_REF = E.CLI_REF AND
+                C.SCO_CODE = 'PAL' AND
+                F.FOU_CODE = PI1.FOU_CODE AND
+                PI1.CEN_REF = T.CEN_REF AND
+                /* Filtres supplementaires */
+                C.PER_CODE_COM like :arg_per_code_com AND
+                PI1.FOU_CODE like :arg_fou_code
       ORDER BY
-        C.CLI_CODE ASC,
-        E.CEN_CODE ASC,
-        PI1.COL_CODE ASC,
-        PI1.FOU_CODE ASC,
-        PI2.DEPDATP ASC,
-        PI2.NORDRE ASC ) rest
+                C.CLI_CODE ASC,
+                E.CEN_CODE ASC,
+                PI1.COL_CODE ASC,
+                PI1.FOU_CODE ASC,
+                PI2.DEPDATP ASC,
+                PI2.NORDRE ASC    ) rest
       ]]>
     </query>
   </named-native-query>
@@ -145,39 +105,39 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
+      SELECT ROWNUM, rest.* FROM(
       SELECT
-      ROWNUM,
-      C.CLI_CODE,
-      E.CEN_CODE,
-      E.RAISOC as e_raisoc,
-      E.ZIP,
-      E.VILLE,
-      E.PAY_CODE,
-      PI1.COL_CODE,
-      PI1.FOU_CODE,
-      F.RAISOC,
-      PI1.DATE_INV,
-      PI1.QTE_INV,
-      PI2.NORDRE,
-      PI2.DEPDATP,
-      PI2.ENTREE,
-      PI2.SORTIE,
-      PI2.BON_RETOUR,
-      PI2.CMR,
-      PI2.REF_CLI,
-      PI2.ESP_CODE,
-      E.CEN_REF,
-      T.SUM_QTT,
-      C.CLI_REF,
-      PI2.PALOX_KO_NBR,
-      PI2.PALOX_KO_CAUSE
-      FROM
+        C.CLI_CODE,
+        E.CEN_CODE,
+        E.RAISOC AS e_raisoc,
+        E.ZIP,
+        E.VILLE,
+        E.PAY_CODE,
+        PI1.COL_CODE,
+        PI1.FOU_CODE,
+        F.RAISOC,
+        PI1.DATE_INV,
+        PI1.QTE_INV,
+        PI2.NORDRE,
+        PI2.DEPDATP,
+        PI2.ENTREE,
+        PI2.SORTIE,
+        PI2.BON_RETOUR,
+        PI2.CMR,
+        PI2.REF_CLI,
+        PI2.ESP_CODE,
+        E.CEN_REF,
+        T.SUM_QTT,
+        C.CLI_REF,
+        PI2.PALOX_KO_NBR,
+        PI2.PALOX_KO_CAUSE
+    FROM
         GEO_ENTREP E,
         GEO_CLIENT C,
         GEO_PALCEN PI1,
         GEO_FOURNI F,
         (
-          SELECT
+        SELECT
             PI.COL_CODE,
             PM.FOU_CODE,
             PM.STATION_RAISOC,
@@ -186,82 +146,123 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             PM.NORDRE,
             PM.DEPDATP,
             CASE
-              WHEN PM.QTE < 0 THEN (-1) * PM.QTE
-              ELSE 0
+                WHEN PM.QTE < 0 THEN (-1) * PM.QTE
+                ELSE 0
             END AS ENTREE,
             CASE
-              WHEN PM.QTE > 0 THEN PM.QTE
-              ELSE 0
+                WHEN PM.QTE > 0 THEN PM.QTE
+                ELSE 0
             END AS SORTIE,
             CASE
-              WHEN PM.QTE < 0 THEN PM.BON_RETOUR
-              ELSE PM.BON_RETOUR
+                WHEN PM.QTE < 0 THEN PM.BON_RETOUR
+                ELSE PM.BON_RETOUR
             END AS BON_RETOUR,
             CASE
-              WHEN PM.QTE < 0 THEN PM.CMR
-              ELSE PM.CMR
+                WHEN PM.QTE < 0 THEN PM.CMR
+                ELSE PM.CMR
             END AS CMR,
             CASE
-              WHEN PM.QTE < 0 THEN ''
-              ELSE ''
+                WHEN PM.QTE < 0 THEN ''
+                ELSE ''
             END AS REF_CLI,
             CASE
-              WHEN PM.ESP_CODE IS NULL THEN 'EMBALL'
-              ELSE PM.ESP_CODE
+                WHEN PM.ESP_CODE IS NULL THEN 'EMBALL'
+                ELSE PM.ESP_CODE
             END AS ESP_CODE,
             PM.CEN_REF,
             PM.PALOX_KO_NBR,
             PM.PALOX_KO_CAUSE
-          FROM
+        FROM
             GEO_PALCEN PI,
             GEO_PALCEL PM
-          WHERE
+        WHERE
             PM.esp_code = PI.esp_code
-            and PM.col_code = PI.col_code
-            and PM.fou_code = PI.fou_code
-            and PM.cen_ref = PI.cen_ref
-            and PM.FOU_CODE IS NOT NULL
-            AND (
-              (
-                PM.depdatp >= PI.date_inv
-                and PM.depdatp <= :arg_dat_max
-                and PI.date_inv <= :arg_dat_max
-              )
-              OR PM.depdatp is null
-            )
-        ) PI2,
+            AND
+                    PM.col_code = PI.col_code
+            AND
+                    PM.fou_code = PI.fou_code
+            AND
+                    PM.cen_ref = PI.cen_ref
+            AND
+                    PM.FOU_CODE IS NOT NULL
+            AND
+                    ((PM.depdatp >= PI.date_inv
+                AND PM.depdatp <=:arg_dat_max
+                AND PI.date_inv <=:arg_dat_max)
+            OR PM.depdatp IS NULL) ) PI2,
         (
-          select
-            cen_ref,
-            sum(QTE_INV) AS SUM_QTT
-          from
-            GEO_PALCEN
-          GROUP BY
-            cen_ref
-        ) T
-      WHERE
-        PI2.esp_code (+) = PI1.esp_code
-        and PI2.col_code (+) = PI1.col_code
-        and PI2.fou_code (+) = PI1.fou_code
-        and PI2.cen_ref (+) = PI1.cen_ref
-        and PI1.soc_code = :arg_soc_code
-        AND PI1.cen_ref like :arg_cen_ref
-        AND E.CEN_REF = PI1.CEN_REF
-        and C.CLI_REF = E.CLI_REF
-        AND C.SCO_CODE = 'PAL'
-        AND C.per_code_com like :arg_per_code_com
-        AND F.FOU_CODE = PI1.FOU_CODE
-        AND PI1.CEN_REF = T.CEN_REF
-        AND ENTREE IS NOT NULL
+        SELECT
+            GEO_PALCEN.cen_ref,
+            GEO_PALCEN.fou_code,
+            GEO_PALCEN.col_code,
+            MAXPALCEN.max_date,
+            sum(GEO_PALCEN.QTE_INV) AS SUM_QTT
+        FROM
+            GEO_PALCEN,
+            (
+            SELECT
+                cen_ref,
+                fou_code,
+                col_code,
+                max(date_inv) max_date
+            FROM
+                GEO_PALCEN
+            WHERE
+                date_inv <=:arg_dat_max
+            GROUP BY
+                cen_ref,
+                fou_code,
+                col_code ) MAXPALCEN
+        WHERE
+            GEO_PALCEN.cen_ref = MAXPALCEN.cen_ref
+            AND
+    GEO_PALCEN.fou_code = MAXPALCEN.fou_code
+            AND
+    GEO_PALCEN.col_code = MAXPALCEN.col_code
+        GROUP BY
+            GEO_PALCEN.cen_ref,
+            GEO_PALCEN.fou_code,
+            GEO_PALCEN.col_code,
+            MAXPALCEN.max_date) T
+    WHERE
+        PI2.esp_code (+)= PI1.esp_code
+        AND
+                    PI2.col_code (+)= PI1.col_code
+        AND
+                    PI2.fou_code (+)= PI1.fou_code
+        AND
+                    PI2.cen_ref (+)= PI1.cen_ref
+        AND
+                    PI1.soc_code = :arg_soc_code
+        AND
+                    PI1.cen_ref LIKE :arg_cen_ref
+        AND
+                    E.CEN_REF = PI1.CEN_REF
+        AND
+                    C.CLI_REF = E.CLI_REF
+        AND
+                    C.SCO_CODE = 'PAL'
+        AND
+                    F.FOU_CODE = PI1.FOU_CODE
+        AND
+                    PI1.CEN_REF = T.CEN_REF
+        AND
+                    PI1.FOU_CODE = T.FOU_CODE
+        AND
+                    PI1.COL_CODE = T.COL_CODE
+        AND
+                    ENTREE IS NOT NULL
         AND SORTIE IS NOT NULL
-        AND PI1.FOU_CODE like :arg_fou_code
-      ORDER BY
+        /* Filtres supplementaires */
+        AND C.PER_CODE_COM LIKE :arg_per_code_com
+        AND PI1.FOU_CODE LIKE :arg_fou_code
+    ORDER BY
         PI1.FOU_CODE ASC,
         PI1.COL_CODE ASC,
         C.CLI_CODE ASC,
         E.CEN_CODE ASC,
         PI2.DEPDATP ASC,
-        PI2.NORDRE ASC
+        PI2.NORDRE ASC ) rest
     ]]>
     </query>
   </named-native-query>
@@ -273,78 +274,69 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
+      SELECT ROWNUM, rest.* FROM (
       SELECT
-      ROWNUM,
-      C.CLI_CODE,
-      E.CEN_CODE,
-      E.RAISOC as e_raisoc,
-      E.ZIP,
-      E.VILLE,
-      E.PAY_CODE,
-      PI1.COL_CODE,
-      PI1.FOU_CODE,
-      F.RAISOC,
-      PI1.DATE_INV,
-      PI1.QTE_INV,
-      CASE
-        WHEN PI2.ENTREE IS NULL THEN 0
-        ELSE PI2.ENTREE
-      END AS ENTREE,
-      CASE
-        WHEN PI2.SORTIE IS NULL THEN 0
-        ELSE PI2.SORTIE
-      END AS SORTIE,
-      PI2.ESP_CODE,
-      E.CEN_REF,
-      T.SUM_QTT,
-      F.FOU_CODE || ' - ' || F.RAISOC as STATION
-      FROM
+        C.CLI_CODE,
+        E.CEN_CODE,
+        E.RAISOC as e_raisoc,
+        E.ZIP,
+        E.VILLE,
+        E.PAY_CODE,
+        PI1.COL_CODE,
+        PI1.FOU_CODE,
+        F.RAISOC,
+        PI1.DATE_INV,
+        PI1.QTE_INV,
+        CASE
+            WHEN PI2.ENTREE IS NULL THEN 0
+            ELSE PI2.ENTREE
+        END AS ENTREE,
+        CASE
+            WHEN PI2.SORTIE IS NULL THEN 0
+            ELSE PI2.SORTIE
+        END AS SORTIE,
+        PI2.ESP_CODE,
+        E.CEN_REF,
+        T.SUM_QTT,
+        F.FOU_CODE || ' - ' || F.RAISOC AS STATION
+    FROM
         GEO_ENTREP E,
         GEO_CLIENT C,
         GEO_PALCEN PI1,
         GEO_FOURNI F,
         (
-          SELECT
+        SELECT
             PI.COL_CODE,
             PM.FOU_CODE,
             PM.STATION_RAISOC,
             PI.DATE_INV,
             PI.QTE_INV,
-            sum(
-              CASE
-                WHEN PM.QTE < 0 THEN (-1) * PM.QTE
-                ELSE 0
-              END
-            ) AS ENTREE,
-            sum(
-              CASE
-                WHEN PM.QTE > 0 THEN PM.QTE
-                ELSE 0
-              END
-            ) AS SORTIE,
+            sum(CASE WHEN PM.QTE < 0 THEN (-1) * PM.QTE ELSE 0 END) AS ENTREE,
+            sum(CASE WHEN PM.QTE > 0 THEN PM.QTE ELSE 0 END) AS SORTIE,
             CASE
-              WHEN PM.ESP_CODE IS NULL THEN 'EMBALL'
-              ELSE PM.ESP_CODE
+                WHEN PM.ESP_CODE IS NULL THEN 'EMBALL'
+                ELSE PM.ESP_CODE
             END AS ESP_CODE,
             PM.CEN_REF
-          FROM
+        FROM
             GEO_PALCEN PI,
             GEO_PALCEL PM
-          WHERE
+        WHERE
             PM.esp_code = PI.esp_code
-            and PM.col_code = PI.col_code
-            and PM.fou_code = PI.fou_code
-            and PM.cen_ref = PI.cen_ref
-            and PM.FOU_CODE IS NOT NULL
-            AND (
-              (
-                PM.depdatp >= PI.date_inv
-                and PM.depdatp <= :arg_dat_max
-                and PI.date_inv <= :arg_dat_max
-              )
-              OR PM.depdatp is null
-            )
-          GROUP BY
+            AND
+                    PM.col_code = PI.col_code
+            AND
+                    PM.fou_code = PI.fou_code
+            AND
+                    PM.cen_ref = PI.cen_ref
+            AND
+                    PM.FOU_CODE IS NOT NULL
+            AND
+                    ((PM.depdatp >= PI.date_inv
+                AND PM.depdatp <=:arg_dat_max
+                AND PI.date_inv <=:arg_dat_max)
+            OR PM.depdatp IS NULL)
+        GROUP BY
             PI.COL_CODE,
             PM.FOU_CODE,
             PM.STATION_RAISOC,
@@ -352,37 +344,49 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             PI.QTE_INV,
             PM.ESP_CODE,
             PM.CEN_REF
-        ) PI2,
+                    ) PI2,
         (
-          select
+        SELECT
             cen_ref,
             sum(QTE_INV) AS SUM_QTT
-          from
+        FROM
             GEO_PALCEN
-          GROUP BY
-            cen_ref
-        ) T
-      WHERE
-        PI2.esp_code (+) = PI1.esp_code
-        and PI2.col_code (+) = PI1.col_code
-        and PI2.fou_code (+) = PI1.fou_code
-        and PI2.cen_ref (+) = PI1.cen_ref
-        and PI1.soc_code = :arg_soc_code
-        AND PI1.cen_ref like :arg_cen_ref
-        AND E.CEN_REF = PI1.CEN_REF
-        and C.CLI_REF = E.CLI_REF
-        AND C.SCO_CODE = 'PAL'
-        AND C.PER_CODE_COM like :arg_per_code_com
-        AND F.FOU_CODE = PI1.FOU_CODE
-        AND PI1.CEN_REF = T.CEN_REF
-        and C.CLI_REF = E.CLI_REF
-        AND F.FOU_CODE = PI1.FOU_CODE
-        AND PI1.FOU_CODE like :arg_fou_code
-      ORDER BY
+        GROUP BY
+            cen_ref) T
+    WHERE
+        PI2.esp_code (+)= PI1.esp_code
+        AND
+                    PI2.col_code (+)= PI1.col_code
+        AND
+                    PI2.fou_code (+)= PI1.fou_code
+        AND
+                    PI2.cen_ref (+)= PI1.cen_ref
+        AND
+                    PI1.soc_code = :arg_soc_code
+        AND
+                    PI1.cen_ref LIKE :arg_cen_ref
+        AND
+                    E.CEN_REF = PI1.CEN_REF
+        AND
+                    C.CLI_REF = E.CLI_REF
+        AND
+                    C.SCO_CODE = 'PAL'
+        AND
+                    F.FOU_CODE = PI1.FOU_CODE
+        AND
+                    PI1.CEN_REF = T.CEN_REF
+        AND
+                    C.CLI_REF = E.CLI_REF
+        AND
+                    F.FOU_CODE = PI1.FOU_CODE
+      /* Filtres supplementaires */
+        AND C.PER_CODE_COM LIKE :arg_per_code_com
+        AND PI1.FOU_CODE LIKE :arg_fou_code
+    ORDER BY
         C.CLI_CODE ASC,
         E.CEN_CODE ASC,
-        PI1.FOU_CODE ASC,
-        PI1.COL_CODE ASC
+        PI1.FOU_CODE ASC ,
+        PI1.COL_CODE ASC ) rest
     ]]>
     </query>
   </named-native-query>
