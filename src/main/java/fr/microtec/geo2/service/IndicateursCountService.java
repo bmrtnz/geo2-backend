@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.repository.ordres.GeoIndicateurCountRepository;
 import fr.microtec.geo2.service.security.SecurityService;
+import lombok.Data;
 import lombok.val;
 
 @Service
@@ -15,6 +16,12 @@ public class IndicateursCountService {
     private final SecurityService securityService;
     private final GeoIndicateurCountRepository repository;
 
+    @Data
+    public static class IndicateurCountResponse {
+        BigDecimal count;
+        String secteur;
+    }
+
     public IndicateursCountService(
             GeoIndicateurCountRepository repository,
             SecurityService securityService) {
@@ -22,19 +29,25 @@ public class IndicateursCountService {
         this.securityService = securityService;
     }
 
-    public BigDecimal countClientsDepassementEncours(String societeCode, String secteurCode) {
-        return this.repository
-                .countClientsDepassementEncours(secteurCode == null ? this.fetchSecteur() : secteurCode, societeCode);
+    public IndicateurCountResponse countClientsDepassementEncours(String societeCode, String secteurCode) {
+        IndicateurCountResponse res = new IndicateurCountResponse();
+        res.setSecteur(secteurCode == null ? this.fetchSecteur() : secteurCode);
+        res.setCount(this.repository.countClientsDepassementEncours(res.getSecteur(), societeCode));
+        return res;
     }
 
-    public BigDecimal countOrdresNonConfirmes(String societeCode, String secteurCode) {
-        return this.repository
-                .countOrdresNonConfirmes(secteurCode == null ? this.fetchSecteur() : secteurCode, societeCode);
+    public IndicateurCountResponse countOrdresNonConfirmes(String societeCode, String secteurCode) {
+        IndicateurCountResponse res = new IndicateurCountResponse();
+        res.setSecteur(secteurCode == null ? this.fetchSecteur() : secteurCode);
+        res.setCount(this.repository.countOrdresNonConfirmes(res.getSecteur(), societeCode));
+        return res;
     }
 
-    public BigDecimal countPlanningDepart(String societeCode, String secteurCode) {
-        return this.repository
-                .countPlanningDepart(secteurCode == null ? this.fetchSecteur() : secteurCode, societeCode);
+    public IndicateurCountResponse countPlanningDepart(String societeCode, String secteurCode) {
+        IndicateurCountResponse res = new IndicateurCountResponse();
+        res.setSecteur(secteurCode == null ? this.fetchSecteur() : secteurCode);
+        res.setCount(this.repository.countPlanningDepart(res.getSecteur(), societeCode));
+        return res;
     }
 
     private String fetchSecteur() {
