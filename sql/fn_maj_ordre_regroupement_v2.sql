@@ -90,7 +90,7 @@ AS
     ls_tab_lib_dlv p_vcr_tab_type := p_vcr_tab_type();
     li_cde_nb_pal_tmp number;
     li_orl_lig_sav number;
-    ls_orl_lig_sav varchar2(50);
+    ls_orl_lig_sav GEO_ORDLIG.ORL_LIG%type;
     li_cde_nb_col_sav number;
     ls_bac_code_tmp varchar2(50);
     ls_tab_bac_code p_vcr_tab_type := p_vcr_tab_type();
@@ -1148,6 +1148,13 @@ BEGIN
 
                             li_nb_lig := li_nb_lig + 1;
                             li_orl_lig_sav := li_orl_lig_sav + 1;
+
+                            if li_orl_lig_sav > 99 then
+                                msg := 'Impossible de dépasser le nombre de ligne de commandes maximal (99)';
+                                res := 0;
+                                return;
+                            end if;
+
                             ls_orl_lig_sav := trim(to_char(li_orl_lig_sav,'00'));
                             If li_nb_lig =2  Then
                                 li_pal_nb_col_tmp :=0;

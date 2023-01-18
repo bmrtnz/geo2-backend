@@ -639,7 +639,9 @@ public class ProgramService {
                             ll_creation_ordre_sa++;
                         }
                     } else {
-                        res.getRow(ls_nordre_).get().pushErreur("Erreur création dupplication SA ORDRE " + ll_ord);
+                        res.getRow(ls_nordre_).get()
+                                .pushErreur("Erreur création dupplication SA ORDRE " + ll_ord + " -> "
+                                        + ll_return.getMsg());
                     }
                 }
             }
@@ -661,7 +663,9 @@ public class ProgramService {
                 ls_ordre_sa
                         .set(Double.toString(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
             } catch (Exception e) {
-                ls_ordre_sa.set(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getStringCellValue());
+                ls_ordre_sa.set(sheet.getRow(ll_row - 1)
+                        .getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                        .getStringCellValue());
             }
             if (!ls_ordre_sa.get().isBlank()) {
                 int ll_pos = ls_programme.indexOf('/');
