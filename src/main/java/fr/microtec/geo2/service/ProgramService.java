@@ -127,13 +127,13 @@ public class ProgramService {
         Integer ll_ind = 0;
 
         String ls_value = sheet
-                .getRow(ll_row)
+                .getRow(ll_row - 1)
                 .getCell(COL_LOAD_REFERENCE)
                 .getStringCellValue()
                 .trim();
         ls_value = ls_value.substring(0, ls_value.indexOf('/') - 1);
         LocalDateTime ls_depart_date_ordre = sheet
-                .getRow(ll_row)
+                .getRow(ll_row - 1)
                 .getCell(COL_DEPART_DATE)
                 .getLocalDateTimeCellValue();
         LocalDateTime ls_depart_date_ordre_prec = LocalDateTime.of(2500, 1, 1, 0, 0, 0);
@@ -153,13 +153,13 @@ public class ProgramService {
             ll_row++;
             try {
                 ls_value = sheet
-                        .getRow(ll_row)
+                        .getRow(ll_row - 1)
                         .getCell(COL_LOAD_REFERENCE)
                         .getStringCellValue()
                         .trim();
                 ls_value = ls_value.substring(0, ls_value.indexOf('/') - 1);
                 ls_depart_date_ordre = sheet
-                        .getRow(ll_row)
+                        .getRow(ll_row - 1)
                         .getCell(COL_DEPART_DATE)
                         .getLocalDateTimeCellValue();
             } catch (Exception e) {
@@ -620,14 +620,14 @@ public class ProgramService {
 
                         // écriture dans le fichier du n° ordre de regroupement
                         Integer ll_row = 2;
-                        Row row = sheet.getRow(ll_row);
+                        Row row = sheet.getRow(ll_row - 1);
                         String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
                         while (!ls_value.isBlank()) {
-                            row = sheet.getRow(ll_row);
                             // do while not IsNull(ls_value) and ls_value <> ""
                             if (ls_value.equals(ls_nordre_))
                                 row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                         .setCellValue(ls_nordre_regroup);
+                            row = sheet.getRow(ll_row - 1);
                             ll_row++;
                             try {
                                 ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
@@ -652,15 +652,16 @@ public class ProgramService {
         // st_progress.text = "Début mise à jour des prix MINI des ordres SA autre que
         // programme 'NEW' et 'ISS'"
         String ls_ordre_sa_prec = "";
-        String ls_programme = sheet.getRow(ll_row).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+        String ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
 
         while (ls_programme != null) {
 
             final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
             try {
-                ls_ordre_sa.set(Double.toString(sheet.getRow(ll_row).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
+                ls_ordre_sa
+                        .set(Double.toString(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
             } catch (Exception e) {
-                ls_ordre_sa.set(sheet.getRow(ll_row).getCell(COL_ORD_PERE_SA).getStringCellValue());
+                ls_ordre_sa.set(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getStringCellValue());
             }
             if (!ls_ordre_sa.get().isBlank()) {
                 int ll_pos = ls_programme.indexOf('/');
@@ -669,8 +670,8 @@ public class ProgramService {
                 if (!ls_programme.startsWith("NEW")
                         && (ls_programme.startsWith("ISS") || ls_programme.startsWith("TES"))) {
                     List<String> ls_array_art = List
-                            .of(sheet.getRow(ll_row).getCell(COL_ARTS_REF).getStringCellValue().split("-"));
-                    Double ld_prix_mini_sa = sheet.getRow(ll_row).getCell(COL_PRIX_MINI_SA).getNumericCellValue();
+                            .of(sheet.getRow(ll_row - 1).getCell(COL_ARTS_REF).getStringCellValue().split("-"));
+                    Double ld_prix_mini_sa = sheet.getRow(ll_row - 1).getCell(COL_PRIX_MINI_SA).getNumericCellValue();
                     List<String> ls_array_art_sa = new ArrayList<>();
                     if (!ls_ordre_sa.get().equals(ls_ordre_sa_prec)) {
                         ls_ordre_sa_prec = ls_ordre_sa.get();
@@ -722,7 +723,7 @@ public class ProgramService {
             }
             ll_row++;
             try {
-                ls_programme = sheet.getRow(ll_row).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+                ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
             } catch (Exception e) {
                 ls_programme = null;
             }
