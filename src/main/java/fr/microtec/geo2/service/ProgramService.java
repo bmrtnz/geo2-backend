@@ -285,7 +285,7 @@ public class ProgramService {
             String[] ls_array_load = ls_load_reference.split("/");
             final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
             String ls_concat;
-            String ls_ref_cli;
+            String ls_ref_cli = "";
 
             if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) { // TES......./
                 if (ls_array_load[1].startsWith("BWTRUE")) {
@@ -316,7 +316,6 @@ public class ProgramService {
                  */
             }
 
-            ls_ref_cli = "";
             val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
                     cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
                     cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
