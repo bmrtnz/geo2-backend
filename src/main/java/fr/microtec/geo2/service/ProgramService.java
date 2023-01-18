@@ -654,7 +654,7 @@ public class ProgramService {
         String ls_ordre_sa_prec = "";
         String ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
 
-        while (ls_programme != null) {
+        while (!ls_programme.isBlank() && ls_programme != null) {
 
             final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
             try {
