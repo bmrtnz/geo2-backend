@@ -39,8 +39,8 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
     @Id
     @GeneratedValue(generator = "GeoOrdreLogistiqueGenerator")
     @GenericGenerator(name = "GeoOrdreLogistiqueGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-            @Parameter(name = "sequenceName", value = "seq_orx_num"),
-            @Parameter(name = "mask", value = "FM099999")
+            @Parameter(name = "sequenceName", value = "F_SEQ_ORX_SEQ"),
+            @Parameter(name = "isSequence", value = "false")
     })
     @Column(name = "orx_ref")
     private String id;
