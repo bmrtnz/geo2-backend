@@ -560,7 +560,7 @@ public class ProgramService {
                                 GeoOrdreLogistique ordlog = new GeoOrdreLogistique();
                                 try {
                                     ordlog.setOrdre(this.ordreRepo.getOne(ls_ord_ref.get()));
-                                    ordlog.setFournisseur(this.fournisseurRepo.getOneByCode(ls_packhouse).get());
+                                    ordlog.setCodeFournisseur(ls_packhouse);
                                     ordlog.setGroupage(this.groupageRepo.getOne(ls_grp_code));
                                     ordlog.setTransporteurGroupage(this.transporteurRepo.getOne(ls_transp_approche));
                                     ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
@@ -572,9 +572,10 @@ public class ProgramService {
                                     ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
                                     ordlog = this.ordreLogistiqueRepo.save(ordlog);
                                 } catch (Exception e) {
-                                    pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref);
+                                    pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref
+                                            + ". " + e.getMessage());
                                     res.pushRow(pRow);
-                                    continue outer;
+                                    continue;
                                 }
                             }
 
