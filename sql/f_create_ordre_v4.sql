@@ -198,7 +198,7 @@ BEGIN
 
     ld_trp_dev_pu := ld_trp_pu / ld_trp_dev_taux;
 
-    ls_inst_log := substr(coalesce(ls_instr_logist_client, ' ') || ' ' || coalesce(ls_instr_logist_entrep, ' '), 280);
+    ls_inst_log := substr(coalesce(ls_instr_logist_client, ' ') || ' ' || coalesce(ls_instr_logist_entrep, ' '),0, 280);
     ldate_dep := SYSDATE;
     ldate_liv := SYSDATE + 1;
     ldate_version := SYSDATE;
