@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.persistence.EntityManager;
@@ -33,6 +34,7 @@ import fr.microtec.geo2.controller.ProgramController.ProgramResponse;
 import fr.microtec.geo2.controller.ProgramController.ProgramResponse.ProgramRow;
 import fr.microtec.geo2.persistance.StringEnum;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLogistique;
 import fr.microtec.geo2.persistance.entity.tiers.GeoModeLivraison;
@@ -871,7 +873,7 @@ public class ProgramService {
                 ls_dluo = "/";
             }
 
-            val existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
+            Optional<GeoOrdre> existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
                     cb.equal(root.get("codeChargement"), ls_load_reference),
                     cb.equal(root.get("entrepot"), entrepot.get()),
                     cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
@@ -880,6 +882,7 @@ public class ProgramService {
             final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
             if (existing_ordre.isPresent()) {
 
+                ls_ord_ref.set(existing_ordre.get().getId());
                 if (ls_load_reference != ls_load_ref_prec && entrepot.get().getId() != ls_cen_ref_prec) {
 
                     val ls_nordre_curr = existing_ordre.get().getNumero();
@@ -931,7 +934,8 @@ public class ProgramService {
             try {
                 ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().split("-"));
             } catch (Exception e) {
-                ls_array_art = List.of(((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).toString());
+                ls_array_art = List
+                        .of(String.valueOf(((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).intValue()));
             }
             if (ls_create_ligne.equals('O')) {
                 for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
@@ -1012,7 +1016,7 @@ public class ProgramService {
                             GeoOrdreLogistique ordlog = new GeoOrdreLogistique();
                             try {
                                 ordlog.setOrdre(this.ordreRepo.getOne(ls_ord_ref.get()));
-                                ordlog.setFournisseur(this.fournisseurRepo.getOneByCode(ls_packhouse).get());
+                                ordlog.setCodeFournisseur(ls_packhouse);
                                 ordlog.setGroupage(this.groupageRepo.getOne(ls_grp_code));
                                 ordlog.setTransporteurGroupage(this.transporteurRepo.getOne(ls_transp_approche));
                                 ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
@@ -1024,9 +1028,10 @@ public class ProgramService {
                                 ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
                                 ordlog = this.ordreLogistiqueRepo.save(ordlog);
                             } catch (Exception e) {
-                                pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref);
+                                pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref
+                                        + ". " + e.getMessage());
                                 res.pushRow(pRow);
-                                continue outer;
+                                continue;
                             }
                         }
 
