@@ -144,10 +144,14 @@ BEGIN
         WHEN 'GBP' THEN 50000
         ELSE 1 -- déclenchera warnings intempestifs pour obliger ajuster cette valeur
     end;
-    select geo_ordre.inc_code, geo_ordre.trp_code, geo_ordre.tottrp, geo_incote.inc_rd, geo_ordre.flbaf, geo_ordre. facture_avoir, geo_ordre.ref_cli, geo_ordre.cli_code, geo_ordre.livdatp,geo_ordre.cen_ref,geo_ordre.trp_pu,geo_ordre.depdatp, geo_ordre.totfad,geo_ordre.cli_ref,geo_ordre.sco_code,geo_ordre.vente_commission,geo_ordre.typ_ordre,geo_ordre.trp_bta_code, geo_ordre.cen_code
-    into ls_inc_code, ls_trp_code, ld_tottrp, ls_inc_rd, ls_flbaf, ls_facture_avoir, ls_ref_cli, ls_cli_code, ldt_livdatp,ls_cen_ref,ld_trp_pu,ldt_depdatp,ld_totfad,ls_cli_ref,ls_sco_code,ls_vente_commission,ls_typ_ordre,ls_trp_bta_code, ls_cen_code
-    from geo_ordre, geo_incote
-    where geo_ordre.ord_ref = arg_ord_ref and geo_incote.inc_code = geo_ordre.inc_code;
+    begin
+        select geo_ordre.inc_code, geo_ordre.trp_code, geo_ordre.tottrp, geo_incote.inc_rd, geo_ordre.flbaf, geo_ordre. facture_avoir, geo_ordre.ref_cli, geo_ordre.cli_code, geo_ordre.livdatp,geo_ordre.cen_ref,geo_ordre.trp_pu,geo_ordre.depdatp, geo_ordre.totfad,geo_ordre.cli_ref,geo_ordre.sco_code,geo_ordre.vente_commission,geo_ordre.typ_ordre,geo_ordre.trp_bta_code, geo_ordre.cen_code
+        into ls_inc_code, ls_trp_code, ld_tottrp, ls_inc_rd, ls_flbaf, ls_facture_avoir, ls_ref_cli, ls_cli_code, ldt_livdatp,ls_cen_ref,ld_trp_pu,ldt_depdatp,ld_totfad,ls_cli_ref,ls_sco_code,ls_vente_commission,ls_typ_ordre,ls_trp_bta_code, ls_cen_code
+        from geo_ordre, geo_incote
+        where geo_ordre.ord_ref = arg_ord_ref and geo_incote.inc_code = geo_ordre.inc_code;
+    exception when no_data_found then
+        null;
+    end;
     begin
         select  ctl_ref_cli into ls_ctl_champ
         from geo_entrep
@@ -160,14 +164,18 @@ BEGIN
             select ctl_ref_cli into ls_ctl_champ
             from geo_client
             where geo_client.cli_ref = ls_cli_ref and geo_client.ctl_ref_cli is not null and ROWNUM = 1;
-            exception when no_data_found then
-                ls_ctl_champ := '';
+        exception when no_data_found then
+            ls_ctl_champ := '';
         end;
     End If;
-    select IND_PALOX_GRATUIT,IND_USINT,IND_FRAIS_RAMAS, IND_GEST_COLIS_MANQUANT, FL_IDENT_REF_CLI
-    into ls_ind_palox_gratuit,ls_ind_usage_interne,ls_ind_frais_ramas, ls_IND_GEST_COLIS_MANQUANT, ls_ident_ref_cli
-    from geo_client
-    where geo_client.cli_ref = ls_cli_ref and ROWNUM = 1;
+    begin
+        select IND_PALOX_GRATUIT,IND_USINT,IND_FRAIS_RAMAS, IND_GEST_COLIS_MANQUANT, FL_IDENT_REF_CLI
+        into ls_ind_palox_gratuit,ls_ind_usage_interne,ls_ind_frais_ramas, ls_IND_GEST_COLIS_MANQUANT, ls_ident_ref_cli
+        from geo_client
+        where geo_client.cli_ref = ls_cli_ref and ROWNUM = 1;
+    exception when no_data_found then
+        null;
+    end;
     begin
         select count(*) into ll_nb_ligne_gratuit
         from GEO_ORDLIG
@@ -509,7 +517,11 @@ BEGIN
     END IF;
     -- FIN LLEF
     -- VERIFICATION SI FACTURATION PAR EDI ALORS UNE REFERENCE CLIENT EST OBLIGATOIRE
-    select ind_bloc_factu_edi into ls_bloc_factu_edi from geo_entrep where cen_ref = ls_cen_ref;
+    begin
+        select ind_bloc_factu_edi into ls_bloc_factu_edi from geo_entrep where cen_ref = ls_cen_ref;
+    exception when no_data_found then
+        null;
+    end;
     if ls_bloc_factu_edi = 'O' and (ls_ref_cli = '' or ls_ref_cli is null) then
         ls_rc := ls_rc || '(A) %%% Facturation en EDI mais aucune référence client ' || ls_crlf;
     end if;

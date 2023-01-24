@@ -19,14 +19,14 @@ BEGIN
     msg := '';
 
 
-    select  C.GCL_CODE,C.SOC_CODE,C.SCO_CODE into ls_gcl_code,ls_soc_code, ls_sco_code
-    from  GEO_CLIENT C,GEO_ENTREP E
-    where  	C.CLI_REF  = E.CLI_REF and
-                E.CEN_CODE =arg_cen_code;
-
-    If  ls_gcl_code is null Then
+    begin
+        select  C.GCL_CODE,C.SOC_CODE,C.SCO_CODE into ls_gcl_code,ls_soc_code, ls_sco_code
+        from  GEO_CLIENT C,GEO_ENTREP E
+        where  	C.CLI_REF  = E.CLI_REF and
+                    E.CEN_CODE =arg_cen_code;
+    exception when no_data_found then
         ls_gcl_code := '';
-    ENd If;
+    end;
 
     If arg_typ_ordre is not null and arg_typ_ordre <> ''  then
 
