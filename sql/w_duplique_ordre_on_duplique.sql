@@ -135,8 +135,8 @@ begin
         return;
     End If;
 
-    ls_depdatp := to_char(arg_depdatp,'yy/mm/dd hh24:mi:ss');
-    ls_livdatp := to_char(arg_livdatp,'yy/mm/dd');
+    ls_depdatp := to_char(arg_depdatp,'yyyy/mm/dd hh24:mi:ss');
+    ls_livdatp := to_char(arg_livdatp,'yyyy/mm/dd');
 
     f_create_ordre_v3(arg_soc_code, is_cur_cli_ref,arg_cen_ref,is_trp_code,is_ref_cli, false, false, ls_depdatp, 'ORD', ls_livdatp, ll_null, res, msg, ls_ord_ref_new);
     if (res <> 1) then
