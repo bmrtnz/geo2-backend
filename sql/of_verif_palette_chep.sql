@@ -6,6 +6,7 @@ CREATE OR REPLACE PROCEDURE OF_VERIF_PALETTE_CHEP (
     msg IN OUT varchar2
 )
 AS
+    ll_pos number:= 0;
     ls_cen_gest_code GEO_ENTREP.GEST_CODE%TYPE;
     ls_sco_code GEO_ORDRE.SCO_CODE%TYPE;
     ls_typ_ordre GEO_ORDRE.TYP_ORDRE%TYPE;
@@ -14,9 +15,10 @@ AS
     ls_ret_fou_code GEO_ORDLIG.FOU_CODE%TYPE;
     ll_count number;
     ll_count_ko_lpr number;
+    ls_station_palette_rouge p_str_tab_type := p_str_tab_type();
     cursor CT (ref_ordre GEO_ORDRE.ORD_REF%type)
     IS
-        select P.gest_code,L.fou_code
+        select coalesce(P.gest_code,''),L.fou_code
         from geo_ordlig L, geo_palett P, geo_article A
         where P.pal_code = L.pal_code
         and A.art_ref = L.art_ref
@@ -27,18 +29,29 @@ BEGIN
     res := 0;
     msg := '';
 
+    ls_station_palette_rouge.extend();
+    ls_station_palette_rouge(1) := 'NOVAC';
+    ls_station_palette_rouge.extend();
+    ls_station_palette_rouge(2) := 'CROQUEFRUIT';
+
     -- vérifie adéquation entrepôt et palettes CHEP ou non CHEP
-    select E.gest_code,O.sco_code,O.typ_ordre
-    into ls_cen_gest_code, ls_sco_code, ls_typ_ordre
-    from  geo_entrep E, geo_ordre O
-    where E.cen_ref = O.cen_ref
-      and O.ord_ref = is_ord_ref;
+    begin
+        select E.gest_code,O.sco_code,O.typ_ordre
+        into ls_cen_gest_code, ls_sco_code, ls_typ_ordre
+        from  geo_entrep E, geo_ordre O
+        where E.cen_ref = O.cen_ref
+        and O.ord_ref = is_ord_ref;
+    exception when others then
+        msg := 'vérif CHEP recherche entrepôt a échoué ' || SQLERRM;
+        return;
+    end;
 
     if substr(is_cur_cen_code, 1, 8) = 'PREORDRE' OR (is_soc_code = 'BWS' and ls_sco_code <> 'GB') OR (ls_typ_ordre='RGP') then
         return;
     end if;
 
     ll_count := 0;
+    ll_count_ko_lpr := 0;
     OPEN CT (is_ord_ref);
     loop
         fetch CT into ls_pal_gest_code, ls_fou_code;
@@ -48,10 +61,13 @@ BEGIN
             if ls_pal_gest_code <> 'CHEP' AND ls_pal_gest_code <> 'LPR' then -- LLEF
                 ll_count := ll_count + 1;
             end if;
-            if (ls_fou_code = 'NOVAC' and ls_pal_gest_code = 'CHEP') or (ls_fou_code = 'CROQUEFRUIT' and ls_pal_gest_code = 'CHEP') then
-                ll_count_ko_lpr := ll_count_ko_lpr + 1;
-                ls_ret_fou_code := ls_fou_code;
-            end if;
+            for ll_int in 1 .. ls_station_palette_rouge.count loop
+                if (ls_station_palette_rouge(ll_int) = ls_fou_code and ls_pal_gest_code = 'CHEP') then
+                    ll_count_ko_lpr := ll_count_ko_lpr + 1;
+                    -- ls_ret_fou_code := ls_fou_code;
+                    ll_pos := ll_int;
+                end if;
+            end loop;
         else
             if ls_pal_gest_code = 'CHEP' then
                 ll_count := ll_count + 1;
@@ -70,7 +86,7 @@ BEGIN
         end if;
     else
         If (ll_count_ko_lpr <> 0 and ls_cen_gest_code = 'CHEP') Then
-            msg := to_char(ll_count_ko_lpr) + ' ligne(s) sans palette  rouge pour un entrepôt CHEP de la station ' || ls_ret_fou_code;
+            msg := to_char(ll_count_ko_lpr) || ' ligne(s) sans palette  rouge pour un entrepôt CHEP de la station ' || ls_station_palette_rouge(ll_pos);
             return;
         end if;
     end if;
