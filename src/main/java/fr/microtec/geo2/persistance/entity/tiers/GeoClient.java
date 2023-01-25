@@ -370,6 +370,9 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity {
     @Column(name = "id_fiscal")
     private String identifiantFiscal;
 
+    @Column(name = "cen_ref_rgp")
+    private String entrepotReferenceRegroupement;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
     @Where(clause = "entite = 'Client'")
     private Set<GeoModification> modifications;
