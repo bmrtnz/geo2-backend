@@ -14,6 +14,7 @@ import fr.microtec.geo2.persistance.repository.GeoRepository;
 public interface GeoPaysRepository extends GeoRepository<GeoPays, String> {
     @Query(name = "Pays.allPaysDepassement", nativeQuery = true)
     List<GeoPaysDepassement> allPaysDepassement(
+            @Param("arg_only_dep") Character depassementOnly,
             @Param("arg_sco_code") String secteurCode,
             @Param("arg_soc_code") String societeCode,
             @Param("arg_com_code") String commercialCode);

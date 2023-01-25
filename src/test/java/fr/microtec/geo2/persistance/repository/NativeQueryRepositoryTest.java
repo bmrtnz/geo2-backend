@@ -18,7 +18,6 @@ import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
-import fr.microtec.geo2.persistance.entity.tiers.GeoPaysDepassement;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeLigneRepository;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
@@ -190,7 +189,7 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllPaysDepassementEnCours() {
         this.paysRepository
-                .allPaysDepassement("F", "SA", "BV");
+                .allPaysDepassement('O', "F", "SA", "BV");
     }
 
 }
