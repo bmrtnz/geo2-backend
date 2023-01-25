@@ -65,4 +65,8 @@ public class GeoPlanningMaritime {
     @Column(name = "full_ref_logistique")
     private String referenceLogistiqueComplete;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref")
+    private GeoOrdre ordre;
+
 }

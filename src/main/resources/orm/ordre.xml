@@ -139,6 +139,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_entrep.pay_code,
                 geo_ordre.trp_code,
                 geo_ordre.nordre,
+                geo_ordre.ord_ref,
                 geo_ordre.ref_logistique,
                 geo_ordre.livdatp,
                 CASE WHEN geo_ordlog.immatriculation IS NOT NULL THEN geo_ordlog.immatriculation || ' ' ELSE '' END ||
@@ -159,6 +160,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         GROUP BY
                 to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
                 geo_ordre.nordre,
+                geo_ordre.ord_ref,
                 geo_ordre.cli_code,
                 geo_ordre.cen_code,
                 geo_entrep.raisoc,
@@ -201,6 +203,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_entrep.pay_code,
                 geo_ordre.trp_code,
                 geo_ordre.nordre,
+                geo_ordre.ord_ref,
                 geo_ordre.ref_logistique,
                 geo_ordre.livdatp,
                 CASE
@@ -237,6 +240,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             GROUP BY
                 to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
                 geo_ordre.nordre,
+                geo_ordre.ord_ref,
                 geo_ordre.cli_code,
                 geo_ordre.cen_code,
                 geo_entrep.raisoc,
