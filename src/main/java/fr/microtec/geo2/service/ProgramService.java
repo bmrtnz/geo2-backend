@@ -474,7 +474,7 @@ public class ProgramService {
                     ls_qty_pallets = ll_qty_pallets.doubleValue();
 
                     for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
-                        if (ll_count > 1) {
+                        if (ll_count > 0) {
                             ls_qty_case = 0d;
                             ls_qty_pallets = 0d;
                             ls_case_per_pallets = 0d;
