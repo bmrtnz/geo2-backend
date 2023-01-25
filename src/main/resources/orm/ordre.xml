@@ -129,6 +129,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         FROM (
             SELECT
                 to_char(geo_ordlog.datdep_fou_p,'yymmdd') as datdep_fou_p_raw,
+                to_char(geo_ordlog.datdep_fou_p,'hh:ss') as heurdep_fou_p,
                 geo_ordlog.datdep_fou_p,
                 sum(geo_ordlig.cde_nb_pal) as cde_nb_pal,
                 geo_ordlog.fou_code,
@@ -159,6 +160,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 )   AND geo_ordre.flannul = 'N'
         GROUP BY
                 to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
+                to_char(geo_ordlog.datdep_fou_p,'hh:ss'),
                 geo_ordre.nordre,
                 geo_ordre.ord_ref,
                 geo_ordre.cli_code,
@@ -193,6 +195,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         FROM (
             SELECT
                 to_char(geo_ordlog.datdep_fou_p, 'yymmdd') as datdep_fou_p_raw,
+                to_char(geo_ordlog.datdep_fou_p,'hh:ss') as heurdep_fou_p,
                 geo_ordlog.datdep_fou_p,
                 sum(geo_ordlig.cde_nb_pal) as cde_nb_pal,
                 geo_ordlog.fou_code,
@@ -239,6 +242,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 AND geo_ordre.flannul = 'N'
             GROUP BY
                 to_char(geo_ordlog.datdep_fou_p,'yymmdd'),
+                to_char(geo_ordlog.datdep_fou_p,'hh:ss'),
                 geo_ordre.nordre,
                 geo_ordre.ord_ref,
                 geo_ordre.cli_code,

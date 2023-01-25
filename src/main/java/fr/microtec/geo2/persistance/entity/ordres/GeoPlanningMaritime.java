@@ -24,6 +24,9 @@ public class GeoPlanningMaritime {
     @Column(name = "datdep_fou_p_raw")
     private String dateDepartPrevueFournisseurRaw;
 
+    @Column(name = "heurdep_fou_p")
+    private String heureDepartPrevueFournisseur;
+
     @Column(name = "datdep_fou_p")
     private LocalDateTime dateDepartPrevueFournisseur;
 
