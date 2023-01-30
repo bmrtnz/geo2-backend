@@ -744,7 +744,7 @@ BEGIN
                 li_tab_grp_orig.extend();
                 li_tab_grp_orig(li_indice) := li_grp_orig_tmp;
                 li_tab_grp_rgp.extend();
-                li_tab_grp_rgp(li_indice) := ls_orl_lig_rgp_tmp;
+                li_tab_grp_rgp(li_indice) := li_grp_rgp_tmp;
                 li_tab_pal_nb_col_orig.extend();
                 li_tab_pal_nb_col_orig(li_indice) := li_pal_nb_col_tmp;
                 ls_tab_orl_ref_rgp.extend();
@@ -900,7 +900,7 @@ BEGIN
                 group by ORD_REF_ORIG,GRP_ORIG;
         begin
             for mlrp in C_MAJ_LIG_REGROUP_PAL loop
-
+-- DEGUGING FROM HERE
                 UPDATE GEO_GEST_REGROUP sET CDE_NB_PAL_ORIG = mlrp.CDE_NB_PAL
                 where ORD_REF_RGP = ls_ord_ref_regroup and
                         ORD_REF_ORIG =mlrp.ORD_REF_ORIG and
