@@ -1417,8 +1417,8 @@ BEGIN
         SET TYP_ORDRE ='ORI', NORDRE_RGP =ls_nordre_regroup
         where ORD_REF =arg_ord_ref_origine;
 
-        fn_chg_dev_ordre_rgp(res,msg,ls_ord_ref_regroup);
-        fn_maj_pu_vte_rgp_platef(res,msg,ls_ord_ref_regroup);
+        fn_chg_dev_ordre_rgp(ls_ord_ref_regroup,res,msg);
+        fn_maj_pu_vte_rgp_platef(ls_ord_ref_regroup,res,msg);
         COMMIT;
 
         f_insert_mru_ordre(ls_ord_ref_regroup,arg_username,res ,msg);
