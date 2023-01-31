@@ -68,7 +68,7 @@ BEGIN
            GEO_ORDRE.NORDRE,
            GEO_CLIENT_PALLOX.CLI_CODE,
            GEO_ENTREP_PALLOX.CEN_CODE,
-           to_char(GEO_ORDRE.DEPDATP,'dd/mm/yy hh24:mi'),
+           to_char(GEO_ORDRE.DEPDATP,'dd/mm/yy'),
            GEO_ORDRE.TRP_CODE,
            GEO_ORDRE.REF_CLI
     into 	ls_cli_ref,

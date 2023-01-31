@@ -4,16 +4,16 @@
 
 CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_GET_STOCK_ARTICLE_FOURNI (
     arg_art_ref IN varchar2,
-	res OUT NUMBER,
-	msg OUT varchar2
+	res IN OUT NUMBER,
+	msg IN OUT clob
 )
 AS
-    ls_rc varchar2(50);
+    ls_rc varchar2(500) := '';
     ls_fou_code varchar2(50);
     ls_pal_code varchar2(50);
     ls_age varchar2(50);
     ls_fou_stocke_age varchar2(50);
-    ls_info_stock varchar2(50) := '~n ';
+    ls_info_stock varchar2(500) := '~n ';
     ls_info varchar2(50);
     ll_qte_dispo number;
     ll_qte_ini_age number;

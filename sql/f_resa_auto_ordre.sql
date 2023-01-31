@@ -10,7 +10,7 @@ AS
     -- s_multi_long	ll_return
     ll_rc number;
     ll_instr number;
-    ls_rc varchar2(50);
+    ls_rc clob;
     ls_comment varchar2(500);
     ls_crlf varchar2(50)	 := '~r~n';
     ls_ord_ref varchar2(50);
@@ -52,7 +52,7 @@ AS
     ib_warning boolean;					-- indicateur avertissement ou erreur
     ls_ordre_desc varchar2(50);
     ls_pal_code_client varchar2(50);
-    ls_info_stock varchar2(50);
+    ls_info_stock clob;
     ls_dispo varchar2(50);
 BEGIN
     res := 0;
