@@ -854,24 +854,25 @@ BEGIN
                             li_max_grp_rgp  := li_tab_grp_rgp(li_j);
                         End If;
 
-                        If    ((ls_tab_art_ref_orig(li_j) = ls_tab_art_ref_orig(li_i) and ls_tab_fou_code_orig(li_j) = ls_tab_fou_code_orig(li_i) and li_tab_grp_rgp(li_j) is not null  and li_tab_pal_nb_col_orig(li_j) = li_tab_pal_nb_col_orig(li_i) and
+                         If ((ls_tab_art_ref_orig(li_j) = ls_tab_art_ref_orig(li_i) and ls_tab_fou_code_orig(li_j) = ls_tab_fou_code_orig(li_i) and li_tab_grp_rgp(li_j) is not null and li_tab_pal_nb_col_orig(li_j) = li_tab_pal_nb_col_orig(li_i) and
                         ls_tab_pal_code(li_j) = ls_tab_pal_code(li_i) and ld_tab_vte_pu(li_j)= ld_tab_vte_pu(li_i) and ls_tab_vte_bta_code(li_j)=ls_tab_vte_bta_code(li_i) and
-                        ld_tab_ach_pu(li_j)=ld_tab_ach_pu(li_i) and ls_tab_ach_bta_code(li_j)	=ls_tab_ach_bta_code(li_i) and 	ls_tab_ach_dev_pu(li_j) = ls_tab_ach_dev_pu(li_i) and 	ls_tab_ach_dev_code(li_j)	 = ls_tab_ach_dev_code(li_i) and
-                        ls_tab_ach_dev_taux(li_j)	=ls_tab_ach_dev_taux(li_i) and ls_tab_lib_dlv(li_j) = ls_tab_lib_dlv(li_i) and 	ls_tab_bac_code(li_j) =ls_tab_bac_code(li_i)  and
-                        ls_tab_esp_code(li_j)=ls_tab_esp_code(li_i) and  	li_tab_pal_nb_inter(li_j)=li_tab_pal_nb_inter(li_i) and 	ls_tab_frais_desc(li_j)=ls_tab_frais_desc(li_i)
+                        ld_tab_ach_pu(li_j)=ld_tab_ach_pu(li_i) and ls_tab_ach_bta_code(li_j) =ls_tab_ach_bta_code(li_i) and ls_tab_ach_dev_pu(li_j) = ls_tab_ach_dev_pu(li_i) and ls_tab_ach_dev_code(li_j) = ls_tab_ach_dev_code(li_i) and
+                        ls_tab_ach_dev_taux(li_j) =ls_tab_ach_dev_taux(li_i) and ((ls_tab_lib_dlv(li_j) = ls_tab_lib_dlv(li_i)) OR (ls_tab_lib_dlv(li_j) IS NULL AND ls_tab_lib_dlv(li_i)IS NULL)) and ls_tab_bac_code(li_j) =ls_tab_bac_code(li_i) and
+                        ls_tab_esp_code(li_j)=ls_tab_esp_code(li_i) and li_tab_pal_nb_inter(li_j)=li_tab_pal_nb_inter(li_i) and ((ls_tab_frais_desc(li_j)=ls_tab_frais_desc(li_i)) OR (ls_tab_frais_desc(li_j) IS NULL OR ls_tab_frais_desc(li_i) IS NULL ) )
                         ) OR
-                            ls_tab_ord_ref_orig(li_j) = ls_tab_ord_ref_orig(li_i)  and ls_tab_fou_code_orig(li_j) = ls_tab_fou_code_orig(li_i)   and li_tab_grp_orig(li_j) = li_tab_grp_orig(li_i) and li_tab_grp_rgp(li_j) is not null)  Then
+                            ls_tab_ord_ref_orig(li_j) = ls_tab_ord_ref_orig(li_i) and ls_tab_fou_code_orig(li_j) = ls_tab_fou_code_orig(li_i) and li_tab_grp_orig(li_j) = li_tab_grp_orig(li_i) and li_tab_grp_rgp(li_j) is not null) Then
                             li_tab_grp_rgp(li_i) := li_tab_grp_rgp(li_j);
                         End IF;
 
-                        If  (ls_tab_art_ref_orig(li_j) = ls_tab_art_ref_orig(li_i) and ls_tab_fou_code_orig(li_j) = ls_tab_fou_code_orig(li_i) and li_tab_grp_rgp(li_j) is not null and ls_tab_orl_ref_rgp(li_i) is null and   ls_tab_orl_ref_rgp(li_j) is not null  and li_tab_pal_nb_col_orig(li_j) = li_tab_pal_nb_col_orig(li_i)and
+                        If (ls_tab_art_ref_orig(li_j) = ls_tab_art_ref_orig(li_i) and ls_tab_fou_code_orig(li_j) = ls_tab_fou_code_orig(li_i) and li_tab_grp_rgp(li_j) is not null and ls_tab_orl_ref_rgp(li_i) is null and ls_tab_orl_ref_rgp(li_j) is not null and li_tab_pal_nb_col_orig(li_j) = li_tab_pal_nb_col_orig(li_i)and
                         ls_tab_pal_code(li_j) = ls_tab_pal_code(li_i) and ld_tab_vte_pu(li_j)= ld_tab_vte_pu(li_i) and ls_tab_vte_bta_code(li_j)=ls_tab_vte_bta_code(li_i) and
-                        ld_tab_ach_pu(li_j)=ld_tab_ach_pu(li_i) and ls_tab_ach_bta_code(li_j)	=ls_tab_ach_bta_code(li_i) and 	ls_tab_ach_dev_pu(li_j) = ls_tab_ach_dev_pu(li_i) and 	ls_tab_ach_dev_code(li_j)	 = ls_tab_ach_dev_code(li_i) and
-                        ls_tab_ach_dev_taux(li_j)	=ls_tab_ach_dev_taux(li_i) and ls_tab_lib_dlv(li_j) = ls_tab_lib_dlv(li_i) and 	ls_tab_bac_code(li_j) =ls_tab_bac_code(li_i)  and
-                        ls_tab_esp_code(li_j)=ls_tab_esp_code(li_i) and  	li_tab_pal_nb_inter(li_j)=li_tab_pal_nb_inter(li_i) and 	ls_tab_frais_desc(li_j)=ls_tab_frais_desc(li_i)
+                        ld_tab_ach_pu(li_j)=ld_tab_ach_pu(li_i) and ls_tab_ach_bta_code(li_j) =ls_tab_ach_bta_code(li_i) and ls_tab_ach_dev_pu(li_j) = ls_tab_ach_dev_pu(li_i) and ls_tab_ach_dev_code(li_j) = ls_tab_ach_dev_code(li_i) and
+                        ls_tab_ach_dev_taux(li_j) =ls_tab_ach_dev_taux(li_i) and((ls_tab_lib_dlv(li_j) = ls_tab_lib_dlv(li_i)) OR (ls_tab_lib_dlv(li_j) IS NULL AND ls_tab_lib_dlv(li_i)IS NULL)) and ls_tab_bac_code(li_j) =ls_tab_bac_code(li_i) and
+                        ls_tab_esp_code(li_j)=ls_tab_esp_code(li_i) and li_tab_pal_nb_inter(li_j)=li_tab_pal_nb_inter(li_i) and ((ls_tab_frais_desc(li_j)=ls_tab_frais_desc(li_i)) OR (ls_tab_frais_desc(li_j) IS NULL OR ls_tab_frais_desc(li_i) IS NULL ) )
                         ) Then
                             ls_tab_orl_ref_rgp(li_i) := ls_tab_orl_ref_rgp(li_j);
                         End if;
+
                     End If;
                 end loop;
                 If li_tab_grp_rgp(li_i) is null Then
