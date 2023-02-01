@@ -32,11 +32,13 @@ public class GeoLitige extends ValidateAndModifiedEntity implements Serializable
     @JoinColumn(name = "ord_ref_avoir")
     private GeoOrdre ordreAvoirClient;
 
-    @Column(name = "ord_ref_avoir_fourni")
-    private String ordreAvoirFournisseurNumero;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref_avoir_fourni")
+    private GeoOrdre ordreAvoirFournisseur;
 
-    @Column(name = "ord_ref_replace")
-    private String ordreReplacementReference;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref_replace")
+    private GeoOrdre ordreReplacement;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "litige")
     private List<GeoLitigeLigne> lignes;
