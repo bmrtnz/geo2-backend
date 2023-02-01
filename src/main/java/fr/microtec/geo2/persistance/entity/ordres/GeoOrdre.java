@@ -471,6 +471,12 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Column(name = "list_nordre_orig")
     private String listeNumeroOrigine;
 
+    @Column(name = "ord_ref_palox_pere")
+    private String ordreRefPaloxPere;
+
+    @Column(name = "ord_ref_palox_list_fils")
+    private String listeOrdreRefPalox;
+
     @Formula("GEO_ORDRE_STATUS_EXPED(ord_ref)")
     private Boolean expedieAuComplet;
 

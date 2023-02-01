@@ -287,7 +287,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
             statut = GeoOrdreStatut.A_FACTURER;
         if (ordre.getFacture()) {
             statut = GeoOrdreStatut.FACTURE;
-            if (ordre.getFactureEDI())
+            if (Optional.ofNullable(ordre.getFactureEDI()).orElse(false))
                 statut = GeoOrdreStatut.FACTURE_EDI;
         }
         if (ordre.getFlagAnnule())
