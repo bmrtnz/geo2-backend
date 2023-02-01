@@ -1,5 +1,5 @@
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_RETURN_FORFAITS_TRP(
-    arg_cen_code IN varchar2,
+    arg_cen_ref IN varchar2,
     arg_inc_code IN varchar2,
     arg_trp_dev_pu IN OUT number,
     arg_bta_code IN OUT varchar2,
@@ -23,7 +23,7 @@ BEGIN
         select  C.GCL_CODE,C.SOC_CODE,C.SCO_CODE into ls_gcl_code,ls_soc_code, ls_sco_code
         from  GEO_CLIENT C,GEO_ENTREP E
         where  	C.CLI_REF  = E.CLI_REF and
-                    E.CEN_CODE =arg_cen_code;
+                    E.CEN_REF =arg_cen_ref;
     exception when no_data_found then
         ls_gcl_code := '';
     end;
