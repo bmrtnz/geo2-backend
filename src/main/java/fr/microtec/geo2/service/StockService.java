@@ -109,7 +109,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             // Create mouvement
             GeoStockMouvement mouvement = new GeoStockMouvement();
             mouvement.setQuantite(quantite);
-            mouvement.setDescription(commentaire);
+            mouvement.setDescription(commentaire.substring(0, 35));
             mouvement.setOrdre(this.ordreRepo.getOne(ordreId));
             mouvement.setStock(stock);
             mouvement.setOrdreLigne(ligne);
