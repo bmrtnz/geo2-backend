@@ -42,71 +42,11 @@ BEGIN
         fetch C_MARK INTO  ll_k_frais,  ls_cat,  ls_sco,  ls_tvt,  ls_culture,  ls_origine,  ld_frais_pu_mark,  ls_frais_unite_mark,  ld_accompte,  ls_prerequation;
         EXIT WHEN C_MARK%notfound;
 
-        declare
-            arrayval p_str_tab_type;
-            found boolean;
-        begin
-            -- CATEGORIE
-            arrayval := p_str_tab_type();
-            found := false;
-            f_split(ls_cat, ',', arrayval);
-            FOR i IN arrayval.FIRST .. arrayval.LAST LOOP
-                if arrayval(i) = arg_cat_code then
-                    found := true;
-                    exit;
-                end if;
-            END LOOP;
-            if found or ls_cat = '%' then lb_ya_cat := 1; end if;
-
-            -- SECTEUR
-            arrayval := p_str_tab_type();
-            found := false;
-            f_split(ls_sco, ',', arrayval);
-            FOR i IN arrayval.FIRST .. arrayval.LAST LOOP
-                if arrayval(i) = arg_sco_code then
-                    found := true;
-                    exit;
-                end if;
-            END LOOP;
-            if found or ls_sco = '%' then lb_ya_sco := 1; end if;
-
-            -- TYPE VENTE
-            arrayval := p_str_tab_type();
-            found := false;
-            f_split(ls_tvt, ',', arrayval);
-            FOR i IN arrayval.FIRST .. arrayval.LAST LOOP
-                if arrayval(i) = arg_tvt_code then
-                    found := true;
-                    exit;
-                end if;
-            END LOOP;
-            if found or ls_tvt = '%' then lb_ya_tvt := 1; end if;
-
-            -- MODE CULTURE
-            arrayval := p_str_tab_type();
-            found := false;
-            f_split(ls_culture, ',', arrayval);
-            FOR i IN arrayval.FIRST .. arrayval.LAST LOOP
-                if arrayval(i) = to_char(arg_mode_culture) then
-                    found := true;
-                    exit;
-                end if;
-            END LOOP;
-            if found or ls_culture = '%' then lb_ya_culture := 1; end if;
-
-            -- ORIGINE
-            arrayval := p_str_tab_type();
-            found := false;
-            f_split(ls_origine, ',', arrayval);
-            FOR i IN arrayval.FIRST .. arrayval.LAST LOOP
-                if arrayval(i) = arg_origine then
-                    found := true;
-                    exit;
-                end if;
-            END LOOP;
-            if found or ls_origine = '%' then lb_ya_origine := 1; end if;
-
-        end;
+        if instr(ls_cat,arg_cat_code) > 0 or ls_cat = '%' then lb_ya_cat := 1; end if;
+        if instr(ls_sco,arg_sco_code) > 0 or ls_sco = '%' then lb_ya_sco := 1; end if;
+        if instr(ls_tvt,arg_tvt_code) > 0 or ls_tvt = '%' then lb_ya_tvt := 1; end if;
+        if instr(ls_culture,arg_mode_culture) > 0 or ls_culture = '%' then lb_ya_culture := 1; end if;
+        if instr(ls_origine,arg_origine) > 0 or ls_origine = '%' then lb_ya_origine := 1; end if;
 
         if lb_ya_cat = 1 and lb_ya_sco = 1 and lb_ya_tvt = 1 and lb_ya_culture = 1 and lb_ya_origine = 1 then
             CLOSE C_MARK;
