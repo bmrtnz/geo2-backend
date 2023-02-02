@@ -183,6 +183,12 @@ begin
 
     CLOSE C_ORD_REF;
 
+    if array_ord_ref.count = 0 then
+        msg := 'Aucun ordre valide pour un envoi automatique de BL';
+        res := 2;
+        return;
+    end if;
+
     DECLARE
         i number;
         flux varchar2(50) := 'DETAIL';
@@ -197,7 +203,6 @@ begin
         msg := 'Echec de l''envoi automatique des BL : ' || SQLERRM;
         return;
     END;
-
 
     If lb_ord_bloq_poids = False Then
         msg := 'Envoi des détails terminé';
