@@ -48,10 +48,14 @@ BEGIN
     from geo_ordre o
     where ord_ref = is_ord_ref;
 
-	select coalesce(con_prenom,is_con_prenom,''), coalesce(con_nom,is_con_nom,'')
-    into ls_con_prenom, ls_con_nom
-    from geo_contac
-    where con_ref = is_con_ref;
+    begin
+        select coalesce(con_prenom,is_con_prenom,''), coalesce(con_nom,is_con_nom,'')
+        into ls_con_prenom, ls_con_nom
+        from geo_contac
+        where con_ref = is_con_ref;
+    EXCEPTION when NO_DATA_FOUND then
+        null; --continu
+    end;
 
 	if ls_con_prenom is null then
 		if ls_con_nom is null then
