@@ -120,6 +120,12 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
+    public FunctionResult fCalculMarge(
+            @GraphQLArgument(name = "ordreRef") String ordreRef) {
+        return this.repository.fCalculMarge(ordreRef);
+    }
+
+    @GraphQLQuery
     public FunctionResult fVerifLogistiqueOrdre(
             @GraphQLArgument(name = "ordreRef") String ordreRef) {
         return this.repository.fVerifLogistiqueOrdre(ordreRef);
