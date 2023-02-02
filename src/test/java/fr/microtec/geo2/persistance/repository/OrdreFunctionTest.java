@@ -246,6 +246,7 @@ public class OrdreFunctionTest {
                 .ofInitArticle("000922", "028514", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
+        Assertions.assertNotNull(result.getData().get("art_ass"));
         Assertions.assertEquals(1, result.getRes());
     }
 

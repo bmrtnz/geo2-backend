@@ -2,6 +2,7 @@ package fr.microtec.geo2.service;
 
 import java.util.List;
 
+import org.apache.commons.math3.analysis.function.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -109,7 +110,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             // Create mouvement
             GeoStockMouvement mouvement = new GeoStockMouvement();
             mouvement.setQuantite(quantite);
-            mouvement.setDescription(commentaire.substring(0, 35));
+            mouvement.setDescription(commentaire.substring(0, Math.min(35, commentaire.length())));
             mouvement.setOrdre(this.ordreRepo.getOne(ordreId));
             mouvement.setStock(stock);
             mouvement.setOrdreLigne(ligne);
