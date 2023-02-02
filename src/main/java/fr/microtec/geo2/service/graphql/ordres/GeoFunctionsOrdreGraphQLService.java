@@ -612,4 +612,20 @@ public class GeoFunctionsOrdreGraphQLService {
                 societeID);
     }
 
+    @GraphQLQuery
+    public FunctionResult fReturnForfaitsTrp(String cenRef,
+            String incCode,
+            Double trpDevPu,
+            String btaCode,
+            String devCode,
+            String typeOrd) {
+        return this.repository.fReturnForfaitsTrp(
+                cenRef,
+                incCode,
+                trpDevPu,
+                btaCode,
+                devCode,
+                typeOrd);
+    }
+
 }
