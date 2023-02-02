@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_RECUP_FRAIS" (
+CREATE OR REPLACE PROCEDURE GEO_ADMIN."F_RECUP_FRAIS" (
     arg_var_code in GEO_VARIET.VAR_CODE%TYPE,
     arg_cat_code in varchar2,
     arg_sco_code in varchar2,
@@ -32,7 +32,13 @@ AS
         select k_frais, choix_cat, sco_code, tvt_code, mode_culture, origine, frais_pu, frais_unite, accompte, perequation
         from geo_attrib_frais
         where var_code = var_ref
-        and  valide = 'O';
+        and  valide = 'O'
+		and  choix_cat is  not null
+		and  sco_code is not null
+		and  tvt_code is not null
+		and mode_culture is not null
+		and origine is not null
+		order by K_FRAIS;
 BEGIN
     res := 0;
     msg := '';
