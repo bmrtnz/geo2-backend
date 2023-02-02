@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import lombok.Data;
 
 @Data
@@ -39,5 +40,9 @@ public class GeoDepotEnvoi {
 
     @Column(name = "flu_code")
     private String fluxID;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "utilisateur")
+    private GeoUtilisateur utilisateur;
 
 }
