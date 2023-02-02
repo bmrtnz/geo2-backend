@@ -7,7 +7,8 @@ CREATE OR REPLACE PROCEDURE "OF_INIT_ARTICLE" (
 	-- arg_ind_exclu_frais_pu in char,
     res out number,
     msg out varchar2,
-    new_orl_ref out varchar2
+    new_orl_ref out varchar2,
+    art_ass out varchar2
 )
 AS
 	ls_art_ref varchar2(50);
@@ -374,13 +375,13 @@ begin
 	end if;
 
 	declare
-		art_ass varchar2(50);
+		-- art_ass varchar2(50);
 		ls_new_orl_ref varchar2(50);
 	begin
 		of_get_article_associe(arg_art_ref, art_ass);
-		if art_ass is not null then
-			of_init_article(arg_ord_ref, art_ass, arg_soc_code, res, msg, ls_new_orl_ref);
-		end if;
+		-- if art_ass is not null then
+		-- 	of_init_article(arg_ord_ref, art_ass, arg_soc_code, res, msg, ls_new_orl_ref);
+		-- end if;
 	exception when others then
 		return;
 	end;
