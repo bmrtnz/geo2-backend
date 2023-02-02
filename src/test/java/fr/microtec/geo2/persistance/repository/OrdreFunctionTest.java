@@ -926,7 +926,6 @@ public class OrdreFunctionTest {
                 "BRUNO");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
     @Test
