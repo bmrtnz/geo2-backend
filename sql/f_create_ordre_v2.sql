@@ -183,9 +183,6 @@ BEGIN
         li_ret number;
     begin
         f_return_forfaits_trp( ls_cen_ref,ls_inc_code,ld_trp_dev_pu,ls_trp_bta_code,ls_trp_dev_code,arg_typ_ordre,res,msg,li_ret);
-        if res = 0 then
-            return;
-        end if;
         If li_ret > 0 Then
             select   dev_tx into  ld_trp_dev_taux
             from  geo_devise_ref
