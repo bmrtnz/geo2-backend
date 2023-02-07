@@ -997,7 +997,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFReturnForfaitsTrp() {
         FunctionResult result = this.functionOrdreRepository
-                .fReturnForfaitsTrp("000915", "CIF", 0.13, "PYF", "EUR", "ORD");
+                .fReturnForfaitsTrp("000915", "CIF", "ORD");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.getRes(), result.getMsg());

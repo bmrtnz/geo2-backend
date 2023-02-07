@@ -1,9 +1,9 @@
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_RETURN_FORFAITS_TRP(
     arg_cen_ref IN varchar2,
     arg_inc_code IN varchar2,
-    arg_trp_dev_pu IN OUT number,
-    arg_bta_code IN OUT varchar2,
-    arg_dev_code IN OUT varchar2,
+    arg_trp_dev_pu OUT number,
+    arg_bta_code OUT varchar2,
+    arg_dev_code OUT varchar2,
     arg_typ_ordre IN varchar2,
     res OUT number,
     msg OUT varchar2,

@@ -319,9 +319,6 @@ public interface GeoFunctionOrdreRepository {
     FunctionResult fReturnForfaitsTrp(
             String arg_cen_ref,
             String arg_inc_code,
-            Double arg_trp_dev_pu,
-            String arg_bta_code,
-            String arg_dev_code,
             String arg_typ_ordre);
 
 }

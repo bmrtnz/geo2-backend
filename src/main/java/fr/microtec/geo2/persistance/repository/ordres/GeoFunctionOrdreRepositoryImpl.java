@@ -1010,17 +1010,14 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     public FunctionResult fReturnForfaitsTrp(
             String cenRef,
             String incCode,
-            Double trpDevPu,
-            String btaCode,
-            String devCode,
             String typeOrd) {
         FunctionQuery query = this.build("F_RETURN_FORFAITS_TRP");
 
         query.attachInput("arg_cen_ref", String.class, cenRef);
         query.attachInput("arg_inc_code", String.class, incCode);
-        query.attachInputOutput("arg_trp_dev_pu", Double.class, trpDevPu);
-        query.attachInputOutput("arg_bta_code", String.class, btaCode);
-        query.attachInputOutput("arg_dev_code", String.class, devCode);
+        query.attachOutput("arg_trp_dev_pu", Double.class);
+        query.attachOutput("arg_bta_code", String.class);
+        query.attachOutput("arg_dev_code", String.class);
         query.attachInput("arg_typ_ordre", String.class, typeOrd);
         query.attachOutput("li_ret", Integer.class);
 
