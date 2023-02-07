@@ -251,6 +251,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     }
 
     @GraphQLQuery
+    @Deprecated
     public RelayPage<GeoOrdreLigne> allOrdreLigneSuiviDeparts(
             @GraphQLArgument(name = "search") String search,
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,

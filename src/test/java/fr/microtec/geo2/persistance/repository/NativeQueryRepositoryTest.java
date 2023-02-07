@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 
 import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
@@ -190,6 +191,18 @@ public class NativeQueryRepositoryTest {
     public void testAllPaysDepassementEnCours() {
         this.paysRepository
                 .allPaysDepassement('O', "F", "SA", "BV");
+    }
+
+    @Test
+    public void testAllPlanningDepart() {
+        List<GeoPlanningDepart> list = this.ordreRepository
+                .allPlanningDepart(
+                        "SA",
+                        "F",
+                        LocalDateTime.of(2022, 10, 25, 0, 0, 0),
+                        LocalDateTime.of(2022, 10, 26, 23, 59, 59));
+
+        Assertions.assertFalse(list.isEmpty());
     }
 
 }

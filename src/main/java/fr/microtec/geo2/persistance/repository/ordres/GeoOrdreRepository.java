@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
@@ -40,6 +41,13 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
     @Query(name = "Ordre.allPlanningArriveMaritime", nativeQuery = true)
     List<GeoPlanningMaritime> allPlanningArriveMaritime(
             @Param("arg_soc_code") String societeCode,
+            @Param("arg_date_min") LocalDateTime dateMin,
+            @Param("arg_date_max") LocalDateTime dateMax);
+
+    @Query(name = "Ordre.allPlanningDepart", nativeQuery = true)
+    List<GeoPlanningDepart> allPlanningDepart(
+            @Param("arg_soc_code") String societeCode,
+            @Param("arg_sco_code") String secteurCode,
             @Param("arg_date_min") LocalDateTime dateMin,
             @Param("arg_date_max") LocalDateTime dateMax);
 

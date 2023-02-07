@@ -484,4 +484,87 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <!-- PLANNING DEPART -->
+  <named-native-query
+    name="Ordre.allPlanningDepart"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart"
+  >
+    <query>
+    <![CDATA[
+      SELECT ROWNUM, rest.*
+      FROM (
+        SELECT
+            SUM(GEO_ORDLIG.cde_nb_col) as sum_cde_nb_col,
+            SUM(GEO_ORDLIG.exp_nb_col) as sum_exp_nb_col,
+            GEO_ORDLOG.orx_ref
+            /* native query fields
+            GEO_ORDRE.ord_ref,
+            GEO_ORDRE.version_detail,
+            GEO_ORDLOG.fou_code,
+            GEO_ORDRE.nordre,
+            GEO_ORDRE.cli_code,
+            GEO_ORDRE.cen_code,
+            GEO_ORDLOG.datdep_fou_p,
+            GEO_ORDLOG.fou_ref_doc,
+            GEO_ORDLOG.flag_exped_fournni,
+            GEO_ORDLOG.datdep_fou_r,
+            GEO_ORDRE.per_codecom,
+            GEO_ORDRE.per_codeass,
+            GEO_ORDRE.TRP_CODE,
+            GEO_ORDRE.LIVDATP,
+            GEO_ORDLOG.TOT_EXP_NB_PAL,
+            GEO_ORDLOG.PAL_NB_SOL,
+            GEO_ORDLOG.PAL_NB_PB100X120,
+            GEO_ORDLOG.PAL_NB_PB60X80,
+            GEO_ORDLOG.PAL_NB_PB80X120
+            */
+        FROM
+            GEO_ORDLOG,
+            GEO_ORDRE,
+            GEO_ORDLIG ,
+            GEO_CLIENT
+        WHERE
+            ( GEO_ORDLOG.ord_ref = GEO_ORDRE.ord_ref )
+            AND
+                ( GEO_ORDRE.ord_ref = GEO_ORDLIG.ord_ref )
+            AND
+                ( GEO_ORDLOG.fou_code = GEO_ORDLIG.fou_code )
+            AND
+                ( ( geo_ordlog.datdep_fou_p BETWEEN :arg_date_min AND :arg_date_max)
+                AND
+                ( geo_ordre.soc_code = :arg_soc_code )
+                    AND
+                ( geo_ordre.sco_code LIKE :arg_sco_code ))
+            AND
+                geo_ordre.cli_REF = geo_client.cli_REF
+            AND
+                geo_client.ind_usint = 'N'
+        GROUP BY
+            GEO_ORDLOG.orx_ref
+            /*
+            GEO_ORDRE.ord_ref,
+            GEO_ORDRE.version_detail,
+            GEO_ORDLOG.fou_code,
+            GEO_ORDRE.nordre,
+            GEO_ORDRE.cli_code,
+            GEO_ORDRE.cen_code,
+            GEO_ORDLOG.datdep_fou_p,
+            GEO_ORDLOG.fou_ref_doc,
+            GEO_ORDLOG.flag_exped_fournni,
+            GEO_ORDLOG.datdep_fou_r,
+            GEO_ORDRE.per_codecom,
+            GEO_ORDRE.per_codeass,
+            GEO_ORDRE.TRP_CODE,
+            GEO_ORDRE.LIVDATP,
+            GEO_ORDLOG.TOT_EXP_NB_PAL,
+            GEO_ORDLOG.PAL_NB_SOL,
+            GEO_ORDLOG.PAL_NB_PB100X120,
+            GEO_ORDLOG.PAL_NB_PB60X80,
+            GEO_ORDLOG.PAL_NB_PB80X120
+            */
+      ) rest
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>
