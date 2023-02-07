@@ -185,14 +185,21 @@ begin
 
     DECLARE
         i number;
+        j BINARY_INTEGER;
         flux varchar2(50) := 'DETAIL';
         co SYS_REFCURSOR;
+        env_codes p_str_tab_type;
 	    ls_env_code varchar2(50);
     BEGIN
         for i in 1 .. array_ord_ref.count
         loop
-            OF_GENERE_ENVOIS(array_ord_ref(i), flux, 'O', arg_utilisateur, 'N', res, msg, co, ls_env_code);
+            OF_GENERE_ENVOIS(array_ord_ref(i), flux, 'O', arg_utilisateur, 'N', res, msg, co, env_codes);
+            for j in 1 .. env_codes.count
+            loop
+                update geo_envois set trait_exp = 'N' where env_code = to_char(env_codes(j));
+            end loop;
         end loop;
+        commit;
     EXCEPTION when others then
         msg := 'Echec de l''envoi automatique des BL : ' || SQLERRM;
         return;
