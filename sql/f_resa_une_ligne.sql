@@ -48,6 +48,11 @@ BEGIN
 	res := 1;
 	msg := '';
 
+    if arg_qte_resa = 0 then
+        msg := 'La quantité a réservé est de 0';
+        return;
+    end if;
+
     -- on récupère les stocks correspondants à fourni et article dans une datastore (triés par âge descendant)
     -- Si pal_code est non null on l'inclut dans les critères
 

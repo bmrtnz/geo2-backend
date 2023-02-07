@@ -53,7 +53,7 @@ AS
     ls_ordre_desc varchar2(50);
     ls_pal_code_client varchar2(50);
     ls_info_stock clob;
-    ls_dispo varchar2(50);
+    ls_dispo varchar2(500);
 BEGIN
     res := 0;
     msg := '';
