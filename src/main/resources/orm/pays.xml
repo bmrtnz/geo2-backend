@@ -34,7 +34,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             AND geo_client.per_code_com like :arg_com_code
             AND GEO_PAYS.sco_code = geo_client.sco_code
             AND geo_pays.valide = 'O'
-            AND geo_client.valide = 'O'
         GROUP BY
                 GEO_CLIENT.SOC_CODE,
                 GEO_CLIENT.SCO_CODE,
