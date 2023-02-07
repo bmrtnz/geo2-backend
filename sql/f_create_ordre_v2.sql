@@ -75,6 +75,10 @@ AS
     ls_nb_colis GEO_ORDRE.TOTCOL%TYPE := '0';
     ls_pds GEO_ORDRE.TOTPDSNET%TYPE := '0';
     ls_trp_bac_code GEO_ORDRE.TRP_BAC_CODE%TYPE := '';
+
+    ld_trp_dev_pu number;
+    ld_trp_dev_taux number;
+    ls_trp_dev_code varchar2(50);
 BEGIN
     -- correspond à f_create_ordre_v2.pbl
     res := 0;
@@ -175,6 +179,26 @@ BEGIN
         ls_trp_code := '-';
     end if;
 
+    DECLARE
+        li_ret number;
+    begin
+        f_return_forfaits_trp( ls_cen_ref,ls_inc_code,ld_trp_dev_pu,ls_trp_bta_code,ls_trp_dev_code,arg_typ_ordre,res,msg,li_ret);
+        if res = 0 then
+            return;
+        end if;
+        If li_ret > 0 Then
+            select   dev_tx into  ld_trp_dev_taux
+            from  geo_devise_ref
+            where dev_code = ls_trp_dev_code and
+                    dev_code_ref = ls_soc_dev_code;
+
+            ld_trp_pu := ld_dev_tx * ld_trp_dev_pu;
+        ELSE
+            ld_trp_dev_pu :=  0;
+            ld_trp_pu := 0;
+        ENd IF;
+    end;
+
     -- LLEF TRANSPORT PAR DEFAUT de GEO_ENT_TRP_BASSIN
     -- Le transporteur par défaut sera alimenté lors de la saisie du premier article
     ls_inst_log := coalesce(ls_instr_logist_client, '') || ' ' || coalesce(ls_instr_logist_entrep, '');
@@ -208,14 +232,15 @@ BEGIN
             TOTVTE,TOTREM,TOTRES,TOTFRD,TOTACH,TOTMOB,TOTTRP,TOTTRS,TOTCRT,FLEXP,FLLIV,FLBAF,FLFAC,
             INSTRUCTIONS_LOGISTIQUE,FRAIS_PU,FRAIS_UNITE,TOTPAL,TOTCOL,TOTPDSNET,TOTPDSBRUT,DEPDATP_ASC,FACTURE_AVOIR,
             FLAG_QP,FLAG_UDC,ACK_TRANSP,FLAG_PUBLIC,VENTE_COMMISSION,FLBAGQP,FLGENQP,FBAGUDC,FLGENUDC,INVOIC,REM_SF_TX_MDD,PAL_NB_SOL,
-            INVOIC_DEMAT,CAME_CODE,TOTFAD,TOT_CDE_NB_PAL,TOT_EXP_NB_PAL,TYP_ORDRE, TRP_BAC_CODE
+            INVOIC_DEMAT,CAME_CODE,TOTFAD,TOT_CDE_NB_PAL,TOT_EXP_NB_PAL,TYP_ORDRE, TRP_BAC_CODE, TRP_BTA_CODE, TRP_DEV_CODE, TRP_DEV_TAUX, TRP_DEV_PU
         ) VALUES (
             ls_ord_ref, arg_soc_code, ls_soc_cam_code, ls_nordre, ls_per_code_ass, ls_per_code_com, ls_cli_ref, arg_cli_code, arg_bon_retour, ls_cen_ref, arg_cen_code, ls_sco_code, ls_pays_code_entrepot,
             ls_dev_code,ld_dev_tx,ls_inc_code,ls_trp_code,'0','N','N','N',ldate_dep,ldate_liv,ldate_dep,
             ls_tvt_code,ls_tvr_code,ls_mpm_code,ls_bpm_code,ls_echnbj,ls_echle,ld_remsf_tx,ld_remhf_tx,
             ls_tot_vte, '0','0','0', ls_tot_vte,ls_marge,'0','0','0','N','N',ls_flagbaf,ls_flagfac,
             ls_inst_log,'0','','0',ls_nb_colis,ls_pds,ls_pds,ls_DEPDATP_ASC,'A',
-            'N','N','N','N','N','N','N','N','N','N',ld_remsf_tx_mdd,'0 ','N',ls_soc_cam_code,'0','0','0',ls_typ_ordre, ls_trp_bac_code
+            'N','N','N','N','N','N','N','N','N','N',ld_remsf_tx_mdd,'0 ','N',ls_soc_cam_code,'0','0','0',ls_typ_ordre, ls_trp_bac_code,
+            ls_trp_bta_code,ls_trp_dev_code,ld_trp_dev_taux,ld_trp_dev_pu
         );
 
         commit;

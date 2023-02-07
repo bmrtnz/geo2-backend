@@ -1,24 +1,25 @@
-CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_CREATE_ORDRE_V4(
-    arg_societe IN varchar2,
-    arg_client IN varchar2,
-    arg_entrepot IN varchar2,
-    arg_transporteur IN varchar2,
-    arg_ref_cmd_cli IN varchar2,
-    arg_is_baf IN char,
-    arg_is_regulation IN char,
-    arg_datedep IN timestamp,
-    arg_type_ordre IN varchar2,
-    arg_date_liv IN timestamp,
-    arg_load_ref IN varchar2,
-    res OUT number,
-    msg OUT varchar2,
-    ls_ord_ref OUT varchar2
+CREATE OR REPLACE PROCEDURE "GEO_ADMIN".F_CREATE_ORDRE_V3(
+    arg_soc_code IN GEO_SOCIETE.SOC_CODE%TYPE,
+    arg_cli_ref IN GEO_CLIENT.CLI_REF%TYPE,
+    arg_cen_ref IN GEO_ENTREP.CEN_REF%TYPE,
+    arg_trp_code GEO_TRANSP.TRP_CODE%TYPE,
+    arg_ref_cli GEO_ORDRE.REF_CLI%TYPE,
+    arg_is_regulation boolean,
+    arg_is_baf boolean,
+    arg_dat_dep varchar2,
+    arg_typ_ordre GEO_ORDRE.TYP_ORDRE%TYPE,
+    arg_dat_liv varchar2,
+    arg_num_edi number,
+    res IN OUT number,
+    msg IN OUT varchar2,
+    ls_ord_ref OUT GEO_ORDRE.ORD_REF%TYPE
 )
 AS
     ls_soc_dev_code GEO_SOCIETE.DEV_CODE%TYPE;
     ls_soc_cam_code GEO_SOCIETE.CAM_CODE%TYPE;
 
     ls_typ_ordre GEO_ORDRE.TYP_ORDRE%TYPE;
+    ls_nordre varchar(100);
     ll_ord_ref number;
     ls_cli_code GEO_CLIENT.CLI_CODE%TYPE;
     ls_fldet_autom GEO_CLIENT.FLDET_AUTOM%TYPE;
@@ -46,12 +47,9 @@ AS
     ls_per_code_com GEO_CLIENT.PER_CODE_COM%TYPE;
     ls_per_code_ass GEO_CLIENT.PER_CODE_ASS%TYPE;
     ls_dluo_client GEO_CLIENT.DLUO%TYPE;
-    ld_frais_plateforme number;
 
     ld_dev_tx number;
     ls_dev_code_ref GEO_DEVISE.DEV_CODE%TYPE;
-    ls_societe_dev_code varchar2(50);
-    ls_ttr_code varchar2(50);
 
     ls_pays_code_entrepot GEO_ENTREP.PAY_CODE%TYPE;
     ls_inc_code GEO_ENTREP.INC_CODE%TYPE;
@@ -83,16 +81,15 @@ AS
     ls_nb_colis GEO_ORDRE.TOTCOL%TYPE := '0';
     ls_pds GEO_ORDRE.TOTPDSNET%TYPE := '0';
     ls_trp_bac_code GEO_ORDRE.TRP_BAC_CODE%TYPE := '';
-
-    ls_nordre varchar2(50);
 BEGIN
-    res := 0;
+    -- correspond à f_create_ordre_v3.pbl
     msg := '';
+    res := 0;
 
-    select CAM_CODE into ls_soc_cam_code from GEO_SOCIETE where soc_code = arg_societe;
+    select CAM_CODE into ls_soc_cam_code from GEO_SOCIETE where soc_code = arg_soc_code;
 
-    -- Pour la création des commandes TESCO dans GEO_ORDRE
-    f_nouvel_ordre(arg_societe, res, msg, ls_nordre);
+    -- Pour la création des commandes EDI dans GEO_ORDRE
+    f_nouvel_ordre(arg_soc_code, res, msg, ls_nordre);
 
     if substr(msg, 1, 3) = '%%%' then
         return;
@@ -102,22 +99,22 @@ BEGIN
     ls_ord_ref := to_char(ll_ord_ref);
 
     begin
-        select cli_code, fldet_autom into ls_cli_code, ls_fldet_autom  from geo_client where cli_ref = arg_client and soc_code = arg_societe;
+        select cli_code, fldet_autom into ls_cli_code, ls_fldet_autom  from geo_client where cli_ref = arg_cli_ref and soc_code = arg_soc_code;
     exception when others then
-        msg := '%%% Erreur sur ref client : ' || arg_client || ' pour la société : ' || arg_societe;
+        msg := '%%% Erreur sur code client : ' || arg_cli_ref || ' pour la société : ' || arg_soc_code;
         res := 0;
         return;
     end;
 
     begin
-        select cen_code into ls_cen_code from geo_entrep where cen_ref = arg_entrepot and cli_ref = arg_client;
+        select cen_code into ls_cen_code from geo_entrep where cen_ref = arg_cen_ref and cli_ref = arg_cli_ref;
     exception when others then
-        msg := '%%% Erreur sur ref entrepot : ' || arg_entrepot || ' pour la société : ' || arg_societe;
+        msg := '%%% Erreur sur code entrepot : ' || arg_cen_ref || ' pour la société : ' || arg_soc_code;
         res := 0;
         return;
     end;
 
-    ls_typ_ordre := arg_type_ordre;
+    ls_typ_ordre := arg_typ_ordre;
     If ls_typ_ordre is null OR ls_typ_ordre = '' THEN
         ls_typ_ordre := 'ORD';
     end if;
@@ -127,18 +124,18 @@ BEGIN
         select
             sco_code, pay_code, dev_code, mpm_code, bpm_code, echnbj, echle, tvt_code,
             crt_code, crt_bta_code, crt_pu, instructions_seccom, instructions_logistique,
-            rem_sf_tx, rem_hf_tx, rem_sf_tx_mdd, tvr_code, frais_pu, frais_unite, per_code_com, per_code_ass, dluo, frais_plateforme
+            rem_sf_tx, rem_hf_tx, rem_sf_tx_mdd, tvr_code, frais_pu, frais_unite, per_code_com, per_code_ass, dluo
         into
             ls_sco_code, ls_pays_code_client, ls_dev_code, ls_mpm_code, ls_bpm_code, ls_echnbj, ls_echle, ls_tvt_code,
             ls_crt_code, ls_crt_bta_code, ld_crt_pu, ls_instr_seccom_client, ls_instr_logist_client,
-            ld_remsf_tx, ld_remhf_tx, ld_remsf_tx_mdd, ls_tvr_code_client, ld_frais_pu, ls_frais_unite, ls_per_code_com, ls_per_code_ass, ls_dluo_client, ld_frais_plateforme
-        from geo_client where cli_ref = arg_client;
+            ld_remsf_tx, ld_remhf_tx, ld_remsf_tx_mdd, ls_tvr_code_client, ld_frais_pu, ls_frais_unite, ls_per_code_com, ls_per_code_ass, ls_dluo_client
+        from geo_client where cli_ref = arg_cli_ref;
     exception when others then
-        msg := '%%% Erreur sur données client : ' || arg_client || ' pour la société : ' || arg_societe;
+        msg := '%%% Erreur sur données client : ' || arg_cli_ref || ' pour la société : ' || arg_soc_code;
         return;
     end;
 
-    select dev_code into ls_soc_dev_code from geo_societe where soc_code = arg_societe;
+    select dev_code into ls_soc_dev_code from geo_societe where soc_code = arg_soc_code;
     if ls_dev_code = ls_soc_dev_code then
         ld_dev_tx := 1;
     else
@@ -165,18 +162,18 @@ BEGIN
     begin
         select
             pay_code, inc_code, tvr_code, trp_code, trp_bta_code, trs_code, trs_bta_code,
-            instructions_seccom, instructions_logistique, trp_pu, trs_pu, gest_ref, ttr_code
+            instructions_seccom, instructions_logistique, trp_pu, trs_pu, gest_ref
         into
             ls_pays_code_entrepot, ls_inc_code, ls_tvr_code, ls_trp_code, ls_trp_bta_code, ls_trs_code, ls_trs_bta_code,
-            ls_instr_seccom_entrep, ls_instr_logist_entrep, ld_trp_pu, ld_trs_pu, ls_gest_ref, ls_ttr_code
-        from geo_entrep where cen_ref = arg_entrepot;
+            ls_instr_seccom_entrep, ls_instr_logist_entrep, ld_trp_pu, ld_trs_pu, ls_gest_ref
+        from geo_entrep where cen_ref = arg_cen_ref;
     exception when others then
-        msg := '%%% Erreur sur données entrepot : ' || arg_entrepot || ' pour la société : ' || arg_societe;
+        msg := '%%% Erreur sur données entrepot : ' || arg_cen_ref || ' pour la société : ' || arg_soc_code;
         return;
     end;
 
-    if arg_transporteur is not null and arg_transporteur <> '' then
-        ls_trp_code := arg_transporteur;
+    if arg_trp_code is not null and arg_trp_code <> '' then
+        ls_trp_code := arg_trp_code;
     end if;
 
     if ls_trp_code is null or ls_trp_code = '' then
@@ -186,7 +183,7 @@ BEGIN
     DECLARE
         li_ret number;
     begin
-        f_return_forfaits_trp( arg_entrepot,ls_inc_code,ld_trp_dev_pu,ls_trp_bta_code,ls_trp_dev_code,ls_typ_ordre,res,msg,li_ret);
+        f_return_forfaits_trp( arg_cen_ref,ls_inc_code,ld_trp_dev_pu,ls_trp_bta_code,ls_trp_dev_code,arg_typ_ordre,res,msg,li_ret);
         if res = 0 then
             return;
         end if;
@@ -215,18 +212,18 @@ BEGIN
 
     ld_trp_dev_pu := ld_trp_pu / ld_trp_dev_taux;
 
-    ls_inst_log := substr(coalesce(ls_instr_logist_client, ' ') || ' ' || coalesce(ls_instr_logist_entrep, ' '),0, 280);
+    ls_inst_log := substr(coalesce(ls_instr_logist_client, ' ') || ' ' || coalesce(ls_instr_logist_entrep, ' '), 280);
     ldate_dep := SYSDATE;
     ldate_liv := SYSDATE + 1;
     ldate_version := SYSDATE;
 
     begin
-        if arg_datedep is not null then
-            ldate_dep := arg_datedep;
+        if arg_dat_dep is not null then
+            ldate_dep := to_date(arg_dat_dep, 'yyyy-mm-dd hh24:mi:ss');
             -- ldate_liv = datetime(RelativeDate(Date(arg_datedep),1))
         end if;
-        if arg_date_liv is not null then
-            ldate_liv := arg_date_liv;
+        if arg_dat_liv is not null then
+            ldate_liv := to_date(arg_dat_liv, 'yyyy-mm-dd hh24:mi:ss');
         end if;
 
         ls_DEPDATP_ASC := to_char(ldate_dep, 'yyyymmdd');
@@ -245,12 +242,12 @@ BEGIN
     -- On crée l'ordre
 
     ls_flagbaf := 'N';
-    if arg_is_baf = 'O' then
+    if arg_is_baf = true then
         ls_flagbaf := 'O';
     end if;
 
     ls_flagfac := 'N';
-    if arg_is_regulation = 'O' then
+    if arg_is_regulation = true then
         ls_flagfac := 'O';
         ls_flagbaf := 'O';
     end if;
@@ -264,25 +261,31 @@ BEGIN
             INSTRUCTIONS_LOGISTIQUE,FRAIS_PU,FRAIS_UNITE,TOTPAL,TOTCOL,TOTPDSNET,TOTPDSBRUT,DEPDATP_ASC,FACTURE_AVOIR,
             FLAG_QP,FLAG_UDC,ACK_TRANSP,FLAG_PUBLIC,VENTE_COMMISSION,FLBAGQP,FLGENQP,FBAGUDC,FLGENUDC,INVOIC,REM_SF_TX_MDD,PAL_NB_SOL,
             INVOIC_DEMAT,CAME_CODE,TOTFAD,TOT_CDE_NB_PAL,TOT_EXP_NB_PAL,TYP_ORDRE, REF_EDI_ORDRE, TRP_BTA_CODE, TRP_DEV_CODE, TRP_DEV_TAUX, TRP_DEV_PU, FLDET_AUTOM,
-            CRT_CODE, CRT_BTA_CODE, CRT_PU, TRP_BAC_CODE, CODE_CHARGEMENT, TTR_CODE, FRAIS_PLATEFORME
+            CRT_CODE, CRT_BTA_CODE, CRT_PU, TRP_BAC_CODE
         ) VALUES (
-             ls_ord_ref, arg_societe,ls_soc_cam_code,ls_nordre,ls_per_code_ass,ls_per_code_com,arg_client,ls_cli_code,arg_ref_cmd_cli,arg_entrepot,ls_cen_code,ls_sco_code,ls_pays_code_entrepot,
+             ls_ord_ref, arg_soc_code,ls_soc_cam_code,ls_nordre,ls_per_code_ass,ls_per_code_com,arg_cli_ref,ls_cli_code,arg_ref_cli,arg_cen_ref,ls_cen_code,ls_sco_code,ls_pays_code_entrepot,
              ls_dev_code,ld_dev_tx,ls_inc_code,ls_trp_code,ld_trp_pu,'N','N','N',ldate_dep,ldate_liv,ldate_dep,
              ls_tvt_code,ls_tvr_code,ls_mpm_code,ls_bpm_code,ls_echnbj,ls_echle,ld_remsf_tx,ld_remhf_tx,
              ls_tot_vte,'0','0','0',ls_tot_vte,ls_marge,'0','0','0','N','N',ls_flagbaf,ls_flagfac,
              ls_inst_log,ld_frais_pu,ls_frais_unite,'0',ls_nb_colis,ls_pds,ls_pds,ls_DEPDATP_ASC,'F',
-             'N','N','N','N','N','N','N','N','N','N',ld_remsf_tx_mdd,'0 ','N', ls_soc_cam_code,'0','0','0',ls_typ_ordre, '', ls_trp_bta_code, ls_trp_dev_code, ld_trp_dev_taux, ld_trp_dev_pu, ls_fldet_autom,
-             ls_crt_code, ls_crt_bta_code, ld_crt_pu, ls_trp_bac_code, arg_load_ref, ls_ttr_code, ld_frais_plateforme
+             'N','N','N','N','N','N','N','N','N','N',ld_remsf_tx_mdd,'0 ','N', ls_soc_cam_code,'0','0','0',ls_typ_ordre, arg_num_edi, ls_trp_bta_code, ls_trp_dev_code, ld_trp_dev_taux, ld_trp_dev_pu, ls_fldet_autom,
+             ls_crt_code, ls_crt_bta_code, ld_crt_pu, ls_trp_bac_code
          );
 
-         commit;
-         res := 1;
+        begin
+            update GEO_EDI_ORDRE set ORD_REF = ls_ord_ref WHERE REF_EDI_ORDRE = arg_num_edi;
+            commit;
 
+            res := 1;
+        exception when others then
+            msg := '%%% Erreur à la création de la mise à jour de l~''ordre EDI : ' || SQLERRM;
+            return;
+        end;
     exception when others then
         msg := '%%% Erreur à la création de l~''ordre : ' || SQLERRM;
-        rollback;
         return;
     end;
-end;
+
+end F_CREATE_ORDRE_V3;
 /
 
