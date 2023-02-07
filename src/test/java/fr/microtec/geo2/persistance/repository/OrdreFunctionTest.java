@@ -752,7 +752,8 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFCreeOrdreComplementaireOrdreV2() {
-        FunctionResult result = this.functionOrdreRepository.fCreeOrdreComplementaire("001864", SOCIETE_SA, "STEPHANE");
+        FunctionResult result = this.functionOrdreRepository.fCreeOrdreComplementaire("1434967", SOCIETE_SA,
+                "STEPHANE");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
