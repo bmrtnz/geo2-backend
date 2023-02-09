@@ -19,16 +19,36 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."SET_TRANSPORTEUR_BASSIN" (
     ls_soc_dev_code varchar2(50);
     ls_cen_ref varchar2(50);
     ls_ord_ref varchar2(50);
+    ls_num_ligne varchar2(2);
 begin
 
     msg := '';
     res := 0;
 
-    select o.typ_ordre,o.cen_ref,o.ord_ref
-    into ls_typ_ordre,ls_cen_ref,ls_ord_ref
+    select o.typ_ordre,o.cen_ref,o.ord_ref,ol.orl_lig
+    into ls_typ_ordre,ls_cen_ref,ls_ord_ref,ls_num_ligne
     from geo_ordlig ol, geo_ordre o
     where ol.ord_ref = o.ord_ref
     and orl_ref = arg_orl_ref;
+
+    -- MAIl LEA du 09/02/2023 - Pb transporteurs par bassin (bloquant)
+    -- Il faut que le transporteur par bassin s’alimente en auto en fonction du bassin du fournisseur
+    -- de la première ligne et uniquement la première ligne.
+    -- Peu importe le mode d’ajout de cette ligne. 😉
+    declare
+        lignes_count number;
+    begin
+        select count(*)
+        into lignes_count
+        from geo_ordlig ol, geo_ordre o
+        where ol.ord_ref = o.ord_ref
+        AND ol.ord_ref  = (SELECT ORD_REF FROM GEO_ORDLIG WHERE ORL_REF = arg_orl_ref);
+        if lignes_count > 1 or ls_num_ligne <> '01' then
+            msg := 'Cette ligne n''est pas la premiere ligne, annulation de  l''assignation du transporteur par bassin';
+            res := 1;
+            return;
+        end if;
+    end;
 
     select dev_code
     into ls_soc_dev_code
