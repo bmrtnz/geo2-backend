@@ -120,7 +120,7 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
      * @return The number of GeoEnvois that match the search criteria.
      */
     @GraphQLQuery
-    public long countBy(String search) {
+    public long countEnvois(String search) {
         Specification<GeoEnvois> spec = null;
         if (search != null && !search.isBlank())
             spec = this.parseSearch(search);
