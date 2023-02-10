@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE "GEO_ADMIN".FN_MAJ_PU_VTE_RGP_PLATEF(
+CREATE OR REPLACE PROCEDURE GEO_ADMIN.FN_MAJ_PU_VTE_RGP_PLATEF(
     arg_ord_ref_grp varchar2,
     res OUT number,
     msg OUT varchar2
@@ -26,6 +26,17 @@ AS
     ld_prix_mini number;
 
     ls_art_ref_sav varchar2(50);
+
+
+     ls_tvt_code varchar2(50);
+     ls_sco_code varchar2(50);
+     ls_var_code varchar2(50);
+     ls_ccw_code varchar2(50);
+
+     ll_k_frais  number;
+
+     ld_accompte   number;
+
 
     cursor C_rgp_pu_vente is
     select R.GRP_RGP,L.CDE_NB_COL,O.dev_code, L.ORL_REF, R.PAL_NB_COL_ORIG*CDE_NB_PAL_ORIG as nb_col
@@ -177,7 +188,7 @@ BEGIN
 
                 ld_vte_pu_rgp := ld_ach_pu_rgp_gbp * ldc_vte_dev_taux_GBP;
             End If;
-
+/*
         select distinct A.col_code, A.mode_culture,O.ori_code , V.ach_pu_mini
         into ls_col_code, ll_article_mode_culture,ls_ori_code,ld_prix_mini
         from geo_article_colis A,  geo_origine O,geo_variet V
@@ -185,17 +196,32 @@ BEGIN
                 A.esp_code = O.esp_code and
                 A.ori_code = O.ori_code and
                 A.esp_code = V.var_code and
-                A.var_code = V.var_code;
+                A.var_code = V.var_code;*/
 
-        If ld_prix_mini is not null and ld_prix_mini > 0 and substr(ls_col_code,1,2) <>'CP'  and ll_article_mode_culture = 0 and ls_ori_code = 'F' then
-            ld_ach_pu_rgp := ld_prix_mini;
-            ld_ach_pu_rgp :=	ld_prix_mini;
+        select O.tvt_code, O.sco_code into ls_tvt_code,ls_sco_code from geo_ordre O where O.ord_ref = arg_ord_ref_grp;
+    begin
+        select A.col_code,A.mode_culture, A.ori_code, A.var_code, A.ccw_code
+        into ls_col_code,ll_article_mode_culture, ls_ori_code, ls_var_code, ls_ccw_code
+        from geo_article_colis A
+        where A.art_ref  = ls_art_ref_sav;
 
-        Else
+        f_recup_frais(ls_var_code, ls_ccw_code, ls_sco_code, ls_tvt_code, ll_article_mode_culture, ls_ori_code, ll_k_frais, msg);
 
-            ld_ach_pu_rgp := null;
+       ld_ach_pu_rgp:=0;
 
-        End If;
+        select accompte
+        into  ld_accompte
+        from geo_attrib_frais
+        where k_frais = ll_k_frais;
+
+
+        If ld_accompte > 0  and substr(ls_col_code,1,2) <>'CP'   then
+          ld_ach_pu_rgp := ld_accompte;
+         End If ;
+            exception when no_data_found then
+                    null; -- pass
+                end;
+
 
         update GEO_ORDLIG
         set VTE_PU = ld_vte_pu_rgp,
@@ -210,10 +236,6 @@ BEGIN
 
 
 
-
-
-
-
     end loop;
 
     msg := 'OK';
@@ -221,4 +243,3 @@ BEGIN
 
 end;
 /
-

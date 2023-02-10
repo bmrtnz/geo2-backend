@@ -203,7 +203,7 @@ BEGIN
     ldate_liv := sysdate + 1;
 
     if arg_dat_dep is not null or arg_dat_dep <> '' then
-        ldate_dep := to_date(arg_dat_dep,'dd/mm/yy');
+        ldate_dep := to_date(arg_dat_dep,'dd/mm/yy hh24:mi:ss');
         ldate_liv := ldate_dep + 1;
     end if;
 
