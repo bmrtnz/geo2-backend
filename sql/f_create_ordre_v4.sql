@@ -175,7 +175,7 @@ BEGIN
         return;
     end;
 
-    if arg_transporteur is not null and arg_transporteur <> '' then
+    if arg_transporteur is not null or arg_transporteur <> '' then
         ls_trp_code := arg_transporteur;
     end if;
 

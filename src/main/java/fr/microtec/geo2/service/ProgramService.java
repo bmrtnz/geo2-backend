@@ -671,7 +671,7 @@ public class ProgramService {
             }
             if (!ls_ordre_sa.get().isBlank()) {
                 int ll_pos = ls_programme.indexOf('/');
-                ls_programme = ls_programme.substring(1, ll_pos - 1);
+                ls_programme = ls_programme.substring(0, ll_pos - 1);
                 // l'alimentation du prix MINI est faite au moment de la création de la ligne
                 if (!ls_programme.startsWith("NEW")
                         && (ls_programme.startsWith("ISS") || ls_programme.startsWith("TES"))) {
@@ -685,10 +685,11 @@ public class ProgramService {
 
                         val lignes = this.olRepo.findAll((root, cq, cb) -> cb.and(
                                 cb.equal(root.get("ordre").get("numero"), ls_ordre_sa.get()),
-                                cb.equal(root.get("societe").get("id"), "SA"),
+                                cb.equal(root.get("ordre").get("societe").get("id"), "SA"),
                                 cb.isNull(root.get("achatPrixUnitaire")),
                                 cb.isNull(root.get("achatUnite").get("id")),
-                                cb.equal(root.get("ordre").get("campagne"), root.get("societe").get("campagne"))));
+                                cb.equal(root.get("ordre").get("campagne"),
+                                        root.get("ordre").get("societe").get("campagne"))));
 
                         for (GeoOrdreLigne ligne : lignes) {
                             ls_array_art_sa.add(ligne.getArticle().getId());
@@ -702,7 +703,7 @@ public class ProgramService {
                                 val cur_art = ls_array_art.get(ll_ind);
                                 val cur_art_sa = ls_array_art_sa.get(ll_ind_sa);
                                 this.olRepo.findOne((root, cq, cb) -> cb.and(
-                                        cb.equal(root.get("ordre").get("id"), ls_ordre_sa.get()),
+                                        cb.equal(root.get("ordre").get("ordre").get("id"), ls_ordre_sa.get()),
                                         cb.equal(root.get("article").get("id"), cur_art)))
                                         .ifPresent(ligne -> {
                                             ligne.setAchatPrixUnitaire(ld_prix_mini_sa);

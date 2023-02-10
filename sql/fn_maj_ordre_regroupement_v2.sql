@@ -268,7 +268,7 @@ BEGIN
 
     End If;
 
-    select substr(code_chargement,1,6),depdatp,to_char(GEO_ORDRE.DEPDATP,'dd/mm/yy'),trp_code,per_codecom,per_codeass,ttr_code,instructions_logistique,code_chargement,livdatp,etd_location,eta_location,etd_date,etd_date,dev_code,dev_tx
+    select substr(code_chargement,1,6),depdatp,to_char(GEO_ORDRE.DEPDATP,'dd/mm/yy hh24:mi'),trp_code,per_codecom,per_codeass,ttr_code,instructions_logistique,code_chargement,livdatp,etd_location,eta_location,etd_date,etd_date,dev_code,dev_tx
     into ls_code_chargement,ldt_depdatp,ls_depdatp,ls_transp,ls_per_codecom,ls_per_codeass,ls_ttr_code,ls_instructions_logistique,ls_code_chargement_complet,ldt_livdatp,ls_etd_location,ls_eta_location,ldt_etd_date,ldt_eta_date,ls_dev_code_orig,ld_dev_tx_ordre_orig
     from GEO_ORDRE
     where ORD_REF =arg_ord_ref_origine;
@@ -287,7 +287,7 @@ BEGIN
                     T.IND_DECL_DOUANIER ='O';
         --Demande de SQ le 31/10/2022
         --Si transporteur PELLIET alors déclaration de douane effectué par LGLCUSTOMS
-        if ls_transp = 'PELLIET' then ls_decl_doua := 'LGLCUSTOMS'; end if;
+        if ls_transp = 'PELLIET' OR ls_transp ='LGLINTER' then ls_decl_doua := 'LGLCUSTOMS'; end if;
 
     exception when no_data_found then
         ls_decl_doua := 'BOLLORE';
@@ -299,7 +299,7 @@ BEGIN
         select ORD_REF into ls_ord_ref_regroup
         from  GEO_ORDRE
         where 	CODE_CHARGEMENT 		like ls_code_chargement and
-                to_date(DEPDATP)					  	=ldt_depdatp and
+                to_date(DEPDATP)					  	=to_date(ldt_depdatp) and
                 VALIDE ='O' 						and
                 CEN_REF  = ls_cen_ref_rgp and
                 rownum = 1;
