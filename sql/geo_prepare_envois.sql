@@ -19,8 +19,7 @@ BEGIN
 	IF (mode_auto = 'O') THEN
 		CASE is_flu_code
 		WHEN 'INCLIT' THEN
-			/* TODO MICROTEC
-			of_genere_envois_litige_autom();*/
+			of_genere_envois_litige_autom(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 			msg := 'OK';
 			res := 1;
 			RETURN;
@@ -52,11 +51,9 @@ BEGIN
 
 	CASE is_flu_code
 		WHEN 'INCLIT' THEN
-			-- of_genere_envois_litige; TODO MICROTEC
-			return; -- à retirer quand procedure précédente ok
+			of_genere_envois_litige(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 		WHEN 'RESLIT' THEN
-			-- of_genere_envois_litige; TODO MICROTEC
-			return; -- à retirer quand procedure précédente ok
+			of_genere_envois_litige(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 		WHEN 'DETAIM' THEN
 			-- of_genere_envoi_detaim; TODO MICROTEC
 			return; -- à retirer après
