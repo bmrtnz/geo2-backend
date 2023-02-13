@@ -87,7 +87,7 @@ AS
     is_ref_document varchar2(50);
     is_imp_full varchar2(50);
     is_imprimante varchar2(35);
-    ls_env_code OUT geo_envois.env_code%TYPE
+    ls_env_code geo_envois.env_code%TYPE;
 BEGIN
     res := 0;
     msg := '';
@@ -219,6 +219,7 @@ BEGIN
                     where LIT_REF = ls_LIT_REF and
                             TIE_CODE	= ls_TIE_CODE and
                             is_flu_code ='INCLIT';
+                    commit;
 
                     open C1;
                     begin

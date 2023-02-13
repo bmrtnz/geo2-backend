@@ -51,11 +51,9 @@ BEGIN
 
 	CASE is_flu_code
 		WHEN 'INCLIT' THEN
-			-- of_genere_envois_litige; TODO MICROTEC
-			return; -- à retirer quand procedure précédente ok
+			of_genere_envois_litige(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 		WHEN 'RESLIT' THEN
-			-- of_genere_envois_litige; TODO MICROTEC
-			return; -- à retirer quand procedure précédente ok
+			of_genere_envois_litige(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 		WHEN 'DETAIM' THEN
 			-- of_genere_envoi_detaim; TODO MICROTEC
 			return; -- à retirer après
