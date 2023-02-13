@@ -657,10 +657,12 @@ public class ProgramService {
         // programme 'NEW' et 'ISS'"
         String ls_ordre_sa_prec = "";
         String ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+        List<String> ls_array_art_sa = new ArrayList<>();
+        final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
+        final AtomicReference<String> ls_ord_ref_sa = new AtomicReference<>("");
 
         while (ls_programme != null && !ls_programme.isBlank()) {
 
-            final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
             try {
                 ls_ordre_sa
                         .set(Double.toString(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
@@ -678,18 +680,21 @@ public class ProgramService {
                     List<String> ls_array_art = List
                             .of(sheet.getRow(ll_row - 1).getCell(COL_ARTS_REF).getStringCellValue().split("-"));
                     Double ld_prix_mini_sa = sheet.getRow(ll_row - 1).getCell(COL_PRIX_MINI_SA).getNumericCellValue();
-                    List<String> ls_array_art_sa = new ArrayList<>();
                     if (!ls_ordre_sa.get().equals(ls_ordre_sa_prec)) {
                         ls_ordre_sa_prec = ls_ordre_sa.get();
                         // int ll_ind = 0;
 
-                        val lignes = this.olRepo.findAll((root, cq, cb) -> cb.and(
+                        List<GeoOrdreLigne> lignes = this.olRepo.findAll((root, cq, cb) -> cb.and(
                                 cb.equal(root.get("ordre").get("numero"), ls_ordre_sa.get()),
                                 cb.equal(root.get("ordre").get("societe").get("id"), "SA"),
-                                cb.isNull(root.get("achatPrixUnitaire")),
+                                cb.or(cb.isNull(root.get("achatPrixUnitaire")),
+                                        cb.equal(root.get("achatPrixUnitaire"), 0)),
                                 cb.isNull(root.get("achatUnite").get("id")),
                                 cb.equal(root.get("ordre").get("campagne"),
                                         root.get("ordre").get("societe").get("campagne"))));
+
+                        if (!lignes.isEmpty())
+                            ls_ord_ref_sa.set(lignes.get(0).getOrdre().getId());
 
                         for (GeoOrdreLigne ligne : lignes) {
                             ls_array_art_sa.add(ligne.getArticle().getId());
@@ -703,7 +708,7 @@ public class ProgramService {
                                 val cur_art = ls_array_art.get(ll_ind);
                                 val cur_art_sa = ls_array_art_sa.get(ll_ind_sa);
                                 this.olRepo.findOne((root, cq, cb) -> cb.and(
-                                        cb.equal(root.get("ordre").get("ordre").get("id"), ls_ordre_sa.get()),
+                                        cb.equal(root.get("ordre").get("id"), ls_ord_ref_sa.get()),
                                         cb.equal(root.get("article").get("id"), cur_art)))
                                         .ifPresent(ligne -> {
                                             ligne.setAchatPrixUnitaire(ld_prix_mini_sa);
@@ -718,7 +723,7 @@ public class ProgramService {
                                                 res.getRow(ligne.getNumero())
                                                         .ifPresent(r -> r.pushErreur(
                                                                 "Erreur update prix mini pour ORD_REF: "
-                                                                        + ls_ordre_sa.get()
+                                                                        + ls_ord_ref_sa.get()
                                                                         + ", ARTICLE: "
                                                                         + cur_art_sa));
                                             }
