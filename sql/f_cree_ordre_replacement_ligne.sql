@@ -32,8 +32,6 @@ AS
     ls_TOTVTE varchar2(50);
     ls_TOTACH varchar2(50);
     ls_TOTMOB varchar2(50);
-    ls_ACH_PU varchar2(50);
-    ls_ach_dev_taux varchar2(50);
     ls_ACH_DEV_PU varchar2(50);
     ls_PROPR_CODE varchar2(50);
     ls_FOU_CODE varchar2(50);
@@ -45,15 +43,18 @@ AS
     ls_orx_ref varchar2(50);
     ls_mdd varchar2(50);
     ls_var_ristourne varchar2(50);
+    ls_ach_dev_taux varchar2(50);
+    ls_ach_pu varchar2(50);
 
     ll_nb_pal number;
     ll_pal_nb_inter_ori number;
-    ll_ACH_PU number := 0;
     ll_nb_col number ;
     ld_PDS_NET number;
     ld_col_tare number;
     ll_VTE_PU number;
     ldc_frais_pu_ori number := 0;
+    ldc_ach_pu number;
+    ldc_ach_dev_pu number;
     ldc_remsf_tx_mdd number;
     ldc_remsf_tx number;
     ldc_remhf_tx number;
@@ -61,8 +62,11 @@ AS
     ld_VTE_QTE number;
     ld_pmb_per_com number;
     ll_pal_nb_col number;
+    ldc_ach_dev_taux number;
 
     soc_dev_code varchar2(50);
+    ls_EXP_PDS_NET_ORDLIG varchar2(50);
+    ls_EXP_PDS_BRUT_ORDLIG varchar2(50);
 
 BEGIN
     res := 0;
@@ -91,8 +95,8 @@ BEGIN
 
 
     --recherche des informations sur la ligne de l'ordre d'origine du litige
-    select  C.col_tare,X.esp_code,OL.fou_code ,OL.pal_code,OL.art_ref,OL.pal_nb_palinter,X.mdd,V.var_ristourne ,OL.propr_code, OL.bac_code, X.u_par_colis,OL.PAL_NB_COL
-    into  ld_col_tare, ls_ESP_CODE,ls_fou_code,ls_pal_code_ori,ls_art_ref_ori,ll_pal_nb_inter_ori,ls_mdd,ls_var_ristourne,ls_PROPR_CODE,ls_bac_code,ld_pmb_per_com,ll_pal_nb_col
+    select  C.col_tare,X.esp_code,OL.fou_code ,OL.pal_code,OL.art_ref,OL.pal_nb_palinter,X.mdd,V.var_ristourne ,OL.propr_code, OL.bac_code, X.u_par_colis,OL.PAL_NB_COL,OL.EXP_PDS_NET,OL.EXP_PDS_BRUT, OL.ACH_DEV_PU,OL.ACH_DEV_CODE
+    into  ld_col_tare, ls_ESP_CODE,ls_fou_code,ls_pal_code_ori,ls_art_ref_ori,ll_pal_nb_inter_ori,ls_mdd,ls_var_ristourne,ls_PROPR_CODE,ls_bac_code,ld_pmb_per_com,ll_pal_nb_col,ls_EXP_PDS_NET_ORDLIG,ls_EXP_PDS_BRUT_ORDLIG,  ldc_ach_dev_pu,ls_ach_dev_code
     from geo_article X, geo_colis C, geo_ordlig OL, GEO_VARIET V
             where 	OL.orl_ref =arg_orl_ref_ori 	and
                         OL.art_ref = X.art_ref 			and
@@ -125,7 +129,6 @@ BEGIN
     where  LIL_REF = arg_lil_ref;
 
 
-    ll_ACH_PU := 0;
 
     --ll_VTE_PU = 0
 
@@ -136,8 +139,11 @@ BEGIN
     ls_EXP_NB_PAL := to_char(ll_nb_pal );
 
     ls_EXP_PDS_NET := to_char(ld_PDS_NET);
-    ls_EXP_PDS_BRUT := to_char( round(ld_pds_net + (ld_col_tare * ll_nb_col), 0));
-
+    If  ls_EXP_PDS_NET_ORDLIG <> ls_EXP_PDS_NET Then
+        ls_EXP_PDS_BRUT := to_char( round(ld_pds_net + (ld_col_tare * ll_nb_col), 0));
+    ELse
+        ls_EXP_PDS_BRUT := ls_EXP_PDS_BRUT_ORDLIG;
+    End If;
 
     case ls_ach_bta_code
         when 'COLIS' then
@@ -171,6 +177,18 @@ BEGIN
 
 
     ls_ACH_DEV_CODE :=soc_dev_code;
+    If ls_ach_dev_code = soc_dev_code  Then
+        ldc_ach_dev_taux  := 1;
+        ldc_ach_pu := ldc_ach_dev_pu;
+    ELSE
+        select dev_tx into ldc_ach_dev_taux
+        from geo_devise_ref
+        where dev_code = ls_ach_dev_code and
+                dev_code_ref=soc_dev_code;
+
+        ldc_ach_pu := ldc_ach_dev_pu*ldc_ach_dev_taux;
+    ENd If;
+
     --ls_ACH_QTE = to_char(ll_nb_col)
     ls_ACH_DEV_TAUX := '1';
     ls_ACH_PU := '0';
@@ -182,14 +200,14 @@ BEGIN
 
 
     ls_TOTVTE := to_char(ll_VTE_PU * ll_nb_col);
-    ls_TOTACH := to_char(ll_ACH_PU * ll_nb_col);
+    ls_TOTACH := to_char(ldc_ACH_PU * ll_nb_col);
     ls_TOTMOB := '0';
 
     If arg_soc_code ='BWS' then
         ls_TOTVTE :='0';
-        ls_TOTACH := '0';
+        -- ls_TOTACH := '0';
         ls_VTE_PU:='0';
-        ls_ACH_PU := '0';
+        -- ls_ACH_PU := '0';
         ldc_frais_pu_ori := 0;
     End If;
     If ll_pal_nb_inter_ori is null Then ll_pal_nb_inter_ori := 0; end if;
@@ -207,9 +225,9 @@ BEGIN
         VALUES (
 
             ls_orl_ref, arg_ord_ref,ls_orl_lig,ls_pal_code_ori,ll_pal_nb_col, ls_CDE_NB_PAL, ls_CDE_NB_COL,ls_EXP_NB_PAL, ls_EXP_NB_COL, ls_EXP_PDS_BRUT,
-            ls_EXP_PDS_NET, ls_ACH_PU, ls_ACH_DEV_CODE,ls_ACH_BTA_CODE, ld_ACH_QTE, ls_VTE_PU,ls_VTE_BTA_CODE, ld_VTE_QTE, ls_FOU_CODE,
+            ls_EXP_PDS_NET, ldc_ACH_PU, ls_ACH_DEV_CODE,ls_ACH_BTA_CODE, ld_ACH_QTE, ls_VTE_PU,ls_VTE_BTA_CODE, ld_VTE_QTE, ls_FOU_CODE,
             0, 0, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0,
-            'N', 'N', 'N', 'N', 'N', ls_var_ristourne, ldc_frais_pu_ori, 'N', 'N', ls_bac_code,ldc_remsf_tx, ldc_remhf_tx, ls_ART_REF_ori , ls_ESP_CODE, 0, ls_ACH_DEV_TAUX, ls_ACH_DEV_PU,ls_PROPR_CODE,ll_pal_nb_inter_ori);
+            'N', 'N', 'N', 'N', 'N', ls_var_ristourne, ldc_frais_pu_ori, 'N', 'N', ls_bac_code,ldc_remsf_tx, ldc_remhf_tx, ls_ART_REF_ori , ls_ESP_CODE, 0, ldc_ACH_DEV_TAUX, ls_ACH_DEV_PU,ls_PROPR_CODE,ll_pal_nb_inter_ori);
     exception when others then
         res := 0;
         msg := '%%% Erreur à la création de la ligne d''ordre: ' || SQLERRM;
