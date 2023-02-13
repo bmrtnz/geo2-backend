@@ -194,23 +194,22 @@ BEGIN
                     dev_code_ref = ls_soc_dev_code;
 
             ld_trp_pu := ld_dev_tx * ld_trp_dev_pu;
-        ENd IF;
-    end;
+		else
+            select DEV_CODE into ls_trp_dev_code from geo_transp where trp_code = ls_trp_code;
+            if ls_trp_dev_code is null or ls_trp_dev_code = '' then
+                ls_trp_dev_code := ls_soc_dev_code;
+                ld_trp_dev_taux := 1.0;
+            else
+                select dev_tx_achat into ld_trp_dev_taux from geo_devise_ref where dev_code = ls_trp_dev_code and dev_code_ref = ls_soc_dev_code;
 
-    select DEV_CODE into ls_trp_dev_code from geo_transp where trp_code = ls_trp_code;
-    if ls_trp_dev_code is null or ls_trp_dev_code = '' then
-        ls_trp_dev_code := ls_soc_dev_code;
-        ld_trp_dev_taux := 1.0;
-    else
-        select dev_tx_achat into ld_trp_dev_taux from geo_devise_ref where dev_code = ls_trp_dev_code and dev_code_ref = ls_soc_dev_code;
-
-        if ld_trp_dev_taux is null or ld_trp_dev_taux = 0 then
-            ls_trp_dev_code := ls_soc_dev_code;
-            ld_trp_dev_taux := 1.0;
-        end if;
-    end if;
-
-    ld_trp_dev_pu := ld_trp_pu / ld_trp_dev_taux;
+                if ld_trp_dev_taux is null or ld_trp_dev_taux = 0 then
+                    ls_trp_dev_code := ls_soc_dev_code;
+                    ld_trp_dev_taux := 1.0;
+                end if;
+            end if;
+            ld_trp_dev_pu := ld_trp_pu / ld_trp_dev_taux;
+		end if;
+	end;
 
     ls_inst_log := substr(coalesce(ls_instr_logist_client, ' ') || ' ' || coalesce(ls_instr_logist_entrep, ' '),0, 280);
     ldate_dep := SYSDATE;
