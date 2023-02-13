@@ -6,6 +6,7 @@ import fr.microtec.geo2.persistance.repository.litige.GeoFraisLitigeRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
@@ -44,6 +45,17 @@ public class GeoFraisLitigeGraphQLService extends GeoAbstractGraphQLService<GeoF
     public Optional<GeoFraisLitige> getFraisLitige(
             @GraphQLArgument(name = "id") String id) {
         return super.getOne(id);
+    }
+
+    @GraphQLMutation
+    public GeoFraisLitige saveFraisLitige(GeoFraisLitige fraisLitige,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(fraisLitige, env);
+    }
+
+    @GraphQLMutation
+    public void deleteFraisLitige(String id) {
+        this.delete(id);
     }
 
 }
