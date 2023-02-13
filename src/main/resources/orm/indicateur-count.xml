@@ -25,6 +25,26 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         </query>
     </named-native-query>
 
+    <!-- SELECT
+    COUNT(rownum)
+FROM
+    geo_pays p,
+    geo_client c
+WHERE (:arg_by_user <> 'N'
+	OR c.PER_CODE_COM = (
+		SELECT gp.PER_CODE
+		FROM GEO_PERSON gp
+		WHERE gp.PER_USERNAME = :arg_user
+		AND gp.per_role = 'C'
+	)
+	OR c.PER_CODE_ASS = (
+		SELECT gp.PER_CODE
+		FROM GEO_PERSON gp
+		WHERE gp.PER_USERNAME = :arg_user
+		AND gp.per_role = 'A'
+	)
+) -->
+
     <named-native-query
         name="Indicateur.countOrdresNonConfirmes"
     >

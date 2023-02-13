@@ -15,11 +15,13 @@ public class GeoIndicateurCountRepository {
 
     public BigDecimal countClientsDepassementEncours(
             String secteurCode,
-            String societeCode) {
+            String societeCode,
+            Boolean byUser) {
         return (BigDecimal) this.entityManager
                 .createNamedQuery("Indicateur.countClientsDepassementEncours")
                 .setParameter("arg_sco_code", secteurCode)
                 .setParameter("arg_soc_code", societeCode)
+                // .setParameter("arg_by_user", byUser)
                 .getSingleResult();
     }
 
