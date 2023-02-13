@@ -19,8 +19,7 @@ BEGIN
 	IF (mode_auto = 'O') THEN
 		CASE is_flu_code
 		WHEN 'INCLIT' THEN
-			/* TODO MICROTEC
-			of_genere_envois_litige_autom();*/
+			of_genere_envois_litige_autom(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 			msg := 'OK';
 			res := 1;
 			RETURN;
