@@ -2,11 +2,11 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.OF_CLOTURE_LITIGE_CLIENT (
     is_cur_lit_ref in GEO_LITLIG.LIT_REF%TYPE,
     arg_soc_code in GEO_SOCIETE.SOC_CODE%TYPE,
     -- User prompts
-    -- Null value is blocking procedure with a message
-    -- Non null value continue the procedure as expected
-    prompt_frais_annexe in boolean,
-    prompt_cloture_client in boolean,
-    prompt_create_avoir_client in boolean,
+    -- Empty value is for blocking procedure with a message
+    -- Non null value ('O'/'N') continue the procedure as evaluated
+    prompt_frais_annexe in varchar2 := '',
+    prompt_cloture_client in varchar2 := '',
+    prompt_create_avoir_client in varchar2 := '',
     res out number,
     msg out varchar2
 )
@@ -92,11 +92,11 @@ BEGIN
         where lit_ref = is_cur_lit_ref;
         If	rowcount > 0 Then
             If ldc_frais_annexe = 0 or ldc_frais_annexe is null Then
-                if prompt_frais_annexe is null then
+                if prompt_frais_annexe is null or prompt_frais_annexe = '' then
                     msg := 'Avertissement: aucun frais annexe sur le litige, êtes-vous vraiment sûr(e) ?';
                     res := 2;
                     return;
-                elsif not prompt_frais_annexe then
+                elsif prompt_frais_annexe = 'N' then
                     res := 1;
                     return;
                 end if;
@@ -131,13 +131,11 @@ BEGIN
         and cli_qte <> 0;
 
         if ll_count = 0 then
-            if prompt_cloture_client is null then
+            if prompt_cloture_client is null or prompt_cloture_client = '' then
                 msg := 'clotûre client: aucun avoir client à créer, êtes-vous vraiment sûr(e) ?';
                 res := 2;
                 return;
-            end if;
-
-            if prompt_cloture_client then
+            elsif prompt_cloture_client = 'O' then
                 update geo_litige set
                 fl_client_clos = 'O',
                 fl_client_admin = 'O',
@@ -157,13 +155,11 @@ BEGIN
 
 
 
-    if prompt_create_avoir_client is null then
+    if prompt_create_avoir_client is null or prompt_create_avoir_client = '' then
         msg := 'création de l''avoir client du litige, si vous acceptez, l''avoir client sera créé, vous ne pourrez plus modifier le litige, êtes-vous vraiment sûr(e) ?';
         res := 2;
         return;
-    end if;
-
-    if not prompt_create_avoir_client then
+    elsif prompt_create_avoir_client = 'N' then
         res := 1;
         return;
     end if;
