@@ -42,7 +42,7 @@ public class GeoDepotEnvoi {
     private String fluxID;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "utilisateur")
+    @JoinColumn(name = "nom_utilisateur")
     private GeoUtilisateur utilisateur;
 
 }
