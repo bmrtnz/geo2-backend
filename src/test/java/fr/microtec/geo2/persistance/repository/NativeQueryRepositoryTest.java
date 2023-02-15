@@ -169,7 +169,7 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testWLitigePickOrdreOrdligV2() {
-        this.ordreLigneRepository.wLitigePickOrdreOrdligV2("1691766");
+        this.ordreLigneRepository.wLitigePickOrdreOrdligV2("1504433");
     }
 
     @Test

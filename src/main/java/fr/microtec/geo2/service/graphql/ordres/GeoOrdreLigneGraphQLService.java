@@ -20,6 +20,7 @@ import org.springframework.util.ReflectionUtils;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.litige.GeoOrdreLigneLitigePick;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCodePromo;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
@@ -261,7 +262,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     }
 
     @GraphQLQuery
-    public List<GeoOrdreLigne> wLitigePickOrdreOrdligV2(String ordreID) {
+    public List<GeoOrdreLigneLitigePick> wLitigePickOrdreOrdligV2(String ordreID) {
         return ((GeoOrdreLigneRepository) this.repository).wLitigePickOrdreOrdligV2(ordreID);
     }
 }

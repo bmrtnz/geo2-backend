@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.microtec.geo2.persistance.entity.litige.GeoOrdreLigneLitigePick;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigneCumul;
@@ -48,6 +49,6 @@ public interface GeoOrdreLigneRepository extends GeoRepository<GeoOrdreLigne, St
             @Param("arg_orl_ref_orig") String ordreLigneOriginale);
 
     @Query(name = "OrdreLigne.w_litige_pick_ordre_ordlig_v2", nativeQuery = true)
-    List<GeoOrdreLigne> wLitigePickOrdreOrdligV2(@Param("ra_ord_ref") String ordreID);
+    List<GeoOrdreLigneLitigePick> wLitigePickOrdreOrdligV2(@Param("ra_ord_ref") String ordreID);
 
 }

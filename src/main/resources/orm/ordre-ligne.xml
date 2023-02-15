@@ -117,11 +117,16 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
 
   <named-native-query
     name="OrdreLigne.w_litige_pick_ordre_ordlig_v2"
-    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne"
+    result-class="fr.microtec.geo2.persistance.entity.litige.GeoOrdreLigneLitigePick"
   >
     <query>
     <![CDATA[
-        SELECT geo_ordlig.pde_ref,
+        SELECT rownum, rest.*
+        FROM (
+        SELECT
+          geo_ordlig.orl_ref,
+          /*
+          geo_ordlig.pde_ref,
           geo_ordlig.cde_nb_pal,
           geo_ordlig.cde_nb_col,
           geo_ordlig.exp_nb_pal,
@@ -152,6 +157,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
           geo_ordlig.lib_dlv,
           geo_ordlig.art_ref,
           geo_ordlig.exp_pds_net,
+          */
           litige_fait.tot_nb_col
               FROM geo_ordlig,
                   geo_article,
@@ -175,7 +181,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
           E.GEN_CODE = 'F' and
           geo_article.ESP_CODE = E.ESP_CODE) and
           litige_fait.ORL_REF (+)= geo_ordlig.ORL_REF
-          ORDER BY geo_ordlig.orl_lig ASC
+          ORDER BY geo_ordlig.orl_lig ASC ) rest
     ]]>
     </query>
   </named-native-query>
