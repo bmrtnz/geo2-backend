@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+  <named-native-query
+    name="Litige.allLitigeLigneForfait"
+    result-class="fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneForfait"
+  >
+    <query>
+    <![CDATA[
+        SELECT
+            ll.lil_ref,
+            ol.art_ref,
+            ll.cli_pu,
+            ll.cli_qte,
+            ll.cli_bta_code,
+            o.dev_code AS cli_dev_code,
+            ll.res_dev_pu,
+            ll.res_pu,
+            ll.res_bta_code,
+            ll.res_qte,
+            ll.res_dev_taux,
+            ll.res_dev_code
+        FROM GEO_LITLIG ll, GEO_LITIGE l, GEO_ORDRE o, GEO_ORDLIG ol
+        WHERE l.lit_ref = :arg_lit_ref
+        AND ll.LIT_REF = l.LIT_REF
+        AND l.ORD_REF_ORIGINE = o.ORD_REF
+        AND ol.ORL_REF = ll.ORL_REF
+    ]]>
+    </query>
+  </named-native-query>
+
+</entity-mappings>
