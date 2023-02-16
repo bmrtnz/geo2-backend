@@ -1,12 +1,12 @@
-CREATE OR REPLACE PROCEDURE GEO_ADMIN.OF_CLOTURE_LITIGE_CLIENT (
+CREATE OR REPLACE PROCEDURE GEO_ADMIN.OF_CLOTURE_LITIGE_RESPONSABLE (
     is_cur_lit_ref in GEO_LITLIG.LIT_REF%TYPE,
     arg_soc_code in GEO_SOCIETE.SOC_CODE%TYPE,
     -- User prompts
     -- Empty value is for blocking procedure with a message
     -- Non null value ('O'/'N') continue the procedure as evaluated
     prompt_frais_annexe in varchar2 := '',
-    prompt_cloture_client in varchar2 := '',
-    prompt_create_avoir_client in varchar2 := '',
+    prompt_cloture_fourni in varchar2 := '',
+    prompt_create_avoir_fourni in varchar2 := '',
     res out number,
     msg out varchar2
 )
@@ -27,6 +27,10 @@ AS
     ls_cur_ord_ref varchar2(50);
     ls_rc varchar2(50);
     ls_flbaf varchar2(1);
+
+    -- s_ordflu par_out
+    li_num_version number;
+    li_null number;
 BEGIN
     res := 0;
     msg := '';
@@ -35,9 +39,6 @@ BEGIN
     into is_cur_ord_ref
     from geo_litige
     where lit_ref = is_cur_lit_ref;
-
-    of_sauve_litige(is_cur_lit_ref,res,msg);
-    if res <> 1 then return; end if;
 
     declare
         rowcount number;
@@ -51,26 +52,6 @@ BEGIN
         end if;
     end;
 
-    -- on vérifie que l'avoir n'est pas déja généré
-    declare
-        ls_ord_ref_avoir varchar2(50);
-    begin
-        select ord_ref_avoir
-        into ls_ord_ref_avoir
-        from geo_litige, geo_ordre
-        where geo_litige.ord_ref_origine = geo_ordre.ord_ref
-        and lit_ref = is_cur_lit_ref;
-        if ls_ord_ref_avoir is not null or ls_ord_ref_avoir <> '' then
-            msg := 'avoir client: l''avoir a déja été généré';
-            res := 0;
-            return;
-        end if;
-    end;
-
-
-
-    declare
-        ls_ord_ref_avoir varchar2(50);
     begin
         select flbaf
         into ls_flbaf
@@ -84,26 +65,10 @@ BEGIN
         End If;
     end;
 
-    declare
-        rowcount number;
-    begin
-        select count(*), lit_frais_annexes
-        into rowcount, ldc_frais_annexe
-        from geo_litige
-        where lit_ref = is_cur_lit_ref;
-        If	rowcount > 0 Then
-            If ldc_frais_annexe = 0 or ldc_frais_annexe is null Then
-                if prompt_frais_annexe is null or prompt_frais_annexe = '' then
-                    msg := 'Avertissement: aucun frais annexe sur le litige, êtes-vous vraiment sûr(e) ?';
-                    res := 2;
-                    return;
-                elsif prompt_frais_annexe = 'N' then
-                    res := 1;
-                    return;
-                end if;
-            End If;
-        End If;
-    end;
+    of_sauve_litige(is_cur_lit_ref,res,msg);
+    if res <> 1 then return; end if;
+
+    li_null := null;
 
     declare
         cursor lit_ligs is
@@ -126,21 +91,57 @@ BEGIN
     declare
         ll_count number;
     begin
+        select num_version, lit_frais_annexes into li_num_version, ldc_frais_annexe
+        from geo_litige where lit_ref = is_cur_lit_ref;
+        select count(*) into ll_count from geo_litlig where lit_ref = is_cur_lit_ref;
+        If	ll_count > 0  Then
+            If ldc_frais_annexe = 0 or ldc_frais_annexe is null Then
+                if prompt_frais_annexe = '' then
+                    msg := 'Avertissement: aucun frais annexe sur le litige, êtes-vous vraiment sûr(e) ?';
+                    res := 2;
+                    return;
+                elsif prompt_frais_annexe = 'O' then
+                    res := 1;
+                    return;
+                end if;
+            End If
+        End If;
+    end;
+
+    --	goto cloture_fourni
+    declare
+        ls_ord_ref_avoir varchar2(50);
+    begin
+        select ord_ref_avoir_fourni
+        into ls_ord_ref_avoir
+        from geo_litige, geo_ordre
+        where geo_litige.ord_ref_origine = geo_ordre.ord_ref
+        and lit_ref = is_cur_lit_ref;
+        if ls_ord_ref_avoir is not null or ls_ord_ref_avoir <> '' then
+            msg := 'avoir fournisseur: l''avoir a déja été généré';
+            res := 0;
+            return;
+        end if;
+    end;
+
+    declare
+        ll_count number;
+    begin
         select count(0) into ll_count
         from geo_litlig
         where lit_ref = is_cur_lit_ref
         and cli_qte <> 0;
 
         if ll_count = 0 then
-            if prompt_cloture_client is null or prompt_cloture_client = '' then
-                msg := 'clotûre client: aucun avoir client à créer, êtes-vous vraiment sûr(e) ?';
+            if prompt_cloture_fourni is null or prompt_cloture_fourni = '' then
+                msg := 'clotûre fournisseur: aucun avoir fournisseur à créer, êtes-vous vraiment sûr(e) ?';
                 res := 2;
                 return;
-            elsif prompt_cloture_client = 'O' then
+            elsif prompt_cloture_fourni = 'O' then
                 update geo_litige set
-                fl_client_clos = 'O',
-                fl_client_admin = 'O',
-                lit_date_avoir_client = sysdate
+                fl_fourni_clos = 'O',
+                fl_fourni_admin = 'O',
+                lit_date_avoir_fourni = sysdate
                 where lit_ref = is_cur_lit_ref;
                 commit;
                 of_sauve_litige(is_cur_lit_ref,res,msg);
@@ -156,15 +157,15 @@ BEGIN
 
 
 
-    if prompt_create_avoir_client is null or prompt_create_avoir_client = '' then
-        msg := 'création de l''avoir client du litige, si vous acceptez, l''avoir client sera créé, vous ne pourrez plus modifier le litige, êtes-vous vraiment sûr(e) ?';
+    if prompt_create_avoir_fourni is null or prompt_create_avoir_fourni = '' then
+        msg := 'création de l''avoir fournisseur du litige, si vous acceptez, l''avoir fournisseur sera créé, vous ne pourrez plus modifier le litige, êtes-vous vraiment sûr(e) ?';
         res := 2;
         return;
-    elsif prompt_create_avoir_client = 'N' then
+    elsif prompt_create_avoir_fourni = 'N' then
         res := 1;
         return;
     end if;
-
+    	-- c'est parti
     ls_old_ord_ref	:= is_cur_ord_ref;
         -- on utilise une séquence spéciale pour les avoirs
     select seq_avo_num.nextval into ll_nordre from dual;
@@ -176,9 +177,9 @@ BEGIN
     declare
         ls_rc varchar2(50);
     begin
-        f_cree_avoir_client(ls_old_ord_ref, ls_cur_ord_ref, is_cur_lit_ref, ls_cur_nordre, arg_soc_code, res, ls_rc);
+        f_cree_avoir_fourni_v2(ls_old_ord_ref, ls_cur_ord_ref, is_cur_lit_ref, ls_cur_nordre, arg_soc_code, res, ls_rc);
         if ls_rc <> 'OK' then
-            msg := 'création de l''avoir client ' || ls_rc;
+            msg := 'création de l''avoir fournisseur ' || ls_rc;
             res := 1;
             return;
         end if;
@@ -202,17 +203,25 @@ BEGIN
 
     update geo_litige set
         ord_ref_avoir = ls_cur_ord_ref,
-        fl_client_clos = 'O',
-        fl_client_admin = 'O',
-        lit_date_avoir_client = sysdate
+        fl_fourni_clos = 'O',
+        fl_fourni_admin = 'O',
+        lit_date_avoir_fourni = sysdate
     where lit_ref = is_cur_lit_ref;
 
-    msg := 'clotûre du litige client ' || is_cur_lit_ref || 'l''avoir client n° ' || ls_cur_nordre || ' a été créé';
+    msg := 'clotûre du litige fournisseur ' || is_cur_lit_ref || 'l''avoir fournisseur n° ' || ls_cur_nordre || ' a été créé';
 
     of_sauve_litige(is_cur_lit_ref,res,msg);
     if res <> 1 then return; end if;
     -- of_eval_litige()
     -- of_litige_ctl_client_update()
+
+    -- TODO front
+    -- If  gs_soc_code <> 'UDC'   then
+    --     par_out.ord_ref	=  is_cur_ord_ref
+    --     par_out.flu_code	= 'RESLIT'
+    --     par_out.mode_auto = true
+    --     OpenWithParm(w_geo_genere_envois, par_out)
+    -- END IF
 
     res := 1;
 END;
