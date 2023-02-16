@@ -205,4 +205,9 @@ public class NativeQueryRepositoryTest {
         Assertions.assertFalse(list.isEmpty());
     }
 
+    @Test
+    public void testAllLitigeLigneForfait() {
+        this.litigeLigneRepository.allLitigeLigneForfait("138306");
+    }
+
 }

@@ -215,7 +215,7 @@ BEGIN
     -- of_eval_litige()
     -- of_litige_ctl_client_update()
 
-    -- TODO front
+    -- Inutile dans le contexte de GEO2 ?
     -- If  gs_soc_code <> 'UDC'   then
     --     par_out.ord_ref	=  is_cur_ord_ref
     --     par_out.flu_code	= 'RESLIT'
