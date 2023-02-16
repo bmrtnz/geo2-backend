@@ -35,4 +35,19 @@ public class GeoFunctionsLitigeGraphQLService {
                 promptCreateAvoirClient);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofClotureLitigeResponsable(
+            String litigeRef,
+            String societeCode,
+            String promptFraisAnnexe,
+            String promptClotureResponsable,
+            String promptCreateAvoirResponsable) {
+        return this.repository.ofClotureLitigeResponsable(
+                litigeRef,
+                societeCode,
+                promptFraisAnnexe,
+                promptClotureResponsable,
+                promptCreateAvoirResponsable);
+    }
+
 }

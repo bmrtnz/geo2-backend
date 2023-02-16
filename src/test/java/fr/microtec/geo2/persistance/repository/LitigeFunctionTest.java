@@ -29,4 +29,12 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfClotureLitigeResponsable() {
+        FunctionResult result = this.functionLitigeRepository
+                .ofClotureLitigeResponsable("004897", SOCIETE_SA, "", "", "");
+
+        Assertions.assertNotNull(result);
+    }
+
 }
