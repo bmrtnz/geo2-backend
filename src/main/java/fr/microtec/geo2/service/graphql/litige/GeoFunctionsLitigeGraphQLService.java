@@ -56,15 +56,15 @@ public class GeoFunctionsLitigeGraphQLService {
             String societeCode,
             String promptFraisAnnexe,
             String promptAvoirClient,
-            String promptAvoirGlobale,
-            String promptCreateAvoirResponsable) {
+            String promptAvoirGlobal,
+            String promptCreateAvoirGlobal) {
         return this.repository.ofClotureLitigeGlobale(
                 litigeRef,
                 societeCode,
                 promptFraisAnnexe,
                 promptAvoirClient,
-                promptAvoirGlobale,
-                promptCreateAvoirResponsable);
+                promptAvoirGlobal,
+                promptCreateAvoirGlobal);
     }
 
 }

@@ -26,7 +26,7 @@ public interface GeoFunctionLitigeRepository {
             String arg_soc_code,
             String prompt_frais_annexe,
             String prompt_avoir_client,
-            String prompt_avoir_globale,
+            String prompt_avoir_global,
             String prompt_create_avoir_global);
 
 }

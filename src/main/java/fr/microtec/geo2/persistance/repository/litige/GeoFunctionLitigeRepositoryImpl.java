@@ -51,7 +51,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
             String arg_soc_code,
             String prompt_frais_annexe,
             String prompt_avoir_client,
-            String prompt_avoir_globale,
+            String prompt_avoir_global,
             String prompt_create_avoir_global) {
         FunctionQuery query = this.build("OF_CLOTURE_LITIGE_GLOBALE");
 
@@ -59,7 +59,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("arg_soc_code", String.class, arg_soc_code);
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
-        query.attachInput("prompt_avoir_globale", String.class, prompt_avoir_globale);
+        query.attachInput("prompt_avoir_global", String.class, prompt_avoir_global);
         query.attachInput("prompt_create_avoir_global", String.class, prompt_create_avoir_global);
 
         return query.fetch();

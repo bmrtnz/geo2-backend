@@ -6,7 +6,7 @@ CREATE OR REPLACE PROCEDURE OF_CLOTURE_LITIGE_GLOBALE (
     -- Non null value ('O'/'N') continue the procedure as evaluated
     prompt_frais_annexe in varchar2 := '',
     prompt_avoir_client in varchar2 := '',
-    prompt_avoir_globale in varchar2 := '',
+    prompt_avoir_global in varchar2 := '',
     prompt_create_avoir_global in varchar2 := '',
     res out number,
     msg out varchar2
@@ -179,11 +179,11 @@ BEGIN
         where lit_ref = is_cur_lit_ref and (cli_qte <> 0 or ((tyt_code = 'F' or  lcq_code = 'A' or  lcq_code = 'B' or lcq_code ='F') and res_qte <> 0));
 
         if ll_count = 0 then -- il n'y a aucune ligne éligible
-            if prompt_avoir_globale is null or prompt_avoir_globale = '' then
+            if prompt_avoir_global is null or prompt_avoir_global = '' then
                 msg := 'clotûre globale: aucun avoir client / fournisseur à créer, êtes-vous vraiment sûr(e) ?';
                 res := 2;
                 return;
-            elsif prompt_avoir_globale = 'O' then
+            elsif prompt_avoir_global = 'O' then
                 update geo_litige set
                 fl_client_clos = 'O',
                 fl_client_admin = 'O',
