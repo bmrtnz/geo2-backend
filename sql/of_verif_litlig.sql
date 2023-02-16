@@ -18,7 +18,7 @@ AS
     ls_mess_lca varchar2(50) :='~n - la cause';
     ls_mess_lcq varchar2(50) :='~n - l''action';
     ls_mess varchar2(50) := 'Il manque dans les lignes litige :';
-    ls_mess_pds_sup varchar2(500) :='Le poids du litige ne peut être superieur au poids net.';
+    ls_mess_pds_sup clob :='Le poids du litige ne peut être superieur au poids net.';
 BEGIN
     res := 0;
     msg := '';

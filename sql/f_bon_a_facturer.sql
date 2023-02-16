@@ -11,9 +11,11 @@ BEGIN
     res := 0;
     msg := '';
 
+    -- Deja lancé par le frontend
+    -- f_verif_ordre_warning(arg_ord_ref, arg_soc_code, res, msg);
+
     -- Consigne palox
     f_baf_gen_pallox(arg_ord_ref, arg_soc_code, res, msg);
-    if res = 2 then return; end if;
     li_ret := res;
 
     -- Kit
@@ -24,12 +26,17 @@ BEGIN
     f_baf_eps_article(arg_ord_ref, res, msg);
     li_ret := li_ret + res;
 
+    -- facturation tesco
+    fn_decl_frais_doua(arg_ord_ref, arg_soc_code, res, msg);
+    fn_gen_tesco_factu(arg_ord_ref, res, msg);
+    li_ret := li_ret + res;
+
     -- Traitement des lignes avec des colis expédiés et a ne pas facturer (NB_COLIS_MANQUANT)
     f_traite_colis_manquants(arg_ord_ref, res, msg);
     li_ret := li_ret + res;
 
-    -- 4, chaque function doit renvoyer 1
-    If li_ret = 4 Then
+    -- 5, chaque function doit renvoyer 1
+    If li_ret = 5 Then
         f_update_bonafacturer(arg_ord_ref, res, msg);
 
         if res = 1 then
