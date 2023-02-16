@@ -85,10 +85,8 @@ BEGIN
     declare
         rowcount number;
     begin
-        select count(*), lit_frais_annexes
-        into rowcount, ldc_frais_annexe
-        from geo_litige
-        where lit_ref = is_cur_lit_ref;
+        select count(*)into rowcount from geo_litige where lit_ref = is_cur_lit_ref;
+        select lit_frais_annexes into ldc_frais_annexe from geo_litige where lit_ref = is_cur_lit_ref;
         If	rowcount > 0 Then
             If ldc_frais_annexe = 0 or ldc_frais_annexe is null Then
                 if prompt_frais_annexe is null or prompt_frais_annexe = '' then
