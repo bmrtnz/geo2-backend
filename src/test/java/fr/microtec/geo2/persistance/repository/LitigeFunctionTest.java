@@ -37,4 +37,12 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfClotureLitigeGlobale() {
+        FunctionResult result = this.functionLitigeRepository
+                .ofClotureLitigeGlobale("004897", SOCIETE_SA, "", "", "", "");
+
+        Assertions.assertNotNull(result);
+    }
+
 }

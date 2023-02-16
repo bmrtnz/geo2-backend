@@ -21,4 +21,12 @@ public interface GeoFunctionLitigeRepository {
             String prompt_avoir_fourni,
             String prompt_create_avoir_fourni);
 
+    FunctionResult ofClotureLitigeGlobale(
+            String is_cur_lit_ref,
+            String arg_soc_code,
+            String prompt_frais_annexe,
+            String prompt_avoir_client,
+            String prompt_avoir_globale,
+            String prompt_create_avoir_global);
+
 }
