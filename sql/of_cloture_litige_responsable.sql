@@ -1,11 +1,11 @@
-CREATE OR REPLACE PROCEDURE GEO_ADMIN.OF_CLOTURE_LITIGE_RESPONSABLE (
+CREATE OR REPLACE PROCEDURE OF_CLOTURE_LITIGE_RESPONSABLE (
     is_cur_lit_ref in GEO_LITLIG.LIT_REF%TYPE,
     arg_soc_code in GEO_SOCIETE.SOC_CODE%TYPE,
     -- User prompts
     -- Empty value is for blocking procedure with a message
     -- Non null value ('O'/'N') continue the procedure as evaluated
     prompt_frais_annexe in varchar2 := '',
-    prompt_cloture_fourni in varchar2 := '',
+    prompt_avoir_fourni in varchar2 := '',
     prompt_create_avoir_fourni in varchar2 := '',
     res out number,
     msg out varchar2
@@ -100,11 +100,11 @@ BEGIN
                     msg := 'Avertissement: aucun frais annexe sur le litige, êtes-vous vraiment sûr(e) ?';
                     res := 2;
                     return;
-                elsif prompt_frais_annexe = 'O' then
+                elsif prompt_frais_annexe <> 'O' then
                     res := 1;
                     return;
                 end if;
-            End If
+            End If;
         End If;
     end;
 
@@ -133,11 +133,11 @@ BEGIN
         and cli_qte <> 0;
 
         if ll_count = 0 then
-            if prompt_cloture_fourni is null or prompt_cloture_fourni = '' then
+            if prompt_avoir_fourni is null or prompt_avoir_fourni = '' then
                 msg := 'clotûre fournisseur: aucun avoir fournisseur à créer, êtes-vous vraiment sûr(e) ?';
                 res := 2;
                 return;
-            elsif prompt_cloture_fourni = 'O' then
+            elsif prompt_avoir_fourni = 'O' then
                 update geo_litige set
                 fl_fourni_clos = 'O',
                 fl_fourni_admin = 'O',
@@ -202,7 +202,7 @@ BEGIN
     if res <> 1 then return; end if;
 
     update geo_litige set
-        ord_ref_avoir = ls_cur_ord_ref,
+        ord_ref_avoir_fourni = ls_cur_ord_ref,
         fl_fourni_clos = 'O',
         fl_fourni_admin = 'O',
         lit_date_avoir_fourni = sysdate

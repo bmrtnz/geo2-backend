@@ -5,7 +5,7 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.OF_CLOTURE_LITIGE_CLIENT (
     -- Empty value is for blocking procedure with a message
     -- Non null value ('O'/'N') continue the procedure as evaluated
     prompt_frais_annexe in varchar2 := '',
-    prompt_cloture_client in varchar2 := '',
+    prompt_avoir_client in varchar2 := '',
     prompt_create_avoir_client in varchar2 := '',
     res out number,
     msg out varchar2
@@ -69,8 +69,6 @@ BEGIN
 
 
 
-    declare
-        ls_ord_ref_avoir varchar2(50);
     begin
         select flbaf
         into ls_flbaf
@@ -97,7 +95,7 @@ BEGIN
                     msg := 'Avertissement: aucun frais annexe sur le litige, êtes-vous vraiment sûr(e) ?';
                     res := 2;
                     return;
-                elsif prompt_frais_annexe = 'N' then
+                elsif prompt_frais_annexe <> 'O' then
                     res := 1;
                     return;
                 end if;
@@ -132,11 +130,11 @@ BEGIN
         and cli_qte <> 0;
 
         if ll_count = 0 then
-            if prompt_cloture_client is null or prompt_cloture_client = '' then
+            if prompt_avoir_client is null or prompt_avoir_client = '' then
                 msg := 'clotûre client: aucun avoir client à créer, êtes-vous vraiment sûr(e) ?';
                 res := 2;
                 return;
-            elsif prompt_cloture_client = 'O' then
+            elsif prompt_avoir_client = 'O' then
                 update geo_litige set
                 fl_client_clos = 'O',
                 fl_client_admin = 'O',

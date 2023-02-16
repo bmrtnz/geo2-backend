@@ -11,14 +11,14 @@ public interface GeoFunctionLitigeRepository {
             String is_cur_lit_ref,
             String arg_soc_code,
             String prompt_frais_annexe,
-            String prompt_cloture_client,
+            String prompt_avoir_client,
             String prompt_create_avoir_client);
 
     FunctionResult ofClotureLitigeResponsable(
             String is_cur_lit_ref,
             String arg_soc_code,
             String prompt_frais_annexe,
-            String prompt_cloture_fourni,
+            String prompt_avoir_fourni,
             String prompt_create_avoir_fourni);
 
 }

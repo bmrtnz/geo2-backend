@@ -25,13 +25,13 @@ public class GeoFunctionsLitigeGraphQLService {
             String litigeRef,
             String societeCode,
             String promptFraisAnnexe,
-            String promptClotureClient,
+            String promptAvoirClient,
             String promptCreateAvoirClient) {
         return this.repository.ofClotureLitigeClient(
                 litigeRef,
                 societeCode,
                 promptFraisAnnexe,
-                promptClotureClient,
+                promptAvoirClient,
                 promptCreateAvoirClient);
     }
 
@@ -40,13 +40,13 @@ public class GeoFunctionsLitigeGraphQLService {
             String litigeRef,
             String societeCode,
             String promptFraisAnnexe,
-            String promptClotureResponsable,
+            String promptAvoirResponsable,
             String promptCreateAvoirResponsable) {
         return this.repository.ofClotureLitigeResponsable(
                 litigeRef,
                 societeCode,
                 promptFraisAnnexe,
-                promptClotureResponsable,
+                promptAvoirResponsable,
                 promptCreateAvoirResponsable);
     }
 
