@@ -24,47 +24,47 @@ public class GeoFunctionsLitigeGraphQLService {
     public FunctionResult ofClotureLitigeClient(
             String litigeRef,
             String societeCode,
-            String promptFraisAnnexe,
-            String promptAvoirClient,
-            String promptCreateAvoirClient) {
+            Boolean promptFraisAnnexe,
+            Boolean promptAvoirClient,
+            Boolean promptCreateAvoirClient) {
         return this.repository.ofClotureLitigeClient(
                 litigeRef,
                 societeCode,
-                promptFraisAnnexe,
-                promptAvoirClient,
-                promptCreateAvoirClient);
+                promptFraisAnnexe != null ? (promptFraisAnnexe ? "O" : "N") : "",
+                promptAvoirClient != null ? (promptAvoirClient ? "O" : "N") : "",
+                promptCreateAvoirClient != null ? (promptCreateAvoirClient ? "O" : "N") : "");
     }
 
     @GraphQLQuery
     public FunctionResult ofClotureLitigeResponsable(
             String litigeRef,
             String societeCode,
-            String promptFraisAnnexe,
-            String promptAvoirResponsable,
-            String promptCreateAvoirResponsable) {
+            Boolean promptFraisAnnexe,
+            Boolean promptAvoirResponsable,
+            Boolean promptCreateAvoirResponsable) {
         return this.repository.ofClotureLitigeResponsable(
                 litigeRef,
                 societeCode,
-                promptFraisAnnexe,
-                promptAvoirResponsable,
-                promptCreateAvoirResponsable);
+                promptFraisAnnexe != null ? (promptFraisAnnexe ? "O" : "N") : "",
+                promptAvoirResponsable != null ? (promptAvoirResponsable ? "O" : "N") : "",
+                promptCreateAvoirResponsable != null ? (promptCreateAvoirResponsable ? "O" : "N") : "");
     }
 
     @GraphQLQuery
     public FunctionResult ofClotureLitigeGlobale(
             String litigeRef,
             String societeCode,
-            String promptFraisAnnexe,
-            String promptAvoirClient,
-            String promptAvoirGlobal,
-            String promptCreateAvoirGlobal) {
+            Boolean promptFraisAnnexe,
+            Boolean promptAvoirClient,
+            Boolean promptAvoirGlobal,
+            Boolean promptCreateAvoirGlobal) {
         return this.repository.ofClotureLitigeGlobale(
                 litigeRef,
                 societeCode,
-                promptFraisAnnexe,
-                promptAvoirClient,
-                promptAvoirGlobal,
-                promptCreateAvoirGlobal);
+                promptFraisAnnexe != null ? (promptFraisAnnexe ? "O" : "N") : "",
+                promptAvoirClient != null ? (promptAvoirClient ? "O" : "N") : "",
+                promptAvoirGlobal != null ? (promptAvoirGlobal ? "O" : "N") : "",
+                promptCreateAvoirGlobal != null ? (promptCreateAvoirGlobal ? "O" : "N") : "");
     }
 
     @GraphQLQuery

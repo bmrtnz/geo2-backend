@@ -23,6 +23,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
         query.attachInput("prompt_create_avoir_client", String.class, prompt_create_avoir_client);
+        query.attachOutput("triggered_prompt", String.class);
 
         return query.fetch();
     }
@@ -41,6 +42,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_fourni", String.class, prompt_avoir_fourni);
         query.attachInput("prompt_create_avoir_fourni", String.class, prompt_create_avoir_fourni);
+        query.attachOutput("triggered_prompt", String.class);
 
         return query.fetch();
     }
@@ -61,6 +63,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
         query.attachInput("prompt_avoir_global", String.class, prompt_avoir_global);
         query.attachInput("prompt_create_avoir_global", String.class, prompt_create_avoir_global);
+        query.attachOutput("triggered_prompt", String.class);
 
         return query.fetch();
     }
