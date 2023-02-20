@@ -45,4 +45,11 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfSauveLitige() {
+        FunctionResult result = this.functionLitigeRepository.ofSauveLitige("003459");
+
+        Assertions.assertNotNull(result);
+    }
+
 }

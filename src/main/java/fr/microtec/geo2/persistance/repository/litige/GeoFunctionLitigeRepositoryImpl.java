@@ -65,4 +65,13 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult ofSauveLitige(String arg_lit_ref) {
+        FunctionQuery query = this.build("OF_SAUVE_LITIGE");
+
+        query.attachInput("arg_lit_ref", String.class, arg_lit_ref);
+
+        return query.fetch();
+    }
+
 }

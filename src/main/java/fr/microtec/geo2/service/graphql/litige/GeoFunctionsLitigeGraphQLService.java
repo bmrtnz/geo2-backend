@@ -67,4 +67,9 @@ public class GeoFunctionsLitigeGraphQLService {
                 promptCreateAvoirGlobal);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofSauveLitige(String litigeRef) {
+        return this.repository.ofSauveLitige(litigeRef);
+    }
+
 }

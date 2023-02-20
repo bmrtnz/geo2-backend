@@ -29,4 +29,6 @@ public interface GeoFunctionLitigeRepository {
             String prompt_avoir_global,
             String prompt_create_avoir_global);
 
+    FunctionResult ofSauveLitige(String arg_lit_ref);
+
 }
