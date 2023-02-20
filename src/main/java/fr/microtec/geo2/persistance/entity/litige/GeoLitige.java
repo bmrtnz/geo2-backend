@@ -1,11 +1,22 @@
 package fr.microtec.geo2.persistance.entity.litige;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -16,14 +27,18 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_litige")
 @Entity
-public class GeoLitige extends ValidateAndModifiedEntity implements Serializable {
+public class GeoLitige extends ValidateAndModifiedEntity {
 
     @Id
     @Column(name = "lit_ref")
+    @GeneratedValue(generator = "GeoLitigeGenerator")
+    @GenericGenerator(name = "GeoLitigeGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "seq_lit_num"),
+            @Parameter(name = "mask", value = "FM099999"),
+    })
     private String id;
 
     @NotNull
-    // @ManyToOne(fetch = FetchType.LAZY)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ord_ref_origine", nullable = false)
     private GeoOrdre ordreOrigine;
