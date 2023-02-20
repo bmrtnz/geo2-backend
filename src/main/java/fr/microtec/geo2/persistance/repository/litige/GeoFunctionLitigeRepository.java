@@ -31,4 +31,6 @@ public interface GeoFunctionLitigeRepository {
 
     FunctionResult ofSauveLitige(String arg_lit_ref);
 
+    FunctionResult ofChronoLitige(String is_cur_ord_ref);
+
 }

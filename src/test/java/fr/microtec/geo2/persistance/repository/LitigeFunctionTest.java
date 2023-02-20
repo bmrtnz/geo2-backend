@@ -52,4 +52,11 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfChronoLitige() {
+        FunctionResult result = this.functionLitigeRepository.ofChronoLitige("2089615");
+
+        Assertions.assertNotNull(result);
+    }
+
 }

@@ -74,4 +74,14 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult ofChronoLitige(String is_cur_ord_ref) {
+        FunctionQuery query = this.build("OF_CHRONO_LITIGE");
+
+        query.attachInput("is_cur_ord_ref", String.class, is_cur_ord_ref);
+        query.attachOutput("is_cur_lit_ref", String.class);
+
+        return query.fetch();
+    }
+
 }

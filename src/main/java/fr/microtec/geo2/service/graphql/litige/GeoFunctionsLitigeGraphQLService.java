@@ -72,4 +72,9 @@ public class GeoFunctionsLitigeGraphQLService {
         return this.repository.ofSauveLitige(litigeRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofChronoLitige(String ordreOrigineRef) {
+        return this.repository.ofChronoLitige(ordreOrigineRef);
+    }
+
 }
