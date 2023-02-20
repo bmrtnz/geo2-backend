@@ -19,14 +19,20 @@ BEGIN
 
     If gs_soc_code = 'SA' then
 
-        select GEO_CLIENT_CTL.DAT_OLDER_LITIGE, GEO_CLIENT.CLI_REF
-        into ld_older_litige,ls_ref_client
-        from GEO_ORDRE,  GEO_CLIENT, GEO_CLIENT_CTL
-        where GEO_ORDRE.ORD_REF = gs_ord_ref  			and
-        GEO_ORDRE.CLI_REF= GEO_CLIENT.CLI_REF 			and
-        GEO_ORDRE.SOC_CODE =GEO_CLIENT.SOC_CODE 	and
-        GEO_CLIENT.SOC_CODE = 'SA'								and
-        GEO_CLIENT.CLI_REF=  GEO_CLIENT_CTL.CLI_REF;
+        begin
+            select GEO_CLIENT_CTL.DAT_OLDER_LITIGE, GEO_CLIENT.CLI_REF
+            into ld_older_litige,ls_ref_client
+            from GEO_ORDRE,  GEO_CLIENT, GEO_CLIENT_CTL
+            where GEO_ORDRE.ORD_REF = gs_ord_ref  			and
+            GEO_ORDRE.CLI_REF= GEO_CLIENT.CLI_REF 			and
+            GEO_ORDRE.SOC_CODE =GEO_CLIENT.SOC_CODE 	and
+            GEO_CLIENT.SOC_CODE = 'SA'								and
+            GEO_CLIENT.CLI_REF=  GEO_CLIENT_CTL.CLI_REF;
+        exception when others then
+            msg := 'Aucune référence client pour cette ordre';
+            res := 2;
+            return;
+        end;
 
         declare
             cursor lignes is

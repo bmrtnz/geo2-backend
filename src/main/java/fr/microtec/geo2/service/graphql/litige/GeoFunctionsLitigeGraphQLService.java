@@ -77,4 +77,15 @@ public class GeoFunctionsLitigeGraphQLService {
         return this.repository.ofChronoLitige(ordreOrigineRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofLitigeCtlClientInsert(
+            String societeCode,
+            String ordreRef,
+            String litigeRef) {
+        return this.repository.ofLitigeCtlClientInsert(
+                societeCode,
+                ordreRef,
+                litigeRef);
+    }
+
 }

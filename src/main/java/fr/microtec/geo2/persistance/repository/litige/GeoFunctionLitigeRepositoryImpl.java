@@ -84,4 +84,18 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult ofLitigeCtlClientInsert(
+            String gs_soc_code,
+            String gs_ord_ref,
+            String arg_lit_ref) {
+        FunctionQuery query = this.build("OF_LITIGE_CTL_CLIENT_INSERT");
+
+        query.attachInput("gs_soc_code", String.class, gs_soc_code);
+        query.attachInput("gs_ord_ref", String.class, gs_ord_ref);
+        query.attachInput("arg_lit_ref", String.class, arg_lit_ref);
+
+        return query.fetch();
+    }
+
 }

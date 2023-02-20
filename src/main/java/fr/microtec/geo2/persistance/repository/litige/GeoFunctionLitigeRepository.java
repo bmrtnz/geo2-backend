@@ -33,4 +33,9 @@ public interface GeoFunctionLitigeRepository {
 
     FunctionResult ofChronoLitige(String is_cur_ord_ref);
 
+    FunctionResult ofLitigeCtlClientInsert(
+            String gs_soc_code,
+            String gs_ord_ref,
+            String arg_lit_ref);
+
 }

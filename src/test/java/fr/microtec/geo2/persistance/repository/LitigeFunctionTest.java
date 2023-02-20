@@ -59,4 +59,12 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfLitigeCtlClientInsert() {
+        FunctionResult result = this.functionLitigeRepository
+                .ofLitigeCtlClientInsert("SA", "2086582", "138829");
+
+        Assertions.assertNotNull(result);
+    }
+
 }
