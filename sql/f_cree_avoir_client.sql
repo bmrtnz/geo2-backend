@@ -16,7 +16,7 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_CREE_AVOIR_CLIENT (
     ar_new_nordre in GEO_ORDRE.NORDRE%TYPE,
     arg_soc_code in GEO_SOCIETE.SOC_CODE%TYPE,
     res out number,
-    msg out varchar2
+    msg out clob
 )
 AS
     ls_tyt_code varchar2(50);

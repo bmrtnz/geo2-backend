@@ -29,4 +29,13 @@ public interface GeoFunctionLitigeRepository {
             String prompt_avoir_global,
             String prompt_create_avoir_global);
 
+    FunctionResult ofSauveLitige(String arg_lit_ref);
+
+    FunctionResult ofChronoLitige(String is_cur_ord_ref);
+
+    FunctionResult ofLitigeCtlClientInsert(
+            String gs_soc_code,
+            String gs_ord_ref,
+            String arg_lit_ref);
+
 }

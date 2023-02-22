@@ -9,7 +9,8 @@ CREATE OR REPLACE PROCEDURE OF_CLOTURE_LITIGE_GLOBALE (
     prompt_avoir_global in varchar2 := '',
     prompt_create_avoir_global in varchar2 := '',
     res out number,
-    msg out varchar2
+    msg out clob,
+    triggered_prompt out varchar2
 )
 AS
     is_cur_ord_ref GEO_ORDRE.ORD_REF%TYPE;
@@ -104,6 +105,7 @@ BEGIN
                 if prompt_frais_annexe = '' then
                     msg := 'Avertissement: aucun frais annexe sur le litige, êtes-vous vraiment sûr(e) ?';
                     res := 2;
+                    triggered_prompt := 'promptFraisAnnexe';
                     return;
                 elsif prompt_frais_annexe <> 'O' then
                     res := 1;
@@ -125,6 +127,7 @@ BEGIN
                 if prompt_avoir_client is null or prompt_avoir_client = '' then
                     msg := 'clotûre globale: la partie client ne générera aucun avoir, êtes-vous vraiment sûr(e) ?';
                     res := 2;
+                    triggered_prompt := 'promptAvoirClient';
                     return;
                 elsif prompt_avoir_client <> 'O' then
                     res := 1;
@@ -182,6 +185,7 @@ BEGIN
             if prompt_avoir_global is null or prompt_avoir_global = '' then
                 msg := 'clotûre globale: aucun avoir client / fournisseur à créer, êtes-vous vraiment sûr(e) ?';
                 res := 2;
+                triggered_prompt := 'promptAvoirGlobal';
                 return;
             elsif prompt_avoir_global = 'O' then
                 update geo_litige set
@@ -209,6 +213,7 @@ BEGIN
     if prompt_create_avoir_global is null or prompt_create_avoir_global = '' then
         msg := 'création de l''avoir global du litige, si vous acceptez, l''avoir global sera créé, vous ne pourrez plus modifier le litige, êtes-vous vraiment sûr(e) ?';
         res := 2;
+        triggered_prompt := 'promptCreateAvoirGlobal';
         return;
     elsif prompt_create_avoir_global = 'N' then
         res := 1;
@@ -218,24 +223,23 @@ BEGIN
     ls_old_ord_ref	:= is_cur_ord_ref;
         -- on utilise une séquence spéciale pour les avoirs
     select seq_avo_num.nextval into ll_nordre from dual;
-    ls_cur_nordre	:= to_char(ll_nordre,'000000');
+    ls_cur_nordre	:= to_char(ll_nordre,'FM099999');
     --BAM separés ORD_REF, NORDRE
     select seq_ord_num.nextval into ll_ord_ref from dual;
-    ls_cur_ord_ref	:= to_char(ll_ord_ref,'000000');
+    ls_cur_ord_ref	:= to_char(ll_ord_ref);
         -- fonction de création de l'avoir (ordre avec facture_avoir = A)
     declare
-        ls_rc varchar2(50);
+        ls_rc varchar2(500);
     begin
         f_cree_avoir_tous_v2(ls_old_ord_ref, ls_cur_ord_ref, is_cur_lit_ref, ls_cur_nordre, arg_soc_code, res, ls_rc);
         if ls_rc <> 'OK' then
             msg := 'création de l''avoir global ' || ls_rc;
-            res := 1;
             return;
         end if;
     end;
 
     declare
-        ls_rc varchar2(50);
+        ls_rc varchar2(500);
     begin
         f_calcul_marge(ls_cur_ord_ref, res, ls_rc); -- actualise avoir : marge
         if res <> 1 then

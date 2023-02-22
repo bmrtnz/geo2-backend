@@ -23,6 +23,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
         query.attachInput("prompt_create_avoir_client", String.class, prompt_create_avoir_client);
+        query.attachOutput("triggered_prompt", String.class);
 
         return query.fetch();
     }
@@ -41,6 +42,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_fourni", String.class, prompt_avoir_fourni);
         query.attachInput("prompt_create_avoir_fourni", String.class, prompt_create_avoir_fourni);
+        query.attachOutput("triggered_prompt", String.class);
 
         return query.fetch();
     }
@@ -61,6 +63,40 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
         query.attachInput("prompt_avoir_global", String.class, prompt_avoir_global);
         query.attachInput("prompt_create_avoir_global", String.class, prompt_create_avoir_global);
+        query.attachOutput("triggered_prompt", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofSauveLitige(String arg_lit_ref) {
+        FunctionQuery query = this.build("OF_SAUVE_LITIGE");
+
+        query.attachInput("arg_lit_ref", String.class, arg_lit_ref);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofChronoLitige(String is_cur_ord_ref) {
+        FunctionQuery query = this.build("OF_CHRONO_LITIGE");
+
+        query.attachInput("is_cur_ord_ref", String.class, is_cur_ord_ref);
+        query.attachOutput("is_cur_lit_ref", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofLitigeCtlClientInsert(
+            String gs_soc_code,
+            String gs_ord_ref,
+            String arg_lit_ref) {
+        FunctionQuery query = this.build("OF_LITIGE_CTL_CLIENT_INSERT");
+
+        query.attachInput("gs_soc_code", String.class, gs_soc_code);
+        query.attachInput("gs_ord_ref", String.class, gs_ord_ref);
+        query.attachInput("arg_lit_ref", String.class, arg_lit_ref);
 
         return query.fetch();
     }
