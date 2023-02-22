@@ -41,12 +41,16 @@ BEGIN
         begin
             for a in C_AGE loop
                 if a.qte_res_age > 0 then
-                    CASE ls_age
-                        when '3' then
-                            ls_info := ' STOCK DATE DE 9 à 20 JOURS !! ';
-                        when '4' then
-                            ls_info := ' STOCK DATE DE PLUS DE 21 JOURS !! ';
-                    end case;
+                    begin
+                        CASE ls_age
+                            when '3' then
+                                ls_info := ' STOCK DATE DE 9 à 20 JOURS !! ';
+                            when '4' then
+                                ls_info := ' STOCK DATE DE PLUS DE 21 JOURS !! ';
+                        end case;
+                    exception when others then
+                        null; -- ignore unmatched case
+                    end;
                     if r.fou_code = a.fou_code then
                         ls_info_stock := ls_info_stock ||  '~n  ' || r.fou_code || ' - ' || ls_info;
                         ls_info :='';
