@@ -78,6 +78,12 @@ BEGIN
                     VALIDE ='O';
     End If;
 
+    if arg_trp_dev_pu is null then
+        res := 2;
+        msg := 'Forfait épuisé';
+        return;
+    end if;
+
     res := 1;
 
 end;

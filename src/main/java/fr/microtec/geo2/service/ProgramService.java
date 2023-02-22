@@ -201,280 +201,775 @@ public class ProgramService {
         int COL_ORD_CREATE = 22;
         int COL_ORD_PERE_SA = 23;
 
+        List<String> addedOrdreRefs = new ArrayList<>();
         // load sheet
         Workbook workbook = ProgramService.loadFile(chunks);
-        Sheet sheet = workbook.getSheetAt(2);
 
-        DateMinTesco dmt = ProgramService.fetchDateMinTesco(sheet, COL_LOAD_REFERENCE, COL_DEPART_DATE);
-        HashMap<Integer, String> ls_array_programme = dmt.getLs_array_programme();
-        HashMap<Integer, LocalDateTime> ls_array_date_depart_ordre = dmt.getLs_array_date_depart_ordre();
-        LocalDateTime ls_depart_date_ordre;
+        try {
 
-        String ls_load_ref_prec = "";
-        String ls_cen_ref_prec = "";
-        String ls_nordre_prec = "";
-        Character ls_create_ligne;
-        String ls_ordref_inscrit_prec = "";
-        List<String> ls_ordre_cree = new ArrayList<>();
-        List<String> ls_loadref_no_dupplic = new ArrayList<>();
-        Integer ll_parse;
-        String ls_stock_dern_loadref = "";
+            Sheet sheet = workbook.getSheetAt(2);
 
-        final AtomicReference<String> ls_nordre = new AtomicReference<>("");
-        final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
+            DateMinTesco dmt = ProgramService.fetchDateMinTesco(sheet, COL_LOAD_REFERENCE, COL_DEPART_DATE);
+            HashMap<Integer, String> ls_array_programme = dmt.getLs_array_programme();
+            HashMap<Integer, LocalDateTime> ls_array_date_depart_ordre = dmt.getLs_array_date_depart_ordre();
+            LocalDateTime ls_depart_date_ordre;
 
-        outer: for (Row row : sheet) {
-            ProgramRow pRow = new ProgramRow();
+            String ls_load_ref_prec = "";
+            String ls_cen_ref_prec = "";
+            String ls_nordre_prec = "";
+            Character ls_create_ligne;
+            String ls_ordref_inscrit_prec = "";
+            List<String> ls_ordre_cree = new ArrayList<>();
+            List<String> ls_loadref_no_dupplic = new ArrayList<>();
+            Integer ll_parse;
+            String ls_stock_dern_loadref = "";
 
-            // ignore header row
-            if (row.getRowNum() == 0)
-                continue;
+            final AtomicReference<String> ls_nordre = new AtomicReference<>("");
+            final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
 
-            // exit when no more data to consume
-            String ls_load_reference;
-            try {
-                ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
-                if (ls_load_reference.isBlank())
-                    break;
-            } catch (Exception e) {
-                break;
-            }
+            outer: for (Row row : sheet) {
+                ProgramRow pRow = new ProgramRow();
 
-            pRow.setLoadRef(ls_load_reference);
-            String ls_programme = ls_load_reference.split("/")[0];
-            // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
-            String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
-            pRow.setDepot(ls_depot_name);
-            String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
-            LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
-            pRow.setDateDepart(ls_depart_date);
-            ls_depart_date_ordre = ls_depart_date;
-            LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
-            pRow.setDateLivraison(ls_delivery_date);
-            // LocalDateTime ls_depot_date =
-            // row.getCell(COL_DEPOT_DATE).getLocalDateTimeCellValue();
-            Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
-            Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
-            Double ld_qty_pallets = ls_qty_pallets;
-            Integer ll_qty_pallets = ld_qty_pallets.intValue();
-            Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
-            String ls_jc = row.getCell(COL_JC).getStringCellValue();
-            String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
-            List<String> ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().split("-"));
-            Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
-
-            Double ld_prix_mini_sa;
-
-            for (int i = 1; i < ls_array_programme.size() + 1; i++) {
-                if (ls_array_programme.get(i) == ls_programme)
-                    ls_depart_date_ordre = ls_array_date_depart_ordre.get(i);
-            }
-
-            final AtomicReference<String> ls_soc_code = new AtomicReference<>("");
-            final AtomicReference<String> ls_cli_ref = new AtomicReference<>("");
-            if (ls_load_reference.startsWith("TES")) {
-                ls_soc_code.set("BUK");
-                ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
-            } else if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS")) {
-                ls_soc_code.set("SA");
-                ls_cli_ref.set("007488"); // BWUK 007488
-            } else {
-                pRow.pushErreur("Erreur préfixe Load reference");
-                res.pushRow(pRow);
-                continue;
-            }
-
-            String[] ls_array_load = ls_load_reference.split("/");
-            final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
-            String ls_concat;
-            String ls_ref_cli = "";
-
-            if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) { // TES......./
-                if (ls_array_load[1].startsWith("BWTRUE")) {
-                    ls_ind_mod_liv.set("D");
-                    ls_concat = " " + ls_ind_mod_liv.get() + "%";
-                    ls_ref_cli = ls_array_load[0] + '/' + ls_depot_name;
-                } else if (ls_array_load[1].startsWith("BWXD")) {
-                    ls_ind_mod_liv.set("X");
-                    ls_concat = ' ' + ls_ind_mod_liv.get() + "%";
-                    ls_ref_cli = ls_array_load[0] + '/' + "TEYNHAM";
-                } else {
-                    pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
-                    res.pushRow(pRow);
+                // ignore header row
+                if (row.getRowNum() == 0)
                     continue;
-                }
-            } else { // SP..../
-                ls_ind_mod_liv.set("D");
-                ls_concat = "";
-                /*
-                 * Le champ DEPOT NAME du fichier EXCEL devra être rempli
-                 * if isnull(ls_depot_name) or ls_depot_name = '' then
-                 * if left(ls_array_load[3], 3) = 'ISS' then
-                 * ls_depot_name = 'TESCO ISS'
-                 * elseif left(ls_array_load[3], 3) = 'NEW' then
-                 * ls_depot_name = 'TESCO NEWLINGFRUIT'
-                 * end if
-                 * end if
-                 */
-            }
 
-            val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
-                    cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
-                    cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
-                    cb.equal(root.get("modeLivraison"),
-                            StringEnum.getValueOf(GeoModeLivraison.class, ls_ind_mod_liv.get())),
-                    cb.like(root.get("code"), ls_depot_name + ls_concat),
-                    cb.isTrue(root.get("valide"))));
-            if (entrepot.isEmpty()) {
-                pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
-                res.pushRow(pRow);
-                continue;
-            }
-
-            if (ls_haulier.isBlank()) {
-                pRow.pushErreur("Erreur transporteur non renseigné !!");
-                res.pushRow(pRow);
-                continue;
-            }
-
-            String ls_transp_approche = "";
-            String ls_transp_final = ls_haulier;
-            if (ls_haulier.startsWith("APPROCHE")) {
-                ls_transp_approche = ls_haulier.substring(9, ls_haulier.indexOf('+') - 1);
-                ls_transp_final = ls_haulier.substring(ls_haulier.indexOf('+') + 2, ls_haulier.length());
-            }
-
-            // EX DLUO: BB = 08 DEC ; JC = L:8
-            // Si ls_bb_date est vide ne rien renseigner
-            // Si ls_bb_date "NO DATE/NO BB" il faudra renseigner : "SANS BOX ; SANS
-            // IMPRESSION"
-            String ls_dluo = "";
-            try {
-                LocalDateTime ls_bb_date = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue();
-                String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM"));
-                String ls_day = StringUtils.padLeft(Integer.toString(ls_bb_date.getDayOfMonth()), "0", 2);
-                ls_dluo = "BB = " + ls_day + " " + ls_month + " ; JC = " + ls_jc;
-            } catch (Exception e) {
+                // exit when no more data to consume
+                String ls_load_reference;
                 try {
-                    if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("NO DATE/NO BB"))
-                        ls_dluo = "SANS BOX ; SANS IMPRESSION";
-                    if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("SANS BOX / SANS IMPRESSION"))
-                        ls_dluo = "SANS BOX / SANS IMPRESSION";
-                } catch (Exception e2) {
+                    ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
+                    if (ls_load_reference.isBlank())
+                        break;
+                } catch (Exception e) {
+                    break;
                 }
-            }
 
-            val existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
-                    cb.equal(root.get("codeChargement"), ls_load_reference),
-                    cb.equal(root.get("entrepot"), entrepot.get()),
-                    cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
+                pRow.setLoadRef(ls_load_reference);
+                String ls_programme = ls_load_reference.split("/")[0];
+                // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
+                String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
+                pRow.setDepot(ls_depot_name);
+                String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
+                LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+                pRow.setDateDepart(ls_depart_date);
+                ls_depart_date_ordre = ls_depart_date;
+                LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
+                pRow.setDateLivraison(ls_delivery_date);
+                // LocalDateTime ls_depot_date =
+                // row.getCell(COL_DEPOT_DATE).getLocalDateTimeCellValue();
+                Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
+                Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
+                Double ld_qty_pallets = ls_qty_pallets;
+                Integer ll_qty_pallets = ld_qty_pallets.intValue();
+                Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
+                String ls_jc = row.getCell(COL_JC).getStringCellValue();
+                String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
+                List<String> ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().trim().split("-"));
+                Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
 
-            if (existing_ordre.isPresent()) {
+                Double ld_prix_mini_sa;
 
-                if (!ls_load_reference.equals(ls_load_ref_prec) && !entrepot.get().getId().equals(ls_cen_ref_prec)) {
+                for (int i = 1; i < ls_array_programme.size() + 1; i++) {
+                    if (ls_array_programme.get(i) == ls_programme)
+                        ls_depart_date_ordre = ls_array_date_depart_ordre.get(i);
+                }
 
-                    val ls_nordre_curr = existing_ordre.get().getNumero();
-                    if (!ls_nordre_curr.equals(ls_nordre_prec))
-                        pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
-
-                    ls_create_ligne = 'N';
-                    ls_nordre_prec = ls_nordre_curr;
-
-                } else
-                    ls_create_ligne = 'O';
-
-            } else {
-                FunctionResult functionRes = this.functionOrdreRepo.fCreateOrdreV4(
-                        ls_soc_code.get(),
-                        ls_cli_ref.get(),
-                        entrepot.get().getId(),
-                        ls_transp_final,
-                        ls_ref_cli,
-                        false,
-                        false,
-                        ls_depart_date_ordre,
-                        "ORD",
-                        ls_delivery_date,
-                        ls_load_reference);
-                if (functionRes.getRes() != FunctionResult.RESULT_OK) {
-                    pRow.pushErreur(functionRes.getMsg());
+                final AtomicReference<String> ls_soc_code = new AtomicReference<>("");
+                final AtomicReference<String> ls_cli_ref = new AtomicReference<>("");
+                if (ls_load_reference.startsWith("TES")) {
+                    ls_soc_code.set("BUK");
+                    ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
+                } else if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS")) {
+                    ls_soc_code.set("SA");
+                    ls_cli_ref.set("007488"); // BWUK 007488
+                } else {
+                    pRow.pushErreur("Erreur préfixe Load reference");
                     res.pushRow(pRow);
                     continue;
                 }
 
-                ls_ord_ref.set((String) functionRes.getData().get("ls_ord_ref"));
-                ls_load_ref_prec = ls_load_reference;
-                ls_cen_ref_prec = entrepot.get().getId();
+                String[] ls_array_load = ls_load_reference.split("/");
+                final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
+                String ls_concat;
+                String ls_ref_cli = "";
 
-                if (functionRes.getRes().equals(FunctionResult.RESULT_OK)
-                        && !ls_ord_ref.get().isBlank()) {
-                    ls_create_ligne = 'O';
-                    if (!ls_ord_ref.get().equals(ls_ordref_inscrit_prec)) {
-                        if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) {
-                            ls_ordre_cree.add(ls_ord_ref.get());
-                        }
-                        ls_ordref_inscrit_prec = ls_ord_ref.get();
-                        ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
-                        pRow.setOrdreNum(ls_nordre.get());
-                        pRow.pushMessage("Ordre créé");
+                if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) { // TES......./
+                    if (ls_array_load[1].startsWith("BWTRUE")) {
+                        ls_ind_mod_liv.set("D");
+                        ls_concat = " " + ls_ind_mod_liv.get() + "%";
+                        ls_ref_cli = ls_array_load[0] + '/' + ls_depot_name;
+                    } else if (ls_array_load[1].startsWith("BWXD")) {
+                        ls_ind_mod_liv.set("X");
+                        ls_concat = ' ' + ls_ind_mod_liv.get() + "%";
+                        ls_ref_cli = ls_array_load[0] + '/' + "TEYNHAM";
+                    } else {
+                        pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
+                        res.pushRow(pRow);
+                        continue;
                     }
+                } else { // SP..../
+                    ls_ind_mod_liv.set("D");
+                    ls_concat = "";
+                    /*
+                     * Le champ DEPOT NAME du fichier EXCEL devra être rempli
+                     * if isnull(ls_depot_name) or ls_depot_name = '' then
+                     * if left(ls_array_load[3], 3) = 'ISS' then
+                     * ls_depot_name = 'TESCO ISS'
+                     * elseif left(ls_array_load[3], 3) = 'NEW' then
+                     * ls_depot_name = 'TESCO NEWLINGFRUIT'
+                     * end if
+                     * end if
+                     */
+                }
+
+                val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
+                        cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
+                        cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
+                        cb.equal(root.get("modeLivraison"),
+                                StringEnum.getValueOf(GeoModeLivraison.class, ls_ind_mod_liv.get())),
+                        cb.like(root.get("code"), ls_depot_name + ls_concat),
+                        cb.isTrue(root.get("valide"))));
+                if (entrepot.isEmpty()) {
+                    pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
+                    res.pushRow(pRow);
+                    continue;
+                }
+
+                if (ls_haulier.isBlank()) {
+                    pRow.pushErreur("Erreur transporteur non renseigné !!");
+                    res.pushRow(pRow);
+                    continue;
+                }
+
+                String ls_transp_approche = "";
+                String ls_transp_final = ls_haulier;
+                if (ls_haulier.startsWith("APPROCHE")) {
+                    ls_transp_approche = ls_haulier.substring(9, ls_haulier.indexOf('+') - 1);
+                    ls_transp_final = ls_haulier.substring(ls_haulier.indexOf('+') + 2, ls_haulier.length());
+                }
+
+                // EX DLUO: BB = 08 DEC ; JC = L:8
+                // Si ls_bb_date est vide ne rien renseigner
+                // Si ls_bb_date "NO DATE/NO BB" il faudra renseigner : "SANS BOX ; SANS
+                // IMPRESSION"
+                String ls_dluo = "";
+                try {
+                    LocalDateTime ls_bb_date = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue();
+                    String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM"));
+                    String ls_day = StringUtils.padLeft(Integer.toString(ls_bb_date.getDayOfMonth()), "0", 2);
+                    ls_dluo = "BB = " + ls_day + " " + ls_month + " ; JC = " + ls_jc;
+                } catch (Exception e) {
+                    try {
+                        if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("NO DATE/NO BB"))
+                            ls_dluo = "SANS BOX ; SANS IMPRESSION";
+                        if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("SANS BOX / SANS IMPRESSION"))
+                            ls_dluo = "SANS BOX / SANS IMPRESSION";
+                    } catch (Exception e2) {
+                    }
+                }
+
+                val existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
+                        cb.equal(root.get("codeChargement"), ls_load_reference),
+                        cb.equal(root.get("entrepot"), entrepot.get()),
+                        cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
+
+                if (existing_ordre.isPresent()) {
+
+                    if (!ls_load_reference.equals(ls_load_ref_prec)
+                            && !entrepot.get().getId().equals(ls_cen_ref_prec)) {
+
+                        val ls_nordre_curr = existing_ordre.get().getNumero();
+                        if (!ls_nordre_curr.equals(ls_nordre_prec))
+                            pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
+
+                        ls_create_ligne = 'N';
+                        ls_nordre_prec = ls_nordre_curr;
+
+                    } else
+                        ls_create_ligne = 'O';
+
                 } else {
-                    ls_nordre.set("");
-                    ls_create_ligne = 'N';
-                    pRow.pushMessage("Numéro d'ordre invalide: " + ls_ord_ref);
+                    FunctionResult functionRes = this.functionOrdreRepo.fCreateOrdreV4(
+                            ls_soc_code.get(),
+                            ls_cli_ref.get(),
+                            entrepot.get().getId(),
+                            ls_transp_final,
+                            ls_ref_cli,
+                            false,
+                            false,
+                            ls_depart_date_ordre,
+                            "ORD",
+                            ls_delivery_date,
+                            ls_load_reference);
+                    if (functionRes.getRes() != FunctionResult.RESULT_OK) {
+                        pRow.pushErreur(functionRes.getMsg());
+                        res.pushRow(pRow);
+                        continue;
+                    }
+
+                    ls_ord_ref.set((String) functionRes.getData().get("ls_ord_ref"));
+                    addedOrdreRefs.add(ls_ord_ref.get());
+                    ls_load_ref_prec = ls_load_reference;
+                    ls_cen_ref_prec = entrepot.get().getId();
+
+                    if (functionRes.getRes().equals(FunctionResult.RESULT_OK)
+                            && !ls_ord_ref.get().isBlank()) {
+                        ls_create_ligne = 'O';
+                        if (!ls_ord_ref.get().equals(ls_ordref_inscrit_prec)) {
+                            if (!ls_load_reference.startsWith("NEW") && !ls_load_reference.startsWith("ISS")) {
+                                ls_ordre_cree.add(ls_ord_ref.get());
+                            }
+                            ls_ordref_inscrit_prec = ls_ord_ref.get();
+                            ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
+                            pRow.setOrdreNum(ls_nordre.get());
+                            pRow.pushMessage("Ordre créé");
+                        }
+                    } else {
+                        ls_nordre.set("");
+                        ls_create_ligne = 'N';
+                        pRow.pushMessage("Numéro d'ordre invalide: " + ls_ord_ref);
+                        row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
+                        row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
+                    }
+                }
+
+                if (ls_create_ligne.equals('O')) {
+                    if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS"))
+                        row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                .setCellValue(ls_nordre.get());
+                    else
+                        row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                .setCellValue(ls_nordre.get());
+
+                    // Test si on est dans le cas de demi-palette
+                    if ((ld_qty_pallets - ll_qty_pallets == 0) || ll_qty_pallets == 0) {
+                        ll_parse = 1;
+                    } else {
+                        ll_parse = 2;
+                        // Dupplication vers la SA: inscription des load reference ayant des demi
+                        // palettes
+                        if (ls_load_reference.startsWith("TES")) {
+                            val fou_uk = this.fournisseurRepo
+                                    .findOne((root, cq, cb) -> cb.equal(root.get("code"), ls_packhouse));
+                            if (fou_uk.isPresent() && fou_uk.get().getNumeroVersionUK() != null) {
+                                if (fou_uk.get().getNumeroVersionUK() == 1) { // Cas pas de gestion de demi-palette
+                                                                              // alors on
+                                                                              // stocke le load reference à éviter
+                                    if (ls_stock_dern_loadref != ls_load_reference) {
+                                        ls_loadref_no_dupplic.add(ls_load_reference); // On écrit le code de chargement
+                                                                                      // à
+                                                                                      // éviter
+                                        ls_stock_dern_loadref = ls_load_reference; // stockage du dernier load ref
+                                                                                   // d'inscrit
+                                                                                   // dans l'array
+                                    }
+                                }
+                            }
+                        }
+                        // Fin Dupplication
+                    }
+
+                    for (int ll_demi_pallets = 1; ll_demi_pallets <= ll_parse; ll_demi_pallets++) {
+                        if (ll_demi_pallets == 2) { // On modifie les qtés de colis commandé pour la demi-palette
+                            // ls_case_per_pallets= ls_case_per_pallets.toString().trim();
+                            ls_qty_case = (ld_qty_pallets - ll_qty_pallets) * ls_case_per_pallets;
+                            ll_qty_pallets = 1;
+                        } else {
+                            if (ll_qty_pallets > 0)
+                                ls_qty_case = ls_case_per_pallets * ll_qty_pallets;
+                            else {
+                                ls_qty_case = ls_case_per_pallets * ld_qty_pallets;
+                                ll_qty_pallets = 1;
+                            }
+                        }
+                        ls_qty_pallets = ll_qty_pallets.doubleValue();
+
+                        for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
+                            if (ll_count > 0) {
+                                ls_qty_case = 0d;
+                                ls_qty_pallets = 0d;
+                                ls_case_per_pallets = 0d;
+                            }
+
+                            val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
+
+                            Boolean ls_art_existe = true;
+                            try {
+                                this.entityManager
+                                        .createNativeQuery(
+                                                "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
+                                        .setParameter("ls_art", ls_art)
+                                        .getSingleResult();
+                            } catch (NoResultException e) {
+                                ls_art_existe = false;
+                            }
+
+                            if (ls_art_existe) {
+                                String ls_prog = "";
+                                if (ls_programme.startsWith("TES"))
+                                    ls_prog = "TESCO";
+                                else if (ls_programme.startsWith("NEW") || ls_programme.startsWith("ISS"))
+                                    ls_prog = "SP";
+                                else if (ls_programme.startsWith("OF"))
+                                    ls_prog = "ORCHARD";
+
+                                if (ls_prog.equals("TESCO"))
+                                    ld_prix_mini_sa = 0d;
+                                else if (ls_prog.equals("SP")) {
+                                    ld_prix_mini_sa = row.getCell(COL_PRIX_MINI_SA).getNumericCellValue();
+                                } else
+                                    ld_prix_mini_sa = 0d;
+
+                                FunctionResult ls_rc = this.functionOrdreRepo.fCreateLigneOrdre(
+                                        ls_ord_ref.get(),
+                                        ls_art,
+                                        ls_packhouse,
+                                        entrepot.get().getId(),
+                                        ls_case_per_pallets,
+                                        ls_qty_pallets,
+                                        ls_qty_case,
+                                        ld_prix_vte,
+                                        0d,
+                                        ls_prog,
+                                        ls_dluo);
+
+                                // HANDLE ls_rc
+                                if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
+                                    pRow.pushErreur(
+                                            "Erreur création ligne article pour ORD_REF: " + ls_ord_ref.get() + " -> "
+                                                    + ls_rc.getMsg());
+                                    res.pushRow(pRow);
+                                    continue outer;
+                                }
+
+                                row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                        .setCellValue(ls_nordre.get());
+
+                                // CREER ORDLOG
+
+                                LocalDateTime ls_DATLIV_GRP, ls_datdep_grp_p;
+                                String ls_grp_code;
+                                val relDepartDate = ls_depart_date;
+                                if (ls_haulier.startsWith("APPROCHE")) {
+                                    ls_DATLIV_GRP = relDepartDate.plusDays(1);
+                                    ls_datdep_grp_p = relDepartDate.plusDays(1);
+                                    ls_grp_code = "TERRYLOIRE";
+                                } else {
+                                    ls_DATLIV_GRP = null;
+                                    ls_datdep_grp_p = relDepartDate;
+                                    ls_grp_code = "";
+                                }
+
+                                val ls_DATDEP_FOU_P = relDepartDate;
+                                val ls_DATDEP_FOU_P_YYYYMMDD = relDepartDate
+                                        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+                                val ls_ordlog_existe = this.ordreLogistiqueRepo.findOne((root, cq, cb) -> cb.and(
+                                        cb.equal(root.get("ordre").get("id"), ls_ord_ref.get()),
+                                        cb.equal(root.get("fournisseur").get("code"), ls_packhouse)));
+
+                                if (ls_ordlog_existe.isEmpty()) {
+                                    GeoOrdreLogistique ordlog = new GeoOrdreLogistique();
+                                    try {
+                                        ordlog.setOrdre(this.ordreRepo.getOne(ls_ord_ref.get()));
+                                        ordlog.setCodeFournisseur(ls_packhouse);
+                                        ordlog.setGroupage(this.groupageRepo.getOne(ls_grp_code));
+                                        ordlog.setTransporteurGroupage(
+                                                this.transporteurRepo.getOne(ls_transp_approche));
+                                        ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
+                                        ordlog.setDateDepartPrevueFournisseurRaw(ls_DATDEP_FOU_P_YYYYMMDD);
+                                        ordlog.setTotalPalettesCommandees(ls_qty_pallets.floatValue());
+                                        ordlog.setTypeLieuGroupageArrivee('G');
+                                        ordlog.setTypeLieuDepart('F');
+                                        ordlog.setDateLivraisonLieuGroupage(ls_DATLIV_GRP);
+                                        ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
+                                        ordlog = this.ordreLogistiqueRepo.save(ordlog);
+                                    } catch (Exception e) {
+                                        pRow.pushErreur(
+                                                "Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref
+                                                        + ". " + e.getMessage());
+                                        res.pushRow(pRow);
+                                        continue;
+                                    }
+                                }
+
+                            } else
+                                pRow.pushMessage("Article invalide: " + ls_art);
+
+                        }
+
+                    } // boucle demi-palettes
+                } else {
                     row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
                     row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
                 }
+
+                res.pushRow(pRow);
+
             }
 
-            if (ls_create_ligne.equals('O')) {
-                if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS"))
-                    row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(ls_nordre.get());
-                else
-                    row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(ls_nordre.get());
+            Integer ll_creation_ordre_sa = 0;
+            String ls_nordre_regroup = "";
+            String ls_nordre_regroup_prec = "";
+            for (String ll_ord : ls_ordre_cree) {
+                Boolean lb_no_dupplic = false;
+                val ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.equal(root.get("id"), ll_ord));
+                if (ordre.isPresent()) {
 
-                // Test si on est dans le cas de demi-palette
-                if ((ld_qty_pallets - ll_qty_pallets == 0) || ll_qty_pallets == 0) {
-                    ll_parse = 1;
-                } else {
-                    ll_parse = 2;
-                    // Dupplication vers la SA: inscription des load reference ayant des demi
-                    // palettes
-                    if (ls_load_reference.startsWith("TES")) {
-                        val fou_uk = this.fournisseurRepo
-                                .findOne((root, cq, cb) -> cb.equal(root.get("code"), ls_packhouse));
-                        if (fou_uk.isPresent() && fou_uk.get().getNumeroVersionUK() != null) {
-                            if (fou_uk.get().getNumeroVersionUK() == 1) { // Cas pas de gestion de demi-palette alors on
-                                                                          // stocke le load reference à éviter
-                                if (ls_stock_dern_loadref != ls_load_reference) {
-                                    ls_loadref_no_dupplic.add(ls_load_reference); // On écrit le code de chargement à
-                                                                                  // éviter
-                                    ls_stock_dern_loadref = ls_load_reference; // stockage du dernier load ref d'inscrit
-                                                                               // dans l'array
+                    val ls_code_chargement = ordre.get().getCodeChargement();
+                    val ls_nordre_ = ordre.get().getNumero();
+                    for (String ll_cpt : ls_loadref_no_dupplic) {
+                        if (ll_cpt.equals(ls_code_chargement))
+                            lb_no_dupplic = true;
+                    }
+                    if (lb_no_dupplic == false) {
+                        ls_nordre_regroup_prec = ls_nordre_regroup;
+                        FunctionResult ll_return = this.functionOrdreRepo
+                                .fnMajOrdreRegroupementV2(ll_ord, societe, generic, utilisateur);
+                        if (ll_return.getRes() == FunctionResult.RESULT_OK) {
+                            ls_nordre_regroup = this.entityManager
+                                    .createNativeQuery("select nordre_rgp from GEO_ORDRE where ord_ref = :ord_ref")
+                                    .setParameter("ord_ref", ll_ord)
+                                    .getSingleResult()
+                                    .toString();
+
+                            // écriture dans le fichier du n° ordre de regroupement
+                            Integer ll_row = 2;
+                            Row row = sheet.getRow(ll_row - 1);
+                            String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
+                            while (!ls_value.isBlank()) {
+                                // do while not IsNull(ls_value) and ls_value <> ""
+                                if (ls_value.equals(ls_nordre_))
+                                    row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            .setCellValue(ls_nordre_regroup);
+                                row = sheet.getRow(ll_row - 1);
+                                ll_row++;
+                                try {
+                                    ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
+                                } catch (Exception e) {
+                                    break;
+                                }
+                            }
+                            if (!ls_nordre_regroup.equals(ls_nordre_regroup_prec)) {
+                                ll_creation_ordre_sa++;
+                            }
+                        } else {
+                            res.getRow(ls_nordre_).get()
+                                    .pushErreur("Erreur création dupplication SA ORDRE " + ll_ord + " -> "
+                                            + ll_return.getMsg());
+                        }
+                    }
+                }
+            }
+
+            // debut mise à jour des prix MINI sur les ordres SA
+            int ll_cpt_update_prix_mini = 0;
+            Integer ll_row = 2;
+
+            // st_progress.text = "Début mise à jour des prix MINI des ordres SA autre que
+            // programme 'NEW' et 'ISS'"
+            String ls_ordre_sa_prec = "";
+            String ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+            List<String> ls_array_art_sa = new ArrayList<>();
+            final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
+            final AtomicReference<String> ls_ord_ref_sa = new AtomicReference<>("");
+
+            while (ls_programme != null && !ls_programme.isBlank()) {
+
+                try {
+                    ls_ordre_sa
+                            .set(Double
+                                    .toString(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
+                } catch (Exception e) {
+                    ls_ordre_sa.set(sheet.getRow(ll_row - 1)
+                            .getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                            .getStringCellValue());
+                }
+                if (!ls_ordre_sa.get().isBlank()) {
+                    int ll_pos = ls_programme.indexOf('/');
+                    ls_programme = ls_programme.substring(0, ll_pos - 1);
+                    // l'alimentation du prix MINI est faite au moment de la création de la ligne
+                    if (!ls_programme.startsWith("NEW")
+                            && (ls_programme.startsWith("ISS") || ls_programme.startsWith("TES"))) {
+                        List<String> ls_array_art = List
+                                .of(sheet.getRow(ll_row - 1).getCell(COL_ARTS_REF).getStringCellValue().trim()
+                                        .split("-"));
+                        Double ld_prix_mini_sa = sheet.getRow(ll_row - 1).getCell(COL_PRIX_MINI_SA)
+                                .getNumericCellValue();
+                        if (!ls_ordre_sa.get().equals(ls_ordre_sa_prec)) {
+                            ls_ordre_sa_prec = ls_ordre_sa.get();
+                            // int ll_ind = 0;
+
+                            List<GeoOrdreLigne> lignes = this.olRepo.findAll((root, cq, cb) -> cb.and(
+                                    cb.equal(root.get("ordre").get("numero"), ls_ordre_sa.get()),
+                                    cb.equal(root.get("ordre").get("societe").get("id"), "SA"),
+                                    cb.or(cb.isNull(root.get("achatPrixUnitaire")),
+                                            cb.equal(root.get("achatPrixUnitaire"), 0)),
+                                    cb.isNull(root.get("achatUnite").get("id")),
+                                    cb.equal(root.get("ordre").get("campagne"),
+                                            root.get("ordre").get("societe").get("campagne"))));
+
+                            if (!lignes.isEmpty())
+                                ls_ord_ref_sa.set(lignes.get(0).getOrdre().getId());
+
+                            for (GeoOrdreLigne ligne : lignes) {
+                                ls_array_art_sa.add(ligne.getArticle().getId());
+                                // ll_ind++;
+                            }
+                        }
+
+                        for (int ll_ind_sa = 0; ll_ind_sa < ls_array_art_sa.size(); ll_ind_sa++) {
+                            for (int ll_ind = 0; ll_ind < ls_array_art.size(); ll_ind++) {
+                                if (ls_array_art_sa.get(ll_ind_sa).equals(ls_array_art.get(ll_ind))) {
+                                    val cur_art = ls_array_art.get(ll_ind);
+                                    val cur_art_sa = ls_array_art_sa.get(ll_ind_sa);
+                                    this.olRepo.findOne((root, cq, cb) -> cb.and(
+                                            cb.equal(root.get("ordre").get("id"), ls_ord_ref_sa.get()),
+                                            cb.equal(root.get("article").get("id"), cur_art)))
+                                            .ifPresent(ligne -> {
+                                                ligne.setAchatPrixUnitaire(ld_prix_mini_sa);
+                                                ligne.setAchatUnite(this.baseTarifRepo.getOne("COLIS"));
+                                                ligne.setAchatDevise("EUR");
+                                                ligne.setAchatDeviseTaux(1d);
+                                                ligne.setAchatDevisePrixUnitaire(ld_prix_mini_sa);
+                                                try {
+                                                    this.olRepo.save(ligne);
+                                                    res.incrementPrixMiniCount();
+                                                } catch (Exception e) {
+                                                    res.getRow(ligne.getNumero())
+                                                            .ifPresent(r -> r.pushErreur(
+                                                                    "Erreur update prix mini pour ORD_REF: "
+                                                                            + ls_ord_ref_sa.get()
+                                                                            + ", ARTICLE: "
+                                                                            + cur_art_sa));
+                                                }
+                                            });
                                 }
                             }
                         }
                     }
-                    // Fin Dupplication
+                }
+                ll_row++;
+                try {
+                    ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
+                } catch (Exception e) {
+                    ls_programme = null;
                 }
 
-                for (int ll_demi_pallets = 1; ll_demi_pallets <= ll_parse; ll_demi_pallets++) {
-                    if (ll_demi_pallets == 2) { // On modifie les qtés de colis commandé pour la demi-palette
-                        // ls_case_per_pallets= ls_case_per_pallets.toString().trim();
-                        ls_qty_case = (ld_qty_pallets - ll_qty_pallets) * ls_case_per_pallets;
-                        ll_qty_pallets = 1;
-                    } else {
-                        if (ll_qty_pallets > 0)
-                            ls_qty_case = ls_case_per_pallets * ll_qty_pallets;
-                        else {
-                            ls_qty_case = ls_case_per_pallets * ld_qty_pallets;
-                            ll_qty_pallets = 1;
-                        }
-                    }
-                    ls_qty_pallets = ll_qty_pallets.doubleValue();
+            }
 
+            // st_progress.text = "Fin mise à jour des prix MINI des ordres SA"
+            // fin mise à jour des prix MINI sur les ordres SA
+
+            res.setOrdreCount(ll_creation_ordre_sa);
+
+            OutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            this.writeOutput(out, chunks);
+            workbook.close();
+
+        } catch (Exception exception) {
+            addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
+            throw new RuntimeException(exception.getMessage());
+        }
+
+        return res;
+    }
+
+    public ProgramResponse importOrchard(MultipartFile chunks) throws IOException {
+
+        val res = new ProgramResponse();
+
+        // useful columns indexes
+        // int COL_PROGRAMME = 0;
+        int COL_LOAD_REFERENCE = 1;
+        // int COL_TPND = 2;
+        int COL_ARTS_REF = 3;
+        int COL_DEPOT_NAME = 5;
+        int COL_PRIX_VENTE = 6;
+        int COL_PRIX_MINI = 7;
+        int COL_PACKHOUSE = 8;
+        int COL_DEPART_DATE = 9;
+        int COL_DELIVERY_DATE = 10;
+        int COL_QTY_CASE = 12;
+        int COL_QTY_PALLETS = 13;
+        int COL_CASES_PER_PALLETS = 14;
+        int COL_BB_DATE = 15;
+        int COL_HAULIER = 16;
+        int COL_ORD_CREATE = 17;
+
+        // load sheet
+        List<String> addedOrdreRefs = new ArrayList<>();
+        Workbook workbook = ProgramService.loadFile(chunks);
+        try {
+            Sheet sheet = workbook.getSheetAt(0);
+
+            String ls_load_ref_prec = "";
+            String ls_cen_ref_prec = "";
+            String ls_nordre_prec = "";
+
+            outer: for (Row row : sheet) {
+                ProgramRow pRow = new ProgramRow();
+
+                // ignore header row
+                if (row.getRowNum() == 0)
+                    continue;
+
+                String ls_load_reference;
+                try {
+                    ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
+                    if (ls_load_reference.isBlank())
+                        break;
+                } catch (Exception e) {
+                    break;
+                }
+
+                Character ls_create_ligne = 'N';
+                pRow.setLoadRef(ls_load_reference);
+                String ls_programme = ls_load_reference.split("/")[0];
+                // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
+                String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
+                pRow.setDepot(ls_depot_name);
+                String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
+                LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+                pRow.setDateDepart(ls_depart_date);
+                LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
+                pRow.setDateLivraison(ls_delivery_date);
+                Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
+                Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
+                Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
+                String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
+                Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
+                Double ld_prix_mini = row.getCell(COL_PRIX_MINI).getNumericCellValue();
+
+                final AtomicReference<String> ls_soc_code = new AtomicReference<>("");
+                final AtomicReference<String> ls_cli_ref = new AtomicReference<>("");
+                if (ls_load_reference.startsWith("OF")) {
+                    ls_soc_code.set("BUK");
+                    ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
+                } else {
+                    pRow.pushErreur("Erreur préfixe Load reference");
+                    res.pushRow(pRow);
+                    continue;
+                }
+
+                final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
+                if (ls_load_reference.startsWith("OFTRUE"))
+                    ls_ind_mod_liv.set("D");
+                else if (ls_load_reference.startsWith("OFXD"))
+                    ls_ind_mod_liv.set("X");
+                else {
+                    pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
+                    res.pushRow(pRow);
+                    continue;
+                }
+                val ls_concat = " " + ls_ind_mod_liv + "%";
+
+                // Pas de référence client pour ORCHARD
+                val ls_ref_cli = "";
+                val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
+                        cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
+                        cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
+                        cb.equal(root.get("modeLivraison"),
+                                StringEnum.getValueOf(GeoModeLivraison.class, ls_ind_mod_liv.get())),
+                        cb.like(root.get("code"), ls_depot_name + ls_concat),
+                        cb.isTrue(root.get("valide"))));
+                if (entrepot.isEmpty()) {
+                    pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
+                    res.pushRow(pRow);
+                    continue;
+                }
+
+                if (ls_haulier.isBlank()) {
+                    pRow.pushErreur("Erreur transporteur non renseigné !!");
+                    res.pushRow(pRow);
+                    continue;
+                }
+
+                String ls_transp_approche = "";
+                String ls_transp_final = ls_haulier;
+                if (ls_haulier.startsWith("APPROCHE")) {
+                    ls_transp_approche = ls_haulier.substring(10, ls_haulier.indexOf('+') - 1 - 10);
+                    ls_transp_final = ls_haulier.substring(ls_haulier.indexOf('+') + 2, ls_haulier.length());
+                }
+
+                // EX DLUO: Toujours "/"
+                // Doit être renseigné dnas le fichier Excel
+                String ls_dluo;
+                try {
+                    ls_dluo = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue().toString();
+                } catch (Exception e) {
+                    ls_dluo = "/";
+                }
+
+                Optional<GeoOrdre> existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
+                        cb.equal(root.get("codeChargement"), ls_load_reference),
+                        cb.equal(root.get("entrepot"), entrepot.get()),
+                        cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
+
+                final AtomicReference<String> ls_nordre = new AtomicReference<>("");
+                final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
+                if (existing_ordre.isPresent()) {
+
+                    ls_ord_ref.set(existing_ordre.get().getId());
+                    if (ls_load_reference != ls_load_ref_prec && entrepot.get().getId() != ls_cen_ref_prec) {
+
+                        val ls_nordre_curr = existing_ordre.get().getNumero();
+                        if (ls_nordre_curr != ls_nordre_prec)
+                            pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
+
+                        ls_create_ligne = 'N';
+                        ls_nordre_prec = ls_nordre_curr;
+
+                    } else
+                        ls_create_ligne = 'O';
+
+                } else {
+                    FunctionResult functionRes = this.functionOrdreRepo.fCreateOrdreV4(
+                            ls_soc_code.get(),
+                            ls_cli_ref.get(),
+                            entrepot.get().getId(),
+                            ls_transp_final,
+                            ls_ref_cli,
+                            false,
+                            false,
+                            ls_depart_date,
+                            "ORD",
+                            ls_delivery_date,
+                            ls_load_reference);
+                    if (functionRes.getRes() != FunctionResult.RESULT_OK) {
+                        pRow.pushErreur(functionRes.getMsg());
+                        res.pushRow(pRow);
+                        continue;
+                    }
+
+                    ls_ord_ref.set((String) functionRes.getData().get("ls_ord_ref"));
+                    addedOrdreRefs.add(ls_ord_ref.get());
+                    ls_load_ref_prec = ls_load_reference;
+                    ls_cen_ref_prec = entrepot.get().getId();
+
+                    if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
+                        ls_create_ligne = 'O';
+                        ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
+                        pRow.setOrdreNum(ls_nordre.get());
+                        pRow.pushMessage("Ordre créé");
+                        res.incrementOrdreCount();
+                    } else {
+                        ls_nordre.set("");
+                        pRow.pushMessage("Ordre NON créé, Numéro d'ordre invalide: " + ls_ord_ref);
+                    }
+                }
+
+                List<String> ls_array_art;
+                try {
+                    ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().trim().split("-"));
+                } catch (Exception e) {
+                    ls_array_art = List
+                            .of(String.valueOf(((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).intValue()));
+                }
+                if (ls_create_ligne.equals('O')) {
                     for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
-                        if (ll_count > 0) {
+                        if (ll_count > 1) {
                             ls_qty_case = 0d;
                             ls_qty_pallets = 0d;
                             ls_case_per_pallets = 0d;
@@ -495,19 +990,11 @@ public class ProgramService {
 
                         if (ls_art_existe) {
                             String ls_prog = "";
-                            if (ls_programme.startsWith("TES"))
+                            if (ls_programme.startsWith("TES")
+                                    || ls_programme.startsWith("SP"))
                                 ls_prog = "TESCO";
-                            else if (ls_programme.startsWith("NEW") || ls_programme.startsWith("ISS"))
-                                ls_prog = "SP";
                             else if (ls_programme.startsWith("OF"))
                                 ls_prog = "ORCHARD";
-
-                            if (ls_prog.equals("TESCO"))
-                                ld_prix_mini_sa = 0d;
-                            else if (ls_prog.equals("SP")) {
-                                ld_prix_mini_sa = row.getCell(COL_PRIX_MINI_SA).getNumericCellValue();
-                            } else
-                                ld_prix_mini_sa = 0d;
 
                             FunctionResult ls_rc = this.functionOrdreRepo.fCreateLigneOrdre(
                                     ls_ord_ref.get(),
@@ -518,7 +1005,7 @@ public class ProgramService {
                                     ls_qty_pallets,
                                     ls_qty_case,
                                     ld_prix_vte,
-                                    0d,
+                                    ld_prix_mini,
                                     ls_prog,
                                     ls_dluo);
 
@@ -584,477 +1071,19 @@ public class ProgramService {
                             pRow.pushMessage("Article invalide: " + ls_art);
 
                     }
-
-                } // boucle demi-palettes
-            } else {
-                row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
-                row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue("ERREUR");
-            }
-
-            res.pushRow(pRow);
-
-        }
-
-        Integer ll_creation_ordre_sa = 0;
-        String ls_nordre_regroup = "";
-        String ls_nordre_regroup_prec = "";
-        for (String ll_ord : ls_ordre_cree) {
-            Boolean lb_no_dupplic = false;
-            val ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.equal(root.get("id"), ll_ord));
-            if (ordre.isPresent()) {
-
-                val ls_code_chargement = ordre.get().getCodeChargement();
-                val ls_nordre_ = ordre.get().getNumero();
-                for (String ll_cpt : ls_loadref_no_dupplic) {
-                    if (ll_cpt.equals(ls_code_chargement))
-                        lb_no_dupplic = true;
                 }
-                if (lb_no_dupplic == false) {
-                    ls_nordre_regroup_prec = ls_nordre_regroup;
-                    FunctionResult ll_return = this.functionOrdreRepo
-                            .fnMajOrdreRegroupementV2(ll_ord, societe, generic, utilisateur);
-                    if (ll_return.getRes() == FunctionResult.RESULT_OK) {
-                        ls_nordre_regroup = this.entityManager
-                                .createNativeQuery("select nordre_rgp from GEO_ORDRE where ord_ref = :ord_ref")
-                                .setParameter("ord_ref", ll_ord)
-                                .getSingleResult()
-                                .toString();
 
-                        // écriture dans le fichier du n° ordre de regroupement
-                        Integer ll_row = 2;
-                        Row row = sheet.getRow(ll_row - 1);
-                        String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
-                        while (!ls_value.isBlank()) {
-                            // do while not IsNull(ls_value) and ls_value <> ""
-                            if (ls_value.equals(ls_nordre_))
-                                row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
-                                        .setCellValue(ls_nordre_regroup);
-                            row = sheet.getRow(ll_row - 1);
-                            ll_row++;
-                            try {
-                                ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
-                            } catch (Exception e) {
-                                break;
-                            }
-                        }
-                        if (!ls_nordre_regroup.equals(ls_nordre_regroup_prec)) {
-                            ll_creation_ordre_sa++;
-                        }
-                    } else {
-                        res.getRow(ls_nordre_).get()
-                                .pushErreur("Erreur création dupplication SA ORDRE " + ll_ord + " -> "
-                                        + ll_return.getMsg());
-                    }
-                }
-            }
-        }
-
-        // debut mise à jour des prix MINI sur les ordres SA
-        int ll_cpt_update_prix_mini = 0;
-        Integer ll_row = 2;
-
-        // st_progress.text = "Début mise à jour des prix MINI des ordres SA autre que
-        // programme 'NEW' et 'ISS'"
-        String ls_ordre_sa_prec = "";
-        String ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
-        List<String> ls_array_art_sa = new ArrayList<>();
-        final AtomicReference<String> ls_ordre_sa = new AtomicReference<>("");
-        final AtomicReference<String> ls_ord_ref_sa = new AtomicReference<>("");
-
-        while (ls_programme != null && !ls_programme.isBlank()) {
-
-            try {
-                ls_ordre_sa
-                        .set(Double.toString(sheet.getRow(ll_row - 1).getCell(COL_ORD_PERE_SA).getNumericCellValue()));
-            } catch (Exception e) {
-                ls_ordre_sa.set(sheet.getRow(ll_row - 1)
-                        .getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
-                        .getStringCellValue());
-            }
-            if (!ls_ordre_sa.get().isBlank()) {
-                int ll_pos = ls_programme.indexOf('/');
-                ls_programme = ls_programme.substring(0, ll_pos - 1);
-                // l'alimentation du prix MINI est faite au moment de la création de la ligne
-                if (!ls_programme.startsWith("NEW")
-                        && (ls_programme.startsWith("ISS") || ls_programme.startsWith("TES"))) {
-                    List<String> ls_array_art = List
-                            .of(sheet.getRow(ll_row - 1).getCell(COL_ARTS_REF).getStringCellValue().split("-"));
-                    Double ld_prix_mini_sa = sheet.getRow(ll_row - 1).getCell(COL_PRIX_MINI_SA).getNumericCellValue();
-                    if (!ls_ordre_sa.get().equals(ls_ordre_sa_prec)) {
-                        ls_ordre_sa_prec = ls_ordre_sa.get();
-                        // int ll_ind = 0;
-
-                        List<GeoOrdreLigne> lignes = this.olRepo.findAll((root, cq, cb) -> cb.and(
-                                cb.equal(root.get("ordre").get("numero"), ls_ordre_sa.get()),
-                                cb.equal(root.get("ordre").get("societe").get("id"), "SA"),
-                                cb.or(cb.isNull(root.get("achatPrixUnitaire")),
-                                        cb.equal(root.get("achatPrixUnitaire"), 0)),
-                                cb.isNull(root.get("achatUnite").get("id")),
-                                cb.equal(root.get("ordre").get("campagne"),
-                                        root.get("ordre").get("societe").get("campagne"))));
-
-                        if (!lignes.isEmpty())
-                            ls_ord_ref_sa.set(lignes.get(0).getOrdre().getId());
-
-                        for (GeoOrdreLigne ligne : lignes) {
-                            ls_array_art_sa.add(ligne.getArticle().getId());
-                            // ll_ind++;
-                        }
-                    }
-
-                    for (int ll_ind_sa = 0; ll_ind_sa < ls_array_art_sa.size(); ll_ind_sa++) {
-                        for (int ll_ind = 0; ll_ind < ls_array_art.size(); ll_ind++) {
-                            if (ls_array_art_sa.get(ll_ind_sa).equals(ls_array_art.get(ll_ind))) {
-                                val cur_art = ls_array_art.get(ll_ind);
-                                val cur_art_sa = ls_array_art_sa.get(ll_ind_sa);
-                                this.olRepo.findOne((root, cq, cb) -> cb.and(
-                                        cb.equal(root.get("ordre").get("id"), ls_ord_ref_sa.get()),
-                                        cb.equal(root.get("article").get("id"), cur_art)))
-                                        .ifPresent(ligne -> {
-                                            ligne.setAchatPrixUnitaire(ld_prix_mini_sa);
-                                            ligne.setAchatUnite(this.baseTarifRepo.getOne("COLIS"));
-                                            ligne.setAchatDevise("EUR");
-                                            ligne.setAchatDeviseTaux(1d);
-                                            ligne.setAchatDevisePrixUnitaire(ld_prix_mini_sa);
-                                            try {
-                                                this.olRepo.save(ligne);
-                                                res.incrementPrixMiniCount();
-                                            } catch (Exception e) {
-                                                res.getRow(ligne.getNumero())
-                                                        .ifPresent(r -> r.pushErreur(
-                                                                "Erreur update prix mini pour ORD_REF: "
-                                                                        + ls_ord_ref_sa.get()
-                                                                        + ", ARTICLE: "
-                                                                        + cur_art_sa));
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                }
-            }
-            ll_row++;
-            try {
-                ls_programme = sheet.getRow(ll_row - 1).getCell(COL_LOAD_REFERENCE).getStringCellValue();
-            } catch (Exception e) {
-                ls_programme = null;
-            }
-
-        }
-
-        // st_progress.text = "Fin mise à jour des prix MINI des ordres SA"
-        // fin mise à jour des prix MINI sur les ordres SA
-
-        res.setOrdreCount(ll_creation_ordre_sa);
-
-        OutputStream out = new ByteArrayOutputStream();
-        workbook.write(out);
-        this.writeOutput(out, chunks);
-        workbook.close();
-
-        return res;
-    }
-
-    public ProgramResponse importOrchard(MultipartFile chunks) throws IOException {
-
-        val res = new ProgramResponse();
-
-        // useful columns indexes
-        // int COL_PROGRAMME = 0;
-        int COL_LOAD_REFERENCE = 1;
-        // int COL_TPND = 2;
-        int COL_ARTS_REF = 3;
-        int COL_DEPOT_NAME = 5;
-        int COL_PRIX_VENTE = 6;
-        int COL_PRIX_MINI = 7;
-        int COL_PACKHOUSE = 8;
-        int COL_DEPART_DATE = 9;
-        int COL_DELIVERY_DATE = 10;
-        int COL_QTY_CASE = 12;
-        int COL_QTY_PALLETS = 13;
-        int COL_CASES_PER_PALLETS = 14;
-        int COL_BB_DATE = 15;
-        int COL_HAULIER = 16;
-        int COL_ORD_CREATE = 17;
-
-        // load sheet
-        Workbook workbook = ProgramService.loadFile(chunks);
-        Sheet sheet = workbook.getSheetAt(0);
-
-        String ls_load_ref_prec = "";
-        String ls_cen_ref_prec = "";
-        String ls_nordre_prec = "";
-
-        outer: for (Row row : sheet) {
-            ProgramRow pRow = new ProgramRow();
-
-            // ignore header row
-            if (row.getRowNum() == 0)
-                continue;
-
-            String ls_load_reference;
-            try {
-                ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
-                if (ls_load_reference.isBlank())
-                    break;
-            } catch (Exception e) {
-                break;
-            }
-
-            Character ls_create_ligne = 'N';
-            pRow.setLoadRef(ls_load_reference);
-            String ls_programme = ls_load_reference.split("/")[0];
-            // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
-            String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
-            pRow.setDepot(ls_depot_name);
-            String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
-            LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
-            pRow.setDateDepart(ls_depart_date);
-            LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
-            pRow.setDateLivraison(ls_delivery_date);
-            Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
-            Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
-            Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
-            String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
-            Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
-            Double ld_prix_mini = row.getCell(COL_PRIX_MINI).getNumericCellValue();
-
-            final AtomicReference<String> ls_soc_code = new AtomicReference<>("");
-            final AtomicReference<String> ls_cli_ref = new AtomicReference<>("");
-            if (ls_load_reference.startsWith("OF")) {
-                ls_soc_code.set("BUK");
-                ls_cli_ref.set("007396"); // TESCOSTORESGBP 007396
-            } else {
-                pRow.pushErreur("Erreur préfixe Load reference");
                 res.pushRow(pRow);
-                continue;
             }
 
-            final AtomicReference<String> ls_ind_mod_liv = new AtomicReference<>("");
-            if (ls_load_reference.startsWith("OFTRUE"))
-                ls_ind_mod_liv.set("D");
-            else if (ls_load_reference.startsWith("OFXD"))
-                ls_ind_mod_liv.set("X");
-            else {
-                pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
-                res.pushRow(pRow);
-                continue;
-            }
-            val ls_concat = " " + ls_ind_mod_liv + "%";
-
-            // Pas de référence client pour ORCHARD
-            val ls_ref_cli = "";
-            val entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
-                    cb.equal(root.get("client").get("id"), ls_cli_ref.get()),
-                    cb.equal(root.get("societe").get("id"), ls_soc_code.get()),
-                    cb.equal(root.get("modeLivraison"),
-                            StringEnum.getValueOf(GeoModeLivraison.class, ls_ind_mod_liv.get())),
-                    cb.like(root.get("code"), ls_depot_name + ls_concat),
-                    cb.isTrue(root.get("valide"))));
-            if (entrepot.isEmpty()) {
-                pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
-                res.pushRow(pRow);
-                continue;
-            }
-
-            if (ls_haulier.isBlank()) {
-                pRow.pushErreur("Erreur transporteur non renseigné !!");
-                res.pushRow(pRow);
-                continue;
-            }
-
-            String ls_transp_approche = "";
-            String ls_transp_final = ls_haulier;
-            if (ls_haulier.startsWith("APPROCHE")) {
-                ls_transp_approche = ls_haulier.substring(10, ls_haulier.indexOf('+') - 1 - 10);
-                ls_transp_final = ls_haulier.substring(ls_haulier.indexOf('+') + 2, ls_haulier.length());
-            }
-
-            // EX DLUO: Toujours "/"
-            // Doit être renseigné dnas le fichier Excel
-            String ls_dluo;
-            try {
-                ls_dluo = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue().toString();
-            } catch (Exception e) {
-                ls_dluo = "/";
-            }
-
-            Optional<GeoOrdre> existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
-                    cb.equal(root.get("codeChargement"), ls_load_reference),
-                    cb.equal(root.get("entrepot"), entrepot.get()),
-                    cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
-
-            final AtomicReference<String> ls_nordre = new AtomicReference<>("");
-            final AtomicReference<String> ls_ord_ref = new AtomicReference<>("");
-            if (existing_ordre.isPresent()) {
-
-                ls_ord_ref.set(existing_ordre.get().getId());
-                if (ls_load_reference != ls_load_ref_prec && entrepot.get().getId() != ls_cen_ref_prec) {
-
-                    val ls_nordre_curr = existing_ordre.get().getNumero();
-                    if (ls_nordre_curr != ls_nordre_prec)
-                        pRow.pushMessage("Ordre déjà existant " + ls_nordre_curr + " !!");
-
-                    ls_create_ligne = 'N';
-                    ls_nordre_prec = ls_nordre_curr;
-
-                } else
-                    ls_create_ligne = 'O';
-
-            } else {
-                FunctionResult functionRes = this.functionOrdreRepo.fCreateOrdreV4(
-                        ls_soc_code.get(),
-                        ls_cli_ref.get(),
-                        entrepot.get().getId(),
-                        ls_transp_final,
-                        ls_ref_cli,
-                        false,
-                        false,
-                        ls_depart_date,
-                        "ORD",
-                        ls_delivery_date,
-                        ls_load_reference);
-                if (functionRes.getRes() != FunctionResult.RESULT_OK) {
-                    pRow.pushErreur(functionRes.getMsg());
-                    res.pushRow(pRow);
-                    continue;
-                }
-
-                ls_ord_ref.set((String) functionRes.getData().get("ls_ord_ref"));
-                ls_load_ref_prec = ls_load_reference;
-                ls_cen_ref_prec = entrepot.get().getId();
-
-                if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
-                    ls_create_ligne = 'O';
-                    ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
-                    pRow.setOrdreNum(ls_nordre.get());
-                    pRow.pushMessage("Ordre créé");
-                    res.incrementOrdreCount();
-                } else {
-                    ls_nordre.set("");
-                    pRow.pushMessage("Ordre NON créé, Numéro d'ordre invalide: " + ls_ord_ref);
-                }
-            }
-
-            List<String> ls_array_art;
-            try {
-                ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().split("-"));
-            } catch (Exception e) {
-                ls_array_art = List
-                        .of(String.valueOf(((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).intValue()));
-            }
-            if (ls_create_ligne.equals('O')) {
-                for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
-                    if (ll_count > 1) {
-                        ls_qty_case = 0d;
-                        ls_qty_pallets = 0d;
-                        ls_case_per_pallets = 0d;
-                    }
-
-                    val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
-
-                    Boolean ls_art_existe = true;
-                    try {
-                        this.entityManager
-                                .createNativeQuery(
-                                        "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
-                                .setParameter("ls_art", ls_art)
-                                .getSingleResult();
-                    } catch (NoResultException e) {
-                        ls_art_existe = false;
-                    }
-
-                    if (ls_art_existe) {
-                        String ls_prog = "";
-                        if (ls_programme.startsWith("TES")
-                                || ls_programme.startsWith("SP"))
-                            ls_prog = "TESCO";
-                        else if (ls_programme.startsWith("OF"))
-                            ls_prog = "ORCHARD";
-
-                        FunctionResult ls_rc = this.functionOrdreRepo.fCreateLigneOrdre(
-                                ls_ord_ref.get(),
-                                ls_art,
-                                ls_packhouse,
-                                entrepot.get().getId(),
-                                ls_case_per_pallets,
-                                ls_qty_pallets,
-                                ls_qty_case,
-                                ld_prix_vte,
-                                ld_prix_mini,
-                                ls_prog,
-                                ls_dluo);
-
-                        // HANDLE ls_rc
-                        if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
-                            pRow.pushErreur("Erreur création ligne article pour ORD_REF: " + ls_ord_ref.get() + " -> "
-                                    + ls_rc.getMsg());
-                            res.pushRow(pRow);
-                            continue outer;
-                        }
-
-                        row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
-                                .setCellValue(ls_nordre.get());
-
-                        // CREER ORDLOG
-
-                        LocalDateTime ls_DATLIV_GRP, ls_datdep_grp_p;
-                        String ls_grp_code;
-                        val relDepartDate = ls_depart_date;
-                        if (ls_haulier.startsWith("APPROCHE")) {
-                            ls_DATLIV_GRP = relDepartDate.plusDays(1);
-                            ls_datdep_grp_p = relDepartDate.plusDays(1);
-                            ls_grp_code = "TERRYLOIRE";
-                        } else {
-                            ls_DATLIV_GRP = null;
-                            ls_datdep_grp_p = relDepartDate;
-                            ls_grp_code = "";
-                        }
-
-                        val ls_DATDEP_FOU_P = relDepartDate;
-                        val ls_DATDEP_FOU_P_YYYYMMDD = relDepartDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-                        val ls_ordlog_existe = this.ordreLogistiqueRepo.findOne((root, cq, cb) -> cb.and(
-                                cb.equal(root.get("ordre").get("id"), ls_ord_ref.get()),
-                                cb.equal(root.get("fournisseur").get("code"), ls_packhouse)));
-
-                        if (ls_ordlog_existe.isEmpty()) {
-                            GeoOrdreLogistique ordlog = new GeoOrdreLogistique();
-                            try {
-                                ordlog.setOrdre(this.ordreRepo.getOne(ls_ord_ref.get()));
-                                ordlog.setCodeFournisseur(ls_packhouse);
-                                ordlog.setGroupage(this.groupageRepo.getOne(ls_grp_code));
-                                ordlog.setTransporteurGroupage(this.transporteurRepo.getOne(ls_transp_approche));
-                                ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
-                                ordlog.setDateDepartPrevueFournisseurRaw(ls_DATDEP_FOU_P_YYYYMMDD);
-                                ordlog.setTotalPalettesCommandees(ls_qty_pallets.floatValue());
-                                ordlog.setTypeLieuGroupageArrivee('G');
-                                ordlog.setTypeLieuDepart('F');
-                                ordlog.setDateLivraisonLieuGroupage(ls_DATLIV_GRP);
-                                ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
-                                ordlog = this.ordreLogistiqueRepo.save(ordlog);
-                            } catch (Exception e) {
-                                pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref
-                                        + ". " + e.getMessage());
-                                res.pushRow(pRow);
-                                continue;
-                            }
-                        }
-
-                    } else
-                        pRow.pushMessage("Article invalide: " + ls_art);
-
-                }
-            }
-
-            res.pushRow(pRow);
+            OutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            this.writeOutput(out, chunks);
+            workbook.close();
+        } catch (Exception exception) {
+            addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
+            throw new RuntimeException(exception.getMessage());
         }
-
-        OutputStream out = new ByteArrayOutputStream();
-        workbook.write(out);
-        this.writeOutput(out, chunks);
-        workbook.close();
-
         return res;
     }
 
