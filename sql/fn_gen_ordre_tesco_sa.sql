@@ -50,7 +50,7 @@ BEGIN
 
     select seq_ord_num.nextval into ll_ord_ref from dual;
 
-    ls_ord_ref_sa	:= to_char(ll_ord_ref,'000000');
+    ls_ord_ref_sa	:= to_char(ll_ord_ref);
     f_nouvel_ordre('SA', res ,msg, ls_nordre_sa);
     if res <> 1 then return; end if;
 
