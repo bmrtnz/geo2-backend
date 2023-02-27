@@ -24,22 +24,25 @@ BEGIN
     select  DEV_TX into ldc_dev_taux_GBP from GEO_DEVISE_REF
     where DEV_CODE_REF ='EUR' and DEV_CODE ='GBP';
 
-
-    select GEO_ORDRE.ORD_REF,TMP_ENTREP.SA_CLI_REF,SA_CEN_REF  INTO ls_ord_ref_buk,ls_sa_cli_ref, ls_sa_cen_ref
-    from GEO_ORDRE ,TMP_ENTREP
-    where 	GEO_ORDRE.SOC_CODE ='BUK' and
-                GEO_ORDRE.CLI_REF  ='007396'  and
-                GEO_ORDRE.REF_CLI like 'LM%' and
-                GEO_ORDRE.ORD_REF =arg_ord_ref_buk and
-                GEO_ORDRE.CLI_REF =TMP_ENTREP.SPA_CLI_REF and
-                GEO_ORDRE.CEN_REF =TMP_ENTREP.SPA_CEN_REF and
-                not exists    (select 1
-                                from GEO_ORDRE_BUK_SA
-                                where  GEO_ORDRE_BUK_SA.ORD_REF_BUK = GEO_ORDRE.ORD_REF) and
-                not  exists (select 1 from GEO_ORDLOG L
-                                    where L.ORD_REF  = GEO_ORDRE.ORD_REF and
-                                                L.FLAG_EXPED_FOURNNI ='N') and
-                                                            FACTURE_AVOIR ='F';
+    begin
+        select GEO_ORDRE.ORD_REF,TMP_ENTREP.SA_CLI_REF,SA_CEN_REF  INTO ls_ord_ref_buk,ls_sa_cli_ref, ls_sa_cen_ref
+        from GEO_ORDRE ,TMP_ENTREP
+        where 	GEO_ORDRE.SOC_CODE ='BUK' and
+                    GEO_ORDRE.CLI_REF  ='007396'  and
+                    GEO_ORDRE.REF_CLI like 'LM%' and
+                    GEO_ORDRE.ORD_REF =arg_ord_ref_buk and
+                    GEO_ORDRE.CLI_REF =TMP_ENTREP.SPA_CLI_REF and
+                    GEO_ORDRE.CEN_REF =TMP_ENTREP.SPA_CEN_REF and
+                    not exists    (select 1
+                                    from GEO_ORDRE_BUK_SA
+                                    where  GEO_ORDRE_BUK_SA.ORD_REF_BUK = GEO_ORDRE.ORD_REF) and
+                    not  exists (select 1 from GEO_ORDLOG L
+                                        where L.ORD_REF  = GEO_ORDRE.ORD_REF and
+                                                    L.FLAG_EXPED_FOURNNI ='N') and
+                                                                FACTURE_AVOIR ='F';
+    exception when no_data_found then
+        null;
+    end;
 
     IF ls_ord_ref_buk is null or 	ls_ord_ref_buk=''	then
         res := 1;

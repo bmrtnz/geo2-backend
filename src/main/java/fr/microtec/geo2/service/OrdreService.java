@@ -53,7 +53,9 @@ import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.graphql.ordres.GeoOrdreGraphQLService;
 import io.leangen.graphql.execution.ResolutionEnvironment;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service()
 public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
@@ -406,7 +408,11 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
                 ls_nordre_sa = res[0];
                 ls_nordre_sa_n = res[1];
             }
+        } catch (Exception exception) {
+            log.info("Pas d'infos de regroupement pour le client 007396", exception);
+        }
 
+        try {
             if (ordre.getClient().getId().equals("002676")) {
                 String[] res;
                 if (ordre.getFactureAvoir().equals(GeoFactureAvoir.FACTURE))
@@ -424,7 +430,11 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
                 ls_nordre_buk = res[0];
                 ls_nordre_sa_n = res[1];
             }
+        } catch (Exception exception) {
+            log.info("Pas d'infos de regroupement pour le client 002676", exception);
+        }
 
+        try {
             if (ordre.getClient().getId().equals("007657")) {
                 String[] res;
                 if (ordre.getFactureAvoir().equals(GeoFactureAvoir.AVOIR))
@@ -442,7 +452,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
                 ls_nordre_buk = res[0];
                 ls_nordre_sa = res[1];
             }
-        } catch (Exception e) {
+        } catch (Exception exception) {
+            log.info("Pas d'infos de regroupement pour le client 007657", exception);
         }
 
         if (!ls_nordre_sa.isEmpty()) {

@@ -24,14 +24,18 @@ BEGIN
     res := 0;
     msg := '';
 
-    select C.CLI_REF,C.CLI_CODE,E.CEN_REF,E.CEN_CODE,OBS.ORD_REF_SA
-    into  ls_sa_cli_ref,ls_sa_cli_code,ls_sa_cen_ref,ls_sa_cen_code,ls_ord_ref_sa
-    FROM GEO_ENTREP E, GEO_CLIENT C, GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE O
-    where E.CLI_REF ='007657' and
-            C.CLI_REF =  E.CLI_REF and
-            OBS.ORD_REF_BUK  =arg_ord_ref_buk and
-            OBS.ORD_REF_SA  = O.ORD_REF and
-            (O.CEN_CODE||'2' = E.CEN_CODE OR substr(O.CEN_CODE,1,17)||'2'= E.CEN_CODE);
+    begin
+        select C.CLI_REF,C.CLI_CODE,E.CEN_REF,E.CEN_CODE,OBS.ORD_REF_SA
+        into  ls_sa_cli_ref,ls_sa_cli_code,ls_sa_cen_ref,ls_sa_cen_code,ls_ord_ref_sa
+        FROM GEO_ENTREP E, GEO_CLIENT C, GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE O
+        where E.CLI_REF ='007657' and
+                C.CLI_REF =  E.CLI_REF and
+                OBS.ORD_REF_BUK  =arg_ord_ref_buk and
+                OBS.ORD_REF_SA  = O.ORD_REF and
+                (O.CEN_CODE||'2' = E.CEN_CODE OR substr(O.CEN_CODE,1,17)||'2'= E.CEN_CODE);
+    exception when no_data_found then
+        null;
+    end;
 
 
     select  DEV_TX into ldc_dev_taux_GBP from GEO_DEVISE_REF
