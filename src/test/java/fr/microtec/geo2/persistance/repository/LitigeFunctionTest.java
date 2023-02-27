@@ -67,4 +67,12 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfInitLigneLitige() {
+        FunctionResult result = this.functionLitigeRepository
+                .ofInitLigneLitige("039172,039173", "002225", "99");
+
+        Assertions.assertNotNull(result);
+    }
+
 }

@@ -38,4 +38,9 @@ public interface GeoFunctionLitigeRepository {
             String gs_ord_ref,
             String arg_lit_ref);
 
+    FunctionResult ofInitLigneLitige(
+            String arg_list_ref,
+            String is_cur_lit_ref,
+            String is_orl_lit);
+
 }

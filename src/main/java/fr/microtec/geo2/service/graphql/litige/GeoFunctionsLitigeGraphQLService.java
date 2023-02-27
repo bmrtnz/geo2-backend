@@ -88,4 +88,15 @@ public class GeoFunctionsLitigeGraphQLService {
                 litigeRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofInitLigneLitige(
+            String ordreLigneList,
+            String litigeID,
+            String numeroLot) {
+        return this.repository.ofInitLigneLitige(
+                ordreLigneList,
+                litigeID,
+                numeroLot);
+    }
+
 }

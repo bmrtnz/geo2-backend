@@ -101,4 +101,19 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult ofInitLigneLitige(
+            String arg_list_ref,
+            String is_cur_lit_ref,
+            String is_orl_lit) {
+        FunctionQuery query = this.build("OF_INIT_LIGNE_LITIGE");
+
+        query.attachInput("arg_list_ref", String.class, arg_list_ref);
+        query.attachInput("is_cur_lit_ref", String.class, is_cur_lit_ref);
+        query.attachInput("is_orl_lit", String.class, is_orl_lit);
+        query.attachOutput("ll_nb_ligne", String.class);
+
+        return query.fetch();
+    }
+
 }
