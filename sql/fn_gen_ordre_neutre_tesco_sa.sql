@@ -41,7 +41,7 @@ BEGIN
 
     select seq_ord_num.nextval into ll_ord_ref_sa_n from dual;
 
-    ls_ord_ref_sa_n	:= to_char(ll_ord_ref_sa_n,'000000');
+    ls_ord_ref_sa_n	:= to_char(ll_ord_ref_sa_n);
     f_nouvel_ordre('SA', res, msg, ls_nordre_sa_n);
 
     begin

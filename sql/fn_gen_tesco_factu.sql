@@ -25,9 +25,13 @@ BEGIN
         case ls_facture_avoir
             when 'F' then
 
-                select ORD_REF_SA,ORD_REF_SA_N into ls_ord_ref_sa,ls_ord_ref_sa_n
-                FROM GEO_ORDRE_BUK_SA
-                where ORD_REF_BUK = arg_ord_ref;
+                begin
+                    select ORD_REF_SA,ORD_REF_SA_N into ls_ord_ref_sa,ls_ord_ref_sa_n
+                    FROM GEO_ORDRE_BUK_SA
+                    where ORD_REF_BUK = arg_ord_ref;
+                exception when no_data_found then
+                    null;
+                end;
 
                 If ls_ord_ref_sa is not null or ls_ord_ref_sa= ''  Then
                     select FLBAF, NORDRE into ls_flbaf_sa,ls_nordre_sa
