@@ -67,6 +67,7 @@ begin
             ld_ach_pu_dev number;
             is_ord_ref varchar(7);
             is_gen_code varchar(6);
+            l_lil_ref GEO_LITLIG.LIL_REF%type;
         begin
             ls_orl_ref := ls_array_lig_ref(ll_ind);		-- pk geo_ordlig
             select L.orl_lig, L.art_ref, L.exp_nb_pal, L.exp_nb_col, L.exp_pds_net, L.ach_pu, L.ach_bta_code, L.vte_pu, L.vte_bta_code, L.fou_code,
@@ -100,6 +101,7 @@ begin
                 ld_ach_pu_dev := ld_ach_pu / ld_ACH_DEV_TAUX;
 
         --			of_chrono_litlig(ll_row)
+                SELECT F_SEQ_LIL_NUM() INTO l_lil_ref FROM DUAL;
                 insert into geo_litlig (
                     lil_ref,
                     orl_ref,
@@ -153,7 +155,7 @@ begin
                     res_ind_forf
                 ) values (
                     -- on initialise la nlle ligne
-                    F_SEQ_LIL_NUM(),
+                    l_lil_ref,
                     ls_orl_ref,
                     is_cur_lit_ref,
                     -- ls_orl_lig,
@@ -204,6 +206,9 @@ begin
                     'N',
                     'N'
                 );
+                update geo_litlig
+                set valide = 'N'
+                where lil_ref = l_lil_ref;
                 commit;
             end if;
         end;
