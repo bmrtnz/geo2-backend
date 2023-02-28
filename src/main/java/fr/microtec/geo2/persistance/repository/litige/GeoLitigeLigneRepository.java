@@ -3,6 +3,9 @@ package fr.microtec.geo2.persistance.repository.litige;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -44,4 +47,8 @@ public interface GeoLitigeLigneRepository extends GeoRepository<GeoLitigeLigne, 
     @Query(name = "Litige.allLitigeLigneForfait", nativeQuery = true)
     List<GeoLitigeLigneForfait> allLitigeLigneForfait(
             @Param("arg_lit_ref") String litRef);
+
+    @Transactional
+    @Modifying
+    void deleteAllByIdIn(List<String> id);
 }
