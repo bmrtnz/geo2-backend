@@ -60,4 +60,9 @@ public class GeoLitigeGraphQLService extends GeoAbstractGraphQLService<GeoLitige
         return ((GeoLitigeRepository) super.repository).allSupervisionLitige(type, code);
     }
 
+    @GraphQLQuery
+    public String genNumLot(String litigeID) {
+        return ((GeoLitigeRepository) super.repository).genNumLot(litigeID);
+    }
+
 }

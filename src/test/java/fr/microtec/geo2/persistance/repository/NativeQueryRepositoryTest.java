@@ -210,4 +210,9 @@ public class NativeQueryRepositoryTest {
         this.litigeLigneRepository.allLitigeLigneForfait("138306");
     }
 
+    @Test
+    public void testGenNumLot() {
+        this.litigeRepository.genNumLot("138306");
+    }
+
 }

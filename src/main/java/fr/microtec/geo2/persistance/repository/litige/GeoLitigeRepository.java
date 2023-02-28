@@ -20,4 +20,7 @@ public interface GeoLitigeRepository extends GeoRepository<GeoLitige, String> {
     List<GeoLitigeSupervision> allSupervisionLitige(
             @Param("arg_typ_search") String type,
             @Param("arg_cod_search") String code);
+
+    @Query(name = "Litige.genNumLot", nativeQuery = true)
+    String genNumLot(@Param("is_lit_ref") String litigeID);
 }
