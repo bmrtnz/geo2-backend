@@ -140,7 +140,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <named-native-query name="Litige.genNumLot">
         <query>
         <![CDATA[
-            select to_char(to_number(max(COALESCE(orl_lit,'00'))) + 1,'00')
+            select trim(to_char(to_number(max(COALESCE(orl_lit,'00'))) + 1,'00'))
             from GEO_LITIGE L , GEO_LITlig LL
             where L.LIT_REF = :is_lit_ref
             and LL.LIT_REF =L.LIT_REF
