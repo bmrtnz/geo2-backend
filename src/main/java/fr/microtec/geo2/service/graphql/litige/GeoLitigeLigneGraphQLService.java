@@ -77,4 +77,15 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
         return ((GeoLitigeLigneRepository) super.repository).allLitigeLigneForfait(litigeID);
     }
 
+    @GraphQLMutation
+    public GeoLitigeLigne saveLitigeLigne(GeoLitigeLigne litigeLigne, @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(litigeLigne, env);
+    }
+
+    @GraphQLMutation
+    public List<GeoLitigeLigne> saveAllLitigeLigne(List<GeoLitigeLigne> allLitigeLigne,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveAllEntities(allLitigeLigne, env);
+    }
+
 }
