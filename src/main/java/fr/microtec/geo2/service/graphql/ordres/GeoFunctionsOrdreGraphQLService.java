@@ -77,7 +77,12 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "ordreRef") String ordreRef,
             @GraphQLArgument(name = "articleRef") String articleRef,
             @GraphQLArgument(name = "societeCode") String societeCode) {
-        return this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+        FunctionResult res = this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+        if (res.getRes() == FunctionResult.RESULT_OK) {
+            String newligneRef = res.getData().get("new_orl_ref").toString();
+            this.repository.onChangeAchDevPu(newligneRef, societeCode);
+        }
+        return res;
     }
 
     @GraphQLQuery
@@ -91,7 +96,7 @@ public class GeoFunctionsOrdreGraphQLService {
         String newligneRef = res.getData().get("new_orl_ref").toString();
 
         // Update generated row with history values
-        if (res.getRes() == 1) {
+        if (res.getRes() == FunctionResult.RESULT_OK) {
             this.ordreLigneService.updateFromHistory(newligneRef, historyLigneRef);
 
             // set bassin
@@ -99,6 +104,9 @@ public class GeoFunctionsOrdreGraphQLService {
 
             // Manually generate logistique
             this.repository.fVerifLogistiqueOrdre(ordreRef);
+
+            // Update `ach_dev_pu`
+            this.repository.onChangeAchDevPu(newligneRef, societeCode);
         }
 
         return res;

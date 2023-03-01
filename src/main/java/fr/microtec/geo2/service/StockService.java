@@ -2,7 +2,6 @@ package fr.microtec.geo2.service;
 
 import java.util.List;
 
-import org.apache.commons.math3.analysis.function.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -132,6 +131,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             res = this.functionRepo.onChangeCdeNbCol(newligneRef, utilisateur.getUsername());
             res = this.functionRepo.setTransporteurBassin(newligneRef, societeId);
             res = this.functionRepo.fVerifLogistiqueOrdre(ordreId);
+            res = this.functionRepo.onChangeAchDevPu(newligneRef, societeId);
         }
 
         return res;

@@ -51,7 +51,9 @@ import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService.PATH_KEY;
 import lombok.Data;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class ProgramService {
 
@@ -723,27 +725,27 @@ public class ProgramService {
                                 if (ls_array_art_sa.get(ll_ind_sa).equals(ls_array_art.get(ll_ind))) {
                                     val cur_art = ls_array_art.get(ll_ind);
                                     val cur_art_sa = ls_array_art_sa.get(ll_ind_sa);
-                                    this.olRepo.findOne((root, cq, cb) -> cb.and(
+                                    List<GeoOrdreLigne> articlesSA = this.olRepo.findAll((root, cq, cb) -> cb.and(
                                             cb.equal(root.get("ordre").get("id"), ls_ord_ref_sa.get()),
-                                            cb.equal(root.get("article").get("id"), cur_art)))
-                                            .ifPresent(ligne -> {
-                                                ligne.setAchatPrixUnitaire(ld_prix_mini_sa);
-                                                ligne.setAchatUnite(this.baseTarifRepo.getOne("COLIS"));
-                                                ligne.setAchatDevise("EUR");
-                                                ligne.setAchatDeviseTaux(1d);
-                                                ligne.setAchatDevisePrixUnitaire(ld_prix_mini_sa);
-                                                try {
-                                                    this.olRepo.save(ligne);
-                                                    res.incrementPrixMiniCount();
-                                                } catch (Exception e) {
-                                                    res.getRow(ligne.getNumero())
-                                                            .ifPresent(r -> r.pushErreur(
-                                                                    "Erreur update prix mini pour ORD_REF: "
-                                                                            + ls_ord_ref_sa.get()
-                                                                            + ", ARTICLE: "
-                                                                            + cur_art_sa));
-                                                }
-                                            });
+                                            cb.equal(root.get("article").get("id"), cur_art)));
+                                    articlesSA.forEach(ligne -> {
+                                        ligne.setAchatPrixUnitaire(ld_prix_mini_sa);
+                                        ligne.setAchatUnite(this.baseTarifRepo.getOne("COLIS"));
+                                        ligne.setAchatDevise("EUR");
+                                        ligne.setAchatDeviseTaux(1d);
+                                        ligne.setAchatDevisePrixUnitaire(ld_prix_mini_sa);
+                                        try {
+                                            this.olRepo.save(ligne);
+                                            res.incrementPrixMiniCount();
+                                        } catch (Exception e) {
+                                            res.getRow(ligne.getNumero())
+                                                    .ifPresent(r -> r.pushErreur(
+                                                            "Erreur update prix mini pour ORD_REF: "
+                                                                    + ls_ord_ref_sa.get()
+                                                                    + ", ARTICLE: "
+                                                                    + cur_art_sa));
+                                        }
+                                    });
                                 }
                             }
                         }
@@ -770,7 +772,9 @@ public class ProgramService {
 
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
-            throw new RuntimeException(exception.getMessage());
+            var throwable = new RuntimeException(exception.getMessage());
+            log.error("Program import has failed: ", throwable);
+            throw throwable;
         }
 
         return res;

@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE GEO_ADMIN.FN_GEN_AVOIR_TESCO_SA (
+CREATE OR REPLACE PROCEDURE GEO_ADMIN.FN_GEN_ORDRE_TESCO_SA (
     arg_ord_ref_buk in GEO_ORDRE.ORD_REF%TYPE,
     res out number,
     msg out varchar2
@@ -24,18 +24,25 @@ BEGIN
     select  DEV_TX into ldc_dev_taux_GBP from GEO_DEVISE_REF
     where DEV_CODE_REF ='EUR' and DEV_CODE ='GBP';
 
-
-    select GEO_ORDRE.ORD_REF,TMP_ENTREP.SA_CLI_REF,SA_CEN_REF  INTO ls_ord_ref_buk,ls_sa_cli_ref, ls_sa_cen_ref
-    from GEO_ORDRE ,TMP_ENTREP
-    where 	GEO_ORDRE.SOC_CODE ='BUK' and
-                GEO_ORDRE.CLI_REF  ='007396'  and
-                GEO_ORDRE.ORD_REF =arg_ord_ref_buk and
-                GEO_ORDRE.CLI_REF =TMP_ENTREP.SPA_CLI_REF and
-                GEO_ORDRE.CEN_REF =TMP_ENTREP.SPA_CEN_REF and
-                not exists    (select 1
-                                			from GEO_AVOIR_BUK_SA
-							where  GEO_AVOIR_BUK_SA.ORD_REF_BUK = GEO_ORDRE.ORD_REF) and
-									  FACTURE_AVOIR ='A';
+    begin
+        select GEO_ORDRE.ORD_REF,TMP_ENTREP.SA_CLI_REF,SA_CEN_REF  INTO ls_ord_ref_buk,ls_sa_cli_ref, ls_sa_cen_ref
+        from GEO_ORDRE ,TMP_ENTREP
+        where 	GEO_ORDRE.SOC_CODE ='BUK' and
+                    GEO_ORDRE.CLI_REF  ='007396'  and
+                    GEO_ORDRE.REF_CLI like 'LM%' and
+                    GEO_ORDRE.ORD_REF =arg_ord_ref_buk and
+                    GEO_ORDRE.CLI_REF =TMP_ENTREP.SPA_CLI_REF and
+                    GEO_ORDRE.CEN_REF =TMP_ENTREP.SPA_CEN_REF and
+                    not exists    (select 1
+                                    from GEO_ORDRE_BUK_SA
+                                    where  GEO_ORDRE_BUK_SA.ORD_REF_BUK = GEO_ORDRE.ORD_REF) and
+                    not  exists (select 1 from GEO_ORDLOG L
+                                        where L.ORD_REF  = GEO_ORDRE.ORD_REF and
+                                                    L.FLAG_EXPED_FOURNNI ='N') and
+                                                                FACTURE_AVOIR ='F';
+    exception when no_data_found then
+        null;
+    end;
 
     IF ls_ord_ref_buk is null or 	ls_ord_ref_buk=''	then
         res := 1;
@@ -46,7 +53,7 @@ BEGIN
 
     select seq_ord_num.nextval into ll_ord_ref from dual;
 
-    ls_ord_ref_sa	:= to_char(ll_ord_ref,'000000');
+    ls_ord_ref_sa	:= to_char(ll_ord_ref);
     f_nouvel_ordre('SA', res ,msg, ls_nordre_sa);
     if res <> 1 then return; end if;
 
@@ -67,7 +74,7 @@ BEGIN
             SELECT ls_ord_ref_sa,'SA',cam_code,ls_nordre_sa,per_codeass,per_codecom,ls_sa_cli_ref,cli_code,ref_cli,ls_sa_cen_ref,cen_code,sco_code,pay_code,dev_code,ldc_dev_taux_GBP,inc_code,
             inc_lieu,trp_code,trp_bta_code,trp_pu*ldc_dev_taux_GBP,trp_prix_visible,ref_logistique,ref_document,trs_code,trs_bta_code,trs_pu,trs_prix_visible,trs_ville,crt_code,crt_bta_code,
             crt_pu,crt_prix_visible,depdatp,livdatp,credat,tvt_code,tvr_code,mpm_code,bpm_code,ent_echnbj,ent_echle,cov_code,remsf_tx,remhf_tx,totvte,totrem,totres,totfrd,totach,
-            totmob,tottrp,tottrs,totcrt,flexp,flliv,'O','N',ord_ref_pere,ent_factcom,instructions_logistique,mod_user,mod_date,valide,version_ordre,version_detail,version_ordre_date,
+            totmob,tottrp,tottrs,totcrt,flexp,flliv,'O',flfac,ord_ref_pere,ent_factcom,instructions_logistique,mod_user,mod_date,valide,version_ordre,version_detail,version_ordre_date,
             version_detail_date,ttr_code,lib_dlv,totpal,totcol,totpdsnet,totpdsbrut,NULL,datech,tot_ht_brut,tot_remsf,tot_remhf,NULL,NULL,compte,pied_ht_brut,pied_ht_rist,pied_ht_ctifl,pied_rist,pied_ht_net,pied_ctifl,
             pied_ht_final,pied_tva,pied_ttc,pied_ht_brut_0,pied_ht_brut_1,pied_ht_brut_2,pied_ht_rist_0,pied_ht_rist_1,pied_ht_rist_2,pied_ht_ctifl_0,pied_ht_ctifl_1,
             pied_ht_ctifl_2,pied_rist_0,pied_rist_1,pied_rist_2,pied_ht_net_0,pied_ht_net_1,pied_ht_net_2,pied_ctifl_0,pied_ctifl_1,pied_ctifl_2,pied_ht_final_0,pied_ht_final_1,pied_ht_final_2,
@@ -76,7 +83,7 @@ BEGIN
             pied_interfel,pied_interfel_0,pied_interfel_1,pied_interfel_2,pied_ht_interfel,pied_ht_interfel_0,pied_ht_interfel_1,pied_ht_interfel_2,came_code,camf_code,
             nordre_pere,totfad,tot_cde_nb_pal,tot_exp_nb_pal,comment_tva,code_chargement,etd_date,eta_date,etd_location,eta_location,ref_edi_ordre,pal_nb_soltrans,list_trp_code,list_nordre,
             list_ord_ref,date_envoi_syleg_trp,num_camion,ordre_chargement,'GBP',ldc_dev_taux_GBP,trp_dev_pu,ord_ref_palox_pere,ord_ref_palox_list_fils,file_cmr,frais_plateforme,totfrais_plateforme,
-            fldet_autom,ref_eta,ref_etd,'UKT',totfob,flannul,NULL,list_nordre_regul,ind_exclu_frais_pu,ind_pres_spec,totfrd_net,totpereq
+            fldet_autom,ref_eta,ref_etd,'UKT',totfob,flannul,list_nordre_comp,list_nordre_regul,ind_exclu_frais_pu,ind_pres_spec,totfrd_net,totpereq
             from GEO_ORDRE
             where ORD_REF =ls_ord_ref_buk;
     exception when others then
@@ -146,9 +153,9 @@ BEGIN
     end;
 
     begin
-        insert into GEO_AVOIR_BUK_SA (ORD_REF_SA,ORD_REF_BUK) VALUES (ls_ord_ref_sa,ls_ord_ref_buk);
+        insert into GEO_ORDRE_BUK_SA (ORD_REF_SA,ORD_REF_BUK) VALUES (ls_ord_ref_sa,ls_ord_ref_buk);
     exception when others then
-        msg := 'insert INTO GEO_AVOIR_BUK_SA' || SQLERRM;
+        msg := 'insert INTO GEO_ORDRE_BUK_SA' || SQLERRM;
         res := 0;
         rollback;
         return;
