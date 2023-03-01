@@ -12,6 +12,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         <![CDATA[
         SELECT
                 GEO_CLIENT.PAY_CODE,
+                GEO_PAYS.SCO_CODE,
                 sum(geo_client.enc_assure) "pays_permanent",
                 sum(geo_client.enc_depasse) "pays_temporaire",
                 sum(geo_client.enc_bw) "pays_bw",
@@ -35,7 +36,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             AND geo_pays.valide = 'O'
         GROUP BY
                 GEO_CLIENT.SOC_CODE,
-                GEO_CLIENT.SCO_CODE,
+                GEO_PAYS.SCO_CODE,
                 GEO_CLIENT.pay_code
         ]]>
         </query>

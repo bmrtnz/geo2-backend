@@ -23,6 +23,10 @@ public class GeoPaysDepassement {
     @JoinColumn(name = "pay_code", nullable = false, updatable = false, insertable = false)
     private GeoPays pays;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sco_code")
+    private GeoSecteur secteur;
+
     @Column(name = "pays_permanent")
     private Float clientsSommeAgrement;
 
