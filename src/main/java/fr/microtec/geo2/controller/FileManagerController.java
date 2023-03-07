@@ -134,7 +134,7 @@ public class FileManagerController {
      */
     @PostMapping("/execute/download")
     @ResponseBody
-    private HttpEntity<FileSystemResource> download(DownloadArgs downloadArgs) throws IOException {
+    public HttpEntity<FileSystemResource> download(DownloadArgs downloadArgs) throws IOException {
         boolean oneFile = downloadArgs.files.size() == 1;
         String basePath = this.fileSystemService.buildKeyIdPath(downloadArgs.key,
                 Optional.ofNullable(downloadArgs.id).orElse(""));
