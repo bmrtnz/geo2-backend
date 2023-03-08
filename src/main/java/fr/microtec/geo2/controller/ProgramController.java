@@ -61,7 +61,7 @@ public class ProgramController {
     /** If it exist, send the program in session, and then, free it */
     @GetMapping("/download")
     @ResponseBody
-    private ResponseEntity<byte[]> download() {
+    public ResponseEntity<byte[]> download() {
         HttpHeaders headers = new HttpHeaders();
         ByteArrayOutputStream out;
         try {
