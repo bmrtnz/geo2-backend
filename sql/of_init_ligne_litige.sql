@@ -206,9 +206,13 @@ begin
                     'N',
                     'N'
                 );
-                update geo_litlig
-                set valide = 'N'
-                where lil_ref = l_lil_ref;
+
+                if is_orl_lit is null then
+                    update geo_litlig
+                    set valide = 'N'
+                    where lil_ref = l_lil_ref;
+                end if;
+
                 commit;
             end if;
         end;
