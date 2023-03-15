@@ -80,6 +80,9 @@ public class GeoEnvois implements GeoAsDocument {
     @Column(name = "acces1")
     private String numeroAcces1;
 
+    @Column(name = "acces2")
+    private String numeroAcces2;
+
     @Column(name = "demdat")
     private LocalDateTime dateDemande;
 
