@@ -59,6 +59,13 @@ public class IndicateursCountService {
         return res;
     }
 
+    public IndicateurCountResponse countLitigeOuvert(String societeCode, String secteurCode, Boolean byUser) {
+        IndicateurCountResponse res = new IndicateurCountResponse();
+        res.setSecteur(secteurCode);
+        res.setCount(this.repository.countLitigeOuvert(res.getSecteur(), societeCode));
+        return res;
+    }
+
     /**
      * Try to retrieve the connected user `secteur` by `role`
      *

@@ -13,6 +13,7 @@ enum Indicateur {
     ClientsDepassementEncours,
     OrdresNonConfirmes,
     PlanningDepart,
+    LitigeOuvert,
 }
 
 @Service
@@ -47,6 +48,8 @@ public class GeoIndicateursGraphQLService {
                 return this.indicateursCountService.countOrdresNonConfirmes(societeCode, secteurCode, byUser);
             case PlanningDepart:
                 return this.indicateursCountService.countPlanningDepart(societeCode, secteurCode, byUser);
+            case LitigeOuvert:
+                return this.indicateursCountService.countLitigeOuvert(societeCode, secteurCode, byUser);
             default:
                 throw new RuntimeException(String.format("Indicator %1 does not exist", indicateur));
         }

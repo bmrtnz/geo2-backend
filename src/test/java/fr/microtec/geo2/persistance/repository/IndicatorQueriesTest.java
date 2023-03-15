@@ -44,4 +44,13 @@ public class IndicatorQueriesTest {
                 .getSingleResult();
     }
 
+    @Test
+    public void testCountLitigeOuvert() {
+        this.entityManager.getEntityManager()
+                .createNamedQuery("Indicateur.countLitigeOuvert")
+                .setParameter("arg_sco_code", "AFA")
+                .setParameter("arg_soc_code", "SA")
+                .getSingleResult();
+    }
+
 }
