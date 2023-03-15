@@ -523,13 +523,14 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     }
 
     /**
-     * Permet de connaitre le nombre de CSLignes associées a cette ordre via un
-     * count.
+     * Permet de connaitre le nombre de CQLignes associées (et évaluées) à cette
+     * ordre.
      *
      * @see GeoOrdre.getCqLitigeCount()
      */
     @LazyCollection(LazyCollectionOption.EXTRA)
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
+    @Where(clause = "evalue != 'N'")
     private Set<GeoCQLigne> cqLignes;
 
     public Integer getCqLignesCount() {
