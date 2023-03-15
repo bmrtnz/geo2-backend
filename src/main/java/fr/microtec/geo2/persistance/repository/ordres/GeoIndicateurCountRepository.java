@@ -45,4 +45,14 @@ public class GeoIndicateurCountRepository {
                 .getSingleResult();
     }
 
+    public BigDecimal countLitigeOuvert(
+            String secteurCode,
+            String societeCode) {
+        return (BigDecimal) this.entityManager
+                .createNamedQuery("Indicateur.countLitigeOuvert")
+                .setParameter("arg_sco_code", secteurCode)
+                .setParameter("arg_soc_code", societeCode)
+                .getSingleResult();
+    }
+
 }
