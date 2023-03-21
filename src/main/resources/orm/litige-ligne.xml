@@ -12,6 +12,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <![CDATA[
         SELECT
             ll.lil_ref,
+            ll.orl_lit,
             ol.art_ref,
             ll.cli_pu,
             ll.cli_qte,
