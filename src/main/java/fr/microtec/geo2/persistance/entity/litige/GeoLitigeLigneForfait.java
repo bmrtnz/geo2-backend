@@ -62,4 +62,7 @@ public class GeoLitigeLigneForfait {
     @Transient
     private Float forfaitResponsable;
 
+    @Transient
+    private Float taux;
+
 }
