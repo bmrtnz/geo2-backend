@@ -182,7 +182,7 @@ BEGIN
     declare
         ls_rc varchar2(500);
     begin
-        f_cree_avoir_fourni_v2(ls_old_ord_ref, ls_cur_ord_ref, is_cur_lit_ref, ls_cur_nordre, arg_soc_code, res, ls_rc);
+        f_cree_avoir_fourni_v2(ls_old_ord_ref, ls_cur_ord_ref, is_cur_lit_ref, ls_cur_nordre, arg_soc_code, arg_username, res, ls_rc);
         if ls_rc <> 'OK' then
             msg := 'création de l''avoir fournisseur ' || ls_rc;
             return;
