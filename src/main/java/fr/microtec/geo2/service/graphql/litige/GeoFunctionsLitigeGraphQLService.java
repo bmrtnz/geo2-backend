@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.repository.litige.GeoFunctionLitigeRepository;
+import fr.microtec.geo2.service.security.SecurityService;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 
@@ -14,10 +15,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoFunctionsLitigeGraphQLService {
 
     private final GeoFunctionLitigeRepository repository;
+    private final SecurityService securityService;
 
     public GeoFunctionsLitigeGraphQLService(
-            GeoFunctionLitigeRepository repository) {
+            GeoFunctionLitigeRepository repository,
+            SecurityService securityService) {
         this.repository = repository;
+        this.securityService = securityService;
     }
 
     @GraphQLQuery
@@ -30,6 +34,7 @@ public class GeoFunctionsLitigeGraphQLService {
         return this.repository.ofClotureLitigeClient(
                 litigeRef,
                 societeCode,
+                this.securityService.getUser().getNomUtilisateur(),
                 promptFraisAnnexe != null ? (promptFraisAnnexe ? "O" : "N") : "",
                 promptAvoirClient != null ? (promptAvoirClient ? "O" : "N") : "",
                 promptCreateAvoirClient != null ? (promptCreateAvoirClient ? "O" : "N") : "");
@@ -45,6 +50,7 @@ public class GeoFunctionsLitigeGraphQLService {
         return this.repository.ofClotureLitigeResponsable(
                 litigeRef,
                 societeCode,
+                this.securityService.getUser().getNomUtilisateur(),
                 promptFraisAnnexe != null ? (promptFraisAnnexe ? "O" : "N") : "",
                 promptAvoirResponsable != null ? (promptAvoirResponsable ? "O" : "N") : "",
                 promptCreateAvoirResponsable != null ? (promptCreateAvoirResponsable ? "O" : "N") : "");
@@ -61,6 +67,7 @@ public class GeoFunctionsLitigeGraphQLService {
         return this.repository.ofClotureLitigeGlobale(
                 litigeRef,
                 societeCode,
+                this.securityService.getUser().getNomUtilisateur(),
                 promptFraisAnnexe != null ? (promptFraisAnnexe ? "O" : "N") : "",
                 promptAvoirClient != null ? (promptAvoirClient ? "O" : "N") : "",
                 promptAvoirGlobal != null ? (promptAvoirGlobal ? "O" : "N") : "",
