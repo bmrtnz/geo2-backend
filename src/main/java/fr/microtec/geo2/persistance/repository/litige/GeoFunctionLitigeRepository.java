@@ -46,4 +46,10 @@ public interface GeoFunctionLitigeRepository {
             String is_cur_lit_ref,
             String is_orl_lit);
 
+    FunctionResult fCreeOrdreRefacturationTransporteur(
+            String arg_ord_ref_origine,
+            Float arg_mont_indemn,
+            String gs_soc_code,
+            String gs_username);
+
 }

@@ -106,4 +106,17 @@ public class GeoFunctionsLitigeGraphQLService {
                 numeroLot);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreRefacturationTransporteur(
+            String ordRefOrigine,
+            Float montIndemn,
+            String socCode,
+            String username) {
+        return this.repository.fCreeOrdreRefacturationTransporteur(
+                ordRefOrigine,
+                montIndemn,
+                socCode,
+                username);
+    }
+
 }

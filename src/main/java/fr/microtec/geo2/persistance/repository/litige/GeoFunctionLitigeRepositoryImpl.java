@@ -122,4 +122,21 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fCreeOrdreRefacturationTransporteur(
+            String arg_ord_ref_origine,
+            Float arg_mont_indemn,
+            String gs_soc_code,
+            String gs_username) {
+        FunctionQuery query = this.build("F_CREE_ORD_REFACT_TRSP");
+
+        query.attachInput("arg_ord_ref_origine", String.class, arg_ord_ref_origine);
+        query.attachInput("arg_mont_indemn", Float.class, arg_mont_indemn);
+        query.attachInput("gs_soc_code", String.class, gs_soc_code);
+        query.attachInput("gs_username", String.class, gs_username);
+        query.attachOutput("ls_ord_ref_refacturer", String.class);
+
+        return query.fetch();
+    }
+
 }

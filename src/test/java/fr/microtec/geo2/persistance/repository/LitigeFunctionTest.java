@@ -75,4 +75,14 @@ public class LitigeFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testFCreeOrdreRefacturationTransporteur() {
+        this.functionLitigeRepository
+                .fCreeOrdreRefacturationTransporteur(
+                        "000581",
+                        6.66f,
+                        "SA",
+                        "BRUNO");
+    }
+
 }
