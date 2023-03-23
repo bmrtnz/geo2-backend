@@ -13,6 +13,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
     public FunctionResult ofClotureLitigeClient(
             String is_cur_lit_ref,
             String arg_soc_code,
+            String arg_username,
             String prompt_frais_annexe,
             String prompt_avoir_client,
             String prompt_create_avoir_client) {
@@ -20,6 +21,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
 
         query.attachInput("is_cur_lit_ref", String.class, is_cur_lit_ref);
         query.attachInput("arg_soc_code", String.class, arg_soc_code);
+        query.attachInput("arg_username", String.class, arg_username);
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
         query.attachInput("prompt_create_avoir_client", String.class, prompt_create_avoir_client);
@@ -32,6 +34,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
     public FunctionResult ofClotureLitigeResponsable(
             String is_cur_lit_ref,
             String arg_soc_code,
+            String arg_username,
             String prompt_frais_annexe,
             String prompt_avoir_fourni,
             String prompt_create_avoir_fourni) {
@@ -39,6 +42,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
 
         query.attachInput("is_cur_lit_ref", String.class, is_cur_lit_ref);
         query.attachInput("arg_soc_code", String.class, arg_soc_code);
+        query.attachInput("arg_username", String.class, arg_username);
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_fourni", String.class, prompt_avoir_fourni);
         query.attachInput("prompt_create_avoir_fourni", String.class, prompt_create_avoir_fourni);
@@ -51,6 +55,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
     public FunctionResult ofClotureLitigeGlobale(
             String is_cur_lit_ref,
             String arg_soc_code,
+            String arg_username,
             String prompt_frais_annexe,
             String prompt_avoir_client,
             String prompt_avoir_global,
@@ -59,6 +64,7 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
 
         query.attachInput("is_cur_lit_ref", String.class, is_cur_lit_ref);
         query.attachInput("arg_soc_code", String.class, arg_soc_code);
+        query.attachInput("arg_username", String.class, arg_username);
         query.attachInput("prompt_frais_annexe", String.class, prompt_frais_annexe);
         query.attachInput("prompt_avoir_client", String.class, prompt_avoir_client);
         query.attachInput("prompt_avoir_global", String.class, prompt_avoir_global);

@@ -24,7 +24,7 @@ public class LitigeFunctionTest {
     @Test
     public void testOfClotureLitigeClient() {
         FunctionResult result = this.functionLitigeRepository
-                .ofClotureLitigeClient("004897", SOCIETE_SA, "", "", "");
+                .ofClotureLitigeClient("004897", SOCIETE_SA, "BRUNO", "", "", "");
 
         Assertions.assertNotNull(result);
     }
@@ -32,7 +32,7 @@ public class LitigeFunctionTest {
     @Test
     public void testOfClotureLitigeResponsable() {
         FunctionResult result = this.functionLitigeRepository
-                .ofClotureLitigeResponsable("004897", SOCIETE_SA, "", "", "");
+                .ofClotureLitigeResponsable("004897", SOCIETE_SA, "BRUNO", "", "", "");
 
         Assertions.assertNotNull(result);
     }
@@ -40,7 +40,7 @@ public class LitigeFunctionTest {
     @Test
     public void testOfClotureLitigeGlobale() {
         FunctionResult result = this.functionLitigeRepository
-                .ofClotureLitigeGlobale("004897", SOCIETE_SA, "", "", "", "");
+                .ofClotureLitigeGlobale("004897", SOCIETE_SA, "BRUNO", "", "", "", "");
 
         Assertions.assertNotNull(result);
     }
