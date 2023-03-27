@@ -59,4 +59,7 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_code_chargement") String codeChargement,
             @Param("arg_ord_original_ref") String ordreOriginal);
 
+    @Query(name = "Ordre.aBloquer", nativeQuery = true)
+    Character aBloquer(@Param("ls_ord_ref_replace") String ordreID);
+
 }

@@ -567,4 +567,43 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <!-- A bloquer -->
+  <named-native-query name="Ordre.aBloquer">
+    <query>
+    <![CDATA[
+        SELECT
+            'O'
+        FROM
+            GEO_ORDRE
+        WHERE
+            ((to_date(DEPDATP, 'DD/MM/YY') = to_date(sysdate, 'DD/MM/YY')
+                AND
+                    ( TO_CHAR(sysdate, 'HH24:MI:SS') ) > '14:30' )
+                OR (to_date(DEPDATP, 'DD/MM/YY') < to_date(sysdate, 'DD/MM/YY')) )
+            AND
+                ORD_REF =:ls_ord_ref_replace
+            AND
+                    NOT EXISTS (
+            SELECT
+                1
+            FROM
+                GEO_CLIENT
+            WHERE
+                GEO_ORDRE.CLI_REF = GEO_CLIENT.CLI_REF
+                AND
+                                    IND_COMM_DEBLOQ = 'O')
+            AND
+                    EXISTS (
+            SELECT
+                1
+            FROM
+                GEO_ENVOIS
+            WHERE
+                GEO_ENVOIS.FLU_CODE = 'ORDRE'
+                AND
+					 		GEO_ENVOIS.ORD_REF = GEO_ORDRE.ORD_REF)
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

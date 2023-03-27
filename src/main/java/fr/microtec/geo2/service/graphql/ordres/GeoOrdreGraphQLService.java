@@ -163,4 +163,9 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     public String descriptifRegroupement(@GraphQLContext GeoOrdre ordre) {
         return this.ordreService.fetchDescriptifRegroupement(ordre.getId());
     }
+
+    @GraphQLQuery
+    public Boolean aBloquer(@GraphQLContext GeoOrdre ordre) {
+        return this.ordreService.fetchABloquer(ordre);
+    }
 }
