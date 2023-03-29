@@ -215,4 +215,9 @@ public class NativeQueryRepositoryTest {
         this.litigeRepository.genNumLot("138306");
     }
 
+    @Test
+    public void testCountCauseConseq() {
+        this.litigeRepository.countCauseConseq("2089876");
+    }
+
 }

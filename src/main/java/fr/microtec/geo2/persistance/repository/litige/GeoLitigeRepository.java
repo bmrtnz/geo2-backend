@@ -23,4 +23,7 @@ public interface GeoLitigeRepository extends GeoRepository<GeoLitige, String> {
 
     @Query(name = "Litige.genNumLot", nativeQuery = true)
     String genNumLot(@Param("is_lit_ref") String litigeID);
+
+    @Query(name = "Litige.countCauseConseq", nativeQuery = true)
+    int[] countCauseConseq(@Param("is_ord_ref") String ordreID);
 }
