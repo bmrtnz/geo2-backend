@@ -180,7 +180,13 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                                               L2.EXP_PDS_NET = 0	and
           E.GEN_CODE = 'F' and
           geo_article.ESP_CODE = E.ESP_CODE) and
-          litige_fait.ORL_REF (+)= geo_ordlig.ORL_REF
+          litige_fait.ORL_REF (+)= geo_ordlig.ORL_REF AND
+            geo_ordlig.ORL_REF NOT IN (
+                SELECT ORL_REF
+                FROM GEO_LITIGE l, GEO_LITLIG ll
+                WHERE ll.LIT_REF = l.LIT_REF
+                AND l.ORD_REF_ORIGINE = :ra_ord_ref
+            )
           ORDER BY geo_ordlig.orl_lig ASC ) rest
     ]]>
     </query>
