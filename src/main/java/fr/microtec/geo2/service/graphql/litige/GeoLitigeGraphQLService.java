@@ -11,6 +11,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeAPayer;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeSupervision;
+import fr.microtec.geo2.persistance.repository.litige.GeoCountCauseConseq;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
@@ -66,7 +67,7 @@ public class GeoLitigeGraphQLService extends GeoAbstractGraphQLService<GeoLitige
     }
 
     @GraphQLQuery
-    public int[] countCauseConseq(String ordreID) {
+    public GeoCountCauseConseq countCauseConseq(String ordreID) {
         return ((GeoLitigeRepository) super.repository).countCauseConseq(ordreID);
     }
 

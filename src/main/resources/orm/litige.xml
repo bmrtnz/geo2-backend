@@ -149,18 +149,23 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </named-native-query>
 
     <!-- Litige cause/conseq count -->
-    <named-native-query name="Litige.countCauseConseq">
+    <named-native-query
+        name="Litige.countCauseConseq"
+        result-class= "fr.microtec.geo2.persistance.repository.litige.GeoCountCauseConseq"
+    >
         <query>
         <![CDATA[
-            SELECT
-                count(DISTINCT LL.lca_code) as cause,
-                count(DISTINCT LL.lcq_code) as consequence
-            FROM
-                GEO_LITIGE L ,
-                GEO_LITLIG LL
-            WHERE
-                L.LIT_REF = LL.LIT_REF
-                AND L.ORD_REF_ORIGINE = :is_ord_ref
+            SELECT rownum, rest.* FROM (
+                SELECT
+                    count(DISTINCT LL.lca_code) as cause,
+                    count(DISTINCT LL.lcq_code) as consequence
+                FROM
+                    GEO_LITIGE L ,
+                    GEO_LITLIG LL
+                WHERE
+                    L.LIT_REF = LL.LIT_REF
+                    AND L.ORD_REF_ORIGINE = :is_ord_ref
+            ) rest
         ]]>
         </query>
     </named-native-query>
