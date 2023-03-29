@@ -85,4 +85,9 @@ public class LitigeFunctionTest {
                         "BRUNO");
     }
 
+    @Test
+    public void testFCreateLitigeLinkedOrders() {
+        this.functionLitigeRepository.fCreateLitigeLinkedOrders("2089876");
+    }
+
 }

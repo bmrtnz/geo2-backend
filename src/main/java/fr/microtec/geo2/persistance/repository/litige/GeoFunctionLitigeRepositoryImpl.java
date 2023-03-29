@@ -139,4 +139,13 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult fCreateLitigeLinkedOrders(String is_ord_ref) {
+        FunctionQuery query = this.build("F_CREATE_LITIGE_LINKED_ORDERS");
+
+        query.attachInput("is_ord_ref", String.class, is_ord_ref);
+
+        return query.fetch();
+    }
+
 }

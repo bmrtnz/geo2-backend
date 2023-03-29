@@ -52,4 +52,6 @@ public interface GeoFunctionLitigeRepository {
             String gs_soc_code,
             String gs_username);
 
+    FunctionResult fCreateLitigeLinkedOrders(String is_ord_ref);
+
 }

@@ -119,4 +119,9 @@ public class GeoFunctionsLitigeGraphQLService {
                 username);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreateLitigeLinkedOrders(String ordreID) {
+        return this.repository.fCreateLitigeLinkedOrders(ordreID);
+    }
+
 }
