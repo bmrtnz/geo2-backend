@@ -165,4 +165,41 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         </query>
     </named-native-query>
 
+    <!-- count litige linked orders -->
+    <named-native-query name="Litige.countLinkedOrders">
+        <query>
+        <![CDATA[
+            SELECT
+                count(*)
+            FROM
+                GEO_ORDRE O1
+            WHERE
+                O1.CODE_CHARGEMENT IS NOT NULL
+                AND
+                                EXISTS (
+                SELECT
+                    1
+                FROM
+                    GEO_ORDRE O2
+                WHERE
+                    O1.CODE_CHARGEMENT = O2.CODE_CHARGEMENT
+                    AND
+                                            O1.DEPDATP = O2.DEPDATP
+                    AND
+                                            O2.ORD_REf =:is_ord_ref
+                    AND
+                                            O1.ORD_REF <> O2.ORD_REF )
+                AND
+                            NOT EXISTS (
+                SELECT
+                    1
+                FROM
+                    GEO_LITIGE L1
+                WHERE
+                    L1.ORD_REF_ORIGINE = O1.ORD_REF)
+
+        ]]>
+        </query>
+    </named-native-query>
+
 </entity-mappings>

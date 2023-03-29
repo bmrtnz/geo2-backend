@@ -70,4 +70,9 @@ public class GeoLitigeGraphQLService extends GeoAbstractGraphQLService<GeoLitige
         return ((GeoLitigeRepository) super.repository).countCauseConseq(ordreID);
     }
 
+    @GraphQLQuery
+    public int countLinkedOrders(String ordreID) {
+        return ((GeoLitigeRepository) super.repository).countLinkedOrders(ordreID);
+    }
+
 }

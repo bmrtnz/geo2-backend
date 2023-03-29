@@ -220,4 +220,9 @@ public class NativeQueryRepositoryTest {
         this.litigeRepository.countCauseConseq("2089876");
     }
 
+    @Test
+    public void testCountLinkedOrders() {
+        this.litigeRepository.countLinkedOrders("2089876");
+    }
+
 }
