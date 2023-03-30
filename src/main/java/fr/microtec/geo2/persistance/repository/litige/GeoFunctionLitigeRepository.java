@@ -34,7 +34,7 @@ public interface GeoFunctionLitigeRepository {
 
     FunctionResult ofSauveLitige(String arg_lit_ref);
 
-    FunctionResult ofChronoLitige(String is_cur_ord_ref);
+    FunctionResult ofChronoLitige(String is_cur_ord_ref, String arg_username);
 
     FunctionResult ofLitigeCtlClientInsert(
             String gs_soc_code,
@@ -43,6 +43,7 @@ public interface GeoFunctionLitigeRepository {
 
     FunctionResult ofInitLigneLitige(
             String arg_list_ref,
+            String arg_username,
             String is_cur_lit_ref,
             String is_orl_lit);
 

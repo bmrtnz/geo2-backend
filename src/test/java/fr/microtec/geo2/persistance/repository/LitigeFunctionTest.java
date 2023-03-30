@@ -54,7 +54,7 @@ public class LitigeFunctionTest {
 
     @Test
     public void testOfChronoLitige() {
-        FunctionResult result = this.functionLitigeRepository.ofChronoLitige("2089615");
+        FunctionResult result = this.functionLitigeRepository.ofChronoLitige("2089615", "BRUNO");
 
         Assertions.assertNotNull(result);
     }
@@ -70,7 +70,7 @@ public class LitigeFunctionTest {
     @Test
     public void testOfInitLigneLitige() {
         FunctionResult result = this.functionLitigeRepository
-                .ofInitLigneLitige("039172,039173", "002225", "99");
+                .ofInitLigneLitige("039172,039173", "BRUNO", "002225", "99");
 
         Assertions.assertNotNull(result);
     }

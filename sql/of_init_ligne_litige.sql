@@ -1,5 +1,6 @@
 CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_INIT_LIGNE_LITIGE" (
     arg_list_ref IN clob,
+    arg_username IN GEO_USER.nom_utilisateur%type,
     is_cur_lit_ref IN GEO_LITIGE.LIT_REF%TYPE,
     is_orl_lit IN varchar2,
     -- ib_redfac IN OUT boolean,
@@ -152,7 +153,8 @@ begin
                     -- ordre_rem_sf_tx_mdd,
                     -- article_mdd,
                     cli_ind_forf,
-                    res_ind_forf
+                    res_ind_forf,
+                    mod_user
                 ) values (
                     -- on initialise la nlle ligne
                     l_lil_ref,
@@ -204,7 +206,8 @@ begin
                     -- ldc_od_rem_sf_tx_mdd,
                     -- ls_mdd,
                     'N',
-                    'N'
+                    'N',
+                    arg_username
                 );
 
                 if is_orl_lit is null then

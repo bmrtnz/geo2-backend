@@ -81,7 +81,7 @@ public class GeoFunctionsLitigeGraphQLService {
 
     @GraphQLQuery
     public FunctionResult ofChronoLitige(String ordreOrigineRef) {
-        return this.repository.ofChronoLitige(ordreOrigineRef);
+        return this.repository.ofChronoLitige(ordreOrigineRef, this.securityService.getUser().getNomUtilisateur());
     }
 
     @GraphQLQuery
@@ -102,6 +102,7 @@ public class GeoFunctionsLitigeGraphQLService {
             String numeroLot) {
         return this.repository.ofInitLigneLitige(
                 ordreLigneList,
+                this.securityService.getUser().getNomUtilisateur(),
                 litigeID,
                 numeroLot);
     }
