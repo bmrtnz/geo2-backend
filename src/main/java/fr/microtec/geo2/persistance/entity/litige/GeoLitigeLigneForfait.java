@@ -22,6 +22,9 @@ public class GeoLitigeLigneForfait {
     @Column(name = "orl_lit")
     private String numeroGroupementLitige;
 
+    @Column(name = "orl_lig")
+    private String numero;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "art_ref")
     private GeoArticle article;
