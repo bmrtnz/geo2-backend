@@ -974,7 +974,7 @@ public class OrdreFunctionTest {
                 .fCreeOrdreReplacementLigne("199933", ordre_replacement, "1631127", "C64A2C", SOCIETE_SA);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
     @Test
