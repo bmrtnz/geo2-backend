@@ -12,6 +12,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
+import fr.microtec.geo2.service.ClientsService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
@@ -26,8 +27,13 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient, String> {
 
-    public GeoClientGraphQLService(GeoClientRepository clientRepository) {
+    private final ClientsService clientsService;
+
+    public GeoClientGraphQLService(
+            GeoClientRepository clientRepository,
+            ClientsService clientsService) {
         super(clientRepository, GeoClient.class);
+        this.clientsService = clientsService;
     }
 
     @GraphQLQuery
@@ -79,5 +85,22 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
             String secteur,
             String societe) {
         return ((GeoClientRepository) this.repository).allClientDepassementEnCours(secteur, societe);
+    }
+
+    @GraphQLQuery
+    public GeoClient duplicateClient(
+            String clientID,
+            String fromSocieteID,
+            String toSocieteID,
+            Boolean copyContacts,
+            Boolean copyContactsEntrepots,
+            Boolean copyEntrepots) {
+        return this.clientsService.duplicate(
+                clientID,
+                fromSocieteID,
+                toSocieteID,
+                copyContacts,
+                copyContactsEntrepots,
+                copyEntrepots);
     }
 }
