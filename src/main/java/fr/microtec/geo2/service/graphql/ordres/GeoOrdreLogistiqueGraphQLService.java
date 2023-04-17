@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -56,6 +57,12 @@ public class GeoOrdreLogistiqueGraphQLService extends GeoAbstractGraphQLService<
     public Long countOrdreLogistique(
             @GraphQLArgument(name = "search") String search) {
         return this.count(search);
+    }
+
+    @GraphQLMutation
+    public List<GeoOrdreLogistique> saveAllOrdreLogistique(List<GeoOrdreLogistique> allOrdreLogistique,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveAllEntities(allOrdreLogistique, env);
     }
 
 }
