@@ -567,4 +567,114 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <!-- Declaration fraude -->
+  <named-native-query
+    name="Ordre.allDeclarationFraude"
+    result-class="fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude"
+  >
+    <query>
+    <![CDATA[
+    SELECT rownum, rest.* FROM (
+        SELECT
+            geo_ordre.soc_code,
+            geo_ordre.nordre,
+            geo_ordre.depdatp,
+            geo_ordre.cli_code,
+            geo_ordre.cen_code,
+            geo_ordre.ref_cli,
+            geo_ordre.pay_code,
+            geo_pays.PAY_DESC,
+            geo_ordlog.fou_code,
+            geo_ordlog.datdep_fou_p,
+            sum(geo_ordlig.cde_nb_pal) AS geo_ordlig_cde_nb_pal,
+            sum(geo_ordlig.cde_nb_col) AS geo_ordlig_cde_nb_col,
+            geo_article_colis.var_code,
+            geo_article_colis.col_code,
+            to_char(geo_ordlog.datdep_fou_p, 'yyyymmdd') as datdep_fou_p_raw,
+            geo_ordre.mod_date,
+            GEO_ORDRE.CODE_CHARGEMENT,
+            GEO_ORDRE.ETD_DATE,
+            GEO_ORDRE.ETD_LOCATION,
+            GEO_ORDRE.ETA_DATE,
+            GEO_ORDRE.ETA_LOCATION,
+            geo_article_colis.col_prepese,
+            geo_ORDRE.INC_CODE,
+            geo_article_colis.pdnet_client,
+            geo_ordre.trp_code,
+            geo_ordre.comm_interne,
+            geo_article_colis.ori_desc
+        FROM
+            geo_ordlig,
+            geo_ordlog,
+            geo_ordre,
+            geo_article_colis,
+            geo_fourni,
+            geo_pays
+        WHERE
+            ( geo_ordlig.ord_ref = geo_ordre.ord_ref )
+            AND
+                ( geo_article_colis.art_ref = geo_ordlig.art_ref )
+            AND
+                ( geo_fourni.fou_code = geo_ordlog.fou_code )
+            AND
+                ( geo_ordlog.ord_ref = geo_ordlig.ord_ref )
+            AND
+                ( geo_ordlog.fou_code = geo_ordlig.fou_code )
+            AND
+                ( ( geo_ordre.sco_code = :ra_tiers_code )
+                AND
+                ( geo_ordre.soc_code = :ra_soc_code )
+                    AND
+                ( geo_ordlog.datdep_fou_p >= :ra_date_min
+                        AND geo_ordlog.datdep_fou_p <= :ra_date_max ) )
+            AND
+                geo_pays.PAY_CODE = geo_ordre.pay_code
+            AND
+                (geo_ordre.credat > :ra_date_crea
+                OR geo_ordre.mod_date > :ra_date_crea)
+            AND
+                (geo_ordre.cli_ref LIKE :ra_cli_ref)
+            AND
+                (geo_ordre.trp_code LIKE :ra_trp_code)
+            AND
+                (geo_ordlig.fou_code LIKE :ra_fou_code)
+            AND
+                ( geo_fourni.bac_code LIKE :ra_bac_code )
+            AND
+                (geo_ordre.cen_ref LIKE :ra_cen_ref )
+        GROUP BY
+            geo_ordre.soc_code,
+            geo_ordre.nordre,
+            geo_ordre.depdatp,
+            geo_ordre.cli_code,
+            geo_ordre.cen_code,
+                geo_ordre.ref_cli,
+            geo_ordre.pay_code,
+                geo_pays.PAY_DESC,
+            geo_ordlog.fou_code,
+            geo_ordlog.datdep_fou_p,
+            geo_article_colis.var_code,
+            geo_article_colis.col_code,
+            geo_ordre.mod_date,
+                GEO_ORDRE.CODE_CHARGEMENT,
+                GEO_ORDRE.ETD_DATE,
+                GEO_ORDRE.ETD_LOCATION,
+                GEO_ORDRE.ETA_DATE,
+                GEO_ORDRE.ETA_LOCATION,
+                geo_article_colis.col_prepese,
+                geo_ORDRE.INC_CODE,
+                geo_article_colis.pdnet_client,
+                geo_ordre.trp_code,
+                geo_ordre.comm_interne,
+                geo_article_colis.ori_desc
+        ORDER BY
+            to_char(geo_ordlog.datdep_fou_p, 'yyyymmdd') ASC,
+            geo_ordre.pay_code ASC,
+            geo_ordre.nordre ASC,
+            geo_ordlog.fou_code ASC,
+                geo_article_colis.var_code ASC ) rest
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

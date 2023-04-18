@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
@@ -58,5 +60,20 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_nordre") String numeroOrdre,
             @Param("arg_code_chargement") String codeChargement,
             @Param("arg_ord_original_ref") String ordreOriginal);
+
+    @Query(name = "Ordre.allDeclarationFraude", nativeQuery = true)
+    @Modifying
+    @Transactional
+    List<GeoDeclarationFraude> allDeclarationFraude(
+            @Param("ra_tiers_code") String secteur,
+            @Param("ra_soc_code") String societe,
+            @Param("ra_date_min") LocalDate dateMin,
+            @Param("ra_date_max") LocalDate dateMax,
+            @Param("ra_date_crea") LocalDateTime dateCreation,
+            @Param("ra_cli_ref") String client,
+            @Param("ra_trp_code") String transporteur,
+            @Param("ra_fou_code") String fournisseur,
+            @Param("ra_bac_code") String bureauAchat,
+            @Param("ra_cen_ref") String entrepot);
 
 }

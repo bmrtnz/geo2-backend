@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
@@ -126,6 +128,31 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLArgument(name = "campagne") String campagneID) {
         return this.documentService.loadDocuments(
                 this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID));
+    }
+
+    @GraphQLQuery
+    public List<GeoDeclarationFraude> allDeclarationFraude(
+            String secteur,
+            String societe,
+            LocalDate dateMin,
+            LocalDate dateMax,
+            LocalDateTime dateCreation,
+            String client,
+            String transporteur,
+            String fournisseur,
+            String bureauAchat,
+            String entrepot) {
+        return ((GeoOrdreRepository) this.repository).allDeclarationFraude(
+                secteur,
+                societe,
+                dateMin,
+                dateMax,
+                Optional.ofNullable(dateCreation).orElse(LocalDateTime.of(1970, 1, 1, 0, 0, 0, 0)),
+                Optional.ofNullable(client).orElse("%"),
+                Optional.ofNullable(transporteur).orElse("%"),
+                Optional.ofNullable(fournisseur).orElse("%"),
+                Optional.ofNullable(bureauAchat).orElse("%"),
+                Optional.ofNullable(entrepot).orElse("%"));
     }
 
     @GraphQLMutation
