@@ -142,17 +142,19 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             String fournisseur,
             String bureauAchat,
             String entrepot) {
-        return ((GeoOrdreRepository) this.repository).allDeclarationFraude(
+        List<GeoDeclarationFraude> res = ((GeoOrdreRepository) this.repository).allDeclarationFraude(
                 secteur,
                 societe,
                 dateMin,
                 dateMax,
-                Optional.ofNullable(dateCreation).orElse(LocalDateTime.of(1970, 1, 1, 0, 0, 0, 0)),
+                Optional.ofNullable(dateCreation != null ? dateCreation.plusNanos(1) : null)
+                        .orElse(LocalDateTime.of(1970, 1, 1, 0, 0, 0, 1)),
                 Optional.ofNullable(client).orElse("%"),
                 Optional.ofNullable(transporteur).orElse("%"),
                 Optional.ofNullable(fournisseur).orElse("%"),
                 Optional.ofNullable(bureauAchat).orElse("%"),
                 Optional.ofNullable(entrepot).orElse("%"));
+        return res;
     }
 
     @GraphQLMutation

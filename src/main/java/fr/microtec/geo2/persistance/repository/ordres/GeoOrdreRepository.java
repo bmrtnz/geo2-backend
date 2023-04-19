@@ -62,8 +62,6 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_ord_original_ref") String ordreOriginal);
 
     @Query(name = "Ordre.allDeclarationFraude", nativeQuery = true)
-    @Modifying
-    @Transactional
     List<GeoDeclarationFraude> allDeclarationFraude(
             @Param("ra_tiers_code") String secteur,
             @Param("ra_soc_code") String societe,

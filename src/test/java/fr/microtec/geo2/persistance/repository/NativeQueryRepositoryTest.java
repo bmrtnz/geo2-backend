@@ -1,10 +1,7 @@
 package fr.microtec.geo2.persistance.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -222,7 +219,8 @@ public class NativeQueryRepositoryTest {
                 "SA",
                 LocalDate.of(2023, 1, 1),
                 LocalDate.of(2023, 1, 2),
-                LocalDateTime.of(LocalDate.of(2023, 1, 1), LocalTime.now()),
+                // On evite le drame grace à la nano-seconde 💣
+                LocalDateTime.of(2023, 1, 1, 0, 0, 0, 1),
                 "007728",
                 "%",
                 "%",
