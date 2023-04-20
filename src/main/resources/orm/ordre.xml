@@ -672,6 +672,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre.pay_code ASC,
             geo_ordre.nordre ASC,
             geo_ordlog.fou_code ASC,
+            geo_article_colis.pdnet_client ASC,
                 geo_article_colis.var_code ASC ) rest
     ]]>
     </query>
