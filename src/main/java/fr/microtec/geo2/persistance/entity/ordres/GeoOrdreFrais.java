@@ -7,12 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
@@ -25,48 +23,49 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class GeoOrdreFrais extends ValidateAndModifiedEntity {
 
-	@Id
-	@GeneratedValue(generator = "GeoOrdreFraisGenerator")
-	@GenericGenerator(name = "GeoOrdreFraisGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
-			@Parameter(name = "sequenceName", value = "seq_orf_num"),
-			@Parameter(name = "mask", value = "FM099999")
-	})
-	@Column(name = "orf_ref")
-	private String id;
+    @Id
+    @GeneratedValue(generator = "GeoOrdreFraisGenerator")
+    @GenericGenerator(name = "GeoOrdreFraisGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "seq_orf_num"),
+            @Parameter(name = "mask", value = "FM099999")
+    })
+    @Column(name = "orf_ref")
+    private String id;
 
-	@Column(name = "fra_desc")
-	private String description;
+    @Column(name = "fra_desc")
+    private String description;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fra_code")
-	private GeoFrais frais;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fra_code")
+    private GeoFrais frais;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "dev_code")
-	private GeoDevise devise;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dev_code")
+    private GeoDevise devise;
 
-	@Column(name = "montant")
-	private Float montant;
+    @Column(name = "montant")
+    private Float montant;
 
-	@Column(name = "dev_tx")
-	private Float deviseTaux;
+    @Column(name = "dev_tx")
+    private Float deviseTaux;
 
-	@Column(name = "trp_code_plus")
-	private String codePlus;
+    @Column(name = "trp_code_plus")
+    private String codePlus;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ord_ref")
-	private GeoOrdre ordre;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ord_ref")
+    private GeoOrdre ordre;
 
-	@Transient
-	private Float montantTotal;
+    @Column(name = "ach_qte")
+    private Double achatQuantite;
 
-	@PostLoad
-	public void postLoad() {
+    @Column(name = "ach_pu")
+    private Double achatPrixUnitaire;
 
-		if (this.getMontant() != null & this.getDeviseTaux() != null)
-			this.setMontantTotal(this.getMontant() * this.getDeviseTaux());
+    @Column(name = "ach_dev_pu")
+    private Double achatDevisePrixUnitaire;
 
-	}
+    @Column(name = "montant_tot")
+    private Double montantTotal;
 
 }
