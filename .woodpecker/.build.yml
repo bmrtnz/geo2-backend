@@ -1,0 +1,20 @@
+# Build the image from the current Dockerfile
+
+matrix:
+    PLATFORM:
+        - linux/amd64
+    JAVA_VERSION:
+        - 11
+
+when:
+    event: push
+    branch: [master, next, "#ci"]
+
+platform: ${PLATFORM}
+
+pipeline:
+    - name: compile
+      image: eclipse-temurin:11
+      commands:
+          - ./mvnw compile
+    # share-images: TODO registry
