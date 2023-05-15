@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
@@ -128,6 +130,33 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
                 this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID));
     }
 
+    @GraphQLQuery
+    public List<GeoDeclarationFraude> allDeclarationFraude(
+            String secteur,
+            String societe,
+            LocalDate dateMin,
+            LocalDate dateMax,
+            LocalDateTime dateCreation,
+            String client,
+            String transporteur,
+            String fournisseur,
+            String bureauAchat,
+            String entrepot) {
+        List<GeoDeclarationFraude> res = ((GeoOrdreRepository) this.repository).allDeclarationFraude(
+                secteur,
+                societe,
+                dateMin,
+                dateMax,
+                Optional.ofNullable(dateCreation != null ? dateCreation.plusNanos(1) : null)
+                        .orElse(LocalDateTime.of(1970, 1, 1, 0, 0, 0, 1)),
+                Optional.ofNullable(client).orElse("%"),
+                Optional.ofNullable(transporteur).orElse("%"),
+                Optional.ofNullable(fournisseur).orElse("%"),
+                Optional.ofNullable(bureauAchat).orElse("%"),
+                Optional.ofNullable(entrepot).orElse("%"));
+        return res;
+    }
+
     @GraphQLMutation
     public GeoOrdre saveOrdre(GeoOrdre ordre, @GraphQLEnvironment ResolutionEnvironment env) {
         return this.ordreService.save(ordre, env);
@@ -162,5 +191,10 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     @GraphQLQuery
     public String descriptifRegroupement(@GraphQLContext GeoOrdre ordre) {
         return this.ordreService.fetchDescriptifRegroupement(ordre.getId());
+    }
+
+    @GraphQLQuery
+    public Boolean aBloquer(@GraphQLContext GeoOrdre ordre) {
+        return this.ordreService.fetchABloquer(ordre);
     }
 }

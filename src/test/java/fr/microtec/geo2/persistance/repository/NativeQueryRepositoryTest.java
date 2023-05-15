@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Import;
 
 import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
+import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
@@ -208,6 +210,38 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllLitigeLigneForfait() {
         this.litigeLigneRepository.allLitigeLigneForfait("138306");
+    }
+
+    @Test
+    public void testGenNumLot() {
+        this.litigeRepository.genNumLot("138306");
+    }
+
+    @Test
+    public void testCountCauseConseq() {
+        this.litigeRepository.countCauseConseq("2089876");
+    }
+
+    @Test
+    public void testCountLinkedOrders() {
+        this.litigeRepository.countLinkedOrders("2089876");
+    }
+
+    @Test
+    public void testAllDeclarationFraude() {
+        List<GeoDeclarationFraude> result = this.ordreRepository.allDeclarationFraude(
+                "F",
+                "SA",
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 1, 2),
+                // On evite le drame grace à la nano-seconde 💣
+                LocalDateTime.of(2023, 1, 1, 0, 0, 0, 1),
+                "007728",
+                "%",
+                "%",
+                "%",
+                "%");
+        assert (!result.isEmpty());
     }
 
 }

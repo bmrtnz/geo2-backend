@@ -84,10 +84,11 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
     }
 
     @Override
-    public FunctionResult ofChronoLitige(String is_cur_ord_ref) {
+    public FunctionResult ofChronoLitige(String is_cur_ord_ref, String arg_username) {
         FunctionQuery query = this.build("OF_CHRONO_LITIGE");
 
         query.attachInput("is_cur_ord_ref", String.class, is_cur_ord_ref);
+        query.attachInput("arg_username", String.class, arg_username);
         query.attachOutput("is_cur_lit_ref", String.class);
 
         return query.fetch();
@@ -103,6 +104,49 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         query.attachInput("gs_soc_code", String.class, gs_soc_code);
         query.attachInput("gs_ord_ref", String.class, gs_ord_ref);
         query.attachInput("arg_lit_ref", String.class, arg_lit_ref);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult ofInitLigneLitige(
+            String arg_list_ref,
+            String arg_username,
+            String is_cur_lit_ref,
+            String is_orl_lit) {
+        FunctionQuery query = this.build("OF_INIT_LIGNE_LITIGE");
+
+        query.attachInput("arg_list_ref", String.class, arg_list_ref);
+        query.attachInput("arg_username", String.class, arg_username);
+        query.attachInput("is_cur_lit_ref", String.class, is_cur_lit_ref);
+        query.attachInput("is_orl_lit", String.class, is_orl_lit);
+        query.attachOutput("ll_nb_ligne", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreeOrdreRefacturationTransporteur(
+            String arg_ord_ref_origine,
+            Float arg_mont_indemn,
+            String gs_soc_code,
+            String gs_username) {
+        FunctionQuery query = this.build("F_CREE_ORD_REFACT_TRSP");
+
+        query.attachInput("arg_ord_ref_origine", String.class, arg_ord_ref_origine);
+        query.attachInput("arg_mont_indemn", Float.class, arg_mont_indemn);
+        query.attachInput("gs_soc_code", String.class, gs_soc_code);
+        query.attachInput("gs_username", String.class, gs_username);
+        query.attachOutput("ls_ord_ref_refacturer", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreateLitigeLinkedOrders(String is_ord_ref) {
+        FunctionQuery query = this.build("F_CREATE_LITIGE_LINKED_ORDERS");
+
+        query.attachInput("is_ord_ref", String.class, is_ord_ref);
 
         return query.fetch();
     }

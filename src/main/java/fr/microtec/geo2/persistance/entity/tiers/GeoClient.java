@@ -30,11 +30,11 @@ import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueClient;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Table(name = "geo_client")
 @Entity
 @DynamicInsert
@@ -382,6 +382,10 @@ public class GeoClient extends ValidateModifiedPrewrittedEntity {
 
     @Formula("coalesce(enc_actuel,0) - (coalesce(enc_assure,0) + coalesce(enc_depasse,0) + coalesce(enc_bw,0))")
     public Float depassement;
+
+    public void updateCertifications(Set<GeoCertificationClient> certifications) {
+        this.certifications = certifications;
+    }
 
     public void setCertifications(Set<GeoCertificationClient> certifications) {
         certifications.forEach(c -> c.setClient(this));

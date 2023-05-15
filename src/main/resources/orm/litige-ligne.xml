@@ -12,6 +12,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     <![CDATA[
         SELECT
             ll.lil_ref,
+            ll.orl_lit,
             ol.art_ref,
             ll.cli_pu,
             ll.cli_qte,
@@ -22,7 +23,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             ll.res_bta_code,
             ll.res_qte,
             ll.res_dev_taux,
-            ll.res_dev_code
+            ll.res_dev_code,
+            ol.orl_lig
         FROM GEO_LITLIG ll, GEO_LITIGE l, GEO_ORDRE o, GEO_ORDLIG ol
         WHERE l.lit_ref = :arg_lit_ref
         AND ll.LIT_REF = l.LIT_REF
@@ -38,38 +40,45 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
-        SELECT rownum, rest.*
-        FROM (
-            SELECT
-                LL.lil_ref,
-                litige_fait.TOT_NB_COL,
-                litige_fait.TOT_PDS_NET,
-                litige_fait.TOT_NB_PAL
-            FROM
-                geo_litlig LL,
-                (
-                SELECT
-                    LL1.ORL_REF "ORL_REF",
-                    sum(LL1.CLI_NB_COL) "TOT_NB_COL",
-                                sum(LL1.CLI_PDS_NET) "TOT_PDS_NET",
-                                sum(LL1.CLI_NB_PAL) "TOT_NB_PAL"
-                FROM
-                    GEO_LITIGE L1 ,
-                    GEO_LITLIG LL1
-                WHERE
-                    L1.lit_ref = :ar_lit_ref
-                    AND
+        SELECT
+	rownum,
+	rest.*
+FROM
+	(
+	SELECT
+		LL.lil_ref,
+		litige_fait.TOT_NB_COL,
+		litige_fait.TOT_PDS_NET,
+		litige_fait.TOT_NB_PAL
+	FROM
+		geo_litlig LL,
+		(
+		SELECT
+			LL1.ORL_REF "ORL_REF",
+			sum(LL1.CLI_NB_COL) "TOT_NB_COL",
+			sum(LL1.CLI_PDS_NET) "TOT_PDS_NET",
+			sum(LL1.CLI_NB_PAL) "TOT_NB_PAL"
+		FROM
+			GEO_LITIGE L1 ,
+			GEO_LITLIG LL1
+		WHERE
+			L1.lit_ref = :ar_lit_ref
+			AND
                                 L1.LIT_REF = LL1.LIT_REF
-                    AND
+			AND
                                 LL1.ORL_LIT <> :ar_orl_lit
-                GROUP BY
-                    LL1.ORL_REF) litige_fait
-            WHERE
-                LL.lit_ref = :ar_lit_ref
-                AND
-                LL.ORL_LIT = :ar_orl_lit
-                AND
-                litige_fait.ORL_REF(+) = LL.ORL_REF ) rest
+		GROUP BY
+			LL1.ORL_REF) litige_fait
+	WHERE
+		LL.lit_ref = :ar_lit_ref
+		AND (
+                (:ar_orl_lit IS NULL
+			AND LL.ORL_LIT IS NULL)
+		OR
+				(:ar_orl_lit IS NOT NULL
+			AND LL.ORL_LIT = :ar_orl_lit)
+                )
+		AND litige_fait.ORL_REF(+) = LL.ORL_REF ) rest
     ]]>
     </query>
   </named-native-query>

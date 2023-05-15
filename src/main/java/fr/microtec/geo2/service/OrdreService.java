@@ -475,4 +475,8 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         return value;
     }
 
+    public Boolean fetchABloquer(GeoOrdre ordre) {
+        return !(this.ordreRepository.aBloquer(ordre.getId()) == null);
+    }
+
 }

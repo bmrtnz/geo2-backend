@@ -54,7 +54,7 @@ public class LitigeFunctionTest {
 
     @Test
     public void testOfChronoLitige() {
-        FunctionResult result = this.functionLitigeRepository.ofChronoLitige("2089615");
+        FunctionResult result = this.functionLitigeRepository.ofChronoLitige("2089615", "BRUNO");
 
         Assertions.assertNotNull(result);
     }
@@ -65,6 +65,29 @@ public class LitigeFunctionTest {
                 .ofLitigeCtlClientInsert("SA", "2086582", "138829");
 
         Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void testOfInitLigneLitige() {
+        FunctionResult result = this.functionLitigeRepository
+                .ofInitLigneLitige("039172,039173", "BRUNO", "002225", "99");
+
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void testFCreeOrdreRefacturationTransporteur() {
+        this.functionLitigeRepository
+                .fCreeOrdreRefacturationTransporteur(
+                        "000581",
+                        6.66f,
+                        "SA",
+                        "BRUNO");
+    }
+
+    @Test
+    public void testFCreateLitigeLinkedOrders() {
+        this.functionLitigeRepository.fCreateLitigeLinkedOrders("2089876");
     }
 
 }

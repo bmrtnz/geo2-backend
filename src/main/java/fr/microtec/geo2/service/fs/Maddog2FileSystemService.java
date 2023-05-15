@@ -34,7 +34,8 @@ public class Maddog2FileSystemService extends FileSystemService {
         GEO_CQ("/geo_cq/"),
         GEO_CQ_PHOTOS("/cqpho/"),
         GEO_CQ_PDF("/cqpdf/"),
-        GEO_IMPORT_GB("/geo_import_gb/");
+        GEO_IMPORT_GB("/geo_import_gb/"),
+        LITIGES("/Geo2_doc/litiges/");
 
         private String path;
 

@@ -81,7 +81,7 @@ public class GeoFunctionsLitigeGraphQLService {
 
     @GraphQLQuery
     public FunctionResult ofChronoLitige(String ordreOrigineRef) {
-        return this.repository.ofChronoLitige(ordreOrigineRef);
+        return this.repository.ofChronoLitige(ordreOrigineRef, this.securityService.getUser().getNomUtilisateur());
     }
 
     @GraphQLQuery
@@ -93,6 +93,36 @@ public class GeoFunctionsLitigeGraphQLService {
                 societeCode,
                 ordreRef,
                 litigeRef);
+    }
+
+    @GraphQLQuery
+    public FunctionResult ofInitLigneLitige(
+            String ordreLigneList,
+            String litigeID,
+            String numeroLot) {
+        return this.repository.ofInitLigneLitige(
+                ordreLigneList,
+                this.securityService.getUser().getNomUtilisateur(),
+                litigeID,
+                numeroLot);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fCreeOrdreRefacturationTransporteur(
+            String ordRefOrigine,
+            Float montIndemn,
+            String socCode,
+            String username) {
+        return this.repository.fCreeOrdreRefacturationTransporteur(
+                ordRefOrigine,
+                montIndemn,
+                socCode,
+                username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult fCreateLitigeLinkedOrders(String ordreID) {
+        return this.repository.fCreateLitigeLinkedOrders(ordreID);
     }
 
 }
