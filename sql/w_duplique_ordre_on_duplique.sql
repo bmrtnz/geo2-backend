@@ -48,6 +48,7 @@ AS
     idc_dev_tx varchar2(50);
     is_comm_interne varchar2(50);
     is_trp_bac_code varchar2(50);
+    is_inc_lieu varchar2(50);
 
     val_code_chargement varchar2(280);
     val_etd_location varchar2(50);
@@ -86,7 +87,8 @@ begin
         ETA_DATE,
         TRP_BAC_CODE,
         INSTRUCTIONS_LOGISTIQUE,
-        INC_CODE
+        INC_CODE,
+        INC_LIEU
     into
         is_cur_cli_ref,
         is_trp_code,
@@ -112,7 +114,8 @@ begin
         val_eta_date,
         is_trp_bac_code,
         ls_instructions_logistique,
-        is_inc_code
+        is_inc_code,
+        is_inc_lieu
     from GEO_ORDRE
     where ORD_REF = arg_ord_ref;
 
@@ -200,7 +203,8 @@ begin
             REF_ETD = val_ref_etd,
             REF_ETA = val_ref_eta,
             TRP_BAC_CODE = is_trp_bac_code,
-            INSTRUCTIONS_LOGISTIQUE =ls_instructions_logistique
+            INSTRUCTIONS_LOGISTIQUE =ls_instructions_logistique,
+            INC_LIEU = is_inc_lieu
         where ORD_REF = ls_ord_ref_new;
 
     If arg_inc_code = 'O' Then
