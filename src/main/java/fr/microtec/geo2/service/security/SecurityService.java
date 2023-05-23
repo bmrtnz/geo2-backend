@@ -1,6 +1,8 @@
 package fr.microtec.geo2.service.security;
 
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.text.Normalizer;
+import java.time.Duration;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -22,6 +25,9 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 public class SecurityService {
 
     private final AuthenticationManager authenticationManager;
+
+    @Value("${server.servlet.session.timeout}")
+    Duration timeout;
 
     public SecurityService(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -31,7 +37,8 @@ public class SecurityService {
      * Authenticate user.
      */
     public GeoUtilisateur login(String login, String password, HttpServletRequest request) {
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(normalizeLogin(login), password);
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(normalizeLogin(login),
+                password);
         GeoUtilisateur user = null;
 
         try {
@@ -48,6 +55,7 @@ public class SecurityService {
                 RequestContextHolder.currentRequestAttributes().getSessionId();
                 HttpSession session = request.getSession(true);
                 session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+                session.setMaxInactiveInterval((int) timeout.toSeconds());
             }
         } catch (BadCredentialsException | UsernameNotFoundException ex) {
             String msg = "Unknown error";
