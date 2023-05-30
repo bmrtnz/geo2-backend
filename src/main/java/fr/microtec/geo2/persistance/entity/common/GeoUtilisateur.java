@@ -102,6 +102,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
     @Column(name = "ind_visu_incot_log")
     private Boolean indicateurVisualisationIncotermFournisseur;
 
+    @Column(name = "periode")
+    private String periode;
+
     @Column(name = "flag_comment_stock")
     @Convert(converter = BooleanIntegerConverter.class)
     private Boolean commentaireStock;
