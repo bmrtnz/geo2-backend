@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -357,7 +358,7 @@ public class ProgramService {
                 String ls_dluo = "";
                 try {
                     LocalDateTime ls_bb_date = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue();
-                    String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM"));
+                    String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM").withLocale(Locale.ENGLISH));
                     String ls_day = StringUtils.padLeft(Integer.toString(ls_bb_date.getDayOfMonth()), "0", 2);
                     ls_dluo = "BB = " + ls_day + " " + ls_month + " ; JC = " + ls_jc;
                 } catch (Exception e) {
