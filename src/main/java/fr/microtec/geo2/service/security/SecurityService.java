@@ -26,11 +26,11 @@ public class SecurityService {
 
     private final AuthenticationManager authenticationManager;
 
-    @Value("${server.servlet.session.timeout}")
-    Duration timeout;
+    private Duration timeout;
 
     public SecurityService(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+        this.timeout = Duration.ofHours(2);
     }
 
     /**
