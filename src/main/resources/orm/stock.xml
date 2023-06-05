@@ -11,8 +11,8 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
+      SELECT rownum, REST.* FROM(
       SELECT
-        rownum,
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long_ref,
         geo2_art_desc.art_bio,
@@ -89,10 +89,12 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         SUM (geo_stock.qte_ini),
         0)
 
-                    "qte_opt_4"
+                    "qte_opt_4",
+        geo_stock_hebdo.QTE_HEBDO
       FROM
         geo_stock,
         geo_stock_consolid,
+        geo_stock_hebdo,
         geo_article,
         geo_fourni,
         avi_art_gestion,
@@ -111,6 +113,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_normalisation.ref_normalisation (+) = avi_art_gestion.ref_normalisation
         AND geo_article.art_ref (+) = geo2_art_desc.art_ref
         AND geo_stock_consolid.art_ref (+) = geo_stock.art_ref
+        AND geo_stock_hebdo.art_ref (+) = geo_stock.art_ref
         AND geo_stock.STO_REF_FROM IS NULL
         AND avi_art_cdc.esp_code LIKE :arg_espece
         AND avi_art_mat_prem.var_code LIKE :arg_variete
@@ -119,7 +122,6 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_emballage.col_code LIKE :arg_emballage
         AND geo_fourni.bac_code LIKE :arg_bureau_achat
       GROUP BY
-        rownum,
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long_ref,
         geo2_art_desc.art_bio,
@@ -140,7 +142,9 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         geo_stock.STO_STATUT,
         geo_stock.DATE_STATUT,
         geo_stock.PAL_CODE,
-        geo_stock_consolid.commentaire
+        geo_stock_consolid.commentaire,
+        geo_stock_hebdo.QTE_HEBDO
+        ) REST
     ]]>
     </query>
   </named-native-query>
