@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -140,14 +141,16 @@ public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite 
     private Integer prevision3j;
 
     public Integer getPrevision3j() {
-        return this.getQuantiteReservee() - this.getQuantiteReservee() - this.quantiteHebdomadaire * 3;
+        return this.getQuantiteReservee() - this.getQuantiteReservee()
+                - Optional.ofNullable(this.getQuantiteHebdomadaire()).orElse(0) * 3;
     }
 
     @Transient
     private Integer prevision7j;
 
     public Integer getPrevision7j() {
-        return this.getQuantiteReservee() - this.getQuantiteReservee() - this.quantiteHebdomadaire * 6;
+        return this.getQuantiteReservee() - this.getQuantiteReservee()
+                - Optional.ofNullable(this.getQuantiteHebdomadaire()).orElse(0) * 6;
     }
 
 }
