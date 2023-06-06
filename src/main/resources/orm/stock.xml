@@ -252,4 +252,32 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <named-native-query
+    name="Stock.allStockPreca"
+    result-class="fr.microtec.geo2.persistance.entity.stock.GeoPrecal"
+  >
+    <query>
+    <![CDATA[
+        SELECT *
+        FROM "GEO_PRECAL",
+            "GEO_PRECAL_MODEL",
+            "GEO_MODE_CULTURE"
+        WHERE
+            ( "GEO_PRECAL"."VAR_CODE" = "GEO_PRECAL_MODEL"."VAR_CODE" ) AND
+            ( "GEO_PRECAL"."CHOIX" = "GEO_PRECAL_MODEL"."CHOIX" ) AND
+            ( "GEO_PRECAL"."COLO" = "GEO_PRECAL_MODEL"."COLO" ) AND
+            ( "GEO_PRECAL"."SEMAINE" = :arg_semaine ) AND
+            ( "GEO_PRECAL"."VAR_CODE" LIKE :arg_var_code ) AND
+            ( "GEO_PRECAL"."FOU_CODE" LIKE :arg_fou_code ) AND
+            "GEO_PRECAL_MODEL"."ESPECE" = :arg_espece  and
+            "GEO_PRECAL_MODEL"."MODE_CULTURE" = "GEO_MODE_CULTURE"."REF"
+        ORDER BY "GEO_PRECAL"."VAR_CODE" ASC,
+            "GEO_PRECAL"."CHOIX" ASC,
+            "GEO_MODE_CULTURE"."REF" ASC,
+            "GEO_PRECAL"."COLO" ASC,
+            "GEO_PRECAL"."FOU_CODE" ASC
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

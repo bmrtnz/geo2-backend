@@ -244,4 +244,13 @@ public class NativeQueryRepositoryTest {
         assert (!result.isEmpty());
     }
 
+    @Test
+    public void testAllStockPreca() {
+        this.stockRepository.allPreca(
+                "2323",
+                "ARIANE",
+                "MARTINOISE",
+                "POMME");
+    }
+
 }
