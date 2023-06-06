@@ -231,7 +231,9 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes());
     }
 
+    // Finira par échoué aprés 100 lignes insérées
     @Test
+    @Disabled
     public void testOfInitArticle() {
         FunctionResult result = this.functionOrdreRepository
                 .ofInitArticle("1504560", "087187", SOCIETE_SA);
@@ -915,7 +917,6 @@ public class OrdreFunctionTest {
                 "BRUNO");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
     @Test

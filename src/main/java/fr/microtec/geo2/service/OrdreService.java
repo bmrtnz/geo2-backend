@@ -101,6 +101,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         if (ordreChunk.getId() == null) {
             if (ordreChunk.getNumero() == null)
                 ordreChunk.setNumero(this.fetchNumero(ordreChunk.getSociete()));
+            ordreChunk.setFlagGeo2(true);
             return this.ordreRepository.save(this.withDefaults(ordreChunk));
         } else {
             Optional<GeoOrdre> ordre = this.ordreRepository.findById(ordreChunk.getId());
