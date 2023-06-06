@@ -141,7 +141,7 @@ public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite 
     private Integer prevision3j;
 
     public Integer getPrevision3j() {
-        return this.getQuantiteReservee() - this.getQuantiteReservee()
+        return this.getQuantiteInitiale() - this.getQuantiteReservee()
                 - Optional.ofNullable(this.getQuantiteHebdomadaire()).orElse(0) * 3;
     }
 
@@ -149,7 +149,7 @@ public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite 
     private Integer prevision7j;
 
     public Integer getPrevision7j() {
-        return this.getQuantiteReservee() - this.getQuantiteReservee()
+        return this.getQuantiteInitiale() - this.getQuantiteReservee()
                 - Optional.ofNullable(this.getQuantiteHebdomadaire()).orElse(0) * 6;
     }
 
