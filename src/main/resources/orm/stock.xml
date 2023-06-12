@@ -280,4 +280,20 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <named-native-query
+    name="Stock.allPrecaEspece"
+  >
+    <query>
+    <![CDATA[
+        SELECT
+            DISTINCT
+        PM.ESPECE
+        FROM
+            GEO_PRECAL_MODEL PM
+        ORDER BY
+            PM.ESPECE
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>
