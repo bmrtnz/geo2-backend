@@ -37,5 +37,6 @@ public interface GeoStockRepository extends GeoRepository<GeoStock, String> {
             @Param("arg_semaine") String semaine,
             @Param("arg_var_code") String codeVariete,
             @Param("arg_fou_code") String codeFournisseur,
-            @Param("arg_espece") String codeEspece);
+            @Param("arg_espece") String codeEspece,
+            @Param("arg_mode_culture") String codeModeCulture);
 }

@@ -95,13 +95,15 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
             @GraphQLArgument(name = "semaine") String semaine,
             @GraphQLArgument(name = "codeEspece") String codeEspece,
             @GraphQLArgument(name = "codeVariete", defaultValue = "%") String codeVariete,
-            @GraphQLArgument(name = "codeFournisseur", defaultValue = "%") String codeFournisseur) {
+            @GraphQLArgument(name = "codeFournisseur", defaultValue = "%") String codeFournisseur,
+            @GraphQLArgument(name = "codeModeCulture", defaultValue = "%") String codeModeCulture) {
         return ((GeoStockRepository) this.repository)
                 .allPreca(
                         semaine,
                         Optional.ofNullable(codeVariete).orElse("%"),
                         Optional.ofNullable(codeFournisseur).orElse("%"),
-                        codeEspece);
+                        codeEspece,
+                        Optional.ofNullable(codeModeCulture).orElse("%"));
     }
 
     @GraphQLQuery

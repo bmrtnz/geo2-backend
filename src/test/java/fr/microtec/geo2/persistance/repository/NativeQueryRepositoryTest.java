@@ -253,7 +253,8 @@ public class NativeQueryRepositoryTest {
                 "2323",
                 "ARIANE",
                 "MARTINOISE",
-                "POMME");
+                "POMME",
+                "%");
     }
 
     @Test
