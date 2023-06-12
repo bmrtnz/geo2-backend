@@ -27,6 +27,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.stock.GeoPrecalModelRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEntrepotRepository;
@@ -57,6 +58,8 @@ public class NativeQueryRepositoryTest {
     private GeoLitigeLigneRepository litigeLigneRepository;
     @Autowired
     private GeoPaysRepository paysRepository;
+    @Autowired
+    private GeoPrecalModelRepository precalModelRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -251,6 +254,16 @@ public class NativeQueryRepositoryTest {
                 "ARIANE",
                 "MARTINOISE",
                 "POMME");
+    }
+
+    @Test
+    public void testAllPrecaEspece() {
+        this.precalModelRepository.allPrecaEspece();
+    }
+
+    @Test
+    public void testAllPrecaVariete() {
+        this.precalModelRepository.allPrecaVariete("POIRE");
     }
 
 }
