@@ -261,4 +261,9 @@ public class NativeQueryRepositoryTest {
         this.precalModelRepository.allPrecaEspece();
     }
 
+    @Test
+    public void testAllPrecaVariete() {
+        this.precalModelRepository.allPrecaVariete("POIRE");
+    }
+
 }

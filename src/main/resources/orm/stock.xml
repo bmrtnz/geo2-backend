@@ -296,4 +296,29 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <named-native-query
+    name="Stock.allPrecaVariete"
+    result-class="fr.microtec.geo2.persistance.entity.stock.GeoPrecalModelVariete"
+  >
+    <query>
+    <![CDATA[
+        SELECT
+            PM.VAR_CODE AS VAR_CODE,
+            V.VAR_DESC AS VAR_DESC
+        FROM
+            GEO_VARIET V,
+            GEO_PRECAL_MODEL PM
+        WHERE
+            V.VAR_CODE (+)= PM.VAR_CODE
+            AND
+        PM.ESPECE = :arg_espece
+        GROUP BY
+            PM.VAR_CODE,
+            V.VAR_DESC
+        ORDER BY
+            PM.VAR_CODE ASC
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

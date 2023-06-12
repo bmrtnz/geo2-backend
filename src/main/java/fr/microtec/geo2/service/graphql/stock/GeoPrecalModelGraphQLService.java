@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.stock.GeoPrecalModel;
+import fr.microtec.geo2.persistance.entity.stock.GeoPrecalModelVariete;
 import fr.microtec.geo2.persistance.repository.stock.GeoPrecalModelRepository;
 import fr.microtec.geo2.service.StockService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -47,6 +48,11 @@ public class GeoPrecalModelGraphQLService extends GeoAbstractGraphQLService<GeoP
     @GraphQLQuery
     public List<String> allPrecaEspece() {
         return ((GeoPrecalModelRepository) this.repository).allPrecaEspece();
+    }
+
+    @GraphQLQuery
+    public List<GeoPrecalModelVariete> allPrecaVariete(String espece) {
+        return ((GeoPrecalModelRepository) this.repository).allPrecaVariete(espece);
     }
 
 }
