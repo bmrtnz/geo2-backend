@@ -16,8 +16,10 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.security.SecurityService;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> {
 
     private final EntityManager entityManager;
@@ -82,7 +84,11 @@ public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> 
             return cb.and(whereOrdre, whereTraite);
         };
         List<GeoEnvois> entities = this.repository.findAll(spec);
-        this.repository.deleteAll(entities);
+        try {
+            this.repository.deleteAll(entities);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
 }
