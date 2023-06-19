@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -85,6 +86,9 @@ public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite 
     @Column(name = "commentaire")
     private String commentaire;
 
+    @Column(name = "qte_hebdo")
+    private Integer quantiteHebdomadaire;
+
     @Column(name = "qte_ini_1")
     private Integer quantiteInitiale1;
     @Column(name = "qte_res_1")
@@ -131,6 +135,22 @@ public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite 
                 + this.getQuantiteReservee2()
                 + this.getQuantiteReservee3()
                 + this.getQuantiteReservee4();
+    }
+
+    @Transient
+    private Integer prevision3j;
+
+    public Integer getPrevision3j() {
+        return this.getQuantiteInitiale() - this.getQuantiteReservee()
+                - Optional.ofNullable(this.getQuantiteHebdomadaire()).orElse(0) * 3;
+    }
+
+    @Transient
+    private Integer prevision7j;
+
+    public Integer getPrevision7j() {
+        return this.getQuantiteInitiale() - this.getQuantiteReservee()
+                - Optional.ofNullable(this.getQuantiteHebdomadaire()).orElse(0) * 6;
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.stock.GeoLigneReservation;
+import fr.microtec.geo2.persistance.entity.stock.GeoPrecal;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockQuantite;
@@ -87,6 +88,22 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
                         Optional.ofNullable(modeCulture).orElse("%"),
                         Optional.ofNullable(emballage).orElse("%"),
                         Optional.ofNullable(bureauAchat).orElse("%"));
+    }
+
+    @GraphQLQuery
+    public List<GeoPrecal> allPreca(
+            @GraphQLArgument(name = "semaine") String semaine,
+            @GraphQLArgument(name = "codeEspece") String codeEspece,
+            @GraphQLArgument(name = "codeVariete", defaultValue = "%") String codeVariete,
+            @GraphQLArgument(name = "codeFournisseur", defaultValue = "%") String codeFournisseur,
+            @GraphQLArgument(name = "codeModeCulture", defaultValue = "%") String codeModeCulture) {
+        return ((GeoStockRepository) this.repository)
+                .allPreca(
+                        semaine,
+                        Optional.ofNullable(codeVariete).orElse("%"),
+                        Optional.ofNullable(codeFournisseur).orElse("%"),
+                        codeEspece,
+                        Optional.ofNullable(codeModeCulture).orElse("%"));
     }
 
     @GraphQLQuery
