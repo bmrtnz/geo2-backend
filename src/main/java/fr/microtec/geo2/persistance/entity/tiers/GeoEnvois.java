@@ -71,6 +71,9 @@ public class GeoEnvois implements GeoAsDocument {
     @JoinColumn(name = "flu_code")
     private GeoFlux flux;
 
+    @Column(name = "fluvar")
+    private String variationFlux;
+
     @Column(name = "tie_code")
     private String codeTiers;
 
