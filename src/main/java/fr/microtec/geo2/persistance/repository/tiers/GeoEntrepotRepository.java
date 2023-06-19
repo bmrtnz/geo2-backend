@@ -51,5 +51,5 @@ public interface GeoEntrepotRepository extends GeoRepository<GeoEntrepot, String
 
     Optional<GeoEntrepot> getOneByCode(String code);
 
-    Optional<GeoEntrepot> getOneByCodeAndSocieteId(String code, String societeId);
+    Optional<GeoEntrepot> getOneByCodeAndSocieteIdAndClientId(String code, String societeId, String clientId);
 }

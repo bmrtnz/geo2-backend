@@ -135,14 +135,12 @@ public class GeoEntrepotGraphQLService extends GeoAbstractGraphQLService<GeoEntr
     }
 
     @GraphQLQuery
-    public Optional<GeoEntrepot> getEntrepotByCodeAndSocieteId(
+    public Optional<GeoEntrepot> getEntrepotByCodeAndSocieteIdAndClientId(
             @GraphQLArgument(name = "code") String code,
-            @GraphQLArgument(name = "societeId") String societeId) {
-        Optional<GeoEntrepot> entrepot = ((GeoEntrepotRepository) this.repository)
-                .getOneByCodeAndSocieteId(code, societeId);
-        if (entrepot.isEmpty())
-            return ((GeoEntrepotRepository) this.repository).getOneByCode(code);
-        return entrepot;
+            @GraphQLArgument(name = "societeId") String societeId,
+            @GraphQLArgument(name = "clientId") String clientId) {
+        return ((GeoEntrepotRepository) this.repository)
+                .getOneByCodeAndSocieteIdAndClientId(code, societeId, clientId);
     }
 
 }
