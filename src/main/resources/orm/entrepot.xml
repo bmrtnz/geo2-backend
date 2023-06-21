@@ -298,7 +298,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         PI2.ESP_CODE,
         E.CEN_REF,
         T.SUM_QTT,
-        F.FOU_CODE || ' - ' || F.RAISOC AS STATION
+        F.FOU_CODE || ' - ' || F.RAISOC AS STATION,
+        coalesce(ENTREE-SORTIE-PI1.QTE_INV,0) "SOLDE"
     FROM
         GEO_ENTREP E,
         GEO_CLIENT C,
