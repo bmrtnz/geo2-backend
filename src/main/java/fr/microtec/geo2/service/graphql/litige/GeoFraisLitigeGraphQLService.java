@@ -37,8 +37,9 @@ public class GeoFraisLitigeGraphQLService extends GeoAbstractGraphQLService<GeoF
 
     @GraphQLQuery
     public List<GeoFraisLitige> allFraisLitigeList(
-            @GraphQLArgument(name = "search") String search) {
-        return this.getAll(search);
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery

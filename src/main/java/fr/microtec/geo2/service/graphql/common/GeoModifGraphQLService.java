@@ -26,43 +26,40 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModification, BigDecimal> {
 
-	private final ModificationService modificationService;
+    private final ModificationService modificationService;
 
-	public GeoModifGraphQLService(
-		GeoModifRepository repository,
-		ModificationService modificationService
-	) {
-		super(repository, GeoModification.class);
-		this.modificationService = modificationService;
-	}
+    public GeoModifGraphQLService(
+            GeoModifRepository repository,
+            ModificationService modificationService) {
+        super(repository, GeoModification.class);
+        this.modificationService = modificationService;
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoModification> allModification(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoModification> allModification(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public List<GeoModification> listModification(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getAll(search);
-	}
+    @GraphQLQuery
+    public List<GeoModification> listModification(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoModification> getModification(
-			@GraphQLArgument(name = "id") BigDecimal id
-	) {
-		return super.getOne(id);
-  }
+    @GraphQLQuery
+    public Optional<GeoModification> getModification(
+            @GraphQLArgument(name = "id") BigDecimal id) {
+        return super.getOne(id);
+    }
 
-  @GraphQLMutation
-	public GeoModification saveModification(GeoModification modification, @GraphQLEnvironment ResolutionEnvironment env) {
-		return this.saveEntity(this.modificationService.prepare(modification), env);
-	}
+    @GraphQLMutation
+    public GeoModification saveModification(GeoModification modification,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveEntity(this.modificationService.prepare(modification), env);
+    }
 
 }

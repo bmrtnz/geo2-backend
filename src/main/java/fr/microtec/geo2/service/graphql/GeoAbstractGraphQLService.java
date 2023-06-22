@@ -99,12 +99,22 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
      */
     @Deprecated
     protected RelayPage<T> getPage(final String search, Pageable pageable, final ResolutionEnvironment env) {
-        return this.getPage(search, pageable, CustomUtils.parseSelectFromEnv(env));
+        return this.getPage(search, pageable, CustomUtils.parseSelectFromPagedEnv(env));
     }
 
+    protected List<T> getUnpaged(final String search, final ResolutionEnvironment env) {
+        Specification<T> spec = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
+        Set<String> fields = CustomUtils.parseSelectFromEnv(env);
+        return this.repository.findAllWithPaginations(spec, Pageable.unpaged(), this.clazz, fields);
+    }
+
+    /**
+     * @deprecated This implementation will fetch all fields of the entity
+     *             Use `{@link getUnpaged}` instead
+     */
+    @Deprecated
     protected List<T> getAll(final String search) {
         val tSpecification = (StringUtils.hasText(search)) ? this.parseSearch(search) : null;
-
         return this.repository.findAll(tSpecification);
     }
 

@@ -77,7 +77,7 @@ public class GeoPaysGraphQLService extends GeoAbstractGraphQLService<GeoPays, St
     public List<GeoPays> allPaysList(
             @GraphQLArgument(name = "search") String search,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.getAll(search);
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery

@@ -36,8 +36,9 @@ public class GeoLitigeCauseGraphQLService extends GeoAbstractGraphQLService<GeoL
 
     @GraphQLQuery
     public List<GeoLitigeCause> allLitigeCauseList(
-            @GraphQLArgument(name = "search") String search) {
-        return this.getAll(search);
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery

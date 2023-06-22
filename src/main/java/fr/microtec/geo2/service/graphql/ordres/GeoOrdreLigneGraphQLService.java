@@ -90,7 +90,7 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
     public List<GeoOrdreLigne> allOrdreLigneList(
             @GraphQLArgument(name = "search") String search,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.getAll(search);
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery

@@ -36,8 +36,9 @@ public class GeoLitigeConsequenceGraphQLService extends GeoAbstractGraphQLServic
 
     @GraphQLQuery
     public List<GeoLitigeConsequence> allLitigeConsequenceList(
-            @GraphQLArgument(name = "search") String search) {
-        return this.getAll(search);
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery
