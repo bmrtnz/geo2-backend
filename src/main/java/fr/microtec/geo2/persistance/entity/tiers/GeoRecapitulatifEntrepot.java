@@ -7,11 +7,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class GeoRecapitulatifEntrepot extends GeoSupervisionPalox {
 
-  @Column(name = "station")
-	String station;
+    @Column(name = "station")
+    String station;
+
+    @Column(name = "solde")
+    Integer solde;
 
 }
