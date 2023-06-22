@@ -237,8 +237,12 @@ public class CustomUtils {
         return arg;
     }
 
-    public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env) {
+    public static Set<String> parseSelectFromPagedEnv(final ResolutionEnvironment env) {
         return CustomUtils.parseSelectFromEnv(env, "edges/node/**");
+    }
+
+    public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env) {
+        return CustomUtils.parseSelectFromEnv(env, "**");
     }
 
     public static Set<String> parseSelectFromEnv(final ResolutionEnvironment env, final String search) {

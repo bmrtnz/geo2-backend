@@ -51,7 +51,7 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
     public RelayPage<GeoOrdreLigne> fetchOrdreLignesTotauxDetail(String search, Pageable pageable,
             final ResolutionEnvironment env) {
 
-        Set<String> fields = CustomUtils.parseSelectFromEnv(env);
+        Set<String> fields = CustomUtils.parseSelectFromPagedEnv(env);
         Specification<GeoOrdreLigne> spec = ((Specification<GeoOrdreLigne>) CriteriaUtils.groupedBySelection(fields));
 
         if (search != null && !search.isBlank())
@@ -74,7 +74,7 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
 
     public RelayPage<GeoOrdreLigne> fetchAllMarge(String search, Pageable pageable, final ResolutionEnvironment env) {
 
-        Set<String> fields = CustomUtils.parseSelectFromEnv(env);
+        Set<String> fields = CustomUtils.parseSelectFromPagedEnv(env);
 
         return this.getPage(search, pageable, fields, summaries -> {
             CriteriaQuery<?> query = CriteriaUtils.createSummariesQuery(
