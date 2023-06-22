@@ -46,8 +46,9 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
 
     @GraphQLQuery
     public List<GeoLitigeLigne> allLitigeLigneList(
-            @GraphQLArgument(name = "search") String search) {
-        return this.getAll(search);
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery

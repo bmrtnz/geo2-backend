@@ -60,8 +60,10 @@ public class GeoTransporteurGraphQLService extends GeoAbstractGraphQLService<Geo
     }
 
     @GraphQLQuery
-    public List<GeoTransporteur> allTransporteurList(@GraphQLArgument(name = "search") String search) {
-        return this.getAll(search);
+    public List<GeoTransporteur> allTransporteurList(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
     }
 
 }

@@ -38,8 +38,9 @@ public class GeoFournisseurGraphQLService extends GeoAbstractGraphQLService<GeoF
 
     @GraphQLQuery
     public List<GeoFournisseur> allFournisseurList(
-            @GraphQLArgument(name = "search") String search) {
-        return this.getAll(search);
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
     }
 
     @GraphQLQuery

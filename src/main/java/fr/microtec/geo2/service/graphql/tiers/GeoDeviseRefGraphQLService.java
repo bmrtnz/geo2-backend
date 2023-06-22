@@ -24,32 +24,29 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Secured("ROLE_USER")
 public class GeoDeviseRefGraphQLService extends GeoAbstractGraphQLService<GeoDeviseRef, GeoDeviseRefKey> {
 
-	public GeoDeviseRefGraphQLService(GeoDeviseRefRepository repository) {
-		super(repository, GeoDeviseRef.class);
-	}
+    public GeoDeviseRefGraphQLService(GeoDeviseRefRepository repository) {
+        super(repository, GeoDeviseRef.class);
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoDeviseRef> allDeviseRef(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoDeviseRef> allDeviseRef(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public List<GeoDeviseRef> allDeviseRefList(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getAll(search);
-	}
+    @GraphQLQuery
+    public List<GeoDeviseRef> allDeviseRefList(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getUnpaged(search, env);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoDeviseRef> getDeviseRef(
-			@GraphQLArgument(name = "id") GeoDeviseRefKey id
-	) {
-		return super.getOne(id);
-	}
+    @GraphQLQuery
+    public Optional<GeoDeviseRef> getDeviseRef(
+            @GraphQLArgument(name = "id") GeoDeviseRefKey id) {
+        return super.getOne(id);
+    }
 
 }
