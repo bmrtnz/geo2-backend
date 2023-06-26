@@ -1005,4 +1005,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(0, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testPrcGenFraisDedimp() {
+        FunctionResult result = this.functionOrdreRepository
+                .prcGenFraisDedimp("000589");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

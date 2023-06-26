@@ -627,4 +627,9 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fReturnForfaitsTrp(cenRef, incCode, typeOrd);
     }
 
+    @GraphQLQuery
+    public FunctionResult prcGenFraisDedimp(String ordRef) {
+        return this.repository.prcGenFraisDedimp(ordRef);
+    }
+
 }

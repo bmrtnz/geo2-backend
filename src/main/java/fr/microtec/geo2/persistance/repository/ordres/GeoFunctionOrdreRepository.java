@@ -321,4 +321,6 @@ public interface GeoFunctionOrdreRepository {
             String arg_inc_code,
             String arg_typ_ordre);
 
+    FunctionResult prcGenFraisDedimp(String arg_ord_ref);
+
 }

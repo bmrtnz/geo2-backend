@@ -1024,4 +1024,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult prcGenFraisDedimp(String arg_ord_ref) {
+        FunctionQuery query = this.build("PRC_GEN_FRAIS_DEDIMP");
+
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+
+        return query.fetch();
+    }
+
 }
