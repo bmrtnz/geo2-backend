@@ -371,12 +371,14 @@ public class ProgramService {
                     }
                 }
 
-                val existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
+                Optional<GeoOrdre> existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
                         cb.equal(root.get("codeChargement"), ls_load_reference),
                         cb.equal(root.get("entrepot"), entrepot.get()),
                         cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
 
                 if (existing_ordre.isPresent()) {
+
+                    ls_ord_ref.set((String) existing_ordre.get().getId());
 
                     if (!ls_load_reference.equals(ls_load_ref_prec)
                             && !entrepot.get().getId().equals(ls_cen_ref_prec)) {
