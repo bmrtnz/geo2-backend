@@ -61,7 +61,7 @@ public class GeoStock extends ValidateAndModifiedEntity {
     private String utilisateurInfo;
 
     @Column(name = "ini_date")
-    private LocalDate dateInfo;
+    private LocalDateTime dateInfo;
 
     @Column(name = "qte_ini")
     private Integer quantiteInitiale;
@@ -95,10 +95,14 @@ public class GeoStock extends ValidateAndModifiedEntity {
     @Formula("(select sum(m.mvt_qte) from geo_stomvt m where m.sto_ref = sto_ref)")
     private Integer totalMouvements;
 
+    @Formula("(select (m.nom_utilisateur || ' ' || m.stm_desc) from geo_stomvt m where m.sto_ref = sto_ref and rownum = 1)")
+    private String parQui;
+
     @Transient
     private Integer quantiteDisponible;
 
     public Integer getQuantiteDisponible() {
         return this.getQuantiteInitiale() - Optional.ofNullable(this.getTotalMouvements()).orElse(0);
     }
+
 }
