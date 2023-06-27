@@ -267,4 +267,9 @@ public class NativeQueryRepositoryTest {
         this.precalModelRepository.allPrecaVariete("POIRE");
     }
 
+    @Test
+    public void testAllDetailStockResa() {
+        this.stockRepository.allDetailStockResa("086109", "%");
+    }
+
 }

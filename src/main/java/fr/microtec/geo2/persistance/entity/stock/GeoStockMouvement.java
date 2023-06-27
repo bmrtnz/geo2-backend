@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.GenericGenerator;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
@@ -61,5 +62,8 @@ public class GeoStockMouvement extends ValidateAndModifiedEntity {
 
     @Column(name = "nom_utilisateur")
     private String nomUtilisateur;
+
+    @Formula("(nom_utilisateur || ' ' || stm_desc)")
+    private String parQui;
 
 }

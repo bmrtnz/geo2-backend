@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import fr.microtec.geo2.persistance.entity.stock.GeoDetailStockResa;
 import fr.microtec.geo2.persistance.entity.stock.GeoLigneReservation;
 import fr.microtec.geo2.persistance.entity.stock.GeoPrecal;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
@@ -39,4 +40,9 @@ public interface GeoStockRepository extends GeoRepository<GeoStock, String> {
             @Param("arg_fou_code") String codeFournisseur,
             @Param("arg_espece") String codeEspece,
             @Param("arg_mode_culture") String codeModeCulture);
+
+    @Query(name = "Stock.allDetailStockResa", nativeQuery = true)
+    List<GeoDetailStockResa> allDetailStockResa(
+            @Param("arg_art_ref") String article,
+            @Param("arg_fou_code") String fournisseur);
 }

@@ -322,4 +322,35 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+  <named-native-query
+    name="Stock.allDetailStockResa"
+    result-class="fr.microtec.geo2.persistance.entity.stock.GeoDetailStockResa"
+  >
+    <query>
+    <![CDATA[
+        SELECT rownum, rest.* FROM (
+            SELECT
+                S.STO_REF,
+                M.STM_REF,
+                A.ART_REF
+            FROM
+                GEO_STOCK S,
+                GEO_STOMVT M,
+                GEO_ARTICLE A
+            WHERE
+                M.sto_ref (+)= S.sto_ref
+                AND
+
+            A.ART_REF = S.ART_REF
+                AND
+
+            S.fou_code LIKE :arg_fou_code
+                AND
+
+            S.art_ref LIKE :arg_art_ref
+        ) rest
+    ]]>
+    </query>
+  </named-native-query>
+
 </entity-mappings>

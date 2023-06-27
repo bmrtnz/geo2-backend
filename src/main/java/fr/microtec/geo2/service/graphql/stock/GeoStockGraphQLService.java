@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
+import fr.microtec.geo2.persistance.entity.stock.GeoDetailStockResa;
 import fr.microtec.geo2.persistance.entity.stock.GeoLigneReservation;
 import fr.microtec.geo2.persistance.entity.stock.GeoPrecal;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
@@ -111,6 +112,16 @@ public class GeoStockGraphQLService extends GeoAbstractGraphQLService<GeoStock, 
             @GraphQLArgument(name = "article") String article) {
         return ((GeoStockRepository) this.repository)
                 .allStockReservationList(article);
+    }
+
+    @GraphQLQuery
+    public List<GeoDetailStockResa> allDetailStockResa(
+            @GraphQLArgument(name = "article") String article,
+            @GraphQLArgument(name = "fournisseur") String fournisseur) {
+        return ((GeoStockRepository) this.repository)
+                .allDetailStockResa(
+                        Optional.ofNullable(article).orElse("%"),
+                        Optional.ofNullable(fournisseur).orElse("%"));
     }
 
     @GraphQLQuery

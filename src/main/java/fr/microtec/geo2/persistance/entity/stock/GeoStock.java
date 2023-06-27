@@ -95,9 +95,6 @@ public class GeoStock extends ValidateAndModifiedEntity {
     @Formula("(select sum(m.mvt_qte) from geo_stomvt m where m.sto_ref = sto_ref)")
     private Integer totalMouvements;
 
-    @Formula("(select (m.nom_utilisateur || ' ' || m.stm_desc) from geo_stomvt m where m.sto_ref = sto_ref and rownum = 1)")
-    private String parQui;
-
     @Transient
     private Integer quantiteDisponible;
 
