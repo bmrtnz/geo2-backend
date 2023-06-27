@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -60,5 +61,18 @@ public class GeoStock extends GeoBaseStock {
 
     @Column(name = "sto_statut")
     private Character statutStock;
+
+    @Column(name = "age")
+    private Character age;
+
+    @Column(name = "date_fab")
+    private LocalDate dateFabrication;
+
+    @Column(name = "date_statut")
+    private LocalDateTime dateStatut;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sto_ref_from")
+    private GeoStock stockOrigine;
 
 }
