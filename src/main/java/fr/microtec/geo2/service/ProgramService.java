@@ -360,7 +360,7 @@ public class ProgramService {
                     LocalDateTime ls_bb_date = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue();
                     String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM").withLocale(Locale.ENGLISH));
                     String ls_day = StringUtils.padLeft(Integer.toString(ls_bb_date.getDayOfMonth()), "0", 2);
-                    ls_dluo = "BB = " + ls_day + " " + ls_month + " ; JC = " + ls_jc;
+                    ls_dluo = "BB = " + ls_day + " " + ls_month.toUpperCase() + " ; JC = " + ls_jc;
                 } catch (Exception e) {
                     try {
                         if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("NO DATE/NO BB"))
