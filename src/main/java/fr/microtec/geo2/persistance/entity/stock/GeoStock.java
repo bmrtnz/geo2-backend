@@ -3,6 +3,7 @@ package fr.microtec.geo2.persistance.entity.stock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Formula;
 
@@ -90,4 +92,13 @@ public class GeoStock extends ValidateAndModifiedEntity {
     @JoinColumn(name = "sto_ref_from")
     private GeoStock stockOrigine;
 
+    @Formula("(select sum(m.mvt_qte) from geo_stomvt m where m.sto_ref = sto_ref)")
+    private Integer totalMouvements;
+
+    @Transient
+    private Integer quantiteDisponible;
+
+    public Integer getQuantiteDisponible() {
+        return this.getQuantiteInitiale() - Optional.ofNullable(this.getTotalMouvements()).orElse(0);
+    }
 }
