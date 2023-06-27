@@ -48,7 +48,7 @@ public class ProgramController {
 
         switch (Program.valueOf(program.toUpperCase())) {
             case ORCHARD:
-                return this.service.importOrchard(chunk);
+                return this.service.importOrchard(chunk, utilisateur);
 
             case TESCO:
                 return this.service.importTesco(chunk, societe, utilisateur, generic);
