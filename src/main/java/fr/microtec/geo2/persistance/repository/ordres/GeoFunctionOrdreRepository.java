@@ -323,4 +323,10 @@ public interface GeoFunctionOrdreRepository {
 
     FunctionResult prcGenFraisDedimp(String arg_ord_ref);
 
+    FunctionResult onChangeTrpDevCode(
+            String arg_ord_ref,
+            String arg_trp_dev_code,
+            String arg_soc_code,
+            Float arg_trp_pu);
+
 }
