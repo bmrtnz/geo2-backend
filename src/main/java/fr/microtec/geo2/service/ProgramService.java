@@ -360,7 +360,7 @@ public class ProgramService {
                     LocalDateTime ls_bb_date = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue();
                     String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM").withLocale(Locale.ENGLISH));
                     String ls_day = StringUtils.padLeft(Integer.toString(ls_bb_date.getDayOfMonth()), "0", 2);
-                    ls_dluo = "BB = " + ls_day + " " + ls_month + " ; JC = " + ls_jc;
+                    ls_dluo = "BB = " + ls_day + " " + ls_month.toUpperCase() + " ; JC = " + ls_jc;
                 } catch (Exception e) {
                     try {
                         if (row.getCell(COL_BB_DATE).getStringCellValue().trim().equals("NO DATE/NO BB"))
@@ -371,12 +371,14 @@ public class ProgramService {
                     }
                 }
 
-                val existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
+                Optional<GeoOrdre> existing_ordre = this.ordreRepo.findOne((root, cq, cb) -> cb.and(
                         cb.equal(root.get("codeChargement"), ls_load_reference),
                         cb.equal(root.get("entrepot"), entrepot.get()),
                         cb.equal(root.get("client").get("id"), ls_cli_ref.get())));
 
                 if (existing_ordre.isPresent()) {
+
+                    ls_ord_ref.set((String) existing_ordre.get().getId());
 
                     if (!ls_load_reference.equals(ls_load_ref_prec)
                             && !entrepot.get().getId().equals(ls_cen_ref_prec)) {
@@ -423,7 +425,10 @@ public class ProgramService {
                                 ls_ordre_cree.add(ls_ord_ref.get());
                             }
                             ls_ordref_inscrit_prec = ls_ord_ref.get();
-                            ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
+                            GeoOrdre ordre = this.ordreRepo.getOne(ls_ord_ref.get());
+                            ordre.setUserModification(utilisateur);
+                            this.ordreRepo.save(ordre);
+                            ls_nordre.set(ordre.getNumero());
                             pRow.setOrdreNum(ls_nordre.get());
                             pRow.pushMessage("Ordre créé");
                         }
@@ -474,7 +479,7 @@ public class ProgramService {
 
                     for (int ll_demi_pallets = 1; ll_demi_pallets <= ll_parse; ll_demi_pallets++) {
                         if (ll_demi_pallets == 2) { // On modifie les qtés de colis commandé pour la demi-palette
-                            // ls_case_per_pallets= ls_case_per_pallets.toString().trim();
+                            ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
                             ls_qty_case = (ld_qty_pallets - ll_qty_pallets) * ls_case_per_pallets;
                             ll_qty_pallets = 1;
                         } else {
@@ -544,6 +549,11 @@ public class ProgramService {
                                     res.pushRow(pRow);
                                     continue outer;
                                 }
+
+                                String orl_ref = (String) ls_rc.getData().get("ls_orl_ref");
+                                GeoOrdreLigne ordLig = this.olRepo.getOne(orl_ref);
+                                ordLig.setUserModification(utilisateur);
+                                this.olRepo.save(ordLig);
 
                                 row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                         .setCellValue(ls_nordre.get());
@@ -781,7 +791,7 @@ public class ProgramService {
         return res;
     }
 
-    public ProgramResponse importOrchard(MultipartFile chunks) throws IOException {
+    public ProgramResponse importOrchard(MultipartFile chunks, String utilisateur) throws IOException {
 
         val res = new ProgramResponse();
 
@@ -955,7 +965,10 @@ public class ProgramService {
 
                     if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
                         ls_create_ligne = 'O';
-                        ls_nordre.set(this.ordreRepo.getOne(ls_ord_ref.get()).getNumero());
+                        GeoOrdre ordre = this.ordreRepo.getOne(ls_ord_ref.get());
+                        ordre.setUserModification(utilisateur);
+                        this.ordreRepo.save(ordre);
+                        ls_nordre.set(ordre.getNumero());
                         pRow.setOrdreNum(ls_nordre.get());
                         pRow.pushMessage("Ordre créé");
                         res.incrementOrdreCount();
@@ -1022,6 +1035,11 @@ public class ProgramService {
                                 res.pushRow(pRow);
                                 continue outer;
                             }
+
+                            String orl_ref = (String) ls_rc.getData().get("ls_orl_ref");
+                            GeoOrdreLigne ordLig = this.olRepo.getOne(orl_ref);
+                            ordLig.setUserModification(utilisateur);
+                            this.olRepo.save(ordLig);
 
                             row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .setCellValue(ls_nordre.get());
