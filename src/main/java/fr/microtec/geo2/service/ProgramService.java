@@ -479,7 +479,7 @@ public class ProgramService {
 
                     for (int ll_demi_pallets = 1; ll_demi_pallets <= ll_parse; ll_demi_pallets++) {
                         if (ll_demi_pallets == 2) { // On modifie les qtés de colis commandé pour la demi-palette
-                            // ls_case_per_pallets= ls_case_per_pallets.toString().trim();
+                            ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
                             ls_qty_case = (ld_qty_pallets - ll_qty_pallets) * ls_case_per_pallets;
                             ll_qty_pallets = 1;
                         } else {
