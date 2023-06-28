@@ -171,7 +171,7 @@ BEGIN
         return;
     end;
 
-    if arg_trp_code is not null and arg_trp_code <> '' then
+    if arg_trp_code is not null and length(arg_trp_code) > 0 then
         ls_trp_code := arg_trp_code;
     end if;
 
@@ -459,7 +459,7 @@ BEGIN
         return;
     end;
 
-    if arg_trp_code is not null or arg_trp_code <> '' then
+    if arg_trp_code is not null or length(arg_trp_code) > 0 then
         ls_trp_code := arg_trp_code;
     end if;
 
@@ -776,7 +776,7 @@ BEGIN
         return;
     end;
 
-    if arg_transporteur is not null or arg_transporteur <> '' then
+    if arg_transporteur is not null or length(arg_transporteur )>0 then
         ls_trp_code := arg_transporteur;
     end if;
 
