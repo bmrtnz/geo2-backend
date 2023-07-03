@@ -12,8 +12,8 @@ AS
     ld_dev_taux number;
     ld_trp_dev_pu number;
 BEGIN
-    res := 0;
-    msg := '';
+    res := 1;
+    msg := 'OK';
 
     SELECT dev_code
     INTO soc_dev_code
