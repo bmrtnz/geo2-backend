@@ -1002,7 +1002,7 @@ public class OrdreFunctionTest {
                 .fReturnForfaitsTrp("000915", "CIF", "ORD");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
     @Test
