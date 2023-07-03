@@ -1014,4 +1014,13 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testOnChangeTrpDevCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeTrpDevCode("2091208", "TROTA", "BUK", 0.58F);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
 }

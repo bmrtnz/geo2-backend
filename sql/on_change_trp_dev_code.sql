@@ -40,6 +40,7 @@ BEGIN
                             dev_code_ref=soc_dev_code;
             exception when no_data_found then
                 msg := 'Erreur, le taux de cette devise n''est pas renseigné';
+                res := 2;
                 ld_dev_taux := 1.0;
                 update geo_ordre set trp_dev_code = soc_dev_code where ord_ref = arg_ord_ref;
             end;
@@ -55,6 +56,7 @@ BEGIN
 
             if ld_dev_taux = 0 then
                 msg := 'Erreur, le taux de cette devise n''est pas renseigné';
+                res := 2;
                 ld_dev_taux := 1.0;
             end if;
 
@@ -66,7 +68,6 @@ BEGIN
     end if;
 
     commit;
-    res := 1;
 
 end;
 /
