@@ -45,9 +45,8 @@ public class GeoModifGraphQLService extends GeoAbstractGraphQLService<GeoModific
 
     @GraphQLQuery
     public List<GeoModification> listModification(
-            @GraphQLArgument(name = "search") String search,
-            @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.getUnpaged(search, env);
+            @GraphQLArgument(name = "search") String search) {
+        return this.getAll(search);
     }
 
     @GraphQLQuery
