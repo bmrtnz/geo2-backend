@@ -69,7 +69,13 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
 
     @GraphQLMutation
     public List<GeoEnvois> saveAllEnvois(List<GeoEnvois> allEnvois) {
-        return this.saveAll(allEnvois, null);
+        List<GeoEnvois> envois = this.saveAll(allEnvois, null);
+
+        // assuming all "envois" are of the same "ordre"
+        GeoOrdre ordre = this.repository.getOne(allEnvois.get(0).getId()).getOrdre();
+        this.envoisService.clearTemp(ordre);
+
+        return envois;
     }
 
     @GraphQLMutation
