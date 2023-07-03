@@ -233,13 +233,13 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllDeclarationFraude() {
         List<GeoDeclarationFraude> result = this.ordreRepository.allDeclarationFraude(
-                "F",
+                "MAR",
                 "SA",
-                LocalDate.of(2023, 1, 1),
-                LocalDate.of(2023, 1, 2),
+                LocalDate.of(2022, 11, 14),
+                LocalDate.of(2022, 11, 14),
                 // On evite le drame grace à la nano-seconde 💣
-                LocalDateTime.of(2023, 1, 1, 0, 0, 0, 1),
-                "007728",
+                LocalDateTime.of(2022, 1, 1, 0, 0, 0, 1),
+                "005810",
                 "%",
                 "%",
                 "%",
