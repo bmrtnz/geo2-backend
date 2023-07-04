@@ -251,13 +251,16 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                     GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
                     AND
 
-            geo_client.sco_code LIKE :secteur
+                        geo_client.sco_code LIKE :secteur
                     AND
 
-            (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+                        (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
                     AND
 
-                geo_client.soc_code = :soc
+                            geo_client.soc_code = :soc
+                    AND
+
+                            geo_client.valide like :client_valide
                 GROUP BY
                     GEO_CLIENT.SOC_CODE,
                     GEO_CLIENT.SCO_CODE ) secteur,
@@ -284,13 +287,16 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 WHERE
                     GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
                     AND
-            geo_client.sco_code LIKE :secteur
+                        geo_client.sco_code LIKE :secteur
                     AND
 
-            (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+                        (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
                         AND
 
-                geo_client.soc_code = :soc
+                            geo_client.soc_code = :soc
+                    AND
+
+                            geo_client.valide like :client_valide
                     GROUP BY
                         GEO_CLIENT.SOC_CODE,
                         GEO_CLIENT.SCO_CODE,
@@ -299,28 +305,31 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 GEO_PAYS.PAY_CODE = GEO_CLIENT.PAY_CODE
                 AND
 
-            geo_client.soc_code = :soc
+                        geo_client.soc_code = :soc
+                    AND
+
+                            geo_client.valide like :client_valide
                 AND
 
-            geo_client.sco_code LIKE :secteur
+                        geo_client.sco_code LIKE :secteur
                 AND
 
-            (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
+                        (geo_client.enc_0 + geo_client.enc_1 + geo_client.enc_2 + geo_client.enc_3 + geo_client.enc_4) <> 0
                 AND
 
-                    secteur.soc_code = geo_client.soc_code
+                                secteur.soc_code = geo_client.soc_code
                 AND
 
-                secteur.sco_code = geo_client.sco_code
+                            secteur.sco_code = geo_client.sco_code
                 AND
 
-                    pays.soc_code = geo_client.soc_code
+                                pays.soc_code = geo_client.soc_code
                 AND
 
-                pays.sco_code = geo_client.sco_code
+                            pays.sco_code = geo_client.sco_code
                 AND
 
-                    pays.pay_code = geo_client.PAY_CODE
+                                pays.pay_code = geo_client.PAY_CODE
             ORDER BY
                 GEO_CLIENT.SCO_CODE ASC,
                 GEO_PAYS.PAY_DESC ASC,
