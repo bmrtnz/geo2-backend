@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
-import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
@@ -21,9 +20,4 @@ public interface GeoClientRepository extends GeoRepository<GeoClient, String> {
             @Param("ra_cli_ref") String clientRef,
             @Param("ra_dev_code_soc") String deviseCodeRef);
 
-    @Query(name = "Client.allClientDepassementEnCours", nativeQuery = true)
-    List<GeoClientDepassementEnCours> allClientDepassementEnCours(
-            @Param("secteur") String secteur,
-            @Param("soc") String societe,
-            @Param("client_valide") Character clientsValide);
 }

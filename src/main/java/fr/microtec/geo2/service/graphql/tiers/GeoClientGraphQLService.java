@@ -81,15 +81,6 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
     }
 
     @GraphQLQuery
-    public List<GeoClientDepassementEnCours> allClientDepassementEnCours(
-            String secteur,
-            String societe,
-            Boolean clientsValide) {
-        Character clientsValideChar = clientsValide == null ? '%' : clientsValide ? 'O' : 'N';
-        return ((GeoClientRepository) this.repository).allClientDepassementEnCours(secteur, societe, clientsValideChar);
-    }
-
-    @GraphQLQuery
     public GeoClient duplicateClient(
             String clientID,
             String fromSocieteID,

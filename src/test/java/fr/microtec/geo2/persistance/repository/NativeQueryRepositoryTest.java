@@ -125,14 +125,6 @@ public class NativeQueryRepositoryTest {
     }
 
     @Test
-    public void testAllClientDepassementEnCours() {
-        List<GeoClientDepassementEnCours> list = this.geoClientRepository
-                .allClientDepassementEnCours("AFA", "SA", '%');
-
-        Assertions.assertFalse(list.isEmpty());
-    }
-
-    @Test
     public void testAllMouvementEntrepot() {
         this.entrepotRepository
                 .allMouvementEntrepot(LocalDateTime.now(), "SA", "004874", null, null);
