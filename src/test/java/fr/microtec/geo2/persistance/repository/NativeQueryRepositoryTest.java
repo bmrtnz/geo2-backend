@@ -127,7 +127,7 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllClientDepassementEnCours() {
         List<GeoClientDepassementEnCours> list = this.geoClientRepository
-                .allClientDepassementEnCours("AFA", "SA");
+                .allClientDepassementEnCours("AFA", "SA", '%');
 
         Assertions.assertFalse(list.isEmpty());
     }

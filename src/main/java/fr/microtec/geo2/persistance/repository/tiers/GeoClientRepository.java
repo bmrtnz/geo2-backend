@@ -24,5 +24,6 @@ public interface GeoClientRepository extends GeoRepository<GeoClient, String> {
     @Query(name = "Client.allClientDepassementEnCours", nativeQuery = true)
     List<GeoClientDepassementEnCours> allClientDepassementEnCours(
             @Param("secteur") String secteur,
-            @Param("soc") String societe);
+            @Param("soc") String societe,
+            @Param("client_valide") Character clientsValide);
 }
