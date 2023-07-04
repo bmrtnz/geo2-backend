@@ -1033,4 +1033,20 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult onChangeTrpDevCode(
+            String arg_ord_ref,
+            String arg_trp_dev_code,
+            String arg_soc_code,
+            Float arg_trp_pu) {
+        FunctionQuery query = this.build("ON_CHANGE_TRP_DEV_CODE");
+
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+        query.attachInput("arg_trp_dev_code", String.class, arg_trp_dev_code);
+        query.attachInput("arg_soc_code", String.class, arg_soc_code);
+        query.attachInput("arg_trp_pu", Float.class, arg_trp_pu);
+
+        return query.fetch();
+    }
+
 }

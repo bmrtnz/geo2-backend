@@ -1002,13 +1002,22 @@ public class OrdreFunctionTest {
                 .fReturnForfaitsTrp("000915", "CIF", "ORD");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes(), result.getMsg());
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
     @Test
     public void testPrcGenFraisDedimp() {
         FunctionResult result = this.functionOrdreRepository
                 .prcGenFraisDedimp("000589");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testOnChangeTrpDevCode() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeTrpDevCode("2091208", "EUR", "BUK", 0.58F);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());

@@ -632,4 +632,17 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.prcGenFraisDedimp(ordRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult onChangeTrpDevCode(
+            String ordreID,
+            String transporteurDevCode,
+            String societeID,
+            Float transporteurPU) {
+        return this.repository.onChangeTrpDevCode(
+                ordreID,
+                transporteurDevCode,
+                societeID,
+                transporteurPU);
+    }
+
 }
