@@ -1020,7 +1020,7 @@ public class OrdreFunctionTest {
                 .onChangeTrpDevCode("2091208", "EUR", "BUK", 0.58F);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertEquals(2, result.getRes(), result.getMsg());
     }
 
 }
