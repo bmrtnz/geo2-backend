@@ -47,13 +47,15 @@ public class GeoPaysGraphQLService extends GeoAbstractGraphQLService<GeoPays, St
             @GraphQLArgument(name = "depassementOnly", defaultValue = "true") Boolean depassementOnly,
             @GraphQLArgument(name = "secteurCode") String secteurCode,
             @GraphQLArgument(name = "societeCode") String societeCode,
-            @GraphQLArgument(name = "commercialCode") String commercialCode) {
+            @GraphQLArgument(name = "commercialCode") String commercialCode,
+            @GraphQLArgument(name = "clientValide") Boolean clientValide) {
         return ((GeoPaysRepository) this.repository)
                 .allPaysDepassement(
                         depassementOnly ? 'O' : 'N',
                         Optional.ofNullable(secteurCode).orElse("%"),
                         societeCode,
-                        Optional.ofNullable(commercialCode).orElse("%"));
+                        Optional.ofNullable(commercialCode).orElse("%"),
+                        Optional.ofNullable(clientValide ? 'O' : 'N').orElse('%'));
     }
 
     @GraphQLQuery

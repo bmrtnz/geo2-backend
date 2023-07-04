@@ -187,7 +187,7 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllPaysDepassementEnCours() {
         this.paysRepository
-                .allPaysDepassement('O', "F", "SA", "BV");
+                .allPaysDepassement('O', "F", "SA", "BV", '%');
     }
 
     @Test
