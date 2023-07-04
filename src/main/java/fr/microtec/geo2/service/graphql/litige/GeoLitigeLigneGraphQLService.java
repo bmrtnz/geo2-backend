@@ -68,6 +68,11 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
         ((GeoLitigeLigneRepository) this.repository).deleteAllByIdIn(ids);
     }
 
+    @GraphQLMutation
+    public void deleteLitigeLigne(String id) {
+        this.delete(id);
+    }
+
     @GraphQLQuery
     public List<GeoLitigeLigneFait> allLitigeLigneFait(String litigeID, String numeroLigne) {
         return ((GeoLitigeLigneRepository) super.repository).allLitigeLigneFait(litigeID, numeroLigne);
