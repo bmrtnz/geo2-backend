@@ -84,7 +84,7 @@ public class GeoClientGraphQLService extends GeoAbstractGraphQLService<GeoClient
     public List<GeoClientDepassementEnCours> allClientDepassementEnCours(
             String secteur,
             String societe,
-            @GraphQLArgument(name = "clientsValide", defaultValue = "%") Boolean clientsValide) {
+            Boolean clientsValide) {
         Character clientsValideChar = clientsValide == null ? '%' : clientsValide ? 'O' : 'N';
         return ((GeoClientRepository) this.repository).allClientDepassementEnCours(secteur, societe, clientsValideChar);
     }
