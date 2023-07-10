@@ -53,7 +53,7 @@ public class ProgramController {
             case TESCO:
                 return this.service.importTesco(chunk, societe, utilisateur, generic);
 
-            case PREORDRE:
+            case PREORDRES:
                 return this.service.importPreordre(chunk, utilisateur);
 
             default:

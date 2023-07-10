@@ -7,7 +7,7 @@ import lombok.Getter;
 public enum Program implements StringEnum {
     TESCO("tesco"),
     ORCHARD("orchard"),
-    PREORDRE("preordre");
+    PREORDRES("preordres");
 
     private final String key;
 
