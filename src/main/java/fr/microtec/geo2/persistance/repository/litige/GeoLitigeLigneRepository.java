@@ -51,4 +51,8 @@ public interface GeoLitigeLigneRepository extends GeoRepository<GeoLitigeLigne, 
     @Transactional
     @Modifying
     void deleteAllByIdIn(List<String> id);
+
+    @Transactional
+    @Modifying
+    void deleteAllByLitigeIdAndNumeroGroupementLitige(String litigeId, String numeroGroupementLitige);
 }
