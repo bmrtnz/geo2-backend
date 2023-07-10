@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.persistance.GeoSequenceGenerator;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
+import fr.microtec.geo2.persistance.entity.tiers.GeoFlux;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoEnvoisRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoFluxRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.security.SecurityService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +26,21 @@ import lombok.extern.slf4j.Slf4j;
 public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> {
 
     private final EntityManager entityManager;
+    private final GeoOrdreRepository ordreRepository;
+    private final GeoFluxRepository fluxRepository;
     private final SecurityService securityService;
 
     public EnvoisService(
             GeoEnvoisRepository paysRepository,
             EntityManager entityManager,
-            SecurityService securityService) {
+            SecurityService securityService,
+            GeoOrdreRepository ordreRepository,
+            GeoFluxRepository fluxRepository) {
         super(paysRepository, GeoEnvois.class);
         this.entityManager = entityManager;
         this.securityService = securityService;
+        this.ordreRepository = ordreRepository;
+        this.fluxRepository = fluxRepository;
     }
 
     /**
@@ -89,6 +98,21 @@ public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> 
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    /**
+     * Count `envois` from specified `ordre` where `flux` is `INCLIT` or `RESLIT`
+     */
+    public Long countLitigeEnvois(String ordreID) {
+        GeoOrdre ordre = this.ordreRepository.getOne(ordreID);
+        GeoFlux fluxInclit = this.fluxRepository.getOne("INCLIT");
+        GeoFlux fluxReslit = this.fluxRepository.getOne("RESLIT");
+        List<Character> traitement = List.of('N', 'O');
+        Long countInclit = ((GeoEnvoisRepository) this.repository)
+                .countByOrdreAndFluxAndTraiteIn(ordre, fluxInclit, traitement);
+        Long countReslit = ((GeoEnvoisRepository) this.repository)
+                .countByOrdreAndFluxAndTraiteIn(ordre, fluxReslit, traitement);
+        return countInclit + countReslit;
     }
 
 }

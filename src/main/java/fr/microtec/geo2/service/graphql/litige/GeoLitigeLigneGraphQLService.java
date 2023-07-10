@@ -1,13 +1,27 @@
 package fr.microtec.geo2.service.graphql.litige;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.criteria.Predicate;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Service;
+
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigne;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneFait;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneForfait;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneTotaux;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeLigneRepository;
+import fr.microtec.geo2.persistance.repository.litige.GeoLitigeRepository;
+import fr.microtec.geo2.service.EnvoisService;
 import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import graphql.GraphQLException;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLMutation;
@@ -15,12 +29,6 @@ import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.execution.ResolutionEnvironment;
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @GraphQLApi
@@ -28,12 +36,18 @@ import java.util.Optional;
 public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoLitigeLigne, String> {
 
     private final OrdreService ordreService;
+    private final EnvoisService envoisService;
+    private final GeoLitigeRepository litigeRepository;
 
     public GeoLitigeLigneGraphQLService(
             GeoLitigeLigneRepository repository,
-            OrdreService ordreService) {
+            OrdreService ordreService,
+            EnvoisService envoisService,
+            GeoLitigeRepository litigeRepository) {
         super(repository, GeoLitigeLigne.class);
         this.ordreService = ordreService;
+        this.envoisService = envoisService;
+        this.litigeRepository = litigeRepository;
     }
 
     @GraphQLQuery
@@ -71,6 +85,26 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
     @GraphQLMutation
     public void deleteLitigeLigne(String id) {
         this.delete(id);
+    }
+
+    @GraphQLMutation
+    public void deleteLot(String litigeID, String groupementID) {
+        Optional<GeoLitige> maybeLitige = this.litigeRepository.findOne((root, query, cb) -> {
+            Predicate whereID = cb.equal(root.get("id"), litigeID);
+            return cb.and(whereID);
+        });
+
+        maybeLitige.ifPresentOrElse(litige -> {
+            GeoOrdre ordre = litige.getOrdreOrigine();
+            if (this.envoisService.countLitigeEnvois(ordre.getId()) > 0)
+                throw new GraphQLException("Impossible de supprimer ce lot car des envois existent");
+            else
+                ((GeoLitigeLigneRepository) this.repository)
+                        .deleteAllByLitigeIdAndNumeroGroupementLitige(litigeID, groupementID);
+        }, () -> {
+            throw new GraphQLException("Le litige demandé est inexistant");
+        });
+
     }
 
     @GraphQLQuery
