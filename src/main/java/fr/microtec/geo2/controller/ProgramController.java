@@ -53,6 +53,9 @@ public class ProgramController {
             case TESCO:
                 return this.service.importTesco(chunk, societe, utilisateur, generic);
 
+            case PREORDRE:
+                return this.service.importPreordre(chunk, utilisateur);
+
             default:
                 throw new RuntimeException(String.format("Program %1 does not exist", program));
         }
