@@ -1329,7 +1329,9 @@ public class ProgramService {
                         res.incrementOrdreCount();
                     } else {
                         ls_nordre = "";
-                        pRow.pushMessage("Ordre NON créé, Numéro d'ordre invalide: " + ls_ord_ref);
+                        pRow.pushErreur("Ordre NON créé, Numéro d'ordre invalide: " + ls_ord_ref);
+                        res.pushRow(pRow);
+                        continue;
                     }
 
                     if (ls_create_ligne.equals("O")) {
@@ -1400,13 +1402,16 @@ public class ProgramService {
                                     }
                                 }
 
-                            } else
-                                pRow.pushMessage("Article invalide: " + ls_art);
+                            } else {
+                                pRow.pushErreur("Article invalide: " + ls_art);
+                                res.pushRow(pRow);
+                                continue;
+                            }
 
                         }
                     }
                 } else {
-                    pRow.pushMessage("Ordre déjà existant " + ls_value + " !!");
+                    pRow.pushErreur("Ordre déjà existant " + ls_value + " !!");
                     pRow.setDepot(ls_depot_name);
                     pRow.setOrdreNum(ls_value);
                     pRow.setRefCli(ls_ref_cli);
