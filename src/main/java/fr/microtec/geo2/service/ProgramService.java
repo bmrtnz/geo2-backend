@@ -1118,28 +1118,28 @@ public class ProgramService {
         val res = new ProgramResponse();
 
         // useful columns indexes
-        int COL_ORD_CREATE = 1;
-        int COL_ENTREPOT = 3;
-        int COL_PROPRIETAIRE = 4;
-        int COL_STATION = 5;
-        int COL_REF_CLI = 6;
-        int COL_ARTS_REF = 10;
-        int COL_DATE_DEPART = 12;
-        int COL_DATE_LIVRAISON = 13;
-        int COL_INSTRUCTION_LOG = 14;
-        int COL_COM_CONF_CDE = 15;
-        int COL_QTE_COLIS = 16;
-        int COL_PAL_INTER = 17;
-        int COL_QTE_COLIS_PAL = 18;
-        int COL_QTE_PAL = 19;
-        int COL_TYP_PAL = 20;
-        int COL_ASSISTANTE = 21;
-        int COL_CIAL = 22;
-        int COL_PRIX_ACHAT = 23;
-        int COL_UNITE_ACHAT = 24;
-        int COL_PRIX_VENTE = 25;
-        int COL_UNITE_VENTE = 26;
-        int COL_TRANSPORTEUR = 27;
+        int COL_ORD_CREATE = 0;
+        int COL_ENTREPOT = 2;
+        int COL_PROPRIETAIRE = 3;
+        int COL_STATION = 4;
+        int COL_REF_CLI = 5;
+        int COL_ARTS_REF = 9;
+        int COL_DATE_DEPART = 11;
+        int COL_DATE_LIVRAISON = 12;
+        int COL_INSTRUCTION_LOG = 13;
+        int COL_COM_CONF_CDE = 14;
+        int COL_QTE_COLIS = 15;
+        int COL_PAL_INTER = 16;
+        int COL_QTE_COLIS_PAL = 17;
+        int COL_QTE_PAL = 18;
+        int COL_TYP_PAL = 19;
+        int COL_ASSISTANTE = 20;
+        int COL_CIAL = 21;
+        int COL_PRIX_ACHAT = 22;
+        int COL_UNITE_ACHAT = 23;
+        int COL_PRIX_VENTE = 24;
+        int COL_UNITE_VENTE = 25;
+        int COL_TRANSPORTEUR = 26;
 
         // load sheet
         List<String> addedOrdreRefs = new ArrayList<>();
@@ -1164,229 +1164,252 @@ public class ProgramService {
                 }
 
                 String ls_create_ligne = "N";
-                String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue().trim();
+                Integer ord_ref_create = ((Double) row.getCell(COL_ORD_CREATE).getNumericCellValue()).intValue();
+                String ls_value = ord_ref_create == 0 ? "" : StringUtils.padLeft(ord_ref_create.toString(), "0", 6);
                 String ls_depot_name = row.getCell(COL_ENTREPOT).getStringCellValue().toUpperCase().trim();
+                pRow.setDepot(ls_depot_name);
                 String ls_ref_cli = row.getCell(COL_REF_CLI).getStringCellValue().toUpperCase().trim();
+                pRow.setRefCli(ls_ref_cli);
 
-                if (!ls_value.isBlank())
-                    pRow.pushMessage("Ordre déjà existant " + ls_value + " !!");
+                if (ls_value.isBlank()) {
 
-                String ls_proprietaire = row.getCell(COL_PROPRIETAIRE).getStringCellValue().toUpperCase().trim();
-                String ls_station = row.getCell(COL_STATION).getStringCellValue().toUpperCase().trim();
-                String ls_arts_ref = row.getCell(COL_ARTS_REF).getStringCellValue().trim();
-                List<String> ls_array_art = Arrays.asList(ls_arts_ref.split("-"));
-                LocalDateTime ls_depart_date = row.getCell(COL_DATE_DEPART).getLocalDateTimeCellValue();
-                pRow.setDateDepart(ls_depart_date);
-                LocalDateTime ls_delivery_date = row.getCell(COL_DATE_LIVRAISON).getLocalDateTimeCellValue();
-                pRow.setDateLivraison(ls_delivery_date);
-                String ls_instruction_log = row.getCell(COL_INSTRUCTION_LOG).getStringCellValue().toUpperCase().trim();
-                String ls_comment_confirm_cde = row.getCell(COL_COM_CONF_CDE).getStringCellValue().toUpperCase().trim();
-                Double ls_qty_case = row.getCell(COL_QTE_COLIS).getNumericCellValue();
-                Double ls_qty_pallets = row.getCell(COL_QTE_PAL).getNumericCellValue();
-                Double ls_case_per_pallets = row.getCell(COL_QTE_COLIS_PAL).getNumericCellValue();
-                Double ls_qty_pallets_inter = row.getCell(COL_PAL_INTER).getNumericCellValue();
-                String ls_type_pallet = row.getCell(COL_TYP_PAL).getStringCellValue().toUpperCase().trim();
-                String ls_assistante = row.getCell(COL_ASSISTANTE).getStringCellValue().toUpperCase().trim();
-                String ls_commercial = row.getCell(COL_CIAL).getStringCellValue().toUpperCase().trim();
-                Double ld_prix_achat;
-                try {
-                    ld_prix_achat = row.getCell(COL_PRIX_ACHAT).getNumericCellValue();
-                } catch (Exception e) {
-                    ld_prix_achat = 0d;
-                }
-                final AtomicReference<String> ls_unite_achat = new AtomicReference<>("");
-                try {
-                    ls_unite_achat.set(row.getCell(COL_UNITE_ACHAT).getStringCellValue().toUpperCase().trim());
-                } catch (Exception e) {
-                    ls_unite_achat.set("");
-                }
+                    String ls_proprietaire = row.getCell(COL_PROPRIETAIRE).getStringCellValue().toUpperCase().trim();
+                    String ls_station = row.getCell(COL_STATION).getStringCellValue().toUpperCase().trim();
+                    pRow.setLoadRef(ls_station);
+                    List<String> ls_array_art;
+                    try {
+                        ls_array_art = Arrays.asList(row.getCell(COL_ARTS_REF).getStringCellValue().trim().split("-"));
+                    } catch (Exception e) {
+                        ls_array_art = List
+                                .of(String.valueOf(
+                                        ((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).intValue()));
+                    }
 
-                String ls_bat_code;
-                if (!ls_unite_achat.get().isBlank()) {
-                    Optional<GeoBaseTarif> baseTarif = this.baseTarifRepo.findOne((root, cq, cb) -> cb.and(
-                            cb.equal(root.get("id"), ls_unite_achat.get())));
-                    if (baseTarif.isPresent()) {
-                        ls_bat_code = baseTarif.get().getId();
+                    LocalDateTime ls_depart_date = row.getCell(COL_DATE_DEPART).getLocalDateTimeCellValue();
+                    pRow.setDateDepart(ls_depart_date);
+
+                    LocalDateTime ls_delivery_date = row.getCell(COL_DATE_LIVRAISON).getLocalDateTimeCellValue();
+                    pRow.setDateLivraison(ls_delivery_date);
+
+                    String ls_instruction_log = row.getCell(COL_INSTRUCTION_LOG).getStringCellValue().toUpperCase()
+                            .trim();
+                    String ls_comment_confirm_cde = row
+                            .getCell(COL_COM_CONF_CDE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                            .getStringCellValue().toUpperCase().trim();
+                    Double ls_qty_case = row.getCell(COL_QTE_COLIS).getNumericCellValue();
+                    Double ls_qty_pallets = row.getCell(COL_QTE_PAL).getNumericCellValue();
+                    Double ls_case_per_pallets = row.getCell(COL_QTE_COLIS_PAL).getNumericCellValue();
+                    Double ls_qty_pallets_inter = row.getCell(COL_PAL_INTER).getNumericCellValue();
+                    String ls_type_pallet = row.getCell(COL_TYP_PAL).getStringCellValue().toUpperCase().trim();
+                    String ls_assistante = row.getCell(COL_ASSISTANTE).getStringCellValue().toUpperCase().trim();
+                    String ls_commercial = row.getCell(COL_CIAL).getStringCellValue().toUpperCase().trim();
+                    Double ld_prix_achat;
+                    try {
+                        ld_prix_achat = row.getCell(COL_PRIX_ACHAT).getNumericCellValue();
+                    } catch (Exception e) {
+                        ld_prix_achat = 0d;
+                    }
+                    final AtomicReference<String> ls_unite_achat = new AtomicReference<>("");
+                    try {
+                        ls_unite_achat.set(row.getCell(COL_UNITE_ACHAT).getStringCellValue().toUpperCase().trim());
+                    } catch (Exception e) {
+                        ls_unite_achat.set("");
+                    }
+
+                    String ls_bat_code;
+                    if (!ls_unite_achat.get().isBlank()) {
+                        Optional<GeoBaseTarif> baseTarif = this.baseTarifRepo.findOne((root, cq, cb) -> cb.and(
+                                cb.equal(root.get("id"), ls_unite_achat.get())));
+                        if (baseTarif.isPresent()) {
+                            ls_bat_code = baseTarif.get().getId();
+                        } else {
+                            pRow.pushErreur("Erreur unité d'achat incorrect: " + ls_unite_achat.get());
+                            res.pushRow(pRow);
+                            continue;
+                        }
+                    }
+                    Double ld_prix_vente;
+                    try {
+                        ld_prix_vente = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
+                    } catch (Exception e) {
+                        ld_prix_vente = 0d;
+                    }
+                    final AtomicReference<String> ls_unite_vente = new AtomicReference<>("");
+                    try {
+                        ls_unite_vente.set(row.getCell(COL_UNITE_VENTE).getStringCellValue().toUpperCase().trim());
+                    } catch (Exception e) {
+                        ls_unite_vente.set("");
+                    }
+                    if (!ls_unite_vente.get().isBlank()) {
+                        Optional<GeoBaseTarif> baseTarif = this.baseTarifRepo.findOne((root, cq, cb) -> cb.and(
+                                cb.equal(root.get("id"), ls_unite_vente.get())));
+                        if (baseTarif.isPresent()) {
+                            ls_bat_code = baseTarif.get().getId();
+                        } else {
+                            pRow.pushErreur("Erreur unité de vente incorrect: " + ls_unite_vente.get());
+                            res.pushRow(pRow);
+                            continue;
+                        }
+                    }
+
+                    String ls_transporteur = row.getCell(COL_TRANSPORTEUR, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                            .getStringCellValue().toUpperCase().trim();
+
+                    String ls_cen_ref;
+                    String ls_soc_code;
+                    String ls_cli_ref;
+                    Optional<GeoEntrepot> entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
+                            cb.equal(root.get("code"), ls_depot_name),
+                            cb.isTrue(root.get("client").get("valide")),
+                            cb.isTrue(root.get("valide"))));
+                    if (entrepot.isEmpty()) {
+                        pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
+                        res.pushRow(pRow);
+                        continue;
                     } else {
-                        pRow.pushErreur("Erreur unité d'achat incorrect: " + ls_unite_achat.get());
+                        ls_cen_ref = entrepot.get().getId();
+                        ls_soc_code = entrepot.get().getClient().getSociete().getId();
+                        ls_cli_ref = entrepot.get().getClient().getId();
+                    }
+
+                    long countStation = this.fournisseurRepo.count((root, cq, cb) -> cb.and(
+                            cb.equal(root.get("code"), ls_station),
+                            cb.isTrue(root.get("valide"))));
+                    if (countStation == 0) {
+                        pRow.pushErreur("Erreur Station emballeuse non trouvé: " + ls_station);
                         res.pushRow(pRow);
                         continue;
                     }
-                }
-                Double ld_prix_vente;
-                try {
-                    ld_prix_vente = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
-                } catch (Exception e) {
-                    ld_prix_vente = 0d;
-                }
-                final AtomicReference<String> ls_unite_vente = new AtomicReference<>("");
-                try {
-                    ls_unite_vente.set(row.getCell(COL_UNITE_VENTE).getStringCellValue().toUpperCase().trim());
-                } catch (Exception e) {
-                    ls_unite_vente.set("");
-                }
-                if (!ls_unite_vente.get().isBlank()) {
-                    Optional<GeoBaseTarif> baseTarif = this.baseTarifRepo.findOne((root, cq, cb) -> cb.and(
-                            cb.equal(root.get("id"), ls_unite_vente.get())));
-                    if (baseTarif.isPresent()) {
-                        ls_bat_code = baseTarif.get().getId();
-                    } else {
-                        pRow.pushErreur("Erreur unité de vente incorrect: " + ls_unite_vente.get());
+
+                    long countProprietaire = this.fournisseurRepo.count((root, cq, cb) -> cb.and(
+                            cb.equal(root.get("code"), ls_proprietaire),
+                            cb.isTrue(root.get("valide"))));
+                    if (countProprietaire == 0) {
+                        pRow.pushErreur("Erreur Propriétaire non trouvé: " + ls_station);
                         res.pushRow(pRow);
                         continue;
                     }
-                }
 
-                String ls_transporteur = row.getCell(COL_TRANSPORTEUR).getStringCellValue().toUpperCase().trim();
-
-                String ls_cen_ref;
-                String ls_soc_code;
-                String ls_cli_ref;
-                Optional<GeoEntrepot> entrepot = this.entrepotRepo.findOne((root, cq, cb) -> cb.and(
-                        cb.equal(root.get("code"), ls_depot_name),
-                        cb.isTrue(root.get("client").get("valide")),
-                        cb.isTrue(root.get("valide"))));
-                if (entrepot.isEmpty()) {
-                    pRow.pushErreur("Erreur entrepôt non trouvé: " + ls_depot_name);
-                    res.pushRow(pRow);
-                    continue;
-                } else {
-                    ls_cen_ref = entrepot.get().getId();
-                    ls_soc_code = entrepot.get().getClient().getSociete().getId();
-                    ls_cli_ref = entrepot.get().getClient().getId();
-                }
-
-                long countStation = this.fournisseurRepo.count((root, cq, cb) -> cb.and(
-                        cb.equal(root.get("code"), ls_station),
-                        cb.isTrue(root.get("valide"))));
-                if (countStation == 0) {
-                    pRow.pushErreur("Erreur Station emballeuse non trouvé: " + ls_station);
-                    res.pushRow(pRow);
-                    continue;
-                }
-
-                long countProprietaire = this.fournisseurRepo.count((root, cq, cb) -> cb.and(
-                        cb.equal(root.get("code"), ls_proprietaire),
-                        cb.isTrue(root.get("valide"))));
-                if (countProprietaire == 0) {
-                    pRow.pushErreur("Erreur Propriétaire non trouvé: " + ls_station);
-                    res.pushRow(pRow);
-                    continue;
-                }
-
-                String ls_transp_final;
-                if (!ls_transporteur.isBlank())
-                    ls_transp_final = ls_transporteur;
-                else {
-                    if (ls_soc_code.equals("SA"))
-                        ls_transp_final = "-";
-                    // erreur si soc_code = BWS et transporteur non renseigné
+                    String ls_transp_final;
+                    if (!ls_transporteur.isBlank())
+                        ls_transp_final = ls_transporteur;
                     else {
-                        pRow.pushErreur("Erreur transporteur non renseigné !!");
+                        if (ls_soc_code.equals("SA"))
+                            ls_transp_final = "-";
+                        // erreur si soc_code = BWS et transporteur non renseigné
+                        else {
+                            pRow.pushErreur("Erreur transporteur non renseigné !!");
+                            res.pushRow(pRow);
+                            continue;
+                        }
+                    }
+
+                    FunctionResult functionRes = this.functionOrdreRepo.fCreatePreordre(
+                            ls_soc_code, ls_cli_ref, ls_cen_ref, ls_transp_final, ls_ref_cli, false,
+                            false, ls_depart_date, ls_delivery_date, ls_instruction_log, ls_assistante, ls_commercial);
+                    if (functionRes.getRes() != FunctionResult.RESULT_OK) {
+                        pRow.pushErreur(functionRes.getMsg());
                         res.pushRow(pRow);
                         continue;
                     }
-                }
 
-                FunctionResult functionRes = this.functionOrdreRepo.fCreatePreordre(
-                        ls_soc_code, ls_cli_ref, ls_cen_ref, ls_transp_final, ls_ref_cli, false,
-                        false, ls_depart_date, ls_delivery_date, ls_instruction_log, ls_assistante, ls_commercial);
-                if (functionRes.getRes() != FunctionResult.RESULT_OK) {
-                    pRow.pushErreur(functionRes.getMsg());
-                    res.pushRow(pRow);
-                    continue;
-                }
+                    String ls_ord_ref = (String) functionRes.getData().get("ls_ord_ref");
+                    addedOrdreRefs.add(ls_ord_ref);
 
-                String ls_ord_ref = (String) functionRes.getData().get("ls_ord_ref");
-                addedOrdreRefs.add(ls_ord_ref);
-
-                String ls_nordre;
-                if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
-                    ls_create_ligne = "O";
-                    GeoOrdre ordre = this.ordreRepo.getOne(ls_ord_ref);
-                    ordre.setUserModification(utilisateur);
-                    this.ordreRepo.save(ordre);
-                    ls_nordre = ordre.getNumero();
-                    pRow.setOrdreNum(ls_nordre);
-                    pRow.pushMessage("Ordre créé");
-                    res.incrementOrdreCount();
-                } else {
-                    ls_nordre = "";
-                    pRow.pushMessage("Ordre NON créé, Numéro d'ordre invalide: " + ls_ord_ref);
-                }
-
-                if (ls_create_ligne.equals("O")) {
-                    for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
-                        if (ll_count > 1) {
-                            ls_qty_case = 0d;
-                            ls_qty_pallets = 0d;
-                            ls_case_per_pallets = 0d;
-                        }
-
-                        val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
-
-                        Boolean ls_art_existe = true;
-                        try {
-                            this.entityManager
-                                    .createNativeQuery(
-                                            "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
-                                    .setParameter("ls_art", ls_art)
-                                    .getSingleResult();
-                        } catch (NoResultException e) {
-                            ls_art_existe = false;
-                        }
-
-                        if (ls_art_existe) {
-
-                            FunctionResult ls_rc = this.functionOrdreRepo.fCreateLignePreordre(
-                                    ls_ord_ref, ls_cen_ref, ls_qty_case, ls_qty_pallets, ls_case_per_pallets,
-                                    ls_type_pallet, ls_qty_pallets_inter, ls_art, ls_proprietaire, ls_station,
-                                    ld_prix_vente, ld_prix_achat, ls_unite_achat.get(), ls_unite_vente.get());
-
-                            // HANDLE ls_rc
-                            if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
-                                pRow.pushErreur(
-                                        "Erreur création ligne article pour ORD_REF: " + ls_ord_ref + " -> "
-                                                + ls_rc.getMsg());
-                                res.pushRow(pRow);
-                                continue outer;
-                            }
-
-                            // CREER ORDLOG
-                            val ls_DATDEP_FOU_P = ls_depart_date;
-                            val ls_DATDEP_FOU_P_YYYYMMDD = ls_depart_date
-                                    .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-                            val ls_datdep_grp_p = ls_depart_date;
-
-                            val ls_ordlog_existe = this.ordreLogistiqueRepo.findOne((root, cq, cb) -> cb.and(
-                                    cb.equal(root.get("ordre").get("id"), ls_ord_ref),
-                                    cb.equal(root.get("fournisseur").get("code"), ls_station)));
-
-                            if (ls_ordlog_existe.isEmpty()) {
-                                GeoOrdreLogistique ordlog = new GeoOrdreLogistique();
-                                try {
-                                    ordlog.setOrdre(this.ordreRepo.getOne(ls_ord_ref));
-                                    ordlog.setCodeFournisseur(ls_station);
-                                    ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
-                                    ordlog.setDateDepartPrevueFournisseurRaw(ls_DATDEP_FOU_P_YYYYMMDD);
-                                    ordlog.setTotalPalettesCommandees(ls_qty_pallets.floatValue());
-                                    ordlog.setTypeLieuGroupageArrivee('G');
-                                    ordlog.setTypeLieuDepart('F');
-                                    ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
-                                    ordlog = this.ordreLogistiqueRepo.save(ordlog);
-                                } catch (Exception e) {
-                                    pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " +
-                                            ls_ord_ref
-                                            + ". " + e.getMessage());
-                                    res.pushRow(pRow);
-                                    continue;
-                                }
-                            }
-
-                        } else
-                            pRow.pushMessage("Article invalide: " + ls_art);
-
+                    String ls_nordre;
+                    if (functionRes.getRes().equals(FunctionResult.RESULT_OK)) {
+                        ls_create_ligne = "O";
+                        GeoOrdre ordre = this.ordreRepo.getOne(ls_ord_ref);
+                        ordre.setUserModification(utilisateur);
+                        this.ordreRepo.save(ordre);
+                        ls_nordre = ordre.getNumero();
+                        pRow.setOrdreNum(ls_nordre);
+                        pRow.pushMessage("Ordre créé");
+                        row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK).setCellValue(ls_nordre);
+                        res.incrementOrdreCount();
+                    } else {
+                        ls_nordre = "";
+                        pRow.pushMessage("Ordre NON créé, Numéro d'ordre invalide: " + ls_ord_ref);
                     }
+
+                    if (ls_create_ligne.equals("O")) {
+                        for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
+                            if (ll_count > 1) {
+                                ls_qty_case = 0d;
+                                ls_qty_pallets = 0d;
+                                ls_case_per_pallets = 0d;
+                            }
+
+                            val ls_art = StringUtils.padLeft(ls_array_art.get(ll_count), "0", 6);
+
+                            Boolean ls_art_existe = true;
+                            try {
+                                this.entityManager
+                                        .createNativeQuery(
+                                                "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
+                                        .setParameter("ls_art", ls_art)
+                                        .getSingleResult();
+                            } catch (NoResultException e) {
+                                ls_art_existe = false;
+                            }
+
+                            if (ls_art_existe) {
+
+                                FunctionResult ls_rc = this.functionOrdreRepo.fCreateLignePreordre(
+                                        ls_ord_ref, ls_cen_ref, ls_qty_case, ls_qty_pallets, ls_case_per_pallets,
+                                        ls_type_pallet, ls_qty_pallets_inter, ls_art, ls_proprietaire, ls_station,
+                                        ld_prix_vente, ld_prix_achat, ls_unite_achat.get(), ls_unite_vente.get());
+
+                                // HANDLE ls_rc
+                                if (ls_rc.getRes() != FunctionResult.RESULT_OK) {
+                                    pRow.pushErreur(
+                                            "Erreur création ligne article pour ORD_REF: " + ls_ord_ref + " -> "
+                                                    + ls_rc.getMsg());
+                                    res.pushRow(pRow);
+                                    continue outer;
+                                }
+
+                                // CREER ORDLOG
+                                val ls_DATDEP_FOU_P = ls_depart_date;
+                                val ls_DATDEP_FOU_P_YYYYMMDD = ls_depart_date
+                                        .format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+                                val ls_datdep_grp_p = ls_depart_date;
+
+                                val ls_ordlog_existe = this.ordreLogistiqueRepo.findOne((root, cq, cb) -> cb.and(
+                                        cb.equal(root.get("ordre").get("id"), ls_ord_ref),
+                                        cb.equal(root.get("fournisseur").get("code"), ls_station)));
+
+                                if (ls_ordlog_existe.isEmpty()) {
+                                    GeoOrdreLogistique ordlog = new GeoOrdreLogistique();
+                                    try {
+                                        ordlog.setOrdre(this.ordreRepo.getOne(ls_ord_ref));
+                                        ordlog.setCodeFournisseur(ls_station);
+                                        ordlog.setDateDepartPrevueFournisseur(ls_DATDEP_FOU_P);
+                                        ordlog.setDateDepartPrevueFournisseurRaw(ls_DATDEP_FOU_P_YYYYMMDD);
+                                        ordlog.setTotalPalettesCommandees(ls_qty_pallets.floatValue());
+                                        ordlog.setTypeLieuGroupageArrivee('G');
+                                        ordlog.setTypeLieuDepart('F');
+                                        ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
+                                        ordlog = this.ordreLogistiqueRepo.save(ordlog);
+                                    } catch (Exception e) {
+                                        pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " +
+                                                ls_ord_ref
+                                                + ". " + e.getMessage());
+                                        res.pushRow(pRow);
+                                        continue;
+                                    }
+                                }
+
+                            } else
+                                pRow.pushMessage("Article invalide: " + ls_art);
+
+                        }
+                    }
+                } else {
+                    pRow.pushMessage("Ordre déjà existant " + ls_value + " !!");
+                    pRow.setDepot(ls_depot_name);
+                    pRow.setOrdreNum(ls_value);
+                    pRow.setRefCli(ls_ref_cli);
                 }
 
                 res.pushRow(pRow);
@@ -1396,9 +1419,7 @@ public class ProgramService {
             workbook.write(out);
             this.writeOutput(out, chunks);
             workbook.close();
-        } catch (
-
-        Exception exception) {
+        } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             throw new RuntimeException(exception.getMessage());
         }

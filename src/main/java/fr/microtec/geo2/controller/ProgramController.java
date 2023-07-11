@@ -121,6 +121,7 @@ public class ProgramController {
             LocalDateTime dateDepart;
             LocalDateTime dateLivraison;
             String ordreNum;
+            String refCli;
             List<String> erreurs = new ArrayList<>();
             List<String> messages = new ArrayList<>();
 
