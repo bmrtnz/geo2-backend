@@ -1023,4 +1023,48 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(2, result.getRes(), result.getMsg());
     }
 
+    @Test
+    public void testFCreatePreordre() {
+        FunctionResult result = this.functionOrdreRepository.fCreatePreordre(
+                SOCIETE_SA,
+                "000115",
+                "016121",
+                "LUNDE",
+                "CDE 666",
+                false,
+                false,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(2),
+                "hello",
+                "AJ",
+                "SJ");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertFalse(result.getData().isEmpty());
+    }
+
+    @Test
+    public void testFCreateLignePreordre() {
+        FunctionResult result = this.functionOrdreRepository.fCreateLignePreordre(
+                "2091363",
+                "016121",
+                100d,
+                10d,
+                10d,
+                "-",
+                0d,
+                "076058",
+                "BWINDEMNISAT",
+                "BWINDEMNISAT",
+                1.2d,
+                1.1d,
+                "COLIS",
+                "COLIS");
+
+        // On test juste l'execution,
+        // parce qu'on arrivera à terme au nombre maximal de lignes
+        Assertions.assertNotNull(result);
+    }
+
 }

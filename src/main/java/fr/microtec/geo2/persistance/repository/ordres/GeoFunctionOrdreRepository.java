@@ -330,33 +330,33 @@ public interface GeoFunctionOrdreRepository {
             Float arg_trp_pu);
 
     FunctionResult fCreatePreordre(
-            String ls_soc_code,
-            String ls_cli_ref,
-            String ls_cen_ref,
-            String ls_transp_final,
-            String ls_ref_cli,
-            Boolean x,
-            Boolean y,
-            LocalDateTime ls_depart_date,
-            LocalDateTime ls_delivery_date,
-            String ls_instruction_log,
-            String ls_assistante,
-            String ls_commercial);
+            String arg_soc_code,
+            String arg_cli_ref,
+            String arg_cen_ref,
+            String arg_trp_code,
+            String arg_ref_cmd_cli,
+            Boolean arg_is_regulation,
+            Boolean arg_is_baf,
+            LocalDateTime arg_dat_dep,
+            LocalDateTime arg_dat_liv,
+            String arg_instruction_log,
+            String arg_assistante,
+            String arg_commercial);
 
     FunctionResult fCreateLignePreordre(
-            String ls_ord_ref,
-            String ls_cen_ref,
-            Double ls_qty_case,
-            Double ls_qty_pallets,
-            Double ls_case_per_pallets,
-            String ls_type_pallet,
-            Double ls_qty_pallets_inter,
-            String ls_art,
-            String ls_proprietaire,
-            String ls_station,
-            Double ld_prix_vte,
-            Double ld_prix_achat,
-            String ls_unite_achat,
-            String ls_unite_vente);
+            String arg_ord_ref,
+            String arg_cen_ref,
+            Double arg_nb_colis,
+            Double arg_nb_pal,
+            Double arg_pal_nb_col,
+            String arg_pal_code,
+            Double arg_palinter_nb,
+            String arg_art_ref,
+            String arg_prop_code,
+            String arg_fou_code,
+            Double arg_prix_vente,
+            Double arg_prix_achat,
+            String arg_unite_achat,
+            String arg_unite_vente);
 
 }
