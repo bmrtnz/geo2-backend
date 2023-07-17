@@ -96,6 +96,7 @@ begin
                 return;
             end if;
             cur_orl_ref := orl_ref_update;
+            new_orl_ref := cur_orl_ref;
         end;
     end if;
 
