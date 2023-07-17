@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.produits;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoEdiArticleClientGraphQLService extends GeoAbstractGraphQLService<GeoEdiArticleClient, Integer> {
+public class GeoEdiArticleClientGraphQLService extends GeoAbstractGraphQLService<GeoEdiArticleClient, BigDecimal> {
 
     public GeoEdiArticleClientGraphQLService(GeoEdiArticleClientRepository repository) {
         super(repository, GeoEdiArticleClient.class);
@@ -37,7 +38,7 @@ public class GeoEdiArticleClientGraphQLService extends GeoAbstractGraphQLService
 
     @GraphQLQuery
     public Optional<GeoEdiArticleClient> getEdiArticleClient(
-            @GraphQLArgument(name = "id") Integer id) {
+            @GraphQLArgument(name = "id") BigDecimal id) {
         return super.getOne(id);
     }
 
@@ -48,7 +49,7 @@ public class GeoEdiArticleClientGraphQLService extends GeoAbstractGraphQLService
     }
 
     @GraphQLMutation
-    public void deleteEdiArticleClient(Integer id) {
+    public void deleteEdiArticleClient(BigDecimal id) {
         this.delete(id);
     }
 
