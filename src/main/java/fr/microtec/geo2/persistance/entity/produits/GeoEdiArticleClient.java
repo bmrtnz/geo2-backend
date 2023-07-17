@@ -49,9 +49,6 @@ public class GeoEdiArticleClient extends ValidateAndModifiedEntity {
     @Column(name = "priorite")
     private Integer priorite;
 
-    @Column(name = "typ_desc")
-    private String description;
-
     @Column(name = "last_ord")
     private String dernierOrdre;
 
