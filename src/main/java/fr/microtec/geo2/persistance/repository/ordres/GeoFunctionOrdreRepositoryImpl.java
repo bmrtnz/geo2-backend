@@ -141,12 +141,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult ofInitArticle(String ordRef, String artRef, String socCode) {
+    public FunctionResult ofInitArticle(String ordRef, String artRef, String socCode, String orlRefUpdate) {
         FunctionQuery query = this.build("OF_INIT_ARTICLE");
 
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_art_ref", String.class, artRef);
         query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("orl_ref_update", String.class, orlRefUpdate);
         query.attachOutput("new_orl_ref", String.class);
         query.attachOutput("art_ass", String.class);
 

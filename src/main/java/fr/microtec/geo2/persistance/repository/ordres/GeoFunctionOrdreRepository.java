@@ -34,7 +34,7 @@ public interface GeoFunctionOrdreRepository {
     /**
      * Génère une nouvelle ligne d'ordre avec l'article sélectionné.
      */
-    FunctionResult ofInitArticle(String ordRef, String artRef, String socCode);
+    FunctionResult ofInitArticle(String ordRef, String artRef, String socCode, String orlRefUpdate);
 
     /**
      * Indicateur du blocage de l'ordre dont le départ est aujourd'hui

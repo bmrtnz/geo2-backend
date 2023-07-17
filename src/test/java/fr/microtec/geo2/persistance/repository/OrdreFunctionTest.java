@@ -231,12 +231,11 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes());
     }
 
-    // Finira par échoué aprés 100 lignes insérées
+    // On ne test pas l'insertion parcequ'elle finira par échouer aprés 100 lignes
     @Test
-    @Disabled
-    public void testOfInitArticle() {
+    public void testOfInitArticleUpdate() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("1504560", "087187", SOCIETE_SA);
+                .ofInitArticle("1504560", "087187", SOCIETE_SA, "D419DD");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -245,7 +244,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticleWithAssociated() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("000922", "028514", SOCIETE_SA);
+                .ofInitArticle("000922", "028514", SOCIETE_SA, null);
 
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getData().get("art_ass"));
