@@ -53,6 +53,9 @@ public class ProgramController {
             case TESCO:
                 return this.service.importTesco(chunk, societe, utilisateur, generic);
 
+            case PREORDRES:
+                return this.service.importPreordre(chunk, utilisateur);
+
             default:
                 throw new RuntimeException(String.format("Program %1 does not exist", program));
         }
@@ -118,6 +121,7 @@ public class ProgramController {
             LocalDateTime dateDepart;
             LocalDateTime dateLivraison;
             String ordreNum;
+            String refCli;
             List<String> erreurs = new ArrayList<>();
             List<String> messages = new ArrayList<>();
 

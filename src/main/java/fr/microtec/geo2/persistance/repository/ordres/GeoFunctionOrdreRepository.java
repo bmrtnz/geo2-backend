@@ -329,4 +329,34 @@ public interface GeoFunctionOrdreRepository {
             String arg_soc_code,
             Float arg_trp_pu);
 
+    FunctionResult fCreatePreordre(
+            String arg_soc_code,
+            String arg_cli_ref,
+            String arg_cen_ref,
+            String arg_trp_code,
+            String arg_ref_cmd_cli,
+            Boolean arg_is_regulation,
+            Boolean arg_is_baf,
+            LocalDateTime arg_dat_dep,
+            LocalDateTime arg_dat_liv,
+            String arg_instruction_log,
+            String arg_assistante,
+            String arg_commercial);
+
+    FunctionResult fCreateLignePreordre(
+            String arg_ord_ref,
+            String arg_cen_ref,
+            Double arg_nb_colis,
+            Double arg_nb_pal,
+            Double arg_pal_nb_col,
+            String arg_pal_code,
+            Double arg_palinter_nb,
+            String arg_art_ref,
+            String arg_prop_code,
+            String arg_fou_code,
+            Double arg_prix_vente,
+            Double arg_prix_achat,
+            String arg_unite_achat,
+            String arg_unite_vente);
+
 }
