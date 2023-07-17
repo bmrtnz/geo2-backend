@@ -1,5 +1,7 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,7 +31,7 @@ public class GeoEdiArticleClient extends ValidateAndModifiedEntity {
             @Parameter(name = "sequenceName", value = "F_SEQ_EDI_ART_CLI"),
             @Parameter(name = "isSequence", value = "false")
     })
-    private Integer id;
+    private BigDecimal id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
