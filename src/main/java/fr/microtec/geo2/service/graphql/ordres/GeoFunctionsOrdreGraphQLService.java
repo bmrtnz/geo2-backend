@@ -76,8 +76,9 @@ public class GeoFunctionsOrdreGraphQLService {
     public FunctionResult ofInitArticle(
             @GraphQLArgument(name = "ordreRef") String ordreRef,
             @GraphQLArgument(name = "articleRef") String articleRef,
-            @GraphQLArgument(name = "societeCode") String societeCode) {
-        FunctionResult res = this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+            @GraphQLArgument(name = "societeCode") String societeCode,
+            @GraphQLArgument(name = "orlRefUpdate") String orlRefUpdate) {
+        FunctionResult res = this.repository.ofInitArticle(ordreRef, articleRef, societeCode, orlRefUpdate);
         if (res.getRes() == FunctionResult.RESULT_OK) {
             String newligneRef = res.getData().get("new_orl_ref").toString();
             this.repository.onChangeAchDevPu(newligneRef, societeCode);
@@ -91,7 +92,7 @@ public class GeoFunctionsOrdreGraphQLService {
             @GraphQLArgument(name = "articleRef") String articleRef,
             @GraphQLArgument(name = "societeCode") String societeCode,
             @GraphQLArgument(name = "fromLigneRef") String historyLigneRef) {
-        FunctionResult res = this.repository.ofInitArticle(ordreRef, articleRef, societeCode);
+        FunctionResult res = this.repository.ofInitArticle(ordreRef, articleRef, societeCode, null);
 
         String newligneRef = res.getData().get("new_orl_ref").toString();
 
