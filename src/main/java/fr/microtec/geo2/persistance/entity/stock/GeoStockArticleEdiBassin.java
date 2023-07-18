@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
@@ -27,7 +26,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "geo_stock_art_edi_bassin")
-public class GeoStockArticleEdiBassin extends ValidateAndModifiedEntity {
+public class GeoStockArticleEdiBassin {
 
     @Id
     @Column(name = "k_stock_art_edi_bassin")
