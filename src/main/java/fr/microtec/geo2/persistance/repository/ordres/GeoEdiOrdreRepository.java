@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
 @Repository
-public interface GeoEdiOrdreRepository extends GeoRepository<GeoEdiOrdre, String> {
+public interface GeoEdiOrdreRepository extends GeoRepository<GeoEdiOrdre, BigDecimal> {
 
     @Query(name = "OrdreEdi.allCommandeEdi", nativeQuery = true)
     List<GeoCommandeEdi> allCommandeEdi(
