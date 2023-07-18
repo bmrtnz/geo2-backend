@@ -3,6 +3,10 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import lombok.Data;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import java.math.BigDecimal;
 
 @Data
@@ -12,7 +16,12 @@ public class GeoEdiLigne {
 
     @Id
     @Column(name = "ref_edi_ligne")
-    private String id;
+    @GeneratedValue(generator = "GeoEdiLigneGenerator")
+    @GenericGenerator(name = "GeoEdiLigneGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+            @Parameter(name = "sequenceName", value = "SEQ_EDI_LIGNE"),
+            @Parameter(name = "isSequence", value = "true")
+    })
+    private BigDecimal id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ref_edi_ordre")
@@ -71,5 +80,8 @@ public class GeoEdiLigne {
 
     @Column(name = "op_marketing")
     private Boolean operationMarketing;
+
+    @Column(name = "alert_prix")
+    private String alertePrix;
 
 }
