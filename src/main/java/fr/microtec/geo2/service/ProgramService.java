@@ -1404,8 +1404,6 @@ public class ProgramService {
 
                             } else {
                                 pRow.pushErreur("Article invalide: " + ls_art);
-                                res.pushRow(pRow);
-                                continue;
                             }
 
                         }
