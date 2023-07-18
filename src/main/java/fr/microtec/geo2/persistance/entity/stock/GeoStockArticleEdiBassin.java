@@ -16,6 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEdiLigne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEdiOrdre;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBureauAchat;
@@ -38,12 +40,22 @@ public class GeoStockArticleEdiBassin {
     private BigDecimal id;
 
     @NotNull
-    @Column(name = "edi_ord")
+    @Column(name = "edi_ord", insertable = false, updatable = false)
     private Integer numeroOrdreEDI;
 
     @NotNull
-    @Column(name = "edi_lig")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "edi_ord", nullable = false)
+    private GeoEdiOrdre ordreEdi;
+
+    @NotNull
+    @Column(name = "edi_lig", insertable = false, updatable = false)
     private Integer numeroLigneEDI;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "edi_ligne", nullable = false)
+    private GeoEdiLigne ligneEdi;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
