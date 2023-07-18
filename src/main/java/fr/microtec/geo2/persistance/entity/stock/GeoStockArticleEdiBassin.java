@@ -54,7 +54,7 @@ public class GeoStockArticleEdiBassin {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "edi_ligne", nullable = false)
+    @JoinColumn(name = "edi_lig", nullable = false)
     private GeoEdiLigne ligneEdi;
 
     @NotNull
