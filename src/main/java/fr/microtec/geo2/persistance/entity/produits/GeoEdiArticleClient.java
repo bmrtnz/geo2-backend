@@ -46,7 +46,6 @@ public class GeoEdiArticleClient extends ValidateAndModifiedEntity {
     @Column(name = "art_ref_client")
     private String codeArticleClient;
 
-    @NotNull
     @Column(name = "gtin_colis_client")
     private String gtinColisClient;
 
