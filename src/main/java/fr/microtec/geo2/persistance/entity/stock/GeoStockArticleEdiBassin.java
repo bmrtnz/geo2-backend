@@ -89,7 +89,13 @@ public class GeoStockArticleEdiBassin {
     private GeoBureauAchat bureauAchat;
 
     @Column(name = "qte_res")
-    private Integer quantiteReservee;
+    private Integer quantiteRestante;
+
+    @Column(name = "qte_valide")
+    private Integer quantiteValidee;
+
+    @Column(name = "flag_hors_bassin")
+    private Boolean flagHorsBassin;
 
     @Column(name = "age")
     private Character age;
