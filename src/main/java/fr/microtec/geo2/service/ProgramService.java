@@ -1348,7 +1348,7 @@ public class ProgramService {
                             try {
                                 this.entityManager
                                         .createNativeQuery(
-                                                "select 'O' from GEO_ARTICLE_COLIS where art_ref = :ls_art and valide = 'O'")
+                                                "select 'O' from AVI_ART_GESTION where art_ref = :ls_art and valide = 'O'")
                                         .setParameter("ls_art", ls_art)
                                         .getSingleResult();
                             } catch (NoResultException e) {
@@ -1404,8 +1404,6 @@ public class ProgramService {
 
                             } else {
                                 pRow.pushErreur("Article invalide: " + ls_art);
-                                res.pushRow(pRow);
-                                continue;
                             }
 
                         }

@@ -235,7 +235,7 @@ BEGIN
 			CRT_CODE, CRT_BTA_CODE, CRT_PU, TRP_BAC_CODE, CODE_CHARGEMENT, TTR_CODE, FRAIS_PLATEFORME,
             FLAG_GEO2
         ) VALUES (
-            ls_ord_ref, arg_soc_code, ls_soc_cam_code, ls_nordre, arg_assistante, arg_commercial, arg_cli_ref, ls_cli_code, arg_ref_cmd_cli, arg_cen_ref, ls_cen_code, ls_sco_code, ls_pays_code_entrepot,
+            ls_ord_ref, arg_soc_code, ls_soc_cam_code, ls_nordre,arg_commercial, arg_assistante, arg_cli_ref, ls_cli_code, arg_ref_cmd_cli, arg_cen_ref, ls_cen_code, ls_sco_code, ls_pays_code_entrepot,
             ls_dev_code,ld_dev_tx,ls_inc_code,ls_trp_code,ld_trp_pu,'N','N','N',ldate_dep,ldate_liv,ldate_dep,
             ls_tvt_code,ls_tvr_code,ls_mpm_code,ls_bpm_code,ls_echnbj,ls_echle,ld_remsf_tx,ld_remhf_tx,
             ls_tot_vte, '0','0','0', ls_tot_vte,ls_marge,'0','0','0','N','N',ls_flagbaf,ls_flagfac,
