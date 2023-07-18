@@ -15,8 +15,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEdiLigne;
+import fr.microtec.geo2.persistance.entity.ordres.GeoEdiOrdre;
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBureauAchat;
@@ -27,7 +28,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "geo_stock_art_edi_bassin")
-public class GeoStockArticleEdiBassin extends ValidateAndModifiedEntity {
+public class GeoStockArticleEdiBassin {
 
     @Id
     @Column(name = "k_stock_art_edi_bassin")
@@ -39,12 +40,22 @@ public class GeoStockArticleEdiBassin extends ValidateAndModifiedEntity {
     private BigDecimal id;
 
     @NotNull
-    @Column(name = "edi_ord")
+    @Column(name = "edi_ord", insertable = false, updatable = false)
     private Integer numeroOrdreEDI;
 
     @NotNull
-    @Column(name = "edi_lig")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "edi_ord", nullable = false)
+    private GeoEdiOrdre ordreEdi;
+
+    @NotNull
+    @Column(name = "edi_lig", insertable = false, updatable = false)
     private Integer numeroLigneEDI;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "edi_ligne", nullable = false)
+    private GeoEdiLigne ligneEdi;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

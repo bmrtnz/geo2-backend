@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 @Service
 @GraphQLApi
 @Secured("ROLE_USER")
-public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiOrdre, String> {
+public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiOrdre, BigDecimal> {
 
     private final GeoEdiOrdreRepository repository;
     private final EdiOrdreService ediOrdreService;
@@ -48,6 +49,11 @@ public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiO
     @GraphQLMutation
     public GeoEdiOrdre saveEdiOrdre(GeoEdiOrdre ediOrdre, @GraphQLEnvironment ResolutionEnvironment env) {
         return this.saveEntity(ediOrdre, env);
+    }
+
+    @GraphQLMutation
+    public void deleteEdiOrdre(BigDecimal id) {
+        this.delete(id);
     }
 
     @GraphQLQuery
