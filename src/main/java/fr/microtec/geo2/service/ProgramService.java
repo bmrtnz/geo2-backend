@@ -1336,7 +1336,7 @@ public class ProgramService {
 
                     if (ls_create_ligne.equals("O")) {
                         for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
-                            if (ll_count > 1) {
+                            if (ll_count >= 1) {
                                 ls_qty_case = 0d;
                                 ls_qty_pallets = 0d;
                                 ls_case_per_pallets = 0d;
