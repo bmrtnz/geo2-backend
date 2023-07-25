@@ -9,40 +9,42 @@ import java.time.format.DateTimeFormatter;
  */
 public class TemporalUtils {
 
-  /**
-   * ISO 8601 pattern with optional time
-   */
-  public static final String ISO8601_PATTERN = "yyyy-MM-dd['T'HH[:mm[:ss[.SSS'Z']]]]";
-  
-  /**
-	 * Parse Object to ISO LocalDate
-	 * 
-	 * @param o Object argument
-	 * @return ISO LocalDate
-	 */
-	public static LocalDate parseToLocalDate(Object o) {
-		return LocalDate.parse(o.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-	}
+    /**
+     * ISO 8601 pattern with optional time
+     */
+    public static final String ISO8601_PATTERN = "yyyy-MM-dd['T'HH[:mm[:ss[.SSS'Z']]]]";
 
-	/**
-	 * Parse Object to ISO LocalDateTime
-	 * 
-	 * @param o Object argument
-	 * @return ISO LocalDateTime
-	 */
-	public static LocalDateTime parseToLocalDateTime(Object o) {
-		return LocalDateTime
-		.parse(o.toString(), DateTimeFormatter.ofPattern(ISO8601_PATTERN));
-	}
+    public static final String GEO_DATETIME_PATTERN = "dd/MM/yyyy HH:mm:ss";
 
-	/**
-	 * Serialize LocalDateDate to ISO String
-	 * 
-	 * @param t LocalDateTime input
-	 * @return ISO serialized string
-	 */
-	public static String serializeFromLocalDateTime(LocalDateTime t) {
-		return t.format(DateTimeFormatter.ofPattern(ISO8601_PATTERN));
-	}
+    /**
+     * Parse Object to ISO LocalDate
+     *
+     * @param o Object argument
+     * @return ISO LocalDate
+     */
+    public static LocalDate parseToLocalDate(Object o) {
+        return LocalDate.parse(o.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    /**
+     * Parse Object to ISO LocalDateTime
+     *
+     * @param o Object argument
+     * @return ISO LocalDateTime
+     */
+    public static LocalDateTime parseToLocalDateTime(Object o) {
+        return LocalDateTime
+                .parse(o.toString(), DateTimeFormatter.ofPattern(ISO8601_PATTERN));
+    }
+
+    /**
+     * Serialize LocalDateDate to ISO String
+     *
+     * @param t LocalDateTime input
+     * @return ISO serialized string
+     */
+    public static String serializeFromLocalDateTime(LocalDateTime t) {
+        return t.format(DateTimeFormatter.ofPattern(ISO8601_PATTERN));
+    }
 
 }

@@ -231,12 +231,11 @@ public class OrdreFunctionTest {
         Assertions.assertEquals(1, result.getRes());
     }
 
-    // Finira par échoué aprés 100 lignes insérées
+    // On ne test pas l'insertion parcequ'elle finira par échouer aprés 100 lignes
     @Test
-    @Disabled
-    public void testOfInitArticle() {
+    public void testOfInitArticleUpdate() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("1504560", "087187", SOCIETE_SA);
+                .ofInitArticle("1504560", "087187", SOCIETE_SA, "D419DD");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -245,7 +244,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticleWithAssociated() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("000922", "028514", SOCIETE_SA);
+                .ofInitArticle("000922", "028514", SOCIETE_SA, null);
 
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getData().get("art_ass"));
@@ -1021,6 +1020,50 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.getRes(), result.getMsg());
+    }
+
+    @Test
+    public void testFCreatePreordre() {
+        FunctionResult result = this.functionOrdreRepository.fCreatePreordre(
+                SOCIETE_SA,
+                "000115",
+                "016121",
+                "LUNDE",
+                "CDE 666",
+                false,
+                false,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(2),
+                "hello",
+                "AJ",
+                "SJ");
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
+        Assertions.assertFalse(result.getData().isEmpty());
+    }
+
+    @Test
+    public void testFCreateLignePreordre() {
+        FunctionResult result = this.functionOrdreRepository.fCreateLignePreordre(
+                "2091363",
+                "016121",
+                100d,
+                10d,
+                10d,
+                "-",
+                0d,
+                "076058",
+                "BWINDEMNISAT",
+                "BWINDEMNISAT",
+                1.2d,
+                1.1d,
+                "COLIS",
+                "COLIS");
+
+        // On test juste l'execution,
+        // parce qu'on arrivera à terme au nombre maximal de lignes
+        Assertions.assertNotNull(result);
     }
 
 }

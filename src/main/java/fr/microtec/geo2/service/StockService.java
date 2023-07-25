@@ -97,7 +97,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             String commentaire) {
 
         // Initialize ordre ligne
-        FunctionResult res = this.functionRepo.ofInitArticle(ordreId, articleId, societeId);
+        FunctionResult res = this.functionRepo.ofInitArticle(ordreId, articleId, societeId, null);
         String newligneRef = res.getData().get("new_orl_ref").toString();
 
         // Update generated row with history values

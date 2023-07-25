@@ -3,11 +3,13 @@ package fr.microtec.geo2.persistance.repository.ordres;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.microtec.geo2.common.TemporalUtils;
 import fr.microtec.geo2.persistance.GeoStringArrayType;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
@@ -141,12 +143,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
     }
 
     @Override
-    public FunctionResult ofInitArticle(String ordRef, String artRef, String socCode) {
+    public FunctionResult ofInitArticle(String ordRef, String artRef, String socCode, String orlRefUpdate) {
         FunctionQuery query = this.build("OF_INIT_ARTICLE");
 
         query.attachInput("arg_ord_ref", String.class, ordRef);
         query.attachInput("arg_art_ref", String.class, artRef);
         query.attachInput("arg_soc_code", String.class, socCode);
+        query.attachInput("orl_ref_update", String.class, orlRefUpdate);
         query.attachOutput("new_orl_ref", String.class);
         query.attachOutput("art_ass", String.class);
 
@@ -1045,6 +1048,78 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         query.attachInput("arg_trp_dev_code", String.class, arg_trp_dev_code);
         query.attachInput("arg_soc_code", String.class, arg_soc_code);
         query.attachInput("arg_trp_pu", Float.class, arg_trp_pu);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreatePreordre(
+            String arg_soc_code,
+            String arg_cli_ref,
+            String arg_cen_ref,
+            String arg_trp_code,
+            String arg_ref_cmd_cli,
+            Boolean arg_is_regulation,
+            Boolean arg_is_baf,
+            LocalDateTime arg_dat_dep,
+            LocalDateTime arg_dat_liv,
+            String arg_instruction_log,
+            String arg_assistante,
+            String arg_commercial) {
+        FunctionQuery query = this.build("F_CREATE_PREORDRE");
+
+        query.attachInput("arg_soc_code", String.class, arg_soc_code);
+        query.attachInput("arg_cli_ref", String.class, arg_cli_ref);
+        query.attachInput("arg_cen_ref", String.class, arg_cen_ref);
+        query.attachInput("arg_trp_code", String.class, arg_trp_code);
+        query.attachInput("arg_ref_cmd_cli", String.class, arg_ref_cmd_cli);
+        query.attachInput("arg_is_regulation", Character.class, arg_is_regulation ? 'O' : 'N');
+        query.attachInput("arg_is_baf", Character.class, arg_is_baf ? 'O' : 'N');
+        query.attachInput("arg_dat_dep", String.class,
+                arg_dat_dep.format(DateTimeFormatter.ofPattern(TemporalUtils.GEO_DATETIME_PATTERN)));
+        query.attachInput("arg_dat_liv", String.class,
+                arg_dat_liv.format(DateTimeFormatter.ofPattern(TemporalUtils.GEO_DATETIME_PATTERN)));
+        query.attachInput("arg_instruction_log", String.class, arg_instruction_log);
+        query.attachInput("arg_assistante", String.class, arg_assistante);
+        query.attachInput("arg_commercial", String.class, arg_commercial);
+        query.attachOutput("ls_ord_ref", String.class);
+
+        return query.fetch();
+    }
+
+    @Override
+    public FunctionResult fCreateLignePreordre(
+            String arg_ord_ref,
+            String arg_cen_ref,
+            Double arg_nb_colis,
+            Double arg_nb_pal,
+            Double arg_pal_nb_col,
+            String arg_pal_code,
+            Double arg_palinter_nb,
+            String arg_art_ref,
+            String arg_prop_code,
+            String arg_fou_code,
+            Double arg_prix_vente,
+            Double arg_prix_achat,
+            String arg_unite_achat,
+            String arg_unite_vente) {
+        FunctionQuery query = this.build("F_CREATE_LIGNE_PREORDRE");
+
+        query.attachInput("arg_ord_ref", String.class, arg_ord_ref);
+        query.attachInput("arg_cen_ref", String.class, arg_cen_ref);
+        query.attachInput("arg_nb_colis", Double.class, arg_nb_colis);
+        query.attachInput("arg_nb_pal", Double.class, arg_nb_pal);
+        query.attachInput("arg_pal_nb_col", Double.class, arg_pal_nb_col);
+        query.attachInput("arg_pal_code", String.class, arg_pal_code);
+        query.attachInput("arg_palinter_nb", Double.class, arg_palinter_nb);
+        query.attachInput("arg_art_ref", String.class, arg_art_ref);
+        query.attachInput("arg_prop_code", String.class, arg_prop_code);
+        query.attachInput("arg_fou_code", String.class, arg_fou_code);
+        query.attachInput("arg_prix_vente", Double.class, arg_prix_vente);
+        query.attachInput("arg_prix_achat", Double.class, arg_prix_achat);
+        query.attachInput("arg_unite_achat", String.class, arg_unite_achat);
+        query.attachInput("arg_unite_vente", String.class, arg_unite_vente);
+        query.attachOutput("ls_orl_ref", String.class);
 
         return query.fetch();
     }

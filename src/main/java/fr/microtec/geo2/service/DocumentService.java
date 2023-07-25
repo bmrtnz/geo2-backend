@@ -91,6 +91,11 @@ public class DocumentService {
             Path doc = this.getDocument(clazz, entityAsDocument);
             String filename = isEtiquette ? doc.getFileName().toString() : doc.toString();
 
+            log.info(
+                    "Load {} '{}'",
+                    isEtiquette ? "etiquette" : "document",
+                    this.getDocumentName(clazz, entityAsDocument));
+
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
             UriComponents uriComponents = uriBuilder
                     .path("/file-manager")
@@ -109,12 +114,6 @@ public class DocumentService {
         } catch (Exception e) {
             document.setIsPresent(false);
         }
-
-        log.info(
-                "Search {} '{}' : {}",
-                isEtiquette ? "etiquette" : "document",
-                this.getDocumentName(clazz, entityAsDocument),
-                document.getIsPresent() ? "Found" : "Not Found");
 
         this.setDocument(clazz, entityAsDocument, document);
     }
