@@ -92,10 +92,9 @@ public class DocumentService {
             String filename = isEtiquette ? doc.getFileName().toString() : doc.toString();
 
             log.info(
-                    "Search {} '{}' : {}",
+                    "Load {} '{}'",
                     isEtiquette ? "etiquette" : "document",
-                    this.getDocumentName(clazz, entityAsDocument),
-                    document.getIsPresent() ? "Found" : "Not Found");
+                    this.getDocumentName(clazz, entityAsDocument));
 
             UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance();
             UriComponents uriComponents = uriBuilder

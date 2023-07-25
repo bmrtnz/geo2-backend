@@ -1,102 +1,3 @@
-DROP TABLE GEO_FRAIS_TYP;
-
-CREATE TABLE GEO_FRAIS_TYP
-( K_FRAIS_TYP       NUMBER,
-  FRA_CODE        VARCHAR2(6 BYTE),
-  TYT_CODE         VARCHAR2(1 BYTE),
-  FRA_TIERS_CODE  VARCHAR2(12 BYTE),
-  ACH_DEV_PU    NUMBER(12,2),
-  ACH_DEV_CODE  VARCHAR2(3 BYTE),
-  MOD_USER                 VARCHAR2(35 BYTE),
-  MOD_DATE                 DATE,
-  VALIDE                   VARCHAR2(1 BYTE)     DEFAULT 'O',
-  PRIMARY  KEY (K_FRAIS_TYP));
-
-
-  DROP SEQUENCE GEO_ADMIN.SEQ_K_FRAIS_TYP;
-
-CREATE SEQUENCE GEO_ADMIN.SEQ_K_FRAIS_TYP
-  START WITH 1
-  MAXVALUE 999999999
-  MINVALUE 1
-  CYCLE
-  NOCACHE
-  NOORDER;
-
-CREATE OR REPLACE FUNCTION GEO_ADMIN.F_SEQ_K_FRAIS_TYP
-RETURN NUMBER IS result NUMBER;
-BEGIN
-        SELECT  SEQ_K_FRAIS_TYP.NEXTVAL INTO result FROM dual;
-        RETURN result;
-END;
-/
-
-
-CREATE OR REPLACE TRIGGER GEO_ADMIN.GEO_FRAIS_TYP_INS
-BEFORE INSERT
-ON GEO_ADMIN.GEO_FRAIS_TYP REFERENCING NEW AS NEW OLD AS OLD
-FOR EACH ROW
-DECLARE
- x_user          VARCHAR2(35);
-BEGIN
--- date et user création
- SELECT sys_context('USERENV','OS_USER') INTO x_user FROM dual;
- :NEW.K_FRAIS_TYP := F_SEQ_K_FRAIS_TYP;
- :NEW.MOD_USER := x_user;
- :NEW.MOD_DATE := SYSDATE;
- :new.valide := 'O';
- EXCEPTION
-   WHEN OTHERS THEN
-   -- Consider logging the error and then re-raise
-   RAISE;
-END;
-/
-Insert into GEO_FRAIS
-   (FRA_CODE, FRA_DESC, MOD_USER, MOD_DATE, VALIDE)
- Values
-   ('GMVS', 'Good Movement vehicle servic', 'bruno', TO_DATE('07/17/2023 17:04:01', 'MM/DD/YYYY HH24:MI:SS'),
-    'O');
-COMMIT;
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('GMVS', 'T', 'SITRA', 12.5,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('GMVS', 'T', 'TROTA', 8,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDEXP', 'S', 'LGL CUSTOMS', 58,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDIMP', 'S', 'EUROVISION', 49,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDIMP', 'S', 'LGL CUSTOMS', 84,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDIMP', 'S', 'BOLLORE', 75,'GBP');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDEXP', 'S', 'BOLLORE', 59,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDEXP', 'S', '2FL', 114,'EUR');
-Insert into GEO_FRAIS_TYP
-   (FRA_CODE, TYT_CODE, FRA_TIERS_CODE, ACH_DEV_PU,ACH_DEV_CODE)
- Values
-   ('DEDEXP', 'S', 'EUROVISION', 49,'EUR');
-COMMIT;
-
-
-
 CREATE OR REPLACE PROCEDURE GEO_ADMIN.FN_MAJ_ORDRE_REGROUPEMENT_V2(
     arg_ord_ref_origine varchar2,
     arg_soc_code varchar2,
@@ -230,7 +131,7 @@ AS
     ld_prix_mini number;
     ls_ind_exp varchar2(50);
 
-    ls_list_propr_code varchar2(50);
+    ls_list_propr_code clob;
     ls_tab_propr_code_2 p_str_tab_type := p_str_tab_type();
     ls_tab_null p_vcr_tab_type := p_vcr_tab_type();
     ll_nb_prop number;
@@ -325,8 +226,8 @@ AS
     ld_doua_pu_tot_new_dedexp number;
     ld_doua_pu_tot_new_dev_dedexp number;
 
-	ld_doua_pu_tot_new_dev_gmvs number;
-	ld_doua_pu_tot_new_gmvs number;
+    ld_doua_pu_tot_new_dev_gmvs number;
+    ld_doua_pu_tot_new_gmvs number;
 
 
     cursor load_geo_societe(a_soc_code varchar2) is
@@ -602,6 +503,14 @@ BEGIN
         begin
 
             for l in C_ordlig loop
+
+                If l.SOC_CODE_DETAIL ='BUK' then
+                    UPDATE GEO_GEST_REGROUP
+                    SET SOC_CODE_DETAIL ='BUK'
+                    where ORD_REF_RGP = ls_ord_ref_regroup and
+                          FOU_CODE_ORIG= l.fou_code;
+
+                ENd If;
                 li_num_version_uk := l.NUM_VERSION_UK;
                 If l.CDE_NB_COL is not null and l.CDE_NB_COL >0 Then
                     li_grp_ori := li_grp_ori + 1;
@@ -1420,14 +1329,23 @@ BEGIN
                                         ld_ach_pu_tmp := ls_ach_dev_taux_tmp * ls_ach_dev_pu_tmp;
 
                                 End IF;
-                                select ind_exp into ls_ind_exp  from GEO_FOURNI where FOU_code = ls_fou_code_tmp;
+
+                                begin
+                                    select ind_exp into ls_ind_exp  from GEO_FOURNI where FOU_code = ls_fou_code_tmp;
+                                exception when no_data_found then
+                                    ls_ind_exp := '';
+                                end;
 
                                 If  ls_ind_exp <>   'F' Then
                                     ls_propr_code_tmp := ls_fou_code_tmp;
                                 ELSE
-                                    select  PROP_CODE into ls_list_propr_code
-                                    from GEO_FOURNI
-                                    where FOU_code = ls_fou_code_tmp;
+                                    begin
+                                        select  PROP_CODE into ls_list_propr_code
+                                        from GEO_FOURNI
+                                        where FOU_code = ls_fou_code_tmp;
+                                    exception when no_data_found then
+                                        ls_list_propr_code := '';
+                                    end;
 
                                     ls_tab_propr_code_2 :=  p_str_tab_type();
                                     f_split(ls_list_propr_code, ',', ls_tab_propr_code_2);
@@ -1499,6 +1417,21 @@ BEGIN
                 ENd IF;
             end LOOP;
         end;
+
+		begin
+		UPDATE GEO_GEST_REGROUP
+		SET SOC_CODE_DETAIL ='BUK'
+		where ORD_REF_RGP = ls_ord_ref_regroup and
+					 SOC_CODE_DETAIL = 'SA' and
+					 exists (
+					 select 1
+					 from GEO_GEST_REGROUP G
+					 where 	G.ORD_REF_RGP = ls_ord_ref_regroup and
+							G.FOU_CODE_ORIG= GEO_GEST_REGROUP.FOU_CODE_ORIG and
+							G.SOC_CODE_DETAIL = 'BUK');
+		exception when no_data_found then
+		 null;
+		end;
 
         declare
         CURSOR C_SOM_QTE_ORIG is
@@ -1596,7 +1529,7 @@ BEGIN
             (ORD_REF,FRA_CODE,MONTANT,DEV_CODE,DEV_TX,TRP_CODE_PLUS) VALUES (ls_ord_ref_regroup,'DEDEXP',ld_doua_pu_tot_rgp,'EUR',1,ls_decl_doua);
         end;
 
-		delete  GEO_ORDFRA where ORD_REF =ls_ord_ref_regroup and FRA_CODE ='GMVS';
+        delete  GEO_ORDFRA where ORD_REF =ls_ord_ref_regroup and FRA_CODE ='GMVS';
 
         begin
         select GEO_FRAIS_TYP.ACH_DEV_PU ,GEO_FRAIS_TYP.ACH_DEV_CODE,GEO_DEVISE_REF.DEV_TX,GEO_FRAIS_TYP.ACH_DEV_PU *GEO_DEVISE_REF.DEV_TX
@@ -1610,10 +1543,10 @@ BEGIN
 
         insert INTO GEO_ORDFRA
             (ORD_REF,FRA_CODE,ACH_DEV_PU,MONTANT,DEV_CODE,DEV_TX,TRP_CODE_PLUS,ACH_QTE,ACH_PU,MONTANT_TOT)
-			VALUES (ls_ord_ref_regroup,'GMVS',ld_doua_pu_tot_new_dev_gmvs,ld_doua_pu_tot_new_dev_gmvs,ls_doua_dev_code,ld_doua_dev_tx,ls_transp,1,ld_doua_pu_tot_new_gmvs,ld_doua_pu_tot_new_gmvs);
+            VALUES (ls_ord_ref_regroup,'GMVS',ld_doua_pu_tot_new_dev_gmvs,ld_doua_pu_tot_new_dev_gmvs,ls_doua_dev_code,ld_doua_dev_tx,ls_transp,1,ld_doua_pu_tot_new_gmvs,ld_doua_pu_tot_new_gmvs);
 
         exception when no_data_found then
-			ls_ord_ref_regroup := ls_ord_ref_regroup;
+            ls_ord_ref_regroup := ls_ord_ref_regroup;
         end;
 
 
@@ -1654,4 +1587,3 @@ BEGIN
 
 end;
 /
-

@@ -40,8 +40,7 @@ BEGIN
 	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND ge.TYT_CODE IN ('C', 'E');
 	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND ge.TYT_CODE = 'F' AND get_flux_rgp(is_ord_ref, ge.tie_code) = 'BUK';
 	 			WHEN 'ORI' THEN -- BUK
-                    -- A la demande de Bruno A., pas de suppression des types clients et entrepots
-	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND ge.TYT_CODE IN ('P', 'F') AND get_flux_ori(is_ord_ref, ge.tie_code) = 'SA';
+	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND (ge.TYT_CODE IN ('P', 'C', 'E') OR (ge.TYT_CODE = 'F' AND get_flux_ori(is_ord_ref, ge.tie_code) = 'SA'));
                 ELSE null;
 			end case;
 		end case;

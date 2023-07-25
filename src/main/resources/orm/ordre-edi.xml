@@ -26,8 +26,11 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             C.SCO_CODE = :arg_sco_code and
             C.CLI_CODE LIKE :arg_cli_code AND
             O.STATUS_GEO LIKE :arg_status AND
-            O.DATE_LIV >= :arg_date_min AND
-            O.DATE_LIV <= :arg_date_max AND
+            (
+                ((:arg_type_search = 'livraison') AND (O.DATE_LIV >= :arg_date_min AND O.DATE_LIV <= :arg_date_max ))
+                OR
+                ((:arg_type_search = 'creation') AND (O.DATE_CREATION >= :arg_date_min AND O.DATE_CREATION <= :arg_date_max ))
+            ) AND
             C.PER_CODE_ASS LIKE :arg_assist AND
             C.PER_CODE_COM LIKE :arg_com AND
             O.REF_EDI_ORDRE LIKE :arg_ref_edi_ord

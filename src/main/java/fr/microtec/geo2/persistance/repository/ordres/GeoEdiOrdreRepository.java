@@ -26,7 +26,8 @@ public interface GeoEdiOrdreRepository extends GeoRepository<GeoEdiOrdre, BigDec
             @Param("arg_assist") String assistante,
             @Param("arg_com") String commercial,
             @Param("arg_ref_edi_ord") String arg_ref_edi_ord,
-            @Param("arg_user") String nomUtilisateur);
+            @Param("arg_user") String nomUtilisateur,
+            @Param("arg_type_search") String typeSearch);
 
     @Query(name = "OrdreEdi.allClientEdi", nativeQuery = true)
     List<GeoClientEdi> allClientEdi(

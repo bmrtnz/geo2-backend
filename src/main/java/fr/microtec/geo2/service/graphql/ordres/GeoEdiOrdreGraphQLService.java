@@ -16,6 +16,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.service.EdiOrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
+import graphql.GraphQLException;
 import io.leangen.graphql.annotations.GraphQLArgument;
 import io.leangen.graphql.annotations.GraphQLEnvironment;
 import io.leangen.graphql.annotations.GraphQLMutation;
@@ -67,9 +68,12 @@ public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiO
             @GraphQLArgument(name = "assistantId") String assistantId,
             @GraphQLArgument(name = "commercialId") String commercialId,
             @GraphQLArgument(name = "ediOrdreId") String ediOrdreId,
-            @GraphQLArgument(name = "nomUtilisateur") String nomUtilisateur) {
+            @GraphQLArgument(name = "nomUtilisateur") String nomUtilisateur,
+            @GraphQLArgument(name = "typeSearch") String typeSearch) {
+        if (typeSearch.isBlank())
+            throw new GraphQLException("Le paramètre de recherche doit etre `livraison` ou `creation`");
         return this.ediOrdreService.allCommandeEdi(secteurId, clientId, status, dateMin, dateMax, assistantId,
-                commercialId, ediOrdreId, nomUtilisateur);
+                commercialId, ediOrdreId, nomUtilisateur, typeSearch);
     }
 
     @GraphQLQuery
