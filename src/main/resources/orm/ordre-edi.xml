@@ -42,13 +42,14 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     >
         <query>
             <![CDATA[
-            Select distinct rownum, C.cli_ref, C.cli_code
+            SELECT rownum, rest.* FROM (
+            Select distinct C.cli_ref, C.cli_code
             from  geo_edi_ordre O, geo_client C
             where O.CLI_REF = C.CLI_REF AND
-                  C.SCO_CODE = :arg_sco_code AND
+                  C.SCO_CODE like :arg_sco_code AND
                   C.PER_CODE_ASS like :arg_ass_code AND
                   C.PER_CODE_COM like :arg_com_code
-            order by C.CLI_CODE
+            order by C.CLI_CODE ) rest
             ]]>
         </query>
     </named-native-query>
