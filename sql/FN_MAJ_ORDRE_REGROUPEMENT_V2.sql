@@ -1418,6 +1418,21 @@ BEGIN
             end LOOP;
         end;
 
+		begin
+		UPDATE GEO_GEST_REGROUP
+		SET SOC_CODE_DETAIL ='BUK'
+		where ORD_REF_RGP = ls_ord_ref_regroup and
+					 SOC_CODE_DETAIL = 'SA' and
+					 exists (
+					 select 1
+					 from GEO_GEST_REGROUP G
+					 where 	G.ORD_REF_RGP = ls_ord_ref_regroup and
+							G.FOU_CODE_ORIG= GEO_GEST_REGROUP.FOU_CODE_ORIG and
+							G.SOC_CODE_DETAIL = 'BUK');
+		exception when no_data_found then
+		 null;
+		end;
+
         declare
         CURSOR C_SOM_QTE_ORIG is
             select distinct
