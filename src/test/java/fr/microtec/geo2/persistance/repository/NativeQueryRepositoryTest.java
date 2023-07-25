@@ -100,10 +100,17 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllCommandeEdi() {
-        List<GeoCommandeEdi> list = this.geoEdiOrdreRepository.allCommandeEdi("F", "%", "%",
+        List<GeoCommandeEdi> list = this.geoEdiOrdreRepository.allCommandeEdi(
+                "F",
+                "%",
+                "%",
                 LocalDateTime.of(2020, 1, 1, 0, 0, 0),
-                LocalDateTime.of(2021, 1, 1, 23, 59, 59),
-                "%", "%", "%", "TINA");
+                LocalDateTime.of(2022, 1, 2, 0, 0, 0),
+                "%",
+                "%",
+                "%",
+                "TINA",
+                "livraison");
 
         Assertions.assertFalse(list.isEmpty());
     }

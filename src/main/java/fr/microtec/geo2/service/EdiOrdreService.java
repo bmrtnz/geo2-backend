@@ -22,9 +22,10 @@ public class EdiOrdreService {
 
     public List<GeoCommandeEdi> allCommandeEdi(
             String secteurId, String clientId, String status, LocalDateTime dateMin,
-            LocalDateTime dateMax, String assistantId, String commercialId, String ediOrdreId, String nomUtilisateur) {
+            LocalDateTime dateMax, String assistantId, String commercialId, String ediOrdreId, String nomUtilisateur,
+            String typeSearch) {
         List<GeoCommandeEdi> commandeEdiList = this.ediOrdreRepository.allCommandeEdi(secteurId, clientId, status,
-                dateMin, dateMax, assistantId, commercialId, ediOrdreId, nomUtilisateur);
+                dateMin, dateMax, assistantId, commercialId, ediOrdreId, nomUtilisateur, typeSearch);
 
         this.fVerifStatusLigEdi(commandeEdiList);
 
