@@ -131,7 +131,7 @@ AS
     ld_prix_mini number;
     ls_ind_exp varchar2(50);
 
-    ls_list_propr_code varchar2(50);
+    ls_list_propr_code clob;
     ls_tab_propr_code_2 p_str_tab_type := p_str_tab_type();
     ls_tab_null p_vcr_tab_type := p_vcr_tab_type();
     ll_nb_prop number;
@@ -503,13 +503,13 @@ BEGIN
         begin
 
             for l in C_ordlig loop
-            
+
                 If l.SOC_CODE_DETAIL ='BUK' then
                     UPDATE GEO_GEST_REGROUP
                     SET SOC_CODE_DETAIL ='BUK'
                     where ORD_REF_RGP = ls_ord_ref_regroup and
                           FOU_CODE_ORIG= l.fou_code;
-                          
+
                 ENd If;
                 li_num_version_uk := l.NUM_VERSION_UK;
                 If l.CDE_NB_COL is not null and l.CDE_NB_COL >0 Then
@@ -1329,14 +1329,23 @@ BEGIN
                                         ld_ach_pu_tmp := ls_ach_dev_taux_tmp * ls_ach_dev_pu_tmp;
 
                                 End IF;
-                                select ind_exp into ls_ind_exp  from GEO_FOURNI where FOU_code = ls_fou_code_tmp;
+
+                                begin
+                                    select ind_exp into ls_ind_exp  from GEO_FOURNI where FOU_code = ls_fou_code_tmp;
+                                exception when no_data_found then
+                                    ls_ind_exp := '';
+                                end;
 
                                 If  ls_ind_exp <>   'F' Then
                                     ls_propr_code_tmp := ls_fou_code_tmp;
                                 ELSE
-                                    select  PROP_CODE into ls_list_propr_code
-                                    from GEO_FOURNI
-                                    where FOU_code = ls_fou_code_tmp;
+                                    begin
+                                        select  PROP_CODE into ls_list_propr_code
+                                        from GEO_FOURNI
+                                        where FOU_code = ls_fou_code_tmp;
+                                    exception when no_data_found then
+                                        ls_list_propr_code := '';
+                                    end;
 
                                     ls_tab_propr_code_2 :=  p_str_tab_type();
                                     f_split(ls_list_propr_code, ',', ls_tab_propr_code_2);
