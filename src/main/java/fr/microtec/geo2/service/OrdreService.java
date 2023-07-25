@@ -393,21 +393,21 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         // Cas clients specifiques
         try {
             if (ordre.getClient().getId().equals("007396")) {
-                String[] res;
+                Object[] res;
                 if (ordre.getFactureAvoir().equals(GeoFactureAvoir.FACTURE))
-                    res = (String[]) this.entityManager
+                    res = (Object[]) this.entityManager
                             .createNativeQuery(
                                     "select SA.NORDRE, SA_N.NORDRE as n FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE SA, GEO_ORDRE SA_N where OBS.ORD_rEF_BUK =:arg_ord_ref and OBS.ORD_REF_SA= SA.ORD_REF  and OBS.ORD_REF_SA_N= SA_N.ORD_REF")
                             .setParameter("arg_ord_ref", ordreID)
                             .getSingleResult();
                 else
-                    res = (String[]) this.entityManager
+                    res = (Object[]) this.entityManager
                             .createNativeQuery(
                                     "select 	SA.NORDRE, SA_N.NORDRE as n FROM GEO_AVOIR_BUK_SA OBS,  GEO_ORDRE SA, GEO_ORDRE SA_N where OBS.ORD_rEF_BUK =:arg_ord_ref and OBS.ORD_REF_SA= SA.ORD_REF  and 	OBS.ORD_REF_SA_N= SA_N.ORD_REF")
                             .setParameter("arg_ord_ref", ordreID)
                             .getSingleResult();
-                ls_nordre_sa = res[0];
-                ls_nordre_sa_n = res[1];
+                ls_nordre_sa = (String) res[0];
+                ls_nordre_sa_n = (String) res[1];
             }
         } catch (Exception exception) {
             log.info("Pas d'infos de regroupement pour le client 007396", exception);
@@ -415,21 +415,21 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
         try {
             if (ordre.getClient().getId().equals("002676")) {
-                String[] res;
+                Object[] res;
                 if (ordre.getFactureAvoir().equals(GeoFactureAvoir.FACTURE))
-                    res = (String[]) this.entityManager
+                    res = (Object[]) this.entityManager
                             .createNativeQuery(
                                     "select 	BUK.NORDRE, SA_N.NORDRE as n FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA_N where OBS.ORD_REF_SA =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA_N= SA_N.ORD_REF ")
                             .setParameter("arg_ord_ref", ordreID)
                             .getSingleResult();
                 else
-                    res = (String[]) this.entityManager
+                    res = (Object[]) this.entityManager
                             .createNativeQuery(
                                     "select 	 BUK.NORDRE, SA_N.NORDRE as n FROM GEO_AVOIR_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA_N where OBS.ORD_rEF_SA =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA_N= SA_N.ORD_REF")
                             .setParameter("arg_ord_ref", ordreID)
                             .getSingleResult();
-                ls_nordre_buk = res[0];
-                ls_nordre_sa_n = res[1];
+                ls_nordre_buk = (String) res[0];
+                ls_nordre_sa_n = (String) res[1];
             }
         } catch (Exception exception) {
             log.info("Pas d'infos de regroupement pour le client 002676", exception);
@@ -437,21 +437,21 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
 
         try {
             if (ordre.getClient().getId().equals("007657")) {
-                String[] res;
+                Object[] res;
                 if (ordre.getFactureAvoir().equals(GeoFactureAvoir.AVOIR))
-                    res = (String[]) this.entityManager
+                    res = (Object[]) this.entityManager
                             .createNativeQuery(
                                     "select 	BUK.NORDRE, SA.NORDRE as n FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA where OBS.ORD_REF_SA_N =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA= SA.ORD_REF")
                             .setParameter("arg_ord_ref", ordreID)
                             .getSingleResult();
                 else
-                    res = (String[]) this.entityManager
+                    res = (Object[]) this.entityManager
                             .createNativeQuery(
                                     "select 	 BUK.NORDRE, SA.NORDRE as n FROM GEO_AVOIR_BUK_SA OBS,  GEO_ORDRE BUK, GEO_ORDRE SA where OBS.ORD_rEF_SA_N =:arg_ord_ref and OBS.ORD_REF_BUK= BUK.ORD_REF  and 	OBS.ORD_REF_SA= SA.ORD_REF ")
                             .setParameter("arg_ord_ref", ordreID)
                             .getSingleResult();
-                ls_nordre_buk = res[0];
-                ls_nordre_sa = res[1];
+                ls_nordre_buk = (String) res[0];
+                ls_nordre_sa = (String) res[1];
             }
         } catch (Exception exception) {
             log.info("Pas d'infos de regroupement pour le client 007657", exception);

@@ -95,7 +95,7 @@ public class GeoStockArticleEdiBassin {
     private Integer quantiteValidee;
 
     @Column(name = "flag_hors_bassin")
-    private Boolean flagHorsBassin;
+    private String flagHorsBassin;
 
     @Column(name = "age")
     private Character age;

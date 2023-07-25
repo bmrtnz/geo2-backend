@@ -448,9 +448,11 @@ public class ProgramService {
                     if (ls_load_reference.startsWith("NEW") || ls_load_reference.startsWith("ISS"))
                         row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                 .setCellValue(ls_nordre.get());
-                    else
+                    else {
+                        GeoOrdre ordre = this.ordreRepo.getOne(ls_ord_ref.get());
                         row.getCell(COL_ORD_CREATE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
-                                .setCellValue(ls_nordre.get());
+                                .setCellValue(ordre.getNumero());
+                    }
 
                     // Test si on est dans le cas de demi-palette
                     if ((ld_qty_pallets - ll_qty_pallets == 0) || ll_qty_pallets == 0) {
@@ -1334,9 +1336,10 @@ public class ProgramService {
                         continue;
                     }
 
+                    int firstValideArticleIndex = 0;
                     if (ls_create_ligne.equals("O")) {
                         for (int ll_count = 0; ll_count < ls_array_art.size(); ll_count++) {
-                            if (ll_count > 1) {
+                            if (ll_count > firstValideArticleIndex) {
                                 ls_qty_case = 0d;
                                 ls_qty_pallets = 0d;
                                 ls_case_per_pallets = 0d;
@@ -1404,6 +1407,7 @@ public class ProgramService {
 
                             } else {
                                 pRow.pushErreur("Article invalide: " + ls_art);
+                                firstValideArticleIndex++;
                             }
 
                         }
