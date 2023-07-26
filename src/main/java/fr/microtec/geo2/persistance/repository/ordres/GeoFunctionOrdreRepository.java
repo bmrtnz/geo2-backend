@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -358,5 +359,12 @@ public interface GeoFunctionOrdreRepository {
             Double arg_prix_achat,
             String arg_unite_achat,
             String arg_unite_vente);
+
+    FunctionResult wAjoutArtRecapEdiColibri(
+            String arg_art_ref,
+            String arg_fou_code,
+            String arg_prop_code,
+            Integer arg_qte_valide,
+            BigDecimal arg_k_stock_art_edi_bassin);
 
 }
