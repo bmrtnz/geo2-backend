@@ -1193,7 +1193,9 @@ public class ProgramService {
                     LocalDateTime ls_delivery_date = row.getCell(COL_DATE_LIVRAISON).getLocalDateTimeCellValue();
                     pRow.setDateLivraison(ls_delivery_date);
 
-                    String ls_instruction_log = row.getCell(COL_INSTRUCTION_LOG).getStringCellValue().toUpperCase()
+                    String ls_instruction_log = row
+                            .getCell(COL_INSTRUCTION_LOG, MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                            .getStringCellValue().toUpperCase()
                             .trim();
                     String ls_comment_confirm_cde = row
                             .getCell(COL_COM_CONF_CDE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
