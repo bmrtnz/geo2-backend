@@ -1061,7 +1061,7 @@ public class OrdreFunctionTest {
                 "COLIS",
                 "COLIS");
 
-        // On test juste l'execution,
+        // On teste juste l'execution,
         // parce qu'on arrivera à terme au nombre maximal de lignes
         Assertions.assertNotNull(result);
     }
@@ -1075,7 +1075,18 @@ public class OrdreFunctionTest {
                 1,
                 null);
 
-        // On test juste l'execution,
+        // On teste juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void testOfReadOrdEdiColibri() {
+        FunctionResult result = this.functionOrdreRepository.ofReadOrdEdiColibri(
+                "16064",
+                "23",
+                'D');
+
+        // On teste juste l'execution,
         Assertions.assertNotNull(result);
     }
 
