@@ -74,9 +74,8 @@ public class GeoEdiOrdre {
     @Column(name = "src_file")
     private String sourceFile;
 
-    // Interpret '-' as null !!!
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinFormula("DECODE({alias}.cen_ref, '-', null, {alias}.cen_ref)")
+    @JoinColumn(name = "cen_ref")
     private GeoEntrepot entrepot;
 
     @ManyToOne(fetch = FetchType.LAZY)
