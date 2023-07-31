@@ -109,6 +109,9 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
     @Convert(converter = BooleanIntegerConverter.class)
     private Boolean commentaireStock;
 
+    @Column(name = "filtre_rech_stock_edi")
+    private Character filtreRechercheStockEdi;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "nomUtilisateur")
     private List<GeoParamUserClientRestriction> restrictions;
 

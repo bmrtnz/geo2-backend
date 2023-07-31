@@ -1,5 +1,6 @@
 package fr.microtec.geo2.service.graphql.ordres;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -644,6 +645,21 @@ public class GeoFunctionsOrdreGraphQLService {
                 transporteurDevCode,
                 societeID,
                 transporteurPU);
+    }
+
+    @GraphQLQuery
+    public FunctionResult wAjoutArtRecapEdiColibri(
+            String articleID,
+            String fournisseurCode,
+            String proprietaireCode,
+            Integer quantiteValide,
+            BigDecimal fromID) {
+        return this.repository.wAjoutArtRecapEdiColibri(
+                articleID,
+                fournisseurCode,
+                proprietaireCode,
+                quantiteValide,
+                fromID);
     }
 
 }
