@@ -41,9 +41,10 @@ public class GeoStickerGraphQLService extends GeoAbstractGraphQLService<GeoStick
 
 	@GraphQLQuery
 	public Optional<GeoStickeur> getStickeur(
-			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
+            @GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.documentService.loadDocuments(super.getOne(id));
+		return this.documentService.loadDocuments(super.getOne(id), env);
 	}
 
 }

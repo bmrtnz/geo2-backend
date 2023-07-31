@@ -40,9 +40,10 @@ public class GeoEtiquetteUcGraphQLService extends GeoAbstractGraphQLService<GeoE
 
 	@GraphQLQuery
 	public Optional<GeoEtiquetteUc> getEtiquetteUc(
-			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
+            @GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.documentService.loadDocuments(super.getOne(id));
+		return this.documentService.loadDocuments(super.getOne(id), env);
 	}
 
 }

@@ -42,9 +42,10 @@ public class GeoEtiquetteEvenementielleGraphQLService
 
 	@GraphQLQuery
 	public Optional<GeoEtiquetteEvenementielle> getEtiquetteEvenementielle(
-			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id
+			@GraphQLArgument(name = "id") GeoProduitWithEspeceId id,
+            @GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.documentService.loadDocuments(super.getOne(id));
+		return this.documentService.loadDocuments(super.getOne(id), env);
 	}
 
 }

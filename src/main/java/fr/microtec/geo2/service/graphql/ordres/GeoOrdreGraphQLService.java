@@ -125,9 +125,12 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     public Optional<GeoOrdre> getOrdreByNumeroAndSocieteAndCampagne(
             @GraphQLArgument(name = "numero") String numero,
             @GraphQLArgument(name = "societe") String societeID,
-            @GraphQLArgument(name = "campagne") String campagneID) {
+            @GraphQLArgument(name = "campagne") String campagneID,
+            @GraphQLEnvironment ResolutionEnvironment env) {
         return this.documentService.loadDocuments(
-                this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID));
+                this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID),
+                env
+        );
     }
 
     @GraphQLQuery
