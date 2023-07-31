@@ -6,8 +6,8 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_SAUVE_STOCK(
 	arg_cam_code IN GEO_ORDRE.CAM_CODE%TYPE,
 	arg_type_recherche IN varchar2,
 	arg_bws_ecris  IN OUT P_STR_TAB_TYPE,
-	ls_entrep_pal_code IN GEO_ENTREP.PAL_CODE%TYPE, 
-	ls_alerte_pal CHAR,
+	ls_entrep_pal_code IN GEO_ENTREP.PAL_CODE%TYPE,
+	ls_alerte_pal IN CHAR,
     res OUT number,
     msg OUT varchar2
 )
@@ -54,7 +54,7 @@ BEGIN
     msg := '';
 	arg_bws_ecris := p_str_tab_type();
 
-	CASE arg_type_recherche 
+	CASE arg_type_recherche
 	WHEN  'SANS_STOCK'  THEN
 			ls_fou_code := '';
 			ls_prop_code := '';
@@ -72,7 +72,7 @@ BEGIN
 			ls_flag_hors_bassin := 'DB';
 	END CASE;
 
-   
+
     begin
         select cli_ref, cen_ref, ean_prod_client, prix_vente, unite_qtt, canal_cde, code_interne_prod_client
 		into ls_cli_ref, ls_cen_ref, ls_ean_prod_client, ld_VTE_PU, ls_VTE_BTA_CODE, ls_canal_cde, ls_art_ref_client
@@ -85,7 +85,7 @@ BEGIN
         res := 0;
         return;
     end;
-	
+
 	ld_VTE_PU_NET := ld_VTE_PU;
 	ls_age := '';
 	ll_qte_restant_stock := 0;
@@ -95,7 +95,7 @@ BEGIN
 	else
 		ls_code_prod_client := ls_ean_prod_client;
 	end if;
-	
+
 	begin
 		select S.age, S.qte_ini - S.qte_res, S.fou_code, S.prop_code, F.bac_code, S.pal_code
 		into ls_age, ll_qte_restant_stock, ls_fou_code, ls_prop_code, ls_bac_code_station, ls_pal_code
@@ -109,9 +109,9 @@ BEGIN
 				return;
 			end if;
 	end;
-	
+
 	begin
-		select * 
+		select *
 		into ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_histo_VTE_BTA_CODE, ld_histo_VTE_PU, ld_ach_dev_taux
 		from (
 			select ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, ACH_DEV_TAUX
@@ -121,11 +121,11 @@ BEGIN
 			and O.ord_ref = L.ord_ref
 			and L.art_ref = arg_art_ref
 			and L.fou_code = ls_fou_code
-			and L.propr_code = ls_prop_code 
+			and L.propr_code = ls_prop_code
 			and FACTURE_AVOIR ='F'
 			and FLANNUL = 'N'
 			and typ_ordre ='ORD'
-			order by O.CREDAT desc 
+			order by O.CREDAT desc
 		)
 		where rownum = 1;
 	  exception when no_data_found then
@@ -151,7 +151,7 @@ BEGIN
 			select AC.GEM_CODE
 			into ls_gem_code
 			FROM GEO_ARTICLE_COLIS AC
-			where AC.ART_REF = arg_art_ref 
+			where AC.ART_REF = arg_art_ref
 			and AC.valide = 'O';
 		exception when others then
 			msg := '%%%Erreur sur récup GEM_CODE pour l''article : ' || arg_art_ref;
@@ -166,12 +166,12 @@ BEGIN
 			WHEN 'UCBARQ' THEN ls_vte_bta_code := 'BARQUE';
 			WHEN 'UCSAC' THEN ls_vte_bta_code := 'SACHET';
 			ELSE ls_vte_bta_code := 'KILO';
-		END CASE;		
+		END CASE;
 	end if;
-	
+
 	/* if ls_pal_code = '' or ls_pal_code is null then
 		begin
-			select pal_code 
+			select pal_code
 			into ls_pal_code_entrep
 			from geo_entrep
 			where cen_ref = ls_cen_ref
@@ -179,7 +179,7 @@ BEGIN
 		exception when others then
 			ls_pal_code := '-';
 		end;
-		
+
 		if length(ls_pal_code_entrep) > 0 and ls_pal_code_entrep is not null then
 			ls_pal_code := ls_pal_code_entrep;
 		end if;
@@ -187,11 +187,11 @@ BEGIN
 
     BEGIN
         insert into GEO_STOCK_ART_EDI_BASSIN (
-			EDI_ORD, EDI_LIG, CLI_REF, CAM_CODE, ART_REF, GTIN, FOU_CODE, BAC_CODE, QTE_RES, AGE, PROP_CODE, ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, VTE_PU_NET, 
+			EDI_ORD, EDI_LIG, CLI_REF, CAM_CODE, ART_REF, GTIN, FOU_CODE, BAC_CODE, QTE_RES, AGE, PROP_CODE, ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, VTE_PU_NET,
 			ACH_DEV_TAUX, FLAG_HORS_BASSIN, PAL_CODE, STO_REF, ALERTE_PAL
 		)
 		values(
-			arg_ref_edi_ordre, arg_ref_edi_ligne, ls_cli_ref, arg_cam_code, arg_art_ref, ls_code_prod_client, ls_fou_code, ls_bac_code_station, ll_qte_restant_stock, ls_age, ls_prop_code, ls_ACH_BTA_CODE, 
+			arg_ref_edi_ordre, arg_ref_edi_ligne, ls_cli_ref, arg_cam_code, arg_art_ref, ls_code_prod_client, ls_fou_code, ls_bac_code_station, ll_qte_restant_stock, ls_age, ls_prop_code, ls_ACH_BTA_CODE,
 			ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ld_ach_dev_taux, ls_flag_hors_bassin, ls_pal_code_entrep, arg_sto_ref, ls_alerte_pal
 		);
     exception when others then
@@ -200,7 +200,7 @@ BEGIN
 		rollback;
         return;
     END;
-	
+
 	if arg_type_recherche = 'BWS' then
 		ls_enr_bws_ecris := arg_art_ref || ';' || ls_prop_code || ';' || ls_fou_code || ';' || ls_bac_code_station || ';' || to_char(arg_ref_edi_ordre) || ';' || to_char(arg_ref_edi_ligne);
 		arg_bws_ecris.extend();
