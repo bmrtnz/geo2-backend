@@ -37,7 +37,7 @@ BEGIN
 
 			CASE ls_typ_ordre
 	 			WHEN 'RGP' THEN -- SA
-	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND ge.TYT_CODE IN ('C', 'E');
+	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND ge.TYT_CODE IN ('C', 'E') and FLU_CODE in ('ORDRE','DETAIL','INCLIT','RESLIT');
 	 				DELETE FROM geo_envois ge WHERE ge.TRAIT_EXP = 'A' AND ge.ORD_REF = is_ord_ref AND ge.TYT_CODE = 'F' AND get_flux_rgp(is_ord_ref, ge.tie_code) = 'BUK';
 	 			WHEN 'ORI' THEN -- BUK
                     -- A la demande de Bruno A., pas de suppression des types clients et entrepots
