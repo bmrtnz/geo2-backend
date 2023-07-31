@@ -35,7 +35,8 @@ public class DocumentService {
         this.maddog2FileSystemService = maddog2FileSystemService;
     }
 
-    public <T extends GeoBaseDocument> Optional<T> loadDocuments(Optional<T> optionalWithDocument, ResolutionEnvironment env) {
+    public <T extends GeoBaseDocument> Optional<T> loadDocuments(Optional<T> optionalWithDocument,
+            ResolutionEnvironment env) {
         optionalWithDocument.ifPresent(doc -> this.loadDocuments(doc, env));
 
         return optionalWithDocument;
@@ -48,7 +49,8 @@ public class DocumentService {
                 .collect(Collectors.toList());
     }
 
-    public <T extends GeoBaseDocument> RelayPage<T> loadDocuments(RelayPage<T> pageWithDocument, ResolutionEnvironment env) {
+    public <T extends GeoBaseDocument> RelayPage<T> loadDocuments(RelayPage<T> pageWithDocument,
+            ResolutionEnvironment env) {
         pageWithDocument.getEdges().forEach(edge -> this.loadDocuments(edge.getNode(), env));
 
         return pageWithDocument;
@@ -65,29 +67,25 @@ public class DocumentService {
                 this.loadDocumentWithClass(
                         GeoAsEtiquette.class,
                         ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc(),
-                        env
-                );
+                        env);
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle() != null) {
                 this.loadDocumentWithClass(
                         GeoAsEtiquette.class,
                         ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle(),
-                        env
-                );
+                        env);
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis() != null) {
                 this.loadDocumentWithClass(
                         GeoAsEtiquette.class,
                         ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis(),
-                        env
-                );
+                        env);
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getStickeur() != null) {
                 this.loadDocumentWithClass(
                         GeoAsEtiquette.class,
                         ((GeoArticle) entityAsDocument).getNormalisation().getStickeur(),
-                        env
-                );
+                        env);
             }
         }
 
@@ -96,7 +94,7 @@ public class DocumentService {
 
     private void loadDocumentWithClass(Class<?> clazz, GeoBaseDocument entityAsDocument, ResolutionEnvironment env) {
         boolean requestDocument = CustomUtils.parseSelectFromEnv(env).contains(this.getDocumentProperty(clazz));
-        System.out.println("Document property contains document : " + (requestDocument ? "True" : "False"));
+        log.info("Document property contains document : " + (requestDocument ? "True" : "False"));
         if (!requestDocument) {
             return;
         }
@@ -243,8 +241,8 @@ public class DocumentService {
             name = "cqDocPath";
         } else {
             throw new RuntimeException(
-                String.format("DocumentService can't load document on entity %s, please map this new document type",
-                    clazz.getSimpleName()));
+                    String.format("DocumentService can't load document on entity %s, please map this new document type",
+                            clazz.getSimpleName()));
         }
 
         return name;
