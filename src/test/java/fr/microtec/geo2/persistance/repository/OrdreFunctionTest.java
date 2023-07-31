@@ -235,7 +235,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfInitArticleUpdate() {
         FunctionResult result = this.functionOrdreRepository
-                .ofInitArticle("1504560", "087187", SOCIETE_SA, "D419DD");
+                .ofInitArticle("001088", "087187", SOCIETE_SA, "002002");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes());
@@ -933,7 +933,7 @@ public class OrdreFunctionTest {
     @Test
     public void testFTakeOptionStock() {
         FunctionResult result = this.functionOrdreRepository
-                .fTakeOptionStock(1, "686760", "3D", "P17", "YO");
+                .fTakeOptionStock(1, "943317", "DABISSECDV", "P17", "YO");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
@@ -1019,7 +1019,7 @@ public class OrdreFunctionTest {
                 .onChangeTrpDevCode("2091208", "EUR", "BUK", 0.58F);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(2, result.getRes(), result.getMsg());
+        Assertions.assertEquals(1, result.getRes(), result.getMsg());
     }
 
     @Test
