@@ -1066,4 +1066,17 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testWAjoutArtRecapEdiColibri() {
+        FunctionResult result = this.functionOrdreRepository.wAjoutArtRecapEdiColibri(
+                "050502",
+                "BIOTROPIC",
+                "BIOTROPIC",
+                1,
+                null);
+
+        // On test juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
 }
