@@ -1142,4 +1142,18 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult ofReadOrdEdiColibri(
+            String arg_num_cde_edi,
+            String arg_cam_code,
+            Character arg_stock_type) {
+        FunctionQuery query = this.build("OF_READ_ORD_EDI_COLIBRI");
+
+        query.attachInput("arg_num_cde_edi", String.class, arg_num_cde_edi);
+        query.attachInput("arg_cam_code", String.class, arg_cam_code);
+        query.attachInput("arg_stock_type", Character.class, arg_stock_type);
+
+        return query.fetch();
+    }
+
 }

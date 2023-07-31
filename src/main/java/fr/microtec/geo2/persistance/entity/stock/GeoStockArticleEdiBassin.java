@@ -123,4 +123,7 @@ public class GeoStockArticleEdiBassin {
     @Column(name = "vte_pu_net")
     private Double ventePrixUnitaireNet;
 
+    @Column(name = "choix")
+    private Boolean choix;
+
 }

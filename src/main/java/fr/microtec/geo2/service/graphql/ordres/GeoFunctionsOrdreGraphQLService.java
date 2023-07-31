@@ -662,4 +662,15 @@ public class GeoFunctionsOrdreGraphQLService {
                 fromID);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofReadOrdEdiColibri(
+            String numeroCommandeEDI,
+            String codeCampagne,
+            Character typeStock) {
+        return this.repository.ofReadOrdEdiColibri(
+                numeroCommandeEDI,
+                codeCampagne,
+                typeStock);
+    }
+
 }

@@ -367,4 +367,9 @@ public interface GeoFunctionOrdreRepository {
             Integer arg_qte_valide,
             BigDecimal arg_k_stock_art_edi_bassin);
 
+    FunctionResult ofReadOrdEdiColibri(
+            String arg_num_cde_edi,
+            String arg_cam_code,
+            Character arg_stock_type);
+
 }
