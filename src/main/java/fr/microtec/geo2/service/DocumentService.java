@@ -2,12 +2,11 @@ package fr.microtec.geo2.service;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import fr.microtec.geo2.common.CustomUtils;
+import io.leangen.graphql.execution.ResolutionEnvironment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -36,54 +35,72 @@ public class DocumentService {
         this.maddog2FileSystemService = maddog2FileSystemService;
     }
 
-    public <T extends GeoBaseDocument> Optional<T> loadDocuments(Optional<T> optionalWithDocument) {
-        optionalWithDocument.ifPresent(this::loadDocuments);
+    public <T extends GeoBaseDocument> Optional<T> loadDocuments(Optional<T> optionalWithDocument, ResolutionEnvironment env) {
+        optionalWithDocument.ifPresent(doc -> this.loadDocuments(doc, env));
 
         return optionalWithDocument;
     }
 
-    public <T extends GeoBaseDocument> List<T> loadDocuments(List<T> listWithDocument) {
+    public <T extends GeoBaseDocument> List<T> loadDocuments(List<T> listWithDocument, ResolutionEnvironment env) {
         return listWithDocument
                 .stream()
-                .map(this::loadDocuments)
+                .map(doc -> this.loadDocuments(doc, env))
                 .collect(Collectors.toList());
     }
 
-    public <T extends GeoBaseDocument> RelayPage<T> loadDocuments(RelayPage<T> pageWithDocument) {
-        pageWithDocument.getEdges().forEach(edge -> this.loadDocuments(edge.getNode()));
+    public <T extends GeoBaseDocument> RelayPage<T> loadDocuments(RelayPage<T> pageWithDocument, ResolutionEnvironment env) {
+        pageWithDocument.getEdges().forEach(edge -> this.loadDocuments(edge.getNode(), env));
 
         return pageWithDocument;
     }
 
-    public <T extends GeoBaseDocument> T loadDocuments(T entityAsDocument) {
+    public <T extends GeoBaseDocument> T loadDocuments(T entityAsDocument, ResolutionEnvironment env) {
         List<Class<?>> findDocumentClass = this.findDocumentClass(entityAsDocument);
         for (Class<?> documentClass : findDocumentClass) {
-            this.loadDocumentWithClass(documentClass, entityAsDocument);
+            this.loadDocumentWithClass(documentClass, entityAsDocument, env);
         }
 
         if (entityAsDocument instanceof GeoArticle) {
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class,
-                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc());
+                this.loadDocumentWithClass(
+                        GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteUc(),
+                        env
+                );
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class,
-                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle());
+                this.loadDocumentWithClass(
+                        GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteEvenementielle(),
+                        env
+                );
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class,
-                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis());
+                this.loadDocumentWithClass(
+                        GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getEtiquetteColis(),
+                        env
+                );
             }
             if (((GeoArticle) entityAsDocument).getNormalisation().getStickeur() != null) {
-                this.loadDocumentWithClass(GeoAsEtiquette.class,
-                        ((GeoArticle) entityAsDocument).getNormalisation().getStickeur());
+                this.loadDocumentWithClass(
+                        GeoAsEtiquette.class,
+                        ((GeoArticle) entityAsDocument).getNormalisation().getStickeur(),
+                        env
+                );
             }
         }
 
         return entityAsDocument;
     }
 
-    private void loadDocumentWithClass(Class<?> clazz, GeoBaseDocument entityAsDocument) {
+    private void loadDocumentWithClass(Class<?> clazz, GeoBaseDocument entityAsDocument, ResolutionEnvironment env) {
+        boolean requestDocument = CustomUtils.parseSelectFromEnv(env).contains(this.getDocumentProperty(clazz));
+        System.out.println("Document property contains document : " + (requestDocument ? "True" : "False"));
+        if (!requestDocument) {
+            return;
+        }
+
         GeoDocument document = new GeoDocument();
         boolean isEtiquette = entityAsDocument instanceof GeoAsEtiquette;
 
@@ -209,6 +226,28 @@ public class DocumentService {
         }
 
         return FsDocumentType.fromPathKey(key);
+    }
+
+    private String getDocumentProperty(Class<?> clazz) {
+        String name;
+
+        if (GeoAsFacture.class.equals(clazz)) {
+            name = "documentFactureName";
+        } else if (GeoAsDocument.class.isAssignableFrom(clazz)) {
+            name = "documentName";
+        } else if (GeoAsCMR.class.equals(clazz)) {
+            name = "documentCMRName";
+        } else if (GeoAsCQTechnique.class.equals(clazz)) {
+            name = "cqTechniqueName";
+        } else if (GeoAsCQDoc.class.equals(clazz)) {
+            name = "cqDocPath";
+        } else {
+            throw new RuntimeException(
+                String.format("DocumentService can't load document on entity %s, please map this new document type",
+                    clazz.getSimpleName()));
+        }
+
+        return name;
     }
 
 }

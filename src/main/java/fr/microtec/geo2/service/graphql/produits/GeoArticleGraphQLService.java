@@ -40,9 +40,10 @@ public class GeoArticleGraphQLService extends GeoAbstractGraphQLService<GeoArtic
 
 	@GraphQLQuery
 	public Optional<GeoArticle> getArticle(
-			@GraphQLArgument(name = "id") String id
+			@GraphQLArgument(name = "id") String id,
+            @GraphQLEnvironment ResolutionEnvironment env
 	) {
-		return this.documentService.loadDocuments(super.getOne(id));
+		return this.documentService.loadDocuments(super.getOne(id), env);
 	}
 
 	@GraphQLMutation

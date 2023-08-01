@@ -37,14 +37,15 @@ public class GeoCQLigneGraphQLService extends GeoAbstractGraphQLService<GeoCQLig
             @GraphQLEnvironment ResolutionEnvironment env) {
 
         return this.documentService
-                .loadDocuments(this.getPage(search, pageable, env));
+                .loadDocuments(this.getPage(search, pageable, env), env);
     }
 
     @GraphQLQuery
     public Optional<GeoCQLigne> getCQLigne(
-            @GraphQLArgument(name = "id") String id) {
+            @GraphQLArgument(name = "id") String id,
+            @GraphQLEnvironment ResolutionEnvironment env) {
         return this.documentService
-                .loadDocuments(super.getOne(id));
+                .loadDocuments(super.getOne(id), env);
     }
 
 }

@@ -47,7 +47,8 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.documentService.loadDocuments(
-                this.getPage(search, pageable, env));
+                this.getPage(search, pageable, env), env
+        );
     }
 
     @GraphQLQuery
