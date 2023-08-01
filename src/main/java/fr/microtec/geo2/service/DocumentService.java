@@ -232,13 +232,13 @@ public class DocumentService {
         String name;
 
         if (GeoAsFacture.class.equals(clazz)) {
-            name = "documentFactureName";
+            name = "documentFacture";
         } else if (GeoAsDocument.class.isAssignableFrom(clazz)) {
-            name = "documentName";
+            name = "document";
         } else if (GeoAsCMR.class.equals(clazz)) {
-            name = "documentCMRName";
+            name = "documentCMR";
         } else if (GeoAsCQTechnique.class.equals(clazz)) {
-            name = "cqTechniqueName";
+            name = "cqTechnique";
         } else if (GeoAsCQDoc.class.equals(clazz)) {
             name = "cqDocPath";
         } else {
