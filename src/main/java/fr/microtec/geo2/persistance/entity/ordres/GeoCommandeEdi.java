@@ -123,8 +123,8 @@ public class GeoCommandeEdi {
      */
     public Boolean checkVerifStatusEdiLigne() {
         return "U".equals(this.getStatus())
-            && "C".equals(this.getStatusLigne())
-            && "N".equals(this.getStatusGeo());
+                && "C".equals(this.getStatusLigne())
+                && "N".equals(this.getStatusGeo());
     }
 
 }
