@@ -100,12 +100,12 @@ begin
 
                     -- Vérification s'il existe une commande dans société BWS pour les entrepôts MOISSACPRES, TERRYPRES, et CHANTEPRES
                     f_verif_ordre_bws(arg_num_cde_edi, ll_ref_edi_ligne, ls_art_ref, arg_cam_code, array_bws_ecris, res, msg);
-                    if res = 0 then return; end if;
-                    ls_ya_stock := 'O';
+                    if res = 1 then
+                        ls_ya_stock := 'O';
+                    end if;
 
                     -- Vérification s'il y a un SUIVI dans la table GEO_EDI_ART_PLANIF
 		            f_verif_planif(ls_region, ls_art_ref, ls_cen_ref, res, msg, ls_planif); -- Recherche dans la table planif avec la région définie ci-dessus.
-                    if res = 0 then return; end if;
 
                     if ls_planif.count() > 0 then
                         f_sauve_stock_planif(ls_planif, arg_num_cde_edi, ll_ref_edi_ligne, arg_cam_code, res, msg); -- Return 'OK' si insert effectué

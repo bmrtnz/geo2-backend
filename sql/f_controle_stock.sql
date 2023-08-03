@@ -29,20 +29,20 @@ AS
 	ll_ident_fou number;
 	ls_a_traiter char;
 	ls_alerte_pal char;
-    
+
 BEGIN
     -- correspond à of_controle_stock.pbl
     res := 0;
     msg := '';
 
 	/*
-		Valeurs de arg_type_recherche: 
+		Valeurs de arg_type_recherche:
 		-------------------------------------
 			- 'BWS' ==> dans la plateforme référencé pour le client / entrepôt table GEO_EDI_BWS
 			- 'DANS_BASSIN' ==> Dans le bassin de l'entrepôt
 			- 'HORS_BASSIN' ==> Hors du bassin de l'entrepôt
 			- 'STATION' ==> Dans la station souhaité cas 'MARTINOISE' client SCAFRUITS
-			
+
 		Valeurs de arg_station_or_bassin:
 		---------------------------------------
 			- une station/ plateforme: FOU_CODE
@@ -50,7 +50,7 @@ BEGIN
 	*/
 
     begin
-        select L.quantite_colis, L.unite_qtt, cen_ref 
+        select L.quantite_colis, L.unite_qtt, cen_ref
 		into ll_qte_cde, ls_unite_qtt, ls_cen_ref
 		from geo_edi_ligne L, geo_edi_ordre O
 		where L.ref_edi_ordre = arg_ref_edi_ordre
@@ -63,7 +63,7 @@ BEGIN
     end;
 
     begin
-        select E.pal_code 
+        select E.pal_code
 		into ls_entrep_pal_code
 		from geo_entrep E
 		where cen_ref = ls_cen_ref
@@ -82,12 +82,12 @@ BEGIN
 		ls_sql := ls_sql || ' and (qte_ini - qte_res) >= ' || ll_qte_cde; -- il faut que la quantité en stock soit suffisante pour la qté commandée
 	else
 		ls_sql := ls_sql || ' and (qte_ini - qte_res) > 0 and qte_res >= 0 '; --Case qte_res négative
-	end if; 
+	end if;
 	ls_sql := ls_sql || ' and F.fou_code = S.fou_code ';
 	CASE arg_type_recherche
 		WHEN 'BWS' THEN ls_sql := ls_sql || ' and F.fou_code = ''' || arg_station_or_bassin || '''';
 		WHEN 'STATION' THEN ls_sql := ls_sql || ' and F.fou_code = ''' || arg_station_or_bassin || '''';
-		WHEN 'DANS_BASSIN' THEN 
+		WHEN 'DANS_BASSIN' THEN
 			if arg_station_or_bassin = '%' then
 				ls_sql := ls_sql || ' and F.bac_code like ''' || arg_station_or_bassin || '''';
 			else
@@ -102,7 +102,7 @@ BEGIN
 	END CASE;
 	ls_sql := ls_sql || ' and S.valide = ''O'' ';
 	ls_sql := ls_sql || ' and F.valide = ''O'' ';
-	--ls_sql := ls_sql || ' and S.pal_code like ''' || ls_pal_code  || '''' --Si code palette est NULL alors tous les codes palettes possible 
+	--ls_sql := ls_sql || ' and S.pal_code like ''' || ls_pal_code  || '''' --Si code palette est NULL alors tous les codes palettes possible
 	ls_sql := ls_sql || ' order by age desc ';
 
 	OPEN C_STOCK FOR ls_sql;
@@ -111,12 +111,12 @@ BEGIN
             EXIT WHEN C_STOCK%notfound;
 			ls_retour_ctrl_insert_bws := 'OK';
 			ls_alerte_pal := 'N';
-			
+
 			if ll_ident_fou = 4 or ll_ident_fou = 5 then -- "Plateforme import", "Plateforme France"
 				ls_a_traiter := 'O';
 				if ls_station_pal_code <> ls_entrep_pal_code and ls_entrep_pal_code is not null and  length(ls_entrep_pal_code) > 0 then
 					ls_alerte_pal := 'O';
-				end if;	
+				end if;
 			else
 				if ls_station_pal_code = ls_entrep_pal_code or ls_entrep_pal_code is null or ls_entrep_pal_code = '' then
 					ls_a_traiter := 'O';
@@ -124,25 +124,33 @@ BEGIN
 					ls_a_traiter := 'N';
 				end if;
 			end if;
-			
+
 			if ls_a_traiter = 'O' then
 				if arg_type_recherche = 'DANS_BASSIN' then
 					f_ctrl_insert_bws(arg_bws_ecris, arg_art_ref, ls_prop_code, ls_fou_code, ls_bac_code_station, arg_ref_edi_ordre, arg_ref_edi_ligne, res, msg, ls_retour_ctrl_insert_bws);
 					if substr(msg, 1, 3) = '%%%' then
+                        res := 0;
 						return;
 					end if;
 				end if;
-				if ls_retour_ctrl_insert_bws = 'OK' then 
-					f_sauve_stock(ls_sto_ref, arg_ref_edi_ordre, arg_ref_edi_ligne, arg_art_ref, arg_cam_code, arg_type_recherche, arg_bws_ecris, ls_entrep_pal_code, ls_alerte_pal, res, msg);  -- Return 'OK' si insert effectué
-					if substr(msg, 1, 3) = '%%%' then
-						res:= 0;
-						return;
-					end if;
+				if ls_retour_ctrl_insert_bws = 'OK' then
+                    declare
+                        save_res number;
+                    begin
+                        f_sauve_stock(ls_sto_ref, arg_ref_edi_ordre, arg_ref_edi_ligne, arg_art_ref, arg_cam_code, arg_type_recherche, arg_bws_ecris, ls_entrep_pal_code, ls_alerte_pal, save_res, msg);  -- Return 'OK' si insert effectué
+                        if save_res = 0 then
+                            res:= 0;
+                            return;
+                        else
+                            res := 1;
+                        end if;
+                    end;
 				end if;
 			end if;
 		END LOOP;
     CLOSE C_STOCK;
 
-    res := 1;
+    res := 2;
+
 END F_CONTROLE_STOCK;
 /
