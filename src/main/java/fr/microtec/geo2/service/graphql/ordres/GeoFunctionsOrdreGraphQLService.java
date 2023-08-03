@@ -664,7 +664,7 @@ public class GeoFunctionsOrdreGraphQLService {
 
     @GraphQLQuery
     public FunctionResult ofReadOrdEdiColibri(
-            String numeroCommandeEDI,
+            BigDecimal numeroCommandeEDI,
             String codeCampagne,
             Character typeStock) {
         return this.repository.ofReadOrdEdiColibri(

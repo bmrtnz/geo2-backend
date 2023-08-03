@@ -44,17 +44,19 @@ BEGIN
 			if ll_cde_nb_col > 0 then
                 declare
                     bws_ecris P_STR_TAB_TYPE := arg_bws_ecris;
+                    save_res number;
                 begin
-				    F_SAUVE_ORD_BWS(ls_ord_ref, ls_orl_ref, arg_ref_edi_ordre, arg_ref_edi_ligne, arg_art_ref, arg_cam_code, bws_ecris, res, msg);
+				    F_SAUVE_ORD_BWS(ls_ord_ref, ls_orl_ref, arg_ref_edi_ordre, arg_ref_edi_ligne, arg_art_ref, arg_cam_code, bws_ecris, save_res, msg);
+                    if save_res = 0 then
+                        res := 0;
+                        return;
+                    else
+                        res := 1;
+                    end if;
                 end;
-				if substr(msg, 1, 3) = '%%%' then
-					res := 0;
-					return;
-				end if;
 			end if;
 		END LOOP;
     CLOSE C_LIG_ORD_BWS;
 
-    res := 1;
 END F_VERIF_ORDRE_BWS;
 /
