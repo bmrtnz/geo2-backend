@@ -1,5 +1,5 @@
 CREATE OR REPLACE PROCEDURE "OF_READ_ORD_EDI_COLIBRI" (
-    arg_num_cde_edi IN varchar2,
+    arg_num_cde_edi IN number,
     arg_cam_code IN GEO_ORDRE.CAM_CODE%TYPE,
     arg_stock_type IN char,
 	res out number,
@@ -33,7 +33,6 @@ CREATE OR REPLACE PROCEDURE "OF_READ_ORD_EDI_COLIBRI" (
     ls_retour_sauve varchar2(50);
     ls_stock_station varchar2(50);
     ls_bw_stock varchar2(50);
-    ls_region_prefis varchar2(50);
 begin
 
     msg := '';
@@ -43,7 +42,7 @@ begin
         cursor C_LIG_EDI_L IS
             select L.ref_edi_ligne, L.num_ligne, L.ean_prod_client, L.quantite_colis,  L.prix_vente, O.cli_ref, O.cen_ref, L.code_interne_prod_client, O.inc_code, O.bac_code
             from geo_edi_ligne L, geo_edi_ordre O
-            where O.ref_edi_ordre = to_char(arg_num_cde_edi)
+            where O.ref_edi_ordre = arg_num_cde_edi
             and L.ref_edi_ordre = O.ref_edi_ordre
             and L.status <> 'D'
             order by ref_edi_ligne, num_ligne;
@@ -75,14 +74,14 @@ begin
                     if res = 0 then return; end if;
                     ls_ya_stock := 'N'; -- initialisation indicateur que l'on a trouvé du stock
 
-                    if ls_region_prefis is null then -- Région préférentielle dans la commande
+                    if ls_region_pref is null then -- Région préférentielle dans la commande
                         ls_region := ls_region_ent;
                     else
                         f_verif_region_pref(ls_region_pref,res,msg,ls_region); -- return la région pref. désirée par le client
                         if res = 0 then return; end if;
                     end if;
 
-                    f_verif_bws(to_char(arg_num_cde_edi), ll_ref_edi_ligne, ls_art_ref,res,msg,ls_plateforme_bws); -- Return  la plateforme si insert effectué
+                    f_verif_bws(arg_num_cde_edi, ll_ref_edi_ligne, ls_art_ref,res,msg,ls_plateforme_bws); -- Return  la plateforme si insert effectué
                     if res = 0 then
                         close C_ARTICLE;
                         close C_LIG_EDI_L;
@@ -90,7 +89,7 @@ begin
                     end if;
 
                     if ls_plateforme_bws <> '' then
-                        f_controle_stock(ls_plateforme_bws, ls_art_ref, to_char(arg_num_cde_edi), ll_ref_edi_ligne, arg_cam_code, 'BWS', array_bws_ecris, arg_stock_type, res, msg); -- Return 'OK' si insert effectué sinon 'KO' aucun insert
+                        f_controle_stock(ls_plateforme_bws, ls_art_ref, arg_num_cde_edi, ll_ref_edi_ligne, arg_cam_code, 'BWS', array_bws_ecris, arg_stock_type, res, msg); -- Return 'OK' si insert effectué sinon 'KO' aucun insert
                         if res = 0 then
                             close C_ARTICLE;
                             close C_LIG_EDI_L;
@@ -100,7 +99,7 @@ begin
                     end if;
 
                     -- Vérification s'il existe une commande dans société BWS pour les entrepôts MOISSACPRES, TERRYPRES, et CHANTEPRES
-                    f_verif_ordre_bws(to_char(arg_num_cde_edi), ll_ref_edi_ligne, ls_art_ref, arg_cam_code, array_bws_ecris, res, msg);
+                    f_verif_ordre_bws(arg_num_cde_edi, ll_ref_edi_ligne, ls_art_ref, arg_cam_code, array_bws_ecris, res, msg);
                     if res = 0 then return; end if;
                     ls_ya_stock := 'O';
 
@@ -109,7 +108,7 @@ begin
                     if res = 0 then return; end if;
 
                     if ls_planif.count() > 0 then
-                        f_sauve_stock_planif(ls_planif, to_char(arg_num_cde_edi), ll_ref_edi_ligne, arg_cam_code, res, msg); -- Return 'OK' si insert effectué
+                        f_sauve_stock_planif(ls_planif, arg_num_cde_edi, ll_ref_edi_ligne, arg_cam_code, res, msg); -- Return 'OK' si insert effectué
                         if res = 0 then
                             close C_ARTICLE;
                             close C_LIG_EDI_L;
@@ -119,7 +118,7 @@ begin
                     end if;
 
                     if ls_region <> '''SE''' and ls_region <> '''SW'',''UDC''' and ls_region <> '''UDC''' and ls_region <> '''VDL''' and ls_region <> '%' then -- Le client souhaite une station particuliere
-                        f_controle_stock(ls_region, ls_art_ref, to_char(arg_num_cde_edi), ll_ref_edi_ligne, arg_cam_code, 'STATION', array_bws_ecris, arg_stock_type, res, msg); -- Return 'OK' si insert effectué sinon 'KO' aucun insert
+                        f_controle_stock(ls_region, ls_art_ref, arg_num_cde_edi, ll_ref_edi_ligne, arg_cam_code, 'STATION', array_bws_ecris, arg_stock_type, res, msg); -- Return 'OK' si insert effectué sinon 'KO' aucun insert
                         if res = 0 then
                             close C_ARTICLE;
                             close C_LIG_EDI_L;
@@ -128,7 +127,7 @@ begin
 
                         ls_ya_stock := 'O';
                     else
-                        f_controle_stock(ls_region, ls_art_ref, to_char(arg_num_cde_edi), ll_ref_edi_ligne, arg_cam_code, 'DANS_BASSIN', array_bws_ecris, arg_stock_type, res, msg); -- Return 'OK' si insert effectué sinon 'KO' aucun insert
+                        f_controle_stock(ls_region, ls_art_ref, arg_num_cde_edi, ll_ref_edi_ligne, arg_cam_code, 'DANS_BASSIN', array_bws_ecris, arg_stock_type, res, msg); -- Return 'OK' si insert effectué sinon 'KO' aucun insert
                         if res = 0 then
                             close C_ARTICLE;
                             close C_LIG_EDI_L;
@@ -137,7 +136,7 @@ begin
 
                         ls_ya_stock := 'O';
 
-                        f_controle_stock(ls_region, ls_art_ref, to_char(arg_num_cde_edi), ll_ref_edi_ligne, arg_cam_code, 'HORS_BASSIN', array_bws_ecris, arg_stock_type, res, msg);
+                        f_controle_stock(ls_region, ls_art_ref, arg_num_cde_edi, ll_ref_edi_ligne, arg_cam_code, 'HORS_BASSIN', array_bws_ecris, arg_stock_type, res, msg);
                         if res = 0 then
                             close C_ARTICLE;
                             close C_LIG_EDI_L;
@@ -150,7 +149,7 @@ begin
 
                     -- On a pas trouvé de stock pour le GTIN client. On insére une ligne sans fournisseur
                     if ls_ya_stock = 'N' then
-                        f_sauve_stock('', to_char(arg_num_cde_edi), ll_ref_edi_ligne, ls_art_ref, arg_cam_code, 'SANS_STOCK', array_bws_ecris,'?', '?', res, msg);
+                        f_sauve_stock('', arg_num_cde_edi, ll_ref_edi_ligne, ls_art_ref, arg_cam_code, 'SANS_STOCK', array_bws_ecris,'?', '?', res, msg);
                         if res = 0 then
                             close C_ARTICLE;
                             close C_LIG_EDI_L;
@@ -165,7 +164,7 @@ begin
             exception when others then
                 close C_ARTICLE;
                 close C_LIG_EDI_L;
-                delete from GEO_STOCK_ART_EDI_BASSIN where edi_ord = to_char(arg_num_cde_edi);
+                delete from GEO_STOCK_ART_EDI_BASSIN where edi_ord = arg_num_cde_edi;
                 commit;
                 res := 0;
                 msg := '%%%ERREUR aucune référence article BW pour le GTIN article client : ' || ls_ean_prod_client || ' et code article client: ' || ls_art_ref_client;
@@ -178,7 +177,7 @@ begin
     exception when others then
         close C_LIG_EDI_L;
         res := 0;
-        msg := '%%%ERREUR lecture commande EDI: ' || to_char(arg_num_cde_edi);
+        msg := '%%%ERREUR lecture commande EDI: ' || arg_num_cde_edi;
         return;
     end;
 

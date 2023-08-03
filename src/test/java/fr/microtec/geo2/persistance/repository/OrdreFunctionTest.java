@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -1082,7 +1083,7 @@ public class OrdreFunctionTest {
     @Test
     public void testOfReadOrdEdiColibri() {
         FunctionResult result = this.functionOrdreRepository.ofReadOrdEdiColibri(
-                "16064",
+                new BigDecimal(16064),
                 "23",
                 'D');
 
