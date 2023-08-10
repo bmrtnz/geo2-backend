@@ -255,8 +255,9 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
             t.setFraisPrixUnitaire(original.getFraisPrixUnitaire());
             t.setFraisUnite(original.getFraisUnite());
             t.setFraisCommentaires(original.getFraisCommentaires());
-            t.setTauxRemiseSurFacture(original.getTauxRemiseSurFacture());
-            t.setTauxRemiseHorsFacture(original.getTauxRemiseHorsFacture());
+            // Issue #21744 - Do not take discount from history
+            // t.setTauxRemiseSurFacture(original.getTauxRemiseSurFacture());
+            // t.setTauxRemiseHorsFacture(original.getTauxRemiseHorsFacture());
             t.setArticleKit(original.getArticleKit());
             t.setGtinColisKit(original.getGtinColisKit());
             this.repository.save(t);
