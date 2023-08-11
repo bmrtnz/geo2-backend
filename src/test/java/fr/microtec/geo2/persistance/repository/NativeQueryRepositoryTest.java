@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,8 @@ public class NativeQueryRepositoryTest {
     private GeoPaysRepository paysRepository;
     @Autowired
     private GeoPrecalModelRepository precalModelRepository;
+    @Autowired
+    private GeoArticleRepository articleRepository;
 
     @Test
     public void testAllPlanningTransporteurs() {
@@ -269,6 +272,30 @@ public class NativeQueryRepositoryTest {
     @Test
     public void testAllDetailStockResa() {
         this.stockRepository.allDetailStockResa("086109", "%");
+    }
+
+    @Test
+    public void testAllArticleStatistiqueClients() {
+        Assertions.assertDoesNotThrow(() -> {
+            this.articleRepository.allArticleStatistiqueClients(
+                "085700",
+                "SA",
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 3, 1)
+            );
+        });
+    }
+
+    @Test
+    public void testAllArticleStatistiqueFournisseurs() {
+        Assertions.assertDoesNotThrow(() -> {
+            this.articleRepository.allArticleStatistiqueFournisseurs(
+                "85700",
+                "SA",
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 3, 1)
+            );
+        });
     }
 
 }
