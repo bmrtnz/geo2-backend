@@ -45,6 +45,15 @@ public class GeoDeclarationFraude {
     @Column(name = "PAY_DESC")
     private String paysDescription;
 
+    @Column(name = "ttr_code")
+    private String typeTransportCode;
+
+    @Column(name = "ttr_desc")
+    private String typeTransportDescription;
+
+    @Column(name = "trp_bta_code")
+    private String baseTarifTransportCode;
+
     @Column(name = "fou_code")
     private String fournisseurCode;
 

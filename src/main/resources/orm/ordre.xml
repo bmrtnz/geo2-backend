@@ -623,6 +623,9 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre.ref_cli,
             geo_ordre.pay_code,
             geo_pays.PAY_DESC,
+            geo_ordre.ttr_code,
+            geo_typtrp.ttr_desc,
+            geo_ordre.trp_bta_code,
             geo_ordlog.fou_code,
             geo_ordlog.datdep_fou_p,
             sum(geo_ordlig.cde_nb_pal) AS geo_ordlig_cde_nb_pal,
@@ -648,9 +651,11 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre,
             geo_article_colis,
             geo_fourni,
-            geo_pays
+            geo_pays,
+            geo_typtrp
         WHERE
             ( geo_ordlig.ord_ref = geo_ordre.ord_ref )
+            AND ( geo_ordre.ttr_code = geo_typtrp.ttr_code )
             AND
 
                         ( geo_article_colis.art_ref = geo_ordlig.art_ref )
@@ -704,6 +709,9 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre.ref_cli,
             geo_ordre.pay_code,
             geo_pays.PAY_DESC,
+            geo_ordre.ttr_code,
+            geo_typtrp.ttr_desc,
+            geo_ordre.trp_bta_code,
             geo_ordlog.fou_code,
             geo_ordlog.datdep_fou_p,
             geo_article_colis.var_code,
