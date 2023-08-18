@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.microtec</groupId>
     <artifactId>geo2</artifactId>
-    <version>1.12.6</version>
+    <version>1.12.8</version>
     <name>geo2</name>
     <description>Geo2 Api</description>
 
