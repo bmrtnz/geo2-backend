@@ -116,7 +116,7 @@ public class GeoCommandeEdi {
     private Boolean initBlocageOrdre;
 
     @Column(name = "code_interne_prod_client")
-    private String codeArticleClient;
+    private String codeInterneProduitClient;
 
     @Transient
     private Boolean verifStatusEdi;
