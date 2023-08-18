@@ -361,9 +361,9 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
-    public FunctionResult fDocumentEnvoiDeclarationBollore(
+    public FunctionResult fDocumentEnvoiFactureDouaniere(
             @GraphQLArgument(name = "ordreRef") String ordRef) {
-        return this.repository.fDocumentEnvoiDeclarationBollore(ordRef);
+        return this.repository.fDocumentEnvoiFactureDouaniere(ordRef);
     }
 
     @GraphQLQuery

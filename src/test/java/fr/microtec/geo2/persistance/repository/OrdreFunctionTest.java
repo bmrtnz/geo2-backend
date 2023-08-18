@@ -624,9 +624,9 @@ public class OrdreFunctionTest {
     }
 
     @Test
-    public void testFDocumentEnvoiDeclarationBollore() {
+    public void testFDocumentEnvoiFactureDouaniere() {
         FunctionResult result = this.functionOrdreRepository
-                .fDocumentEnvoiDeclarationBollore("000895");
+                .fDocumentEnvoiFactureDouaniere("000895");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());

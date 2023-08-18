@@ -162,7 +162,7 @@ public interface GeoFunctionOrdreRepository {
 
     FunctionResult fDocumentEnvoiShipmentBuyco(String ordRef);
 
-    FunctionResult fDocumentEnvoiDeclarationBollore(String ordRef);
+    FunctionResult fDocumentEnvoiFactureDouaniere(String ordRef);
 
     FunctionResult fClotureLogGrp(String ordRef, String fouCode, Character expedie);
 
