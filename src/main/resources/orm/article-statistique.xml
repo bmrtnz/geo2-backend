@@ -14,7 +14,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 FROM (
                     SELECT
                         "GEO_ORDLIG"."ART_REF",
-                        "GEO_CLIENT"."CLI_CODE",
+                        "GEO_CLIENT"."CLI_REF",
                         "GEO_CLIENT"."RAISOC",
                         "GEO_CLIENT"."ZIP",
                         "GEO_CLIENT"."VILLE" ,
@@ -32,7 +32,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                         )
                     ORDER BY
                         "GEO_ORDLIG"."ART_REF",
-                        "GEO_CLIENT"."CLI_CODE",
+                        "GEO_CLIENT"."CLI_REF",
                         "GEO_CLIENT"."RAISOC",
                         "GEO_CLIENT"."ZIP",
                         "GEO_CLIENT"."VILLE"

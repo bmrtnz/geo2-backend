@@ -18,7 +18,7 @@ public class GeoArticleStatistiqueClient {
     private GeoArticle article;
 
     @ManyToOne
-    @JoinColumn(name = "cli_code", referencedColumnName = "cli_code")
+    @JoinColumn(name = "cli_ref")
     private GeoClient client;
 
     @Column(name = "exp_nb_col")
