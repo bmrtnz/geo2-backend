@@ -41,6 +41,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoTracabiliteDetailPalette;
 import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
@@ -480,4 +481,20 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         return !(this.ordreRepository.aBloquer(ordre.getId()) == null);
     }
 
+    public List<GeoOrdreRegroupement> allOrdresRegroupement(
+        LocalDateTime dateMin,
+        LocalDateTime dateMax,
+        String transporteurCode,
+        String stationCode,
+        String commercialCode
+    ) {
+        return this.ordreRepository
+            .allOrdresRegroupement(
+                dateMin,
+                dateMax,
+                transporteurCode,
+                stationCode,
+                commercialCode
+            );
+    }
 }

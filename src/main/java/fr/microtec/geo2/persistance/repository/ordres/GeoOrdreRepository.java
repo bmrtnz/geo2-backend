@@ -17,6 +17,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
@@ -76,5 +77,13 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("ra_fou_code") String fournisseur,
             @Param("ra_bac_code") String bureauAchat,
             @Param("ra_cen_ref") String entrepot);
+
+    @Query(name = "Ordre.allOrdresRegroupement", nativeQuery = true)
+    List<GeoOrdreRegroupement> allOrdresRegroupement(
+            @Param("arg_date_min") LocalDateTime dateMin,
+            @Param("arg_date_max") LocalDateTime dateMax,
+            @Param("arg_transp") String transporteur,
+            @Param("arg_station") String station,
+            @Param("arg_commercial") String commercial);
 
 }
