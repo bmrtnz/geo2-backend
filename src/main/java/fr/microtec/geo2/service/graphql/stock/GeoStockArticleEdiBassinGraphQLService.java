@@ -1,6 +1,7 @@
 package fr.microtec.geo2.service.graphql.stock;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.configuration.graphql.RelayPage;
+import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigne;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleEdiBassin;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockArticleEdiBassinRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -47,6 +49,13 @@ public class GeoStockArticleEdiBassinGraphQLService
     public GeoStockArticleEdiBassin saveStockArticleEdiBassin(GeoStockArticleEdiBassin stockArticleEdiBassin,
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.saveEntity(stockArticleEdiBassin, env);
+    }
+
+    @GraphQLMutation
+    public List<GeoStockArticleEdiBassin> saveAllStockArticleEdiBassin(
+            List<GeoStockArticleEdiBassin> allStockArticleEdiBassin,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.saveAllEntities(allStockArticleEdiBassin, env);
     }
 
     @GraphQLMutation
