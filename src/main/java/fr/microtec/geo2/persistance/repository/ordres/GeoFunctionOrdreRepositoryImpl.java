@@ -1168,4 +1168,16 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult ofControleQteArt(
+            BigDecimal arg_edi_ordre,
+            String arg_cam_code) {
+        FunctionQuery query = this.build("OF_CONTROLE_QTE_ART");
+
+        query.attachInput("arg_edi_ordre", BigDecimal.class, arg_edi_ordre);
+        query.attachInput("arg_cam_code", String.class, arg_cam_code);
+
+        return query.fetch();
+    }
+
 }

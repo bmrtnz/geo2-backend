@@ -376,4 +376,8 @@ public interface GeoFunctionOrdreRepository {
             BigDecimal arg_edi_ordre,
             String arg_cam_code);
 
+    FunctionResult ofControleQteArt(
+            BigDecimal arg_edi_ordre,
+            String arg_cam_code);
+
 }

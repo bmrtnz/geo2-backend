@@ -1101,4 +1101,14 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfControleQteArt() {
+        FunctionResult result = this.functionOrdreRepository.ofControleQteArt(
+                new BigDecimal(16064),
+                "23");
+
+        // On teste juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
 }

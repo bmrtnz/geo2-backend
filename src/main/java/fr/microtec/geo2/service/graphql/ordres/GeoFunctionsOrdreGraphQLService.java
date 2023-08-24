@@ -682,4 +682,13 @@ public class GeoFunctionsOrdreGraphQLService {
                 codeCampagne);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofControleQteArt(
+            BigDecimal numeroCommandeEDI,
+            String codeCampagne) {
+        return this.repository.ofControleQteArt(
+                numeroCommandeEDI,
+                codeCampagne);
+    }
+
 }
