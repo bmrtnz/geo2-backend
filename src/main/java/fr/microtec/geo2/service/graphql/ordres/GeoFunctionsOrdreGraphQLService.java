@@ -673,4 +673,13 @@ public class GeoFunctionsOrdreGraphQLService {
                 typeStock);
     }
 
+    @GraphQLQuery
+    public FunctionResult ofControleSelArt(
+            BigDecimal numeroCommandeEDI,
+            String codeCampagne) {
+        return this.repository.ofControleSelArt(
+                numeroCommandeEDI,
+                codeCampagne);
+    }
+
 }

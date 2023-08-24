@@ -1091,4 +1091,14 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testOfControleSelArt() {
+        FunctionResult result = this.functionOrdreRepository.ofControleSelArt(
+                new BigDecimal(16064),
+                "23");
+
+        // On teste juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
 }

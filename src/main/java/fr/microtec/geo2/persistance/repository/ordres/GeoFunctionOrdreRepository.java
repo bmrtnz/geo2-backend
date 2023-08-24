@@ -372,4 +372,8 @@ public interface GeoFunctionOrdreRepository {
             String arg_cam_code,
             Character arg_stock_type);
 
+    FunctionResult ofControleSelArt(
+            BigDecimal arg_edi_ordre,
+            String arg_cam_code);
+
 }
