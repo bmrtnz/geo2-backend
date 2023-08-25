@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class GeoOrdreRegroupement {
+public class GeoOrdreRegroupement implements Serializable {
     @Column(name = "code_chargement")
     private String codeChargement;
 
-    @Id
     @Column(name = "ordregrp")
-    private String id;
+    private String ordreRegroupement;
 
+    @Id
     @Column(name = "ordorig")
     private String ordreOrigine;
 
@@ -57,6 +57,7 @@ public class GeoOrdreRegroupement {
     @Column(name = "fou_code_orig")
     private String station;
 
+    @Id
     @Column(name = "ORL_LIG")
     private String numero;
 }
