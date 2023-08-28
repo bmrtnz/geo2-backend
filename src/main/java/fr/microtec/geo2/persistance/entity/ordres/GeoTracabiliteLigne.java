@@ -11,10 +11,12 @@ import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_traca_ligne")
 @Entity
@@ -30,7 +32,7 @@ public class GeoTracabiliteLigne extends ValidateAndModifiedEntity {
 	@Column(name = "nb_colis")
 	private Integer nombreColis;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orl_ref")
 	private GeoOrdreLigne ordreLigne;
 

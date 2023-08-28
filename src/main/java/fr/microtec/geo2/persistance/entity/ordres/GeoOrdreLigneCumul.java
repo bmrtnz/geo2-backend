@@ -3,31 +3,32 @@ package fr.microtec.geo2.persistance.entity.ordres;
 import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeoOrdreLigneCumul implements Serializable {
   public GeoOrdreLigneCumul(
-    Float nombrePalettesCommandees,
-    Float nombrePalettesExpediees,
-    Float nombreColisCommandes,
-    Float nombreColisExpedies,
-    Float poidsNetExpedie,
-    Float poidsNetCommande,
-    Double poidsBrutExpedie,
-    Float poidsBrutCommande,
-    Double totalVenteBrut,
-    Float totalRemise,
-    Float totalRestitue,
-    Double totalFraisMarketing,
-    Double totalAchat,
-    Float totalObjectifMarge,
-    Float indicateurPalette,
-    GeoOrdreLogistique logistique
-  ){
+      Float nombrePalettesCommandees,
+      Float nombrePalettesExpediees,
+      Float nombreColisCommandes,
+      Float nombreColisExpedies,
+      Float poidsNetExpedie,
+      Float poidsNetCommande,
+      Double poidsBrutExpedie,
+      Float poidsBrutCommande,
+      Double totalVenteBrut,
+      Float totalRemise,
+      Float totalRestitue,
+      Double totalFraisMarketing,
+      Double totalAchat,
+      Float totalObjectifMarge,
+      Float indicateurPalette,
+      GeoOrdreLogistique logistique) {
     this.nombrePalettesCommandees = nombrePalettesCommandees;
     this.nombrePalettesExpediees = nombrePalettesExpediees;
     this.nombreColisCommandes = nombreColisCommandes;
@@ -45,6 +46,7 @@ public class GeoOrdreLigneCumul implements Serializable {
     this.indicateurPalette = indicateurPalette;
     this.logistique = logistique;
   }
+
   private Float nombrePalettesCommandees;
   private Float nombrePalettesExpediees;
   private Float nombreColisCommandes;

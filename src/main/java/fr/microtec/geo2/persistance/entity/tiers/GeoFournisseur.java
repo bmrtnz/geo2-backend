@@ -28,10 +28,12 @@ import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.common.GeoParamUserFournisseurRestriction;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueFournisseur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStock;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_fourni")
 @Entity

@@ -15,10 +15,12 @@ import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoUtilisateur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_mru_ordre")
 @IdClass(GeoMRUOrdreKey.class)

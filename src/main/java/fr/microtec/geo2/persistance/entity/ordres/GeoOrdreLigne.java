@@ -32,10 +32,12 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordlig")
 @Entity

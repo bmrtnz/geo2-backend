@@ -1,13 +1,15 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class GeoOrdreBaf {
 

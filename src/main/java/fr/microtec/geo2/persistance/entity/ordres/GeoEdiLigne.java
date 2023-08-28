@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -9,7 +10,8 @@ import org.hibernate.annotations.Parameter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
 @Table(name = "geo_edi_ligne")
 @Entity
 public class GeoEdiLigne {

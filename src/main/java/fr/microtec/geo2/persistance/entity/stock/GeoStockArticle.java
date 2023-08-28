@@ -11,10 +11,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import fr.microtec.geo2.persistance.entity.ValidateEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 public class GeoStockArticle extends ValidateEntity implements GeoStockQuantite {

@@ -1,13 +1,15 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @Table(name = "geo_hebdo")
 @Entity
 public class GeoStockHebdomadaire {

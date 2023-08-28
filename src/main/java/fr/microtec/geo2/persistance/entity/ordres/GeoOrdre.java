@@ -11,7 +11,8 @@ import fr.microtec.geo2.persistance.entity.document.GeoAsFacture;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Parameter;
@@ -26,7 +27,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordre")
 @DynamicInsert

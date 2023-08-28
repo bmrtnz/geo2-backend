@@ -21,9 +21,11 @@ import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Table(name = "geo_packlist_entete")
 @Entity
 public class GeoPacklistEntete {

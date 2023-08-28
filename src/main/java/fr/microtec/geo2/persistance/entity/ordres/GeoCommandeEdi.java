@@ -2,7 +2,8 @@ package fr.microtec.geo2.persistance.entity.ordres;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -10,7 +11,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class GeoCommandeEdi {
 
@@ -126,8 +128,8 @@ public class GeoCommandeEdi {
      */
     public Boolean checkVerifStatusEdiLigne() {
         return "U".equals(this.getStatus())
-            && "C".equals(this.getStatusLigne())
-            && "N".equals(this.getStatusGeo());
+                && "C".equals(this.getStatusLigne())
+                && "N".equals(this.getStatusGeo());
     }
 
 }

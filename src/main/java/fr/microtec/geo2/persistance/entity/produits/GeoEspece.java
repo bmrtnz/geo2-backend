@@ -1,19 +1,28 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoGenre;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
-
-import javax.persistence.*;
-
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

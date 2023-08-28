@@ -2,7 +2,8 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,7 +15,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_groupa")
 @Entity
@@ -33,7 +35,7 @@ public class GeoLieuPassageAQuai extends ValidateModifiedPrewrittedEntity implem
 	@Column(name = "raisoc", nullable = false)
 	private String raisonSocial;
 
-	//region Primary Address
+	// region Primary Address
 	@Column(name = "ads1")
 	private String adresse1;
 
@@ -53,7 +55,7 @@ public class GeoLieuPassageAQuai extends ValidateModifiedPrewrittedEntity implem
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pay_code")
 	private GeoPays pays;
-	//endregion
+	// endregion
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "lan_code")

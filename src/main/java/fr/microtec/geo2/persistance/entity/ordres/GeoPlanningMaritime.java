@@ -11,9 +11,11 @@ import javax.persistence.ManyToOne;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class GeoPlanningMaritime {
 

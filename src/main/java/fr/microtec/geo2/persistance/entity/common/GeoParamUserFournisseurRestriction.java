@@ -9,9 +9,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Table(name = "geo_param_user_fourni_restr")
 @Entity
 public class GeoParamUserFournisseurRestriction {

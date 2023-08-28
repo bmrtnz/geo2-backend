@@ -13,10 +13,12 @@ import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModeCulture;
 import fr.microtec.geo2.persistance.entity.produits.GeoEspece;
 import fr.microtec.geo2.persistance.entity.produits.GeoVariete;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_precal_model")
 @Entity

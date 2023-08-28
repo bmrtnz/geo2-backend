@@ -1,14 +1,14 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
 @Embeddable
 public class GeoGroupeVarieteId implements Serializable {
-
-
 
 }

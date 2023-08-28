@@ -7,16 +7,18 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_groupa")
 @Entity
 public class GeoGroupage extends ValidateModifiedPrewrittedEntity {
-  
-  public static final String TYPE_TIERS = "G";
+
+	public static final String TYPE_TIERS = "G";
 
 	@Id
 	@Column(name = "grp_code")

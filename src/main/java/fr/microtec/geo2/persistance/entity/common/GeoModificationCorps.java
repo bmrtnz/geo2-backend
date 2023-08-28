@@ -18,9 +18,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "geo_modif_corps")
 @EntityListeners(AuditingEntityListener.class)
@@ -28,21 +30,17 @@ public class GeoModificationCorps {
 
 	@Id
 	@Column(name = "k_modif_corps")
-  @GeneratedValue(generator = "GeoModifCorpsGenerator")
-	@GenericGenerator(
-			name = "GeoModifCorpsGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_key_modif_corps"),
-					@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
-			}
-	)
+	@GeneratedValue(generator = "GeoModifCorpsGenerator")
+	@GenericGenerator(name = "GeoModifCorpsGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_key_modif_corps"),
+			@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
+	})
 	private BigDecimal id;
 
 	@NotNull
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "modif", nullable = false)
-  private GeoModification modification;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "modif", nullable = false)
+	private GeoModification modification;
 
 	@NotNull
 	@Column(name = "chemin", nullable = false)
@@ -63,11 +61,11 @@ public class GeoModificationCorps {
 	@Column(name = "affichage_demande")
 	private String affichageDemande;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "validateur")
-  private GeoUtilisateur validateur;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "validateur")
+	private GeoUtilisateur validateur;
 
-  @LastModifiedDate
+	@LastModifiedDate
 	@Column(name = "mod_date")
 	private LocalDateTime dateModification;
 

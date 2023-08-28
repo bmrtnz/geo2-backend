@@ -16,11 +16,13 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_histo_transp")
 @Entity
@@ -29,13 +31,9 @@ public class GeoHistoriqueTransporteur extends GeoBaseHistorique {
 	@Id
 	@Column(name = "histo_trp_ref")
 	@GeneratedValue(generator = "GeoHistoriqueTransporteurGenerator")
-	@GenericGenerator(
-			name = "GeoHistoriqueTransporteurGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "seq_histo_trp"),
-			}
-	)
+	@GenericGenerator(name = "GeoHistoriqueTransporteurGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "seq_histo_trp"),
+	})
 	private BigDecimal id;
 
 	@NotNull

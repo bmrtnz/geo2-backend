@@ -13,10 +13,12 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "GEO_HISTO_MODIF_DETAIL")
 @Entity

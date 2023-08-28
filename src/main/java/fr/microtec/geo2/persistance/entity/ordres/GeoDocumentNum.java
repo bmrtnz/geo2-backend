@@ -15,11 +15,13 @@ import org.hibernate.annotations.DynamicUpdate;
 import fr.microtec.geo2.persistance.entity.document.GeoAsCQDoc;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "geo_docnum")
-@Data
+@Getter
+@Setter
 @IdClass(GeoDocumentNumKey.class)
 @DynamicUpdate
 public class GeoDocumentNum implements GeoAsCQDoc {

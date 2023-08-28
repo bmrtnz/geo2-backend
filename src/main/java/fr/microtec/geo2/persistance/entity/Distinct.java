@@ -1,22 +1,24 @@
 package fr.microtec.geo2.persistance.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Distinct {
 
-	public Distinct(Number key, Long count) {
-		this(parseKey(key), null, count);
-	}
+    public Distinct(Number key, Long count) {
+        this(parseKey(key), null, count);
+    }
 
     public Distinct(String key, Long count) {
         this(key, null, count);
@@ -28,14 +30,14 @@ public class Distinct {
         this.count = count;
     }
 
-	@Id
-	private String key;
+    @Id
+    private String key;
 
     @Column
     private String description;
 
-	@Column
-	private Long count;
+    @Column
+    private Long count;
 
     private static String parseKey(Number key) {
         return key == null ? "[null]" : key.toString();

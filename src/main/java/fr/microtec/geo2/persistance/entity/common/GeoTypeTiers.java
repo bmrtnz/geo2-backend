@@ -12,10 +12,12 @@ import org.hibernate.annotations.Where;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_typtie")
@@ -33,6 +35,6 @@ public class GeoTypeTiers extends ValidateAndModifiedEntity {
 
   @OneToMany(mappedBy = "typeTiers")
   @Where(clause = "typ_tiers = '" + GeoClient.TYPE_TIERS + "'")
-	private List<GeoClient> clients;
+  private List<GeoClient> clients;
 
 }

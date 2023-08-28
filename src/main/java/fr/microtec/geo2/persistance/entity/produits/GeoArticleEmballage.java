@@ -3,7 +3,8 @@ package fr.microtec.geo2.persistance.entity.produits;
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import fr.microtec.geo2.persistance.repository.produits.matcher.GeoArticlePartMatch;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
@@ -12,7 +13,8 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_emballage")
@@ -23,60 +25,56 @@ public class GeoArticleEmballage extends ValidateCreatedAndModifiedEntity implem
 	@Id
 	@Column(name = "ref_emballage")
 	@GeneratedValue(generator = "GeoArticleEmballageGenerator")
-	@GenericGenerator(
-			name = "GeoArticleEmballageGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "F_SEQ_AVI_ART_EMBALLAGE"),
-					@Parameter(name = "isSequence", value = "false")
-			}
-	)
+	@GenericGenerator(name = "GeoArticleEmballageGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "F_SEQ_AVI_ART_EMBALLAGE"),
+			@Parameter(name = "isSequence", value = "false")
+	})
 	private String id;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "col_pdnet")
 	private Float poidsNetColis;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "uc_pdnet_garanti")
 	private Float poidsNetGaranti;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "pdnet_client")
 	private Float poidsNetClient;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "col_prepese")
 	private Boolean prepese;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "u_par_colis")
 	private Integer uniteParColis;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "col_code"))
 	private GeoEmballage emballage;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "cos_code"))
 	private GeoConditionSpecial conditionSpecial;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "alv_code"))
 	private GeoAlveole alveole;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "maq_code"))
@@ -94,7 +92,7 @@ public class GeoArticleEmballage extends ValidateCreatedAndModifiedEntity implem
 		clone.poidsNetGaranti = this.poidsNetGaranti;
 		clone.prepese = this.prepese;
 		clone.uniteParColis = this.uniteParColis;
-		
+
 		return clone;
 	}
 

@@ -1,13 +1,15 @@
 package fr.microtec.geo2.persistance.entity.historique;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 public class GeoBaseHistorique extends ValidateAndModifiedEntity {

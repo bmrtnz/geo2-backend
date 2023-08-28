@@ -14,10 +14,12 @@ import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "geo_grid_config")
 @IdClass(GeoGridConfigKey.class)

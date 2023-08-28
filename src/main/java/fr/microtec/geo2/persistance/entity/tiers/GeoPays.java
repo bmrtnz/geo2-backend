@@ -13,10 +13,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_pays")
 @Entity

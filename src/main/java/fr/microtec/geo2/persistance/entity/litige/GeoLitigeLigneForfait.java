@@ -9,9 +9,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class GeoLitigeLigneForfait {
 

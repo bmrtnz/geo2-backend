@@ -26,9 +26,11 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoLieuPassageAQuai;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "geo_modif")
 @EntityListeners(AuditingEntityListener.class)
@@ -36,15 +38,11 @@ public class GeoModification {
 
 	@Id
 	@Column(name = "k_modif")
-  @GeneratedValue(generator = "GeoModifGenerator")
-	@GenericGenerator(
-			name = "GeoModifGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_key_modif"),
-					@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
-			}
-	)
+	@GeneratedValue(generator = "GeoModifGenerator")
+	@GenericGenerator(name = "GeoModifGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_key_modif"),
+			@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
+	})
 	private BigDecimal id;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modification", cascade = CascadeType.ALL)
@@ -63,11 +61,11 @@ public class GeoModification {
 	private Boolean statut = false;
 
 	@NotNull
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "utilisateur", nullable = false)
-  private GeoUtilisateur initiateur;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "utilisateur", nullable = false)
+	private GeoUtilisateur initiateur;
 
-  @LastModifiedDate
+	@LastModifiedDate
 	@Column(name = "mod_date")
 	private LocalDateTime dateModification;
 

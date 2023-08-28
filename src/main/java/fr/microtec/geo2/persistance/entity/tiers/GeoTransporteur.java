@@ -3,7 +3,8 @@ package fr.microtec.geo2.persistance.entity.tiers;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueTransporteur;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -15,7 +16,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_transp")
@@ -110,6 +112,5 @@ public class GeoTransporteur extends ValidateModifiedPrewrittedEntity implements
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "transporteur")
 	private List<GeoHistoriqueTransporteur> historique;
-
 
 }

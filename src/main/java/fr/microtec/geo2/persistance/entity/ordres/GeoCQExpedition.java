@@ -14,10 +14,12 @@ import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_cqexp")
 @Entity
@@ -30,7 +32,7 @@ public class GeoCQExpedition extends ModifiedEntity implements Serializable {
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "cql_ref", insertable = false, updatable = false)
   private GeoCQLigne ligne;
-  
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "orl_ref")
   private GeoOrdreLigne ordreLigne;

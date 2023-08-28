@@ -3,7 +3,8 @@ package fr.microtec.geo2.persistance.entity.produits;
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateCreatedAndModifiedEntity;
 import fr.microtec.geo2.persistance.repository.produits.matcher.GeoArticlePartMatch;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
@@ -12,91 +13,89 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_normalisation")
-public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity implements Duplicable<GeoArticleNormalisation> {
+public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity
+		implements Duplicable<GeoArticleNormalisation> {
 
 	@Id
 	@Column(name = "ref_normalisation")
 	@GeneratedValue(generator = "GeoArticleNormalisationGenerator")
-	@GenericGenerator(
-			name = "GeoArticleNormalisationGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@Parameter(name = "sequenceName", value = "F_SEQ_AVI_ART_NORMALISATION"),
-					@Parameter(name = "isSequence", value = "false")
-			}
-	)
+	@GenericGenerator(name = "GeoArticleNormalisationGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@Parameter(name = "sequenceName", value = "F_SEQ_AVI_ART_NORMALISATION"),
+			@Parameter(name = "isSequence", value = "false")
+	})
 	private String id;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "gtin_colis")
 	private String gtinColis;
 
-    @GeoArticlePartMatch
-    @Column(name = "gtin_palette")
-    private String gtinPalette;
+	@GeoArticlePartMatch
+	@Column(name = "gtin_palette")
+	private String gtinPalette;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "gtin_uc")
 	private String gtinUc;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "com_client")
 	private String descriptionCalibreClient;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "mdd")
 	private Boolean produitMdd;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@Column(name = "pde_cliart")
 	private String articleClient;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "esp_code")
 	private GeoEspece espece;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "cam_code"))
 	private GeoCalibreMarquage calibreMarquage;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etf_code"))
 	private GeoStickeur stickeur;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etc_code"))
 	private GeoEtiquetteColis etiquetteColis;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etp_code"))
 	private GeoEtiquetteUc etiquetteUc;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "etv_code"))
 	private GeoEtiquetteEvenementielle etiquetteEvenementielle;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "ids_code"))
 	private GeoIdentificationSymbolique identificationSymbolique;
 
-    @GeoArticlePartMatch
+	@GeoArticlePartMatch
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumnOrFormula(formula = @JoinFormula("esp_code"))
 	@JoinColumnOrFormula(column = @JoinColumn(name = "maq_code"))
@@ -117,7 +116,7 @@ public class GeoArticleNormalisation extends ValidateCreatedAndModifiedEntity im
 		clone.descriptionCalibreClient = this.descriptionCalibreClient;
 		clone.produitMdd = this.produitMdd;
 		clone.articleClient = this.articleClient;
-        clone.gtinPalette = this.gtinPalette;
+		clone.gtinPalette = this.gtinPalette;
 
 		return clone;
 	}

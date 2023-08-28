@@ -25,12 +25,14 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.val;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordlog")
 @Entity

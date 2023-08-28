@@ -30,9 +30,11 @@ import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.ordres.GeoImprimante;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Table(name = "geo_envois")
 @Entity
 public class GeoEnvois implements GeoAsDocument {

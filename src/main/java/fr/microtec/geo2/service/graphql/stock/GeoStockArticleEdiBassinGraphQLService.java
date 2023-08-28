@@ -63,4 +63,9 @@ public class GeoStockArticleEdiBassinGraphQLService
         this.delete(id);
     }
 
+    @GraphQLMutation
+    public void deleteAllByOrdreEdiId(BigDecimal ordreEdiId) {
+        ((GeoStockArticleEdiBassinRepository) this.repository).deleteAllByOrdreEdiId(ordreEdiId);
+    }
+
 }

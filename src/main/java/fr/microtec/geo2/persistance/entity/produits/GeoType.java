@@ -1,10 +1,12 @@
 package fr.microtec.geo2.persistance.entity.produits;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "geo_typ")
 public class GeoType {

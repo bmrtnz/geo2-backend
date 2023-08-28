@@ -17,9 +17,11 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "typ_tiers")
@@ -29,14 +31,10 @@ public class GeoCertificationTier {
 	@Id
 	@Column(name = "k_certifs_tiers")
 	@GeneratedValue(generator = "GeoCertificationTierGenerator")
-	@GenericGenerator(
-			name = "GeoCertificationTierGenerator",
-			strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_k_certifs_tiers"),
-					@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
-			}
-	)
+	@GenericGenerator(name = "GeoCertificationTierGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
+			@org.hibernate.annotations.Parameter(name = "sequenceName", value = "seq_k_certifs_tiers"),
+			@org.hibernate.annotations.Parameter(name = "isSequence", value = "true")
+	})
 	private BigDecimal id;
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -28,11 +28,13 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
 import fr.microtec.geo2.persistance.entity.tiers.GeoRole;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.service.security.GeoSecurityRoles;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.val;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_user")
 @Entity

@@ -15,10 +15,12 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.converter.BooleanIntegerConverter;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypePalette;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_traca_detail_pal")
 @Entity
@@ -37,11 +39,11 @@ public class GeoTracabiliteDetailPalette extends ValidateAndModifiedEntity {
 	@Column(name = "pds_brut")
 	private Float poidsBrut;
 
-  @Convert(converter = BooleanIntegerConverter.class)
+	@Convert(converter = BooleanIntegerConverter.class)
 	@Column(name = "pal_sol")
 	private Boolean paletteAuSol;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ord_ref")
 	private GeoOrdre ordre;
 
