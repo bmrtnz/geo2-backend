@@ -3,6 +3,7 @@ package fr.microtec.geo2.service.graphql.ordres;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -13,6 +14,7 @@ import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoEdiOrdre;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.service.EdiOrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -37,6 +39,12 @@ public class GeoEdiOrdreGraphQLService extends GeoAbstractGraphQLService<GeoEdiO
         super(repository, GeoEdiOrdre.class);
         this.repository = repository;
         this.ediOrdreService = ediOrdreService;
+    }
+
+    @GraphQLQuery
+    public Optional<GeoEdiOrdre> getEdiOrdre(
+            @GraphQLArgument(name = "id") BigDecimal id) {
+        return this.getOne(id);
     }
 
     @GraphQLQuery
