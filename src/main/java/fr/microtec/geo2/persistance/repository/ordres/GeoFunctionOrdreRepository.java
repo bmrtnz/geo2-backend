@@ -305,6 +305,31 @@ public interface GeoFunctionOrdreRepository {
             String arg_soc_code,
             Float arg_trp_pu);
 
+    // Evenements de cellules sur les lignes d'ordres
+    FunctionResult onChangeCdeNbPal(String orlRef, String scoCode);
+
+    FunctionResult onChangeDemipalInd(String orlRef, String username);
+
+    FunctionResult onChangePalNbCol(String orlRef, String username);
+
+    FunctionResult onChangeCdeNbCol(String orlRef, String username);
+
+    FunctionResult onChangeProprCode(String orlRef, String username, String socCode);
+
+    FunctionResult onChangeFouCode(String orlRef, String username, String socCode);
+
+    FunctionResult onChangeVtePu(String orlRef);
+
+    FunctionResult onChangePalCode(String orlRef, String username, String scoCode);
+
+    FunctionResult onChangePalinterCode(String orlRef);
+
+    FunctionResult onChangeIndGratuit(String orlRef);
+
+    FunctionResult onChangeAchDevPu(String orlRef, String socCode);
+
+    FunctionResult onChangePalNbPalinter(String orlRef, String username);
+
     FunctionResult fCreatePreordre(
             String arg_soc_code,
             String arg_cli_ref,

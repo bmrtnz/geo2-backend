@@ -390,6 +390,15 @@ public class OrdreFunctionTest {
     }
 
     @Test
+    public void testOnChangeAchDevPu() {
+        FunctionResult result = this.functionOrdreRepository
+                .onChangeAchDevPu("9F291C", SOCIETE_SA);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.getRes());
+    }
+
+    @Test
     public void testFDetailsExpOnClickAuto() {
         FunctionResult result = this.functionOrdreRepository
                 .fDetailsExpOnClickAuto("9F1F7C");
