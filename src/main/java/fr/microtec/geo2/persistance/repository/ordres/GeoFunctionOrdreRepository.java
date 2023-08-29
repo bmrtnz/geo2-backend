@@ -111,31 +111,6 @@ public interface GeoFunctionOrdreRepository {
     // FunctionResult fCalculQte(String argOrdRef, String argOrlRef, Float
     // argPdsBrut, Float argPdsNet, Integer argAchQte, Integer argVteQte);
 
-    // Evenements de cellules sur les lignes d'ordres
-    FunctionResult onChangeCdeNbPal(String orlRef, String scoCode);
-
-    FunctionResult onChangeDemipalInd(String orlRef, String username);
-
-    FunctionResult onChangePalNbCol(String orlRef, String username);
-
-    FunctionResult onChangeCdeNbCol(String orlRef, String username);
-
-    FunctionResult onChangeProprCode(String orlRef, String username, String socCode);
-
-    FunctionResult onChangeFouCode(String orlRef, String username, String socCode);
-
-    FunctionResult onChangeVtePu(String orlRef);
-
-    FunctionResult onChangePalCode(String orlRef, String username, String scoCode);
-
-    FunctionResult onChangePalinterCode(String orlRef);
-
-    FunctionResult onChangeIndGratuit(String orlRef);
-
-    FunctionResult onChangeAchDevPu(String orlRef, String socCode);
-
-    FunctionResult onChangePalNbPalinter(String orlRef, String username);
-
     FunctionResult fDetailsExpOnClickAuto(String orlRef);
 
     FunctionResult fChgtQteArtRet(String ordRef);
