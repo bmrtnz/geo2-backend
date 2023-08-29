@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -21,24 +22,31 @@ import java.util.Optional;
 @Secured("ROLE_USER")
 public class GeoTypePaletteGraphQLService extends GeoAbstractGraphQLService<GeoTypePalette, String> {
 
-	public GeoTypePaletteGraphQLService(GeoTypePaletteRepository repository) {
-		super(repository, GeoTypePalette.class);
-	}
+    public GeoTypePaletteGraphQLService(GeoTypePaletteRepository repository) {
+        super(repository, GeoTypePalette.class);
+    }
 
-	@GraphQLQuery
-	public RelayPage<GeoTypePalette> allTypePalette(
-			@GraphQLArgument(name = "search") String search,
-			@GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
-			@GraphQLEnvironment ResolutionEnvironment env
-	) {
-		return this.getPage(search, pageable, env);
-	}
+    @GraphQLQuery
+    public RelayPage<GeoTypePalette> allTypePalette(
+            @GraphQLArgument(name = "search") String search,
+            @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.getPage(search, pageable, env);
+    }
 
-	@GraphQLQuery
-	public Optional<GeoTypePalette> getTypePalette(
-			@GraphQLArgument(name = "id") String id
-	) {
-		return super.getOne(id);
-	}
+    @GraphQLQuery
+    public Optional<GeoTypePalette> getTypePalette(
+            @GraphQLArgument(name = "id") String id) {
+        return super.getOne(id);
+    }
+
+    @GraphQLQuery
+    public BigDecimal fetchNombreColisParPalette(
+            String typePalette,
+            String article,
+            String secteur) {
+        return ((GeoTypePaletteRepository) this.repository)
+                .fetchNombreColisParPalette(typePalette, article, secteur);
+    }
 
 }

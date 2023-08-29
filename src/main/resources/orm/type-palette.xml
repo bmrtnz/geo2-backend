@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity-mappings version="2.1"
+  xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
+
+  <named-native-query name="TypePalette.fetchNombreColisParPalette">
+    <query>
+    <![CDATA[
+        select
+            case P.dim_code
+                when '1' then case when CS.COL_XB IS NOT NULL AND CS.COL_XH IS NOT NULL THEN CS.COL_XB * CS.COL_XH ELSE C.COL_XB * C.COL_XH END
+                when '8' then case when CS.COL_YB IS NOT NULL AND CS.COL_YH IS NOT NULL THEN CS.COL_YB * CS.COL_YH ELSE C.COL_YB * C.COL_YH END
+                when '6' then case when CS.COL_ZB IS NOT NULL AND CS.COL_ZH IS NOT NULL THEN CS.COL_ZB * CS.COL_ZH ELSE C.COL_ZB * C.COL_ZH END
+            END
+        FROM
+            GEO_PALETT P,
+            GEO_COLIS C,
+            GEO_ARTICLE_COLIS AC,
+            geo_colis_secteur CS
+        where
+            P.PAL_CODE  = :ls_pal_code and
+            C.COL_CODE  = AC.COL_CODE  and
+            AC.ART_REF =:ls_art_ref and
+            AC.ESP_CODE = C.ESP_CODE AND
+            CS.esp_code (+)= AC.esp_code and
+            CS.col_code (+)= AC.col_code and
+            CS.SCO_CODE (+)= :ls_sco_code
+    ]]>
+    </query>
+  </named-native-query>
+
+</entity-mappings>
