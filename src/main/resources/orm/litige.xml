@@ -103,8 +103,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             AND GEO_LITLIG.lca_code = GEO_LITCAU.lca_code
             AND GEO_LITLIG.lcq_code = GEO_LITCON.LCQ_CODE
             AND GEO_ORDRE.SOC_CODE = GEO_SOCIETE.SOC_CODE
-            AND (GEO_ORDRE.CAM_CODE = GEO_SOCIETE.CAM_CODE
-                OR GEO_ORDRE.CAM_CODE = GEO_SOCIETE.CAM_CODE)
             AND EXISTS
         (
             SELECT
