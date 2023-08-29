@@ -78,7 +78,11 @@ BEGIN
         where    GCL_CODE =ls_gcl_code and
                     INC_CODE =arg_inc_code and
                     VALIDE ='O';
+	ELSE
+		arg_bta_code :='KILO';
+		arg_dev_code :='EUR';
     End If;
+
 
     if arg_trp_dev_pu is null then
         res := 2;
