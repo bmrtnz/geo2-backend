@@ -1003,4 +1003,12 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testClearTraca() {
+        FunctionResult result = this.functionOrdreRepository.clearTraca("9F1F4C");
+
+        // On teste juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
 }

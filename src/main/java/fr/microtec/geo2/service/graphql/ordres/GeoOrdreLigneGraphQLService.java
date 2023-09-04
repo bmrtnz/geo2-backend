@@ -36,18 +36,19 @@ import io.leangen.graphql.spqr.spring.annotations.GraphQLApi;
 public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOrdreLigne, String> {
 
     private final OrdreLigneService ordreLigneService;
+    private final GeoFournisseurRepository fournisseurRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public GeoOrdreLigneGraphQLService(
-            GeoOrdreLigneRepository repository, GeoBaseTarifRepository geoBaseTarifRepository,
-            GeoFournisseurRepository geoFournisseurRepository, GeoFunctionOrdreRepository geoFunctionOrdreRepository,
-            GeoTypePaletteRepository geoTypePaletteRepository, GeoCodePromoRepository geoCodePromoRepository,
+            GeoOrdreLigneRepository repository,
             OrdreLigneService ordreLigneService,
+            GeoFournisseurRepository fournisseurRepository,
             SecurityService securityService) {
         super(repository, GeoOrdreLigne.class);
         this.ordreLigneService = ordreLigneService;
+        this.fournisseurRepository = fournisseurRepository;
     }
 
     @GraphQLQuery
@@ -97,6 +98,12 @@ public class GeoOrdreLigneGraphQLService extends GeoAbstractGraphQLService<GeoOr
 
     @GraphQLMutation
     public GeoOrdreLigne saveOrdreLigne(GeoOrdreLigne ordreLigne, @GraphQLEnvironment ResolutionEnvironment env) {
+        if (ordreLigne.getProprietaireMarchandise() != null)
+            this.fournisseurRepository.findById(ordreLigne.getProprietaireMarchandise().getId())
+                    .ifPresent(fournisseur -> ordreLigne.setProprietaireMarchandise(fournisseur));
+        if (ordreLigne.getFournisseur() != null)
+            this.fournisseurRepository.findById(ordreLigne.getFournisseur().getId())
+                    .ifPresent(fournisseur -> ordreLigne.setFournisseur(fournisseur));
         return this.saveEntity(this.ordreLigneService.withDefaults(ordreLigne), env);
     }
 

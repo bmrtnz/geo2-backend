@@ -614,4 +614,9 @@ public class GeoFunctionsOrdreGraphQLService {
                 codeCampagne);
     }
 
+    @GraphQLQuery
+    public FunctionResult clearTraca(String ordreLigneRef) {
+        return this.repository.clearTraca(ordreLigneRef);
+    }
+
 }
