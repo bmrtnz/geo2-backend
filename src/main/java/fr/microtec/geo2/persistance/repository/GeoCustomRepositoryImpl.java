@@ -67,9 +67,9 @@ public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJ
 
         // Call 'defaultGraphQLFields' if exists on entity
         Arrays.stream(clazz.getMethods())
-            .filter(m -> "defaultGraphQLFields".equals(m.getName()) && Modifier.isStatic(m.getModifiers()))
-            .findFirst()
-            .ifPresent(m -> ReflectionUtils.invokeMethod(m, null, fields));
+                .filter(m -> "defaultGraphQLFields".equals(m.getName()) && Modifier.isStatic(m.getModifiers()))
+                .findFirst()
+                .ifPresent(m -> ReflectionUtils.invokeMethod(m, null, fields));
 
         List<Selection<?>> selections = CustomUtils.getSelections(fields, root, joinType);
 
@@ -100,6 +100,7 @@ public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJ
                     this.setData(newClass, alias, tuple);
                 });
 
+                this.handleAnnotationEvent(newClass, PostLoad.class);
                 result.add(newClass);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException
                     | NoSuchMethodException e) {
@@ -216,7 +217,6 @@ public class GeoCustomRepositoryImpl<T, ID extends Serializable> extends SimpleJ
                     }
                 }
             }
-            this.handleAnnotationEvent(newClass, PostLoad.class);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException | InstantiationException
                 | NoSuchMethodException e) {
             log.error(e.getMessage());
