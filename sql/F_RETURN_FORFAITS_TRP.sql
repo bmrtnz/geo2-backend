@@ -62,13 +62,16 @@ BEGIN
         If ls_sco_code  = 'F' THEN
             ls_gcl_code :='NONDEF';
         End If;
-
+        begin
         select count(*), TRP_PU into li_ret,  trp_dev_pu
         from GEO_FORFAITS_TRP
         where    GCL_CODE =ls_gcl_code and
                     INC_CODE =arg_inc_code and
                     VALIDE ='O'
         group by TRP_PU;
+        exception when no_data_found then
+                li_ret:=0;
+        end;
 
     ENd IF;
 
@@ -78,9 +81,9 @@ BEGIN
         where    GCL_CODE =ls_gcl_code and
                     INC_CODE =arg_inc_code and
                     VALIDE ='O';
-	ELSE
-		arg_bta_code :='KILO';
-		arg_dev_code :='EUR';
+    ELSE
+        arg_bta_code :='KILO';
+        arg_dev_code :='EUR';
     End If;
 
 
