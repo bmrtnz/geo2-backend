@@ -1180,4 +1180,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult clearTraca(String arg_orl_ref) {
+        FunctionQuery query = this.build("CLEAR_TRACA");
+
+        query.attachInput("arg_orl_ref", String.class, arg_orl_ref);
+
+        return query.fetch();
+    }
+
 }

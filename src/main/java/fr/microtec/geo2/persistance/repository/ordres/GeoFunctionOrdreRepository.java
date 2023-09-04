@@ -380,4 +380,6 @@ public interface GeoFunctionOrdreRepository {
             BigDecimal arg_edi_ordre,
             String arg_cam_code);
 
+    FunctionResult clearTraca(String arg_orl_ref);
+
 }
