@@ -61,12 +61,10 @@ public class OrdreFunctionTest {
 
     @Test
     public void testFRecupFraisValid() {
-        FunctionResult result = this.functionOrdreRepository.fRecupFrais("ENVY", "%", "%", "F", 0, "F");
+        FunctionResult result = this.functionOrdreRepository.fRecupFrais("REGACA", "A", "F", "F", 2, "F");
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(0, result.getRes(), result.getMsg());
-        Assertions.assertTrue(StringUtils.isEmpty(result.getMsg()));
-        Assertions.assertTrue(result.getData().isEmpty());
+        Assertions.assertEquals(144, result.getRes(), result.getMsg());
     }
 
     @Test

@@ -619,4 +619,15 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.clearTraca(ordreLigneRef);
     }
 
+    @GraphQLQuery
+    public FunctionResult fRecupFrais(
+            String varCode,
+            String catCode,
+            String scoCode,
+            String tvtCode,
+            Integer modeCulture,
+            String origine) {
+        return this.repository.fRecupFrais(varCode, catCode, scoCode, tvtCode, modeCulture, origine);
+    }
+
 }
