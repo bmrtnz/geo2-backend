@@ -630,4 +630,9 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.fRecupFrais(varCode, catCode, scoCode, tvtCode, modeCulture, origine);
     }
 
+    @GraphQLQuery
+    public FunctionResult setTransporteurBassin(String orlRef, String socCode) {
+        return this.repository.setTransporteurBassin(orlRef, socCode);
+    }
+
 }
