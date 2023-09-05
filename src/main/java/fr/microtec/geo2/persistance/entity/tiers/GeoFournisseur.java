@@ -215,6 +215,9 @@ public class GeoFournisseur extends ValidateModifiedPrewrittedEntity {
     @Column(name = "num_version_uk")
     private Integer numeroVersionUK;
 
+    @Column(name = "ind_repar_camion")
+    private Boolean indicateurRepartitionCamion;
+
     @Deprecated // Do not use
     @Column(name = "entrepot")
     private Boolean entrepot;
