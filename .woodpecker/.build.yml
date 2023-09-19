@@ -8,13 +8,13 @@ matrix:
 
 when:
     event: push
-    branch: [master, next, "#ci"]
+    branch: [master, next, "ci"]
 
 platform: ${PLATFORM}
 
 pipeline:
     - name: compile
-      image: eclipse-temurin:11
+      image: eclipse-temurin:${JAVA_VERSION}
       commands:
           - ./mvnw compile
     # share-images: TODO registry
