@@ -2,7 +2,7 @@ CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_CREATE_LIGNE_EDI_2" (
     arg_ord_ref in GEO_ORDRE.ORD_REF%TYPE,
     arg_cli_ref IN GEO_CLIENT.CLI_REF%TYPE,
     arg_cen_ref IN GEO_ENTREP.CEN_REF%TYPE,
-    arg_ref_edi_ligne IN geo_edi_ligne.ref_edi_ligne%TYPE,
+    arg_k_stock_art_edi_bassin IN GEO_STOCK_ART_EDI_BASSIN.K_STOCK_ART_EDI_BASSIN%TYPE,
     arg_bassin IN GEO_ENT_TRP_BASSIN.BAC_CODE%TYPE,
     arg_soc_code IN GEO_SOCIETE.SOC_CODE%TYPE,
     arg_username IN varchar2,
@@ -44,6 +44,7 @@ AS
     ld_ACH_DEV_PU GEO_STOCK_ART_EDI_BASSIN.ACH_DEV_PU%TYPE;
     ld_VTE_PU GEO_STOCK_ART_EDI_BASSIN.VTE_PU%TYPE;
     ld_VTE_PU_NET GEO_STOCK_ART_EDI_BASSIN.VTE_PU_NET%TYPE;
+    ld_remsf_tx number;
 
     ls_soc_code GEO_ORDRE.SOC_CODE%TYPE;
     ls_cam_code GEO_ORDRE.CAM_CODE%TYPE;
@@ -89,6 +90,7 @@ AS
     ld_trp_pu geo_ent_trp_bassin.TRP_PU%TYPE;
     ls_trp_dev_code geo_ent_trp_bassin.TRP_DEV_CODE%TYPE;
     ld_dev_tx geo_devise_ref.DEV_TX%TYPE;
+    ld_trp_pu_ordre number;
 
     ls_sto_ref GEO_STOCK.STO_REF%TYPE;
     ll_qte_ini GEO_STOCK.QTE_INI%TYPE;
@@ -102,6 +104,18 @@ AS
 
     ll_qte_restante number;
     ll_stock_nb_resa number;
+
+    ls_code_interne_prod_client varchar2(50);
+    ls_gtin_colis_kit varchar2(50);
+    ls_trp_code_edi varchar2(50);
+    ls_bac_code_edi varchar2(50);
+    ls_flag_hors_bassin varchar2(50);
+    ls_art_ref_ouverture varchar2(50);
+    ls_num_ligne varchar2(50);
+    ll_qte_valide number;
+    ll_ref_edi_ligne number;
+
+    gl_num_ligne number := 0;
 BEGIN
     -- corresponds à f_create_ligne_edi.pbl
     res := 0;
@@ -112,19 +126,18 @@ BEGIN
     ls_ORD_REF := arg_ord_ref;
     ls_arg_bassin := arg_bassin;
 
-    select ean_prod_client, quantite_colis, prix_vente, ref_edi_ordre
-    into ls_ean_cli, ll_qte_art_cde, ld_prix_vente, ll_edi_ord
-    from geo_edi_ligne where ref_edi_ligne = arg_ref_edi_ligne;
-
-    select S.fou_code, S.art_ref, S.bac_code, A.esp_code, S.prop_code,  S.ACH_BTA_CODE,  S.ACH_DEV_CODE,  S.ACH_DEV_PU,  S.ACH_PU,  S.VTE_BTA_CODE,  S.VTE_PU,  S.VTE_PU_NET
-    into ls_fou_code, ls_art_ref, ls_bac_code, ls_esp_code, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ll_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET
+    select S.edi_lig, S.fou_code, S.art_ref, S.bac_code, A.esp_code, S.prop_code,  S.ACH_BTA_CODE,  S.ACH_DEV_CODE,  S.ACH_DEV_PU,  S.ACH_PU,  S.VTE_BTA_CODE,  S.VTE_PU,  S.VTE_PU_NET, S.pal_code, S.STO_REF, S.QTE_VALIDE, S.FLAG_HORS_BASSIN
+    into ll_ref_edi_ligne, ls_fou_code, ls_art_ref, ls_bac_code, ls_esp_code, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ll_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ls_pal_code, ls_sto_ref, ll_qte_valide, ls_flag_hors_bassin
     from GEO_STOCK_ART_EDI_BASSIN S, GEO_ARTICLE_COLIS A
-    where edi_lig = arg_ref_edi_ligne
-      and edi_ord = ll_edi_ord
-      and cli_ref = arg_cli_ref
-      and gtin = ls_ean_cli
-      and choix = 'O'
-      and A.art_ref = S.art_ref;
+    where K_STOCK_ART_EDI_BASSIN = arg_k_stock_art_edi_bassin
+    and S.choix = 'O'
+    and A.art_ref = S.art_ref;
+
+    select L.ean_prod_client, L.code_interne_prod_client, L.quantite_colis, L.prix_vente, L.ref_edi_ordre, O.trp_code , O.bac_code
+    into ls_ean_cli, ls_code_interne_prod_client, ll_qte_art_cde, ld_prix_vente, ll_edi_ord, ls_trp_code_edi, ls_bac_code_edi
+    from geo_edi_ligne L, geo_edi_ordre O
+    where ref_edi_ligne = ll_ref_edi_ligne
+    and O.ref_edi_ordre = L.ref_edi_ordre;
 
     -- Recup du secteur de l'ordre
     select sco_code, soc_code, cam_code into ls_sco_code, ls_soc_code, ls_cam_code from GEO_ORDRE where GEO_ORDRE.ORD_REF = arg_ord_ref;
@@ -133,7 +146,9 @@ BEGIN
     -- Recup de ORL suivante
     select F_SEQ_ORL_SEQ() into ls_ORL_REF FROM DUAL;
     -- recherche du prochain numero de ligne dans nouvel ordre
-    select TRIM(to_char(count(orl_ref)+1,'00')) into ls_orl_lig from GEO_ORDLIG where GEO_ORDLIG.ORD_REF = arg_ord_ref;
+    select TRIM(to_char(count(orl_ref)+3,'00')) into ls_orl_lig from GEO_ORDLIG where GEO_ORDLIG.ORD_REF = arg_ord_ref;
+    gl_num_ligne := gl_num_ligne + 3;
+    ls_num_ligne := TRIM(to_char(gl_num_ligne,'00'));
     -- Recup du pal_code au niveau de l'entrepôt
     select PAL_CODE, CLI_REF into ls_pal_code, ls_cli_ref from GEO_ENTREP where cen_ref = arg_cen_ref;
 
@@ -143,15 +158,15 @@ BEGIN
         ld_prix_vente := ld_vte_pu;
     end if;
 
-    select rem_sf_tx, dev_code into ld_remsf_tx, ls_dev_code from geo_client where cli_ref = ls_cli_ref;
-    if ld_remsf_tx is null then
-        ld_remsf_tx := 0;
+    if ls_sto_ref is null then ls_sto_ref := ''; end if;
+    if ll_qte_valide is null then ll_qte_valide := 0; end if;
+
+    --on récupére la qté saisie par l'utilisateur dans la fenêtre de recap_algo
+    if ll_qte_valide > 0  then
+        ll_qte_art_cde := ll_qte_valide;
     end if;
-    if ld_remsf_tx <> 0 then
-        ld_vte_pu_net := round(ld_prix_vente - ld_prix_vente * ld_remsf_tx * 0.01, 4);
-    else
-        ld_vte_pu_net := round(ld_prix_vente, 4);
-    end if;
+
+    select dev_code into  ls_dev_code from geo_client where cli_ref = ls_cli_ref;
 
     -- détermination du nbre de pal au sol
     begin
@@ -288,44 +303,62 @@ BEGIN
     end if;
     -- fin marketing
 
+    if ls_pal_code is null or ls_pal_code = '' then
+        ls_pal_code := '-';
+    end if;
+
+    if ls_ean_cli is null or ls_ean_cli ='' then
+        ls_gtin_colis_kit := ls_code_interne_prod_client;
+    else
+        ls_gtin_colis_kit := ls_ean_cli;
+    end if;
+
     begin
         INSERT INTO GEO_ORDLIG (
             ORL_REF, ORD_REF, ORL_LIG, PAL_CODE, PAL_NB_COL, CDE_NB_PAL, CDE_NB_COL, EXP_NB_PAL, EXP_NB_COL, EXP_PDS_BRUT, EXP_PDS_NET, ACH_PU, ACH_DEV_CODE, ACH_BTA_CODE, ACH_QTE, VTE_PU,
-            VTE_BTA_CODE, VTE_QTE, FOU_CODE, CDE_PDS_BRUT, CDE_PDS_NET, TOTVTE, TOTREM, TOTRES, TOTFRD, TOTACH, TOTMOB, TOTTRP, TOTTRS, TOTCRT, FLEXP, FLLIV, FLBAF, FLFAC, FOU_FLVER, VAR_RISTOURNE, FRAIS_PU,
-            FLVERFOU, FLVERTRP, BAC_CODE, REMSF_TX, REMHF_TX, ART_REF
+            VTE_BTA_CODE, VTE_QTE, FOU_CODE, CDE_PDS_BRUT, CDE_PDS_NET, TOTVTE, TOTREM, TOTRES, TOTFRD, TOTACH, TOTMOB, TOTTRP, TOTTRS, TOTCRT, FLEXP, FLLIV, FLBAF, FLFAC, FOU_FLVER, VAR_RISTOURNE, FRAIS_PU, FLVERFOU, FLVERTRP, BAC_CODE, REMSF_TX, REMHF_TX, ART_REF
             , ESP_CODE, TOTFAD, ACH_DEV_TAUX, ACH_DEV_PU, ART_REF_KIT, GTIN_COLIS_KIT, REF_EDI_LIGNE, FRAIS_UNITE, PROPR_CODE, INDBLOQ_ACH_DEV_PU, LIB_DLV, vte_pu_net
         ) VALUES (
-         ls_ORL_REF, arg_ord_ref, ls_orl_lig , ls_PAL_CODE, ll_pal_nb_col ,ll_cde_nb_pal, ll_qte_art_cde, 0, 0,0, 0, ll_ach_pu, ls_ach_dev_code, ls_ach_bta_code, ld_ACH_QTE, ld_prix_vente,
+         ls_ORL_REF, arg_ord_ref, ls_num_ligne , ls_PAL_CODE, ll_pal_nb_col ,ll_cde_nb_pal, ll_qte_art_cde, 0, 0,0, 0, ll_ach_pu, ls_ach_dev_code, ls_ach_bta_code, ld_ACH_QTE, ld_prix_vente,
          ls_vte_bta_code, ld_vte_qte, ls_fou_code, ld_pds_brut, ld_pds_net, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0, 'N', 'N', 'N', 'N', 'N', 'O', ld_frais_pu, 'N', 'N',ls_BAC_CODE, 0, 0, ls_art_ref,
-         ls_ESP_CODE, 0, ll_ach_dev_taux, ls_ach_dev_pu, ls_art_ref, ls_ean_cli, arg_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
+         ls_ESP_CODE, 0, ll_ach_dev_taux, ls_ach_dev_pu, ls_art_ref, ls_gtin_colis_kit, ll_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
         );
 
-        -- Mise à jour du référentiel EDI table GEO_STOCK_ART_EDI
+        -- Mise à jour du référentiel EDI table GEO_STOCK_ART_EDI_BASSIN
         update GEO_STOCK_ART_EDI_BASSIN
         set ach_pu = ll_ach_pu, ach_dev_pu = ls_ach_dev_pu, ach_bta_code = ls_ach_bta_code, ach_dev_code = ls_ach_dev_code, ach_dev_taux = ll_ach_dev_taux,
             vte_pu_net = ld_vte_pu_net, vte_pu = ld_prix_vente
-        where edi_lig = arg_ref_edi_ligne
-          and gtin = ls_ean_cli
-          and art_ref = ls_art_ref
-          and cli_ref = ls_cli_ref
-          and cam_code = ls_cam_code;
+        where k_stock_art_edi_bassin = arg_k_stock_art_edi_bassin
+        and cam_code = ls_cam_code;
 
         -- DEB TRANSPORT PAR DEFAUT
         -- Vérification que le bassin de la station est en phase avec le bassin du transport par défaut souhaité par l'entrepôt
         -- Table GEO_ENT_TRP_BASSIN
         if ls_arg_bassin = '' or ls_arg_bassin is null  then
             begin
-                select trp_code, trp_bta_code, trp_pu, trp_dev_code, dev_tx into ls_trp_code, ls_trp_bta_code, ld_trp_pu, ls_trp_dev_code, ld_dev_tx
-                from geo_ent_trp_bassin , geo_devise_ref
-                where cen_ref = arg_cen_ref and
-                        bac_code = ls_bac_code and
-                        dev_code = trp_dev_code and
-                        dev_code_ref = ls_ach_dev_code;
+                if ls_trp_code_edi is not null and  ls_trp_code_edi <> '' and ls_bac_code_edi = ls_bac_code then
+                    update geo_ordre set trp_code = ls_trp_code_edi
+                    where ord_ref = arg_ord_ref;
+                    ls_arg_bassin := ls_bac_code;
+                else
+                    select trp_code, trp_bta_code, trp_pu, trp_dev_code, dev_tx into ls_trp_code, ls_trp_bta_code, ld_trp_pu, ls_trp_dev_code, ld_dev_tx
+                    from geo_ent_trp_bassin , geo_devise_ref
+                    where cen_ref = arg_cen_ref and
+                            bac_code = ls_bac_code and
+                            dev_code = trp_dev_code and
+                            dev_code_ref = ls_ach_dev_code;
 
-                update geo_ordre set trp_code = ls_trp_code, trp_dev_pu = ld_trp_pu, trp_dev_code = ls_trp_dev_code, trp_bta_code = ls_trp_bta_code, dev_tx = ld_dev_tx
-                where ord_ref = arg_ord_ref;
-
-                ls_arg_bassin := ls_bac_code;
+                    --llef
+                    select trp_pu into ld_trp_pu_ordre from geo_ordre where ord_ref = arg_ord_ref;
+                    if ld_trp_pu_ordre is null or ld_trp_pu_ordre = 0 then
+                        update geo_ordre set trp_code = ls_trp_code, trp_dev_pu = ld_trp_pu, trp_dev_code = ls_trp_dev_code, trp_bta_code = ls_trp_bta_code, dev_tx = ld_dev_tx
+                        where ord_ref = arg_ord_ref;
+                    else
+                        update geo_ordre set trp_code = ls_trp_code
+                        where ord_ref = arg_ord_ref;
+                    end if;
+                    ls_arg_bassin := ls_bac_code;
+                end if;
             exception when others then null;
             end;
         end if;
@@ -333,34 +366,88 @@ BEGIN
         -- FIN TRANSPORT PAR DEFAUT
         -- résa stock
         if ls_FOU_CODE is not null and ls_fou_code <> '' then
-            begin
-                select STO_REF, QTE_INI, QTE_RES into ls_sto_ref, ll_qte_ini, ll_qte_res from GEO_STOCK where FOU_CODE = ls_FOU_CODE AND ART_REF = ls_ART_REF AND VALIDE='O';
-
-                select seq_stm_num.nextval into ll_stm_ref from dual;
-                select nordre, cli_code into ls_nordre, ls_cli_code from GEO_ORDRE WHERE ORD_REF = arg_ord_ref;
-
-                ls_stm_ref	:= to_char(ll_stm_ref,'000000');
-                ls_desc :=  'ordre ' || ls_nordre || '/' || ls_cli_code;
-                -- voir trigger GEO_STOMVT_BEF_INS qui actualise aussi geo_stock ainsi que les champs manquant de stomvt
+            --Pour les lignes rajoutées manuellement, il n'y a pas de résa de stock !!
+		    if ls_sto_ref is not null then
                 begin
-                    insert into geo_stomvt (stm_ref, sto_ref, nom_utilisateur, mvt_type, mvt_qte, ord_ref, art_ref, orl_ref, stm_desc)
-                    values(ls_stm_ref, ls_sto_ref, arg_username, 'R', ll_qte_art_cde, arg_ord_ref, ls_ART_REF, ls_ORL_REF, ls_desc);
+                    select QTE_INI, QTE_RES into ll_qte_ini, ll_qte_res
+                    from GEO_STOCK
+                    where STO_REF = ls_sto_ref;
 
-                    ll_qte_restante := ll_qte_ini - ll_qte_res - ll_qte_art_cde;
-                    if ll_qte_restante > 0 then
-                        ll_stock_nb_resa := 1;
-                    else
-                        ll_stock_nb_resa := -1;
-                    end if;
+                    select seq_stm_num.nextval into ll_stm_ref from dual;
+                    select nordre, cli_code into ls_nordre, ls_cli_code from GEO_ORDRE WHERE ORD_REF = arg_ord_ref;
 
-                    update GEO_ORDLIG SET stock_nb_resa = ll_stock_nb_resa where orl_ref = ls_ORL_REF and ord_ref = arg_ord_ref;
-                exception when others then
-                    msg := 'erreur sur création de réservation orl_ref=' || ls_ORL_REF || ' ordre ' || arg_ord_ref || '/' || arg_cli_ref || ':' || SQLERRM;
+                    ls_stm_ref	:= to_char(ll_stm_ref,'000000');
+                    ls_desc :=  'ordre ' || ls_nordre || '/' || ls_cli_code;
+                    -- voir trigger GEO_STOMVT_BEF_INS qui actualise aussi geo_stock ainsi que les champs manquant de stomvt
+                    begin
+                        insert into geo_stomvt (stm_ref, sto_ref, nom_utilisateur, mvt_type, mvt_qte, ord_ref, art_ref, orl_ref, stm_desc)
+                        values(ls_stm_ref, ls_sto_ref, arg_username, 'R', ll_qte_art_cde, arg_ord_ref, ls_ART_REF, ls_ORL_REF, ls_desc);
+
+                        ll_qte_restante := ll_qte_ini - ll_qte_res - ll_qte_art_cde;
+                        if ll_qte_restante > 0 then
+                            ll_stock_nb_resa := 1;
+                        else
+                            ll_stock_nb_resa := -1;
+                        end if;
+
+                        update GEO_ORDLIG SET stock_nb_resa = ll_stock_nb_resa where orl_ref = ls_ORL_REF and ord_ref = arg_ord_ref;
+                    exception when others then
+                        msg := 'erreur sur création de réservation orl_ref=' || ls_ORL_REF || ' ordre ' || arg_ord_ref || '/' || arg_cli_ref || ':' || SQLERRM;
+                    end;
+
+                exception when others then null;
                 end;
+            end if;
+        end if;
 
-            exception when others then null;
+        --DEB TEST LLEF
+        --Ouverture de calibre pour les article en PLATEFORME
+        if ls_flag_hors_bassin = 'PLA' then
+            DECLARE
+                CURSOR C_ART_OUVERTURE IS
+                    select art_ref
+                    from geo_edi_art_cli
+                    where (gtin_colis_client = ls_gtin_colis_kit or art_ref_client = ls_gtin_colis_kit)
+                    and cli_ref = arg_cli_ref
+                    and valide = 'O'
+                    and art_ref <> ls_art_ref;
+            begin
+                OPEN C_ART_OUVERTURE;
+                loop
+                    FETCH C_ART_OUVERTURE into ls_art_ref_ouverture;
+                    EXIT WHEN C_ART_OUVERTURE%notfound;
+                    -- Recup de ORL suivante
+                    select F_SEQ_ORL_SEQ() into ls_ORL_REF FROM DUAL;
+                    --recherche du prochain numero de ligne dans nouvel ordre
+                    select TRIM(to_char(count(orl_ref)+3,'00')) into ls_orl_lig from GEO_ORDLIG where GEO_ORDLIG.ORD_REF =arg_ord_ref;
+                    ll_pal_nb_col 	:= 0;
+                    ll_cde_nb_pal 	:= 0;
+                    ll_qte_art_cde  := 0;
+                    ld_ACH_QTE	:= 0;
+                    ld_vte_qte		:= 0;
+                    gl_num_ligne 	:= gl_num_ligne + 3;
+                    ls_num_ligne 	:= trim(to_char(gl_num_ligne, '00'));
+
+                    INSERT INTO GEO_ORDLIG (
+                    ORL_REF, ORD_REF, ORL_LIG, PAL_CODE, PAL_NB_COL, CDE_NB_PAL, CDE_NB_COL, EXP_NB_PAL, EXP_NB_COL, EXP_PDS_BRUT, EXP_PDS_NET, ACH_PU, ACH_DEV_CODE, ACH_BTA_CODE, ACH_QTE, VTE_PU,
+                    VTE_BTA_CODE, VTE_QTE, FOU_CODE, CDE_PDS_BRUT, CDE_PDS_NET, TOTVTE, TOTREM, TOTRES, TOTFRD, TOTACH, TOTMOB, TOTTRP, TOTTRS, TOTCRT, FLEXP, FLLIV, FLBAF, FLFAC, FOU_FLVER, VAR_RISTOURNE, FRAIS_PU,
+                    FLVERFOU, FLVERTRP, BAC_CODE, REMSF_TX, REMHF_TX, ART_REF
+                    , ESP_CODE, TOTFAD, ACH_DEV_TAUX, ACH_DEV_PU, ART_REF_KIT, GTIN_COLIS_KIT, REF_EDI_LIGNE, FRAIS_UNITE, PROPR_CODE, INDBLOQ_ACH_DEV_PU, LIB_DLV, vte_pu_net
+                    ) VALUES (
+                        ls_ORL_REF, arg_ord_ref, ls_num_ligne , ls_PAL_CODE, ll_pal_nb_col ,ll_cde_nb_pal, ll_qte_art_cde, 0, 0,0, 0, ll_ach_pu, ls_ach_dev_code, ls_ach_bta_code, ld_ACH_QTE, ld_prix_vente,
+                        ls_vte_bta_code, ld_vte_qte, ls_fou_code, ld_pds_brut, ld_pds_net, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0, 'N', 'N', 'N', 'N', 'N', 'O', ld_frais_pu, 'N', 'N',ls_BAC_CODE, 0, 0, ls_art_ref_ouverture,
+                        ls_ESP_CODE, 0, ll_ach_dev_taux, ls_ach_dev_pu, ls_art_ref_ouverture, ls_gtin_colis_kit, ll_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
+                    );
+                end LOOP;
+                CLOSE C_ART_OUVERTURE;
+            exception when others then
+                msg := 'Error: Anomalie lors de la récupération des ouvertures de calibre: ' || arg_ord_ref;
+                res := 0;
+                return;
             end;
         end if;
+    	--FIN TEST LLEF
+
     exception when others then
         msg := '%%% Erreur à la création de la ligne d~''ordre: ' || SQLERRM;
         return;
