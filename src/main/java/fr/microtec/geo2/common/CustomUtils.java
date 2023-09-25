@@ -1,6 +1,7 @@
 package fr.microtec.geo2.common;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -227,6 +228,12 @@ public class CustomUtils {
 
     public static Map<String, Object> parseArgumentFromEnv(final ResolutionEnvironment env, Class<?> clazz) {
         String argument = CustomUtils.classToArgument(clazz);
+        return env.dataFetchingEnvironment.getArgument(argument);
+    }
+
+    public static List<Map<String, Object>> parseArgumentFromEnv(final ResolutionEnvironment env, Class<?> clazz,
+            String prefix) {
+        String argument = prefix + StringUtils.capitalize(CustomUtils.classToArgument(clazz));
         return env.dataFetchingEnvironment.getArgument(argument);
     }
 
