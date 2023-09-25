@@ -20,12 +20,15 @@ import static fr.microtec.geo2.persistance.entity.FunctionResult.RESULT_UNKNOWN;
 public class GeoFunctionGraphQLServiceAspect {
 
     @Pointcut("execution(public fr.microtec.geo2.persistance.entity.FunctionResult fr.microtec.geo2.service.graphql..*(..))")
-    public void serviceMethods() {}
+    public void serviceMethods() {
+    }
 
     @AfterReturning(value = "serviceMethods()", returning = "result")
     public void logMethodCall(JoinPoint jp, FunctionResult result) {
         if (result.getRes() == RESULT_UNKNOWN) {
-            throw new GraphQLException(result.getMsg());
+            String message = result.getMsg();
+            throw new GraphQLException(message != null ? message
+                    : "Une erreur est survenue pendant l'execution de la procédure");
         }
     }
 
