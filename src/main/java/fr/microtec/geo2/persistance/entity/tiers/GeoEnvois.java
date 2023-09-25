@@ -1,5 +1,6 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +23,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import fr.microtec.geo2.common.StringUtils;
-import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeTiers;
 import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
@@ -37,7 +37,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "geo_envois")
 @Entity
-public class GeoEnvois implements GeoAsDocument {
+public class GeoEnvois implements GeoAsDocument, Serializable {
 
     @Id
     @Column(name = "env_code")

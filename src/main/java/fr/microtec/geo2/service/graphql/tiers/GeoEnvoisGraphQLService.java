@@ -47,8 +47,7 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
             @GraphQLArgument(name = "pageable") @GraphQLNonNull Pageable pageable,
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.documentService.loadDocuments(
-                this.getPage(search, pageable, env), env
-        );
+                this.getPage(search, pageable, env), env);
     }
 
     @GraphQLQuery
@@ -69,8 +68,8 @@ public class GeoEnvoisGraphQLService extends GeoAbstractGraphQLService<GeoEnvois
     }
 
     @GraphQLMutation
-    public List<GeoEnvois> saveAllEnvois(List<GeoEnvois> allEnvois) {
-        List<GeoEnvois> envois = this.saveAll(allEnvois, null);
+    public List<GeoEnvois> saveAllEnvois(List<GeoEnvois> allEnvois, @GraphQLEnvironment ResolutionEnvironment env) {
+        List<GeoEnvois> envois = this.saveAllEntities(allEnvois, env);
 
         // assuming all "envois" are of the same "ordre"
         GeoOrdre ordre = this.repository.getOne(allEnvois.get(0).getId()).getOrdre();

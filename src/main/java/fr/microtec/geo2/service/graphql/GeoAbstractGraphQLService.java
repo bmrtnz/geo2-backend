@@ -200,8 +200,8 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
         return this.repository.save(data);
     }
 
-    protected List<T> saveAll(List<T> data, Map<String, Object> graphQlArguments) {
-        data = data.stream()
+    protected List<T> saveAll(final List<T> data, List<Map<String, Object>> graphQlArguments) {
+        return this.repository.saveAll(data.stream()
                 .map(entity -> {
                     T res = entity;
                     ID id = (ID) this.getId(entity);
@@ -210,14 +210,12 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
                         Optional<T> optionalEntity = this.repository.findById(id);
 
                         if (optionalEntity.isPresent()) {
-                            res = this.merge(entity, optionalEntity.get(), graphQlArguments);
+                            res = this.merge(entity, optionalEntity.get(), graphQlArguments.get(data.indexOf(entity)));
                         }
                     }
                     return res;
                 })
-                .collect(Collectors.toList());
-
-        return this.repository.saveAll(data);
+                .collect(Collectors.toList()));
     }
 
     protected T saveEntity(T data, ResolutionEnvironment env) {
@@ -226,7 +224,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
     }
 
     protected List<T> saveAllEntities(List<T> data, ResolutionEnvironment env) {
-        Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, this.clazz);
+        List<Map<String, Object>> parsedArguments = CustomUtils.parseArgumentFromEnv(env, this.clazz, "all");
         return this.saveAll(data, parsedArguments);
     }
 
