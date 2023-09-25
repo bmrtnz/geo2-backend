@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
+import org.hibernate.Hibernate;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.BeanUtils;
@@ -200,24 +201,23 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
         return this.repository.save(data);
     }
 
-    protected List<T> saveAll(List<T> data, Map<String, Object> graphQlArguments) {
-        data = data.stream()
+    protected List<T> saveAll(final List<T> data, List<Map<String, Object>> graphQlArguments) {
+        return this.repository.saveAll(data.stream()
                 .map(entity -> {
                     T res = entity;
                     ID id = (ID) this.getId(entity);
 
                     if (id != null) {
-                        Optional<T> optionalEntity = this.repository.findById(id);
+                        T optionalEntity = Hibernate.unproxy(this.repository.getOne(id), this.clazz);
 
-                        if (optionalEntity.isPresent()) {
-                            res = this.merge(entity, optionalEntity.get(), graphQlArguments);
+                        if (optionalEntity != null) {
+                            res = GeoAbstractGraphQLService.merge(entity, optionalEntity,
+                                    graphQlArguments.get(data.indexOf(entity)));
                         }
                     }
                     return res;
                 })
-                .collect(Collectors.toList());
-
-        return this.repository.saveAll(data);
+                .collect(Collectors.toList()));
     }
 
     protected T saveEntity(T data, ResolutionEnvironment env) {
@@ -226,7 +226,7 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
     }
 
     protected List<T> saveAllEntities(List<T> data, ResolutionEnvironment env) {
-        Map<String, Object> parsedArguments = CustomUtils.parseArgumentFromEnv(env, this.clazz);
+        List<Map<String, Object>> parsedArguments = CustomUtils.parseArgumentFromEnv(env, this.clazz, "all");
         return this.saveAll(data, parsedArguments);
     }
 
