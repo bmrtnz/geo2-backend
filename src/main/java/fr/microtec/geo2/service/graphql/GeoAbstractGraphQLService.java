@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
+import org.hibernate.Hibernate;
 import org.hibernate.metamodel.spi.MetamodelImplementor;
 import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.beans.BeanUtils;
@@ -207,10 +208,11 @@ public abstract class GeoAbstractGraphQLService<T, ID extends Serializable> {
                     ID id = (ID) this.getId(entity);
 
                     if (id != null) {
-                        Optional<T> optionalEntity = this.repository.findById(id);
+                        T optionalEntity = Hibernate.unproxy(this.repository.getOne(id), this.clazz);
 
-                        if (optionalEntity.isPresent()) {
-                            res = this.merge(entity, optionalEntity.get(), graphQlArguments.get(data.indexOf(entity)));
+                        if (optionalEntity != null) {
+                            res = GeoAbstractGraphQLService.merge(entity, optionalEntity,
+                                    graphQlArguments.get(data.indexOf(entity)));
                         }
                     }
                     return res;
