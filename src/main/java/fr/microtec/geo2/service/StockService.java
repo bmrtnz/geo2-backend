@@ -1,6 +1,8 @@
 package fr.microtec.geo2.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -98,6 +100,7 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
 
         // Initialize ordre ligne
         FunctionResult res = this.functionRepo.ofInitArticle(ordreId, articleId, societeId, null);
+        Map<String, Object> initArticleData = res.getData();
         String newligneRef = res.getData().get("new_orl_ref").toString();
 
         // Update generated row with history values
@@ -133,6 +136,8 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             res = this.functionRepo.fVerifLogistiqueOrdre(ordreId);
             res = this.functionRepo.onChangeAchDevPu(newligneRef, societeId);
         }
+
+        res.setData(initArticleData);
 
         return res;
     }
