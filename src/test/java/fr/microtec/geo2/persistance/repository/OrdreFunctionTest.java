@@ -717,7 +717,7 @@ public class OrdreFunctionTest {
     @Test
     public void testSetTransporteurBassin() {
         FunctionResult result = this.functionOrdreRepository
-                .setTransporteurBassin("8B8E8D", SOCIETE_SA);
+                .setTransporteurBassin("8B8E8D");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
