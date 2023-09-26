@@ -635,4 +635,14 @@ public class GeoFunctionsOrdreGraphQLService {
         return this.repository.setTransporteurBassin(orlRef, socCode);
     }
 
+    @GraphQLQuery
+    public FunctionResult fCreateEdiEsp(
+            BigDecimal ediOrdreRef,
+            String socCode,
+            String cliRef,
+            String cenRef,
+            String username) {
+        return this.repository.fCreateEdiEsp(ediOrdreRef, socCode, cliRef, cenRef, username);
+    }
+
 }
