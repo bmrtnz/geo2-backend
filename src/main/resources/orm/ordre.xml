@@ -90,8 +90,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
       and :arg_date_max
       and geo_ordre.soc_code like :arg_soc_code
       and (
-        geo_ordre.trp_code = :arg_trp_code
-        or geo_ordlog.trp_code = :arg_trp_code
+        geo_ordre.trp_code like :arg_trp_code
+        or geo_ordlog.trp_code like :arg_trp_code
       )
       and geo_ordlog.fou_code =geo_fourni.fou_code
     GROUP by
