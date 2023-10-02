@@ -193,7 +193,7 @@ public interface GeoFunctionOrdreRepository {
 
     FunctionResult ofInitRegimeTva(String ordreRef, String tvrCode);
 
-    FunctionResult setTransporteurBassin(String orlRef, String socCode);
+    FunctionResult setTransporteurBassin(String orlRef);
 
     FunctionResult fDecomptePalox(
             Long nbPallox,
