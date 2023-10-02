@@ -20,6 +20,8 @@ import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAge;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticleAgeKey;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockMouvement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoDeviseRef;
+import fr.microtec.geo2.persistance.entity.tiers.GeoDeviseRefKey;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
@@ -29,6 +31,8 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockArticleAgeRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockMouvementRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoDeviseRefRepository;
+import fr.microtec.geo2.persistance.repository.tiers.GeoSocieteRepository;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
 import fr.microtec.geo2.service.security.SecurityService;
 
@@ -41,6 +45,8 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
     private final GeoOrdreRepository ordreRepo;
     private final GeoOrdreLigneRepository ordreLigneRepo;
     private final GeoStockMouvementRepository stockMouvementRepo;
+    private final GeoDeviseRefRepository deviseRefRepository;
+    private final GeoSocieteRepository societeRepository;
     private final SecurityService securityService;
 
     public StockService(
@@ -50,6 +56,8 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             GeoStockRepository stockRepository,
             GeoOrdreLigneRepository ordreLigneRepo,
             GeoStockMouvementRepository stockMouvementRepo,
+            GeoDeviseRefRepository deviseRefRepository,
+            GeoSocieteRepository societeRepository,
             SecurityService securityService) {
         super(stockArticleAgeRepository, GeoStockArticleAge.class);
         this.stockArticleAgeRepository = stockArticleAgeRepository;
@@ -59,6 +67,8 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
         this.stockMouvementRepo = stockMouvementRepo;
         this.securityService = securityService;
         this.stockRepository = stockRepository;
+        this.deviseRefRepository = deviseRefRepository;
+        this.societeRepository = societeRepository;
     }
 
     public RelayPage<GeoStockArticleAge> fetchStockArticleAge(GeoSociete societe, List<GeoSecteur> secteurs,
@@ -108,6 +118,10 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             GeoOrdreLigne ligne = this.ordreLigneRepo.getOne(newligneRef);
             GeoStock stock = this.stockRepository.getOne(stockId);
             GeoUtilisateur utilisateur = this.securityService.getUser();
+            GeoSociete societe = this.societeRepository.getOne(societeId);
+            GeoDeviseRef deviseRef = this.deviseRefRepository
+                    .getOne(new GeoDeviseRefKey(societe.getDevise().getId(),
+                            stock.getProprietaire().getDevise().getId()));
 
             // Create mouvement
             GeoStockMouvement mouvement = new GeoStockMouvement();
@@ -129,10 +143,12 @@ public class StockService extends GeoAbstractGraphQLService<GeoStockArticleAge, 
             ligne.setNombreReservationsSurStock(
                     stock.getQuantiteInitiale() - stock.getQuantiteReservee() < 0 ? -1f : 1f);
             ligne.setBureauAchat(ligne.getFournisseur().getBureauAchat());
+            ligne.setAchatDevise(stock.getProprietaire().getDevise().getId());
+            ligne.setAchatDeviseTaux(deviseRef.getTauxAchat());
             ligne = this.ordreLigneRepo.save(ligne);
 
             res = this.functionRepo.onChangeCdeNbCol(newligneRef, utilisateur.getUsername());
-            res = this.functionRepo.setTransporteurBassin(newligneRef, societeId);
+            res = this.functionRepo.setTransporteurBassin(newligneRef);
             res = this.functionRepo.fVerifLogistiqueOrdre(ordreId);
             res = this.functionRepo.onChangeAchDevPu(newligneRef, societeId);
         }

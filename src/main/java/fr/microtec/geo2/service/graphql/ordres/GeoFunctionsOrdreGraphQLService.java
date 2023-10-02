@@ -102,7 +102,7 @@ public class GeoFunctionsOrdreGraphQLService {
             this.ordreLigneService.updateFromHistory(newligneRef, historyLigneRef);
 
             // set bassin
-            this.repository.setTransporteurBassin(newligneRef, societeCode);
+            this.repository.setTransporteurBassin(newligneRef);
 
             // Manually generate logistique
             this.repository.fVerifLogistiqueOrdre(ordreRef);
@@ -631,8 +631,8 @@ public class GeoFunctionsOrdreGraphQLService {
     }
 
     @GraphQLQuery
-    public FunctionResult setTransporteurBassin(String orlRef, String socCode) {
-        return this.repository.setTransporteurBassin(orlRef, socCode);
+    public FunctionResult setTransporteurBassin(String orlRef) {
+        return this.repository.setTransporteurBassin(orlRef);
     }
 
     @GraphQLQuery
