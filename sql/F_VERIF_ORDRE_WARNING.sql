@@ -110,6 +110,10 @@ AS
     ld_trp_dev_pu_bidon number;
     ls_trp_bta_code_bidon varchar2(50);
     ls_trp_dev_code_bidon varchar2(50);
+	
+	
+	ls_ind_mod_liv varchar2(50);
+	
     CURSOR C2 (ref_ordre GEO_ORDRE.ORD_REF%type)
     IS
         select L.orl_lig, A.esp_code, L.ach_qte, L.ach_pu, L.vte_qte, L.vte_pu, O.dev_tx, V.pu_max, E.pu_min, L.exp_pds_net,
@@ -159,7 +163,7 @@ BEGIN
         null;
     end;
     begin
-        select  ctl_ref_cli into ls_ctl_champ
+        select  ctl_ref_cli,ind_mod_liv into ls_ctl_champ,ls_ind_mod_liv
         from geo_entrep
         where geo_entrep.cen_ref = ls_cen_ref;
         exception when no_data_found then
@@ -229,7 +233,9 @@ BEGIN
                 ll_count_envois := 0;
         end;
         if ll_count_envois = 0 then
-            ls_rc := ls_rc || '(A) Aucune confirmation n''a été effectuée' || ls_crlf;
+			If ls_ind_mod_liv IS NULL OR ls_ind_mod_liv<> 'S' Then 	
+				ls_rc := ls_rc || '(A) Aucune confirmation n''a été effectuée' || ls_crlf;
+			end if;
         end if;
         -- fin llef
     end if;
