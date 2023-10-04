@@ -29,7 +29,7 @@ AS
 	ll_ident_fou number;
 	ls_a_traiter char;
 	ls_alerte_pal char;
-
+    found_stock boolean := false;
 BEGIN
     -- correspond à of_controle_stock.pbl
     res := 0;
@@ -143,6 +143,7 @@ BEGIN
                             return;
                         else
                             res := 1;
+                            found_stock := true;
                         end if;
                     end;
 				end if;
@@ -150,7 +151,7 @@ BEGIN
 		END LOOP;
     CLOSE C_STOCK;
 
-    res := 2;
+    if not found_stock then res := 2; end if;
 
 END F_CONTROLE_STOCK;
 /
