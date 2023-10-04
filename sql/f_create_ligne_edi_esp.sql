@@ -353,7 +353,7 @@ BEGIN
 	end;
 	
 	CASE ls_grv_code
-		WHEN 'FUJI' THEN ls_r := substr(to_char(to_date(ldate_depdatp + 4, 'dd/mm/yy')), 1, 2);
+		WHEN 'FUJI' THEN ls_r := substr(to_char(to_date(ldate_depdatp + 5, 'dd/mm/yy')), 1, 2);
 		WHEN 'CHANTE' THEN ls_r := substr(to_char(to_date(ldate_depdatp + 4, 'dd/mm/yy')), 1, 2);
 		WHEN 'ENVY' THEN ls_r := substr(to_char(to_date(ldate_depdatp + 5, 'dd/mm/yy')), 1, 2);
 		ELSE ls_r := substr(to_char(to_date(ldate_depdatp + 4, 'dd/mm/yy')), 1, 2);
