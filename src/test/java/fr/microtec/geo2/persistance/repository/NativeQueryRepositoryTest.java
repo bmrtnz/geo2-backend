@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
-import fr.microtec.geo2.persistance.entity.tiers.GeoClientDepassementEnCours;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeLigneRepository;
@@ -28,6 +26,7 @@ import fr.microtec.geo2.persistance.repository.ordres.GeoEdiOrdreRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoLigneChargementRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLigneRepository;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
+import fr.microtec.geo2.persistance.repository.produits.GeoArticleRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoPrecalModelRepository;
 import fr.microtec.geo2.persistance.repository.stock.GeoStockRepository;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
@@ -80,6 +79,7 @@ public class NativeQueryRepositoryTest {
         List<GeoStockArticle> list = this.stockRepository
                 .allStockArticleList(
                         "POMME",
+                        "%",
                         "%",
                         "%",
                         "%",
@@ -278,11 +278,10 @@ public class NativeQueryRepositoryTest {
     public void testAllArticleStatistiqueClients() {
         Assertions.assertDoesNotThrow(() -> {
             this.articleRepository.allArticleStatistiqueClients(
-                "085700",
-                "SA",
-                LocalDate.of(2023, 1, 1),
-                LocalDate.of(2023, 3, 1)
-            );
+                    "085700",
+                    "SA",
+                    LocalDate.of(2023, 1, 1),
+                    LocalDate.of(2023, 3, 1));
         });
     }
 
@@ -290,11 +289,10 @@ public class NativeQueryRepositoryTest {
     public void testAllArticleStatistiqueFournisseurs() {
         Assertions.assertDoesNotThrow(() -> {
             this.articleRepository.allArticleStatistiqueFournisseurs(
-                "85700",
-                "SA",
-                LocalDate.of(2023, 1, 1),
-                LocalDate.of(2023, 3, 1)
-            );
+                    "85700",
+                    "SA",
+                    LocalDate.of(2023, 1, 1),
+                    LocalDate.of(2023, 3, 1));
         });
     }
 
