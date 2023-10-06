@@ -114,6 +114,21 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
     @Column(name = "filtre_rech_stock_edi")
     private Character filtreRechercheStockEdi;
 
+    @Column(name = "ind_report_ach")
+    private Character reportPrixAchat;
+
+    @Column(name = "ind_report_vte")
+    private Character reportPrixVente;
+
+    @Column(name = "ind_report_prop")
+    private Character reportProprietaire;
+
+    @Column(name = "ind_report_exp")
+    private Character reportExpediteur;
+
+    @Column(name = "ind_report_pal")
+    private Character reportTypePalette;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "nomUtilisateur")
     private List<GeoParamUserClientRestriction> restrictions;
 
