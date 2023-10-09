@@ -742,4 +742,59 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
     </query>
   </named-native-query>
 
+    <!-- Ordres de regroupement -->
+    <named-native-query
+        name="Ordre.allOrdresRegroupement"
+        result-class="fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement"
+    >
+        <query>
+            <![CDATA[
+                SELECT
+                    O2.code_chargement,
+                    O1.nordre ordregrp,
+                    O2.nordre ordorig,
+                    E.raisoc,
+                    E.ville,
+                    R.art_ref_orig,
+                    A.var_desc,
+                    A.CAM_DESC,
+                    L.cde_nb_pal,
+                    L.cde_nb_col NB_COL,
+                    L.CDE_PDS_NET,
+                    O1.depdatp,
+                    O1.livdatp,
+                    O1.trp_code,
+                    R.fou_code_orig,
+                    L.ORL_LIG
+                FROM
+                    geo_gest_regroup R,
+                    geo_ordre O1,
+                    geo_ordre O2,
+                    geo_entrep E,
+                    geo_article_colis A,
+                    geo_ordlig L
+                WHERE
+                    R.ord_ref_rgp = O1.ord_ref
+                    AND ord_ref_orig = O2.ord_ref
+                    AND O2.cen_ref = E.cen_ref
+                    AND A.art_ref = R.art_ref_orig
+                    AND R.orl_ref_orig = L.orl_ref
+                    AND O1.DEPDATP >= :arg_date_min
+                    AND
+                    O1.DEPDATP <= :arg_date_max
+                    AND
+                    R.FOU_CODE_ORIG LIKE :arg_station
+                    AND
+                    O1.TRP_CODE LIKE :arg_transp
+                    AND
+                    O1.PER_CODEASS LIKE :arg_commercial
+                ORDER BY
+                    ordregrp,
+                    O2.code_chargement,
+                    ordorig,
+                    L.ORL_LIG
+    ]]>
+        </query>
+    </named-native-query>
+
 </entity-mappings>

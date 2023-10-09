@@ -16,6 +16,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.OrdreService;
@@ -199,5 +200,22 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     @GraphQLQuery
     public Boolean aBloquer(@GraphQLContext GeoOrdre ordre) {
         return this.ordreService.fetchABloquer(ordre);
+    }
+
+    @GraphQLQuery
+    public List<GeoOrdreRegroupement> allOrdresRegroupement(
+        @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
+        @GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
+        @GraphQLArgument(name = "transporteurCode") String transporteurCode,
+        @GraphQLArgument(name = "stationCode") String stationCode,
+        @GraphQLArgument(name = "commercialCode") String commercialCode
+    ) {
+        return this.ordreService.allOrdresRegroupement(
+            dateMin,
+            dateMax,
+            Optional.ofNullable(transporteurCode).orElse("%"),
+            Optional.ofNullable(stationCode).orElse("%"),
+            Optional.ofNullable(commercialCode).orElse("%")
+        );
     }
 }
