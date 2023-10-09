@@ -128,7 +128,7 @@ public class GeoEnvois implements GeoAsDocument, Serializable {
     @Column(name = "trait_exp")
     private Character traite;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "con_ref")
     private GeoContact contact;
 
