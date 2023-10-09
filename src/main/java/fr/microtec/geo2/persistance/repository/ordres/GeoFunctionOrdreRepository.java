@@ -382,4 +382,11 @@ public interface GeoFunctionOrdreRepository {
 
     FunctionResult clearTraca(String arg_orl_ref);
 
+    FunctionResult fCreateEdiEsp(
+            BigDecimal arg_edi_ordre,
+            String arg_soc_code,
+            String arg_cli_ref,
+            String arg_cen_ref,
+            String arg_username);
+
 }

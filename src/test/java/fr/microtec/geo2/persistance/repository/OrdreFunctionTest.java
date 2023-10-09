@@ -1005,4 +1005,17 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testFCreateEdiEsp() {
+        FunctionResult result = this.functionOrdreRepository.fCreateEdiEsp(
+                BigDecimal.valueOf(15995),
+                SOCIETE_SA,
+                "000448",
+                "-",
+                "BRUNO");
+
+        // On teste juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
 }
