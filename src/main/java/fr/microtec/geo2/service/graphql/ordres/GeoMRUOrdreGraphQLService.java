@@ -3,10 +3,18 @@ package fr.microtec.geo2.service.graphql.ordres;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import javax.persistence.criteria.Predicate;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
@@ -61,11 +69,28 @@ public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUO
             @GraphQLArgument(name = "societe") String societe,
             @GraphQLArgument(name = "count", defaultValue = "20") Long count,
             @GraphQLEnvironment ResolutionEnvironment env) {
-        return this.repo.findHead(
-                societe,
-                this.securityService.getUser().getNomUtilisateur(),
-                LocalDateTime.now().minusDays(60),
-                count);
+        Specification<GeoMRUOrdre> spec = (root, query, cb) -> {
+            Predicate whereSociete = cb.equal(root
+                    .get("societe")
+                    .get("id"),
+                    societe);
+            Predicate whereUser = cb.equal(root
+                    .get("utilisateur")
+                    .get("nomUtilisateur"),
+                    this.securityService.getUser().getNomUtilisateur());
+            Predicate whereModificationDate = cb.greaterThan(root
+                    .get("dateModification"),
+                    LocalDateTime.now().minusDays(60));
+            Predicate whereOrdreExist = cb.isNotNull(root.get("ordre"));
+            return cb.and(whereSociete, whereOrdreExist, whereUser,
+                    whereModificationDate);
+        };
+        Set<String> fields = CustomUtils.parseSelectFromEnv(env);
+        return this.repository.findAllWithPaginations(
+                spec,
+                PageRequest.of(0, count.intValue(), Sort.by(Direction.DESC, "dateModification")),
+                GeoMRUOrdre.class,
+                fields);
     }
 
     @GraphQLQuery
