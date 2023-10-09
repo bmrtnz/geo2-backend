@@ -11,7 +11,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
   >
     <query>
     <![CDATA[
-      SELECT rownum, REST.* FROM(
+            SELECT rownum, REST.* FROM(
       SELECT
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long_ref,
@@ -102,7 +102,8 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         avi_art_cdc,
         avi_art_emballage,
         avi_art_normalisation,
-        geo2_art_desc
+        geo2_art_desc,
+        geo_colis
       WHERE
         avi_art_gestion.art_ref = geo_stock.art_ref
         AND geo_fourni.fou_code (+) = geo_stock.fou_code
@@ -110,6 +111,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_mat_prem.ref_mat_prem (+) = avi_art_gestion.ref_mat_prem
         AND avi_art_cdc.ref_cdc (+) = avi_art_gestion.ref_cdc
         AND avi_art_emballage.ref_emballage (+) = avi_art_gestion.ref_emballage
+        AND geo_colis.col_code (+) = avi_art_emballage.col_code
         AND avi_art_normalisation.ref_normalisation (+) = avi_art_gestion.ref_normalisation
         AND geo_article.art_ref (+) = geo2_art_desc.art_ref
         AND geo_stock_consolid.art_ref (+) = geo_stock.art_ref
@@ -121,6 +123,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_mat_prem.mode_culture LIKE :arg_mode_culture
         AND avi_art_emballage.col_code LIKE :arg_emballage
         AND geo_fourni.bac_code LIKE :arg_bureau_achat
+        AND geo_colis.gem_code LIKE :arg_groupe_emballage
       GROUP BY
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long_ref,
