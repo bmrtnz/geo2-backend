@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,8 @@ public class ProgramService {
     private final GeoFunctionOrdreRepository functionOrdreRepo;
     private final EntityManager entityManager;
     private final Maddog2FileSystemService md2Service;
+    private int CURRENT_ROW = 0;
+    private int CURRENT_COL = 0;
 
     public ProgramService(
             EntityManager entityManager,
@@ -235,6 +238,7 @@ public class ProgramService {
 
             outer: for (Row row : sheet) {
                 ProgramRow pRow = new ProgramRow();
+                CURRENT_ROW = row.getRowNum();
 
                 // ignore header row
                 if (row.getRowNum() == 0)
@@ -243,6 +247,7 @@ public class ProgramService {
                 // exit when no more data to consume
                 String ls_load_reference;
                 try {
+                    CURRENT_COL = COL_LOAD_REFERENCE;
                     ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
                     if (ls_load_reference.isBlank())
                         break;
@@ -253,24 +258,35 @@ public class ProgramService {
                 pRow.setLoadRef(ls_load_reference);
                 String ls_programme = ls_load_reference.split("/")[0];
                 // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
+                CURRENT_COL = COL_DEPOT_NAME;
                 String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
                 pRow.setDepot(ls_depot_name);
+                CURRENT_COL = COL_PACKHOUSE;
                 String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
+                CURRENT_COL = COL_DEPART_DATE;
                 LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
                 pRow.setDateDepart(ls_depart_date);
                 ls_depart_date_ordre = ls_depart_date;
+                CURRENT_COL = COL_DELIVERY_DATE;
                 LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
                 pRow.setDateLivraison(ls_delivery_date);
                 // LocalDateTime ls_depot_date =
                 // row.getCell(COL_DEPOT_DATE).getLocalDateTimeCellValue();
+                CURRENT_COL = COL_QTY_CASE;
                 Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
+                CURRENT_COL = COL_QTY_PALLETS;
                 Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
                 Double ld_qty_pallets = ls_qty_pallets;
                 Integer ll_qty_pallets = ld_qty_pallets.intValue();
+                CURRENT_COL = COL_CASES_PER_PALLETS;
                 Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
+                CURRENT_COL = COL_JC;
                 String ls_jc = row.getCell(COL_JC).getStringCellValue();
+                CURRENT_COL = COL_HAULIER;
                 String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
+                CURRENT_COL = COL_ARTS_REF;
                 List<String> ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().trim().split("-"));
+                CURRENT_COL = COL_PRIX_VENTE;
                 Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
 
                 Double ld_prix_mini_sa;
@@ -360,6 +376,7 @@ public class ProgramService {
                 // IMPRESSION"
                 String ls_dluo = "";
                 try {
+                    CURRENT_COL = COL_BB_DATE;
                     LocalDateTime ls_bb_date = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue();
                     String ls_month = ls_bb_date.format(DateTimeFormatter.ofPattern("MMM").withLocale(Locale.ENGLISH));
                     String ls_day = StringUtils.padLeft(Integer.toString(ls_bb_date.getDayOfMonth()), "0", 2);
@@ -484,6 +501,7 @@ public class ProgramService {
 
                     for (int ll_demi_pallets = 1; ll_demi_pallets <= ll_parse; ll_demi_pallets++) {
                         if (ll_demi_pallets == 2) { // On modifie les qtés de colis commandé pour la demi-palette
+                            CURRENT_COL = COL_CASES_PER_PALLETS;
                             ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
                             ls_qty_case = (ld_qty_pallets - ll_qty_pallets) * ls_case_per_pallets;
                             ll_qty_pallets = 1;
@@ -529,6 +547,7 @@ public class ProgramService {
                                 if (ls_prog.equals("TESCO"))
                                     ld_prix_mini_sa = 0d;
                                 else if (ls_prog.equals("SP")) {
+                                    CURRENT_COL = COL_PRIX_MINI_SA;
                                     ld_prix_mini_sa = row.getCell(COL_PRIX_MINI_SA).getNumericCellValue();
                                 } else
                                     ld_prix_mini_sa = 0d;
@@ -654,6 +673,7 @@ public class ProgramService {
                             // écriture dans le fichier du n° ordre de regroupement
                             Integer ll_row = 2;
                             Row row = sheet.getRow(ll_row - 1);
+                            CURRENT_COL = COL_ORD_CREATE;
                             String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
                             while (!ls_value.isBlank()) {
                                 // do while not IsNull(ls_value) and ls_value <> ""
@@ -790,7 +810,12 @@ public class ProgramService {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             var throwable = new RuntimeException(exception.getMessage());
             log.error("Program import has failed: ", throwable);
-            throw throwable;
+            String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
+            if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
+                throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
+            } else {
+                throw throwable;
+            }
         }
 
         return res;
@@ -830,6 +855,7 @@ public class ProgramService {
 
             outer: for (Row row : sheet) {
                 ProgramRow pRow = new ProgramRow();
+                CURRENT_ROW = row.getRowNum();
 
                 // ignore header row
                 if (row.getRowNum() == 0)
@@ -848,18 +874,28 @@ public class ProgramService {
                 pRow.setLoadRef(ls_load_reference);
                 String ls_programme = ls_load_reference.split("/")[0];
                 // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
+                CURRENT_COL = COL_DEPOT_NAME;
                 String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
                 pRow.setDepot(ls_depot_name);
+                CURRENT_COL = COL_PACKHOUSE;
                 String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
+                CURRENT_COL = COL_DEPART_DATE;
                 LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
                 pRow.setDateDepart(ls_depart_date);
+                CURRENT_COL = COL_DELIVERY_DATE;
                 LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
                 pRow.setDateLivraison(ls_delivery_date);
+                CURRENT_COL = COL_QTY_CASE;
                 Double ls_qty_case = row.getCell(COL_QTY_CASE).getNumericCellValue();
+                CURRENT_COL = COL_QTY_PALLETS;
                 Double ls_qty_pallets = row.getCell(COL_QTY_PALLETS).getNumericCellValue();
+                CURRENT_COL = COL_CASES_PER_PALLETS;
                 Double ls_case_per_pallets = row.getCell(COL_CASES_PER_PALLETS).getNumericCellValue();
+                CURRENT_COL = COL_HAULIER;
                 String ls_haulier = row.getCell(COL_HAULIER).getStringCellValue().toUpperCase().trim();
+                CURRENT_COL = COL_PRIX_VENTE;
                 Double ld_prix_vte = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
+                CURRENT_COL = COL_PRIX_MINI;
                 Double ld_prix_mini = row.getCell(COL_PRIX_MINI).getNumericCellValue();
 
                 final AtomicReference<String> ls_soc_code = new AtomicReference<>("");
@@ -1110,7 +1146,13 @@ public class ProgramService {
             workbook.close();
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
-            throw new RuntimeException(exception.getMessage());
+            String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
+            log.error("Program import has failed: ", exception.getMessage());
+            if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
+                throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
+            } else {
+                throw new RuntimeException(exception.getMessage());
+            }
         }
         return res;
     }
@@ -1151,6 +1193,7 @@ public class ProgramService {
 
             outer: for (Row row : sheet) {
                 ProgramRow pRow = new ProgramRow();
+                CURRENT_ROW = row.getRowNum();
 
                 // ignore header row
                 if (row.getRowNum() == 0)
@@ -1166,20 +1209,26 @@ public class ProgramService {
                 }
 
                 String ls_create_ligne = "N";
+                CURRENT_COL = COL_ORD_CREATE;
                 Integer ord_ref_create = ((Double) row.getCell(COL_ORD_CREATE).getNumericCellValue()).intValue();
                 String ls_value = ord_ref_create == 0 ? "" : StringUtils.padLeft(ord_ref_create.toString(), "0", 6);
+                CURRENT_COL = COL_ENTREPOT;
                 String ls_depot_name = row.getCell(COL_ENTREPOT).getStringCellValue().toUpperCase().trim();
                 pRow.setDepot(ls_depot_name);
+                CURRENT_COL = COL_REF_CLI;
                 String ls_ref_cli = row.getCell(COL_REF_CLI).getStringCellValue().toUpperCase().trim();
                 pRow.setRefCli(ls_ref_cli);
 
                 if (ls_value.isBlank()) {
 
+                    CURRENT_COL = COL_PROPRIETAIRE;
                     String ls_proprietaire = row.getCell(COL_PROPRIETAIRE).getStringCellValue().toUpperCase().trim();
+                    CURRENT_COL = COL_STATION;
                     String ls_station = row.getCell(COL_STATION).getStringCellValue().toUpperCase().trim();
                     pRow.setLoadRef(ls_station);
                     List<String> ls_array_art;
                     try {
+                        CURRENT_COL = COL_ARTS_REF;
                         ls_array_art = Arrays.asList(row.getCell(COL_ARTS_REF).getStringCellValue().trim().split("-"));
                     } catch (Exception e) {
                         ls_array_art = List
@@ -1187,25 +1236,36 @@ public class ProgramService {
                                         ((Double) row.getCell(COL_ARTS_REF).getNumericCellValue()).intValue()));
                     }
 
+                    CURRENT_COL = COL_DATE_DEPART;
                     LocalDateTime ls_depart_date = row.getCell(COL_DATE_DEPART).getLocalDateTimeCellValue();
                     pRow.setDateDepart(ls_depart_date);
 
+                    CURRENT_COL = COL_DATE_LIVRAISON;
                     LocalDateTime ls_delivery_date = row.getCell(COL_DATE_LIVRAISON).getLocalDateTimeCellValue();
                     pRow.setDateLivraison(ls_delivery_date);
 
+                    CURRENT_COL = COL_INSTRUCTION_LOG;
                     String ls_instruction_log = row
                             .getCell(COL_INSTRUCTION_LOG, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                             .getStringCellValue().toUpperCase()
                             .trim();
+                    CURRENT_COL = COL_COM_CONF_CDE;
                     String ls_comment_confirm_cde = row
                             .getCell(COL_COM_CONF_CDE, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                             .getStringCellValue().toUpperCase().trim();
+                    CURRENT_COL = COL_QTE_COLIS;
                     Double ls_qty_case = row.getCell(COL_QTE_COLIS).getNumericCellValue();
+                    CURRENT_COL = COL_QTE_PAL;
                     Double ls_qty_pallets = row.getCell(COL_QTE_PAL).getNumericCellValue();
+                    CURRENT_COL = COL_QTE_COLIS_PAL;
                     Double ls_case_per_pallets = row.getCell(COL_QTE_COLIS_PAL).getNumericCellValue();
+                    CURRENT_COL = COL_PAL_INTER;
                     Double ls_qty_pallets_inter = row.getCell(COL_PAL_INTER).getNumericCellValue();
+                    CURRENT_COL = COL_TYP_PAL;
                     String ls_type_pallet = row.getCell(COL_TYP_PAL).getStringCellValue().toUpperCase().trim();
+                    CURRENT_COL = COL_ASSISTANTE;
                     String ls_assistante = row.getCell(COL_ASSISTANTE).getStringCellValue().toUpperCase().trim();
+                    CURRENT_COL = COL_CIAL;
                     String ls_commercial = row.getCell(COL_CIAL).getStringCellValue().toUpperCase().trim();
                     Double ld_prix_achat;
                     try {
@@ -1256,6 +1316,7 @@ public class ProgramService {
                         }
                     }
 
+                    CURRENT_COL = COL_TRANSPORTEUR;
                     String ls_transporteur = row.getCell(COL_TRANSPORTEUR, MissingCellPolicy.CREATE_NULL_AS_BLANK)
                             .getStringCellValue().toUpperCase().trim();
 
@@ -1430,7 +1491,13 @@ public class ProgramService {
             workbook.close();
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
-            throw new RuntimeException(exception.getMessage());
+            String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
+            log.error("Program import has failed: ", exception.getMessage());
+            if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
+                throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
+            } else {
+                throw new RuntimeException(exception.getMessage());
+            }
         }
         return res;
     }
