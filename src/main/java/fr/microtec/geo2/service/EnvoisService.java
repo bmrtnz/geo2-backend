@@ -53,7 +53,6 @@ public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> 
      * @return A list of GeoEnvois
      */
     public List<GeoEnvois> duplicateMergeAll(List<GeoEnvois> envois) {
-        String numeroDemande = this.fetchEnvoiDemandeNumero();
         return envois.stream()
                 .map(envoi -> {
                     GeoEnvois original = this.repository.findById(envoi.getId()).orElseThrow();
@@ -61,7 +60,6 @@ public class EnvoisService extends GeoAbstractGraphQLService<GeoEnvois, String> 
                     this.entityManager.detach(envoi);
                     this.entityManager.detach(original);
                     envoi.setId(null);
-                    envoi.setNumeroDemande(numeroDemande);
                     envoi.setUserModification(this.securityService.getUser().getNomUtilisateur());
                     return envoi;
                 })
