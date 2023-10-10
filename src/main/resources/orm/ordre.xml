@@ -94,6 +94,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         or geo_ordlog.trp_code like :arg_trp_code
       )
       and geo_ordlog.fou_code =geo_fourni.fou_code
+      and geo_fourni.bac_code like :arg_bac_code
     GROUP by
       geo_ordre.ord_ref,
       geo_ordre.code_chargement,

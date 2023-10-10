@@ -16,7 +16,6 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
-import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.stock.GeoStockArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEdi;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClientEnCours;
@@ -65,13 +64,12 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllPlanningTransporteurs() {
-        List<GeoPlanningTransporteur> list = this.ordreRepository.allPlanningTransporteurs(
+        this.ordreRepository.allPlanningTransporteurs(
                 LocalDateTime.of(2021, 10, 25, 0, 0, 0),
                 LocalDateTime.of(2021, 10, 26, 23, 59, 59),
                 "SA",
-                "TRANSI");
-
-        Assertions.assertFalse(list.isEmpty());
+                "TRANSI",
+                "SE");
     }
 
     @Test

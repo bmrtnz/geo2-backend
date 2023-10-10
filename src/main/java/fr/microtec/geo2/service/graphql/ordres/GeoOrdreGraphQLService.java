@@ -58,12 +58,14 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
             @GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
             @GraphQLArgument(name = "societeCode") String societeCode,
-            @GraphQLArgument(name = "transporteurCode") String transporteurCode) {
+            @GraphQLArgument(name = "transporteurCode") String transporteurCode,
+            @GraphQLArgument(name = "bureauAchatCode") String bureauAchatCode) {
         return this.ordreService.allPlanningTransporteurs(
                 dateMin,
                 dateMax,
                 societeCode,
-                transporteurCode);
+                transporteurCode,
+                bureauAchatCode);
     }
 
     @GraphQLQuery
@@ -130,8 +132,7 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.documentService.loadDocuments(
                 this.ordreService.getOneByNumeroAndSocieteAndCampagne(numero, societeID, campagneID),
-                env
-        );
+                env);
     }
 
     @GraphQLQuery
@@ -204,18 +205,16 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
 
     @GraphQLQuery
     public List<GeoOrdreRegroupement> allOrdresRegroupement(
-        @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
-        @GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
-        @GraphQLArgument(name = "transporteurCode") String transporteurCode,
-        @GraphQLArgument(name = "stationCode") String stationCode,
-        @GraphQLArgument(name = "commercialCode") String commercialCode
-    ) {
+            @GraphQLArgument(name = "dateMin") LocalDateTime dateMin,
+            @GraphQLArgument(name = "dateMax") LocalDateTime dateMax,
+            @GraphQLArgument(name = "transporteurCode") String transporteurCode,
+            @GraphQLArgument(name = "stationCode") String stationCode,
+            @GraphQLArgument(name = "commercialCode") String commercialCode) {
         return this.ordreService.allOrdresRegroupement(
-            dateMin,
-            dateMax,
-            Optional.ofNullable(transporteurCode).orElse("%"),
-            Optional.ofNullable(stationCode).orElse("%"),
-            Optional.ofNullable(commercialCode).orElse("%")
-        );
+                dateMin,
+                dateMax,
+                Optional.ofNullable(transporteurCode).orElse("%"),
+                Optional.ofNullable(stationCode).orElse("%"),
+                Optional.ofNullable(commercialCode).orElse("%"));
     }
 }

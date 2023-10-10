@@ -203,13 +203,15 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
             LocalDateTime dateMin,
             LocalDateTime dateMax,
             String societeCode,
-            String transporteurCode) {
+            String transporteurCode,
+            String bureauAchatCode) {
         List<GeoPlanningTransporteur> list = this.ordreRepository
                 .allPlanningTransporteurs(
                         dateMin,
                         dateMax,
                         societeCode,
-                        transporteurCode);
+                        transporteurCode,
+                        bureauAchatCode);
 
         return list;
     }
@@ -482,19 +484,17 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
     }
 
     public List<GeoOrdreRegroupement> allOrdresRegroupement(
-        LocalDateTime dateMin,
-        LocalDateTime dateMax,
-        String transporteurCode,
-        String stationCode,
-        String commercialCode
-    ) {
+            LocalDateTime dateMin,
+            LocalDateTime dateMax,
+            String transporteurCode,
+            String stationCode,
+            String commercialCode) {
         return this.ordreRepository
-            .allOrdresRegroupement(
-                dateMin,
-                dateMax,
-                transporteurCode,
-                stationCode,
-                commercialCode
-            );
+                .allOrdresRegroupement(
+                        dateMin,
+                        dateMax,
+                        transporteurCode,
+                        stationCode,
+                        commercialCode);
     }
 }
