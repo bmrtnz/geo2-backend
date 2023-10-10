@@ -33,7 +33,8 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_date_min") LocalDateTime dateMin,
             @Param("arg_date_max") LocalDateTime dateMax,
             @Param("arg_soc_code") String societeCode,
-            @Param("arg_trp_code") String transporteurCode);
+            @Param("arg_trp_code") String transporteurCode,
+            @Param("arg_bac_code") String bureauAchatCode);
 
     @Query(name = "Ordre.allPlanningDepartMaritime", nativeQuery = true)
     List<GeoPlanningMaritime> allPlanningDepartMaritime(
