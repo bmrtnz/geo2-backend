@@ -139,7 +139,7 @@ BEGIN
         end loop;
     end;
 
-    if ls_nordre_tot is not null and ls_nordre_tot <> '' then
+    if ls_nordre_tot is not null then
         update GEO_EDI_ORDRE SET STATUS_GEO = 'T' WHERE REF_EDI_ORDRE = arg_edi_ordre;
     end if;
 
