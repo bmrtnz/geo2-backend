@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoMRUOrdreKey;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.repository.ordres.GeoMRUOrdreRepository;
 import fr.microtec.geo2.service.MRUOrdreService;
 import fr.microtec.geo2.service.graphql.GeoAbstractGraphQLService;
@@ -81,7 +84,14 @@ public class GeoMRUOrdreGraphQLService extends GeoAbstractGraphQLService<GeoMRUO
             Predicate whereModificationDate = cb.greaterThan(root
                     .get("dateModification"),
                     LocalDateTime.now().minusDays(60));
-            Predicate whereOrdreExist = cb.isNotNull(root.get("ordre"));
+
+            Subquery<GeoOrdre> ordreInfoSubquery = query.subquery(GeoOrdre.class);
+            Root<GeoOrdre> ordreInfo = ordreInfoSubquery.from(GeoOrdre.class);
+            ordreInfoSubquery.select(ordreInfo)// subquery selection
+                    .where(cb.equal(ordreInfo.get("id"),
+                            root.get("ordre")));// subquery restriction
+            Predicate whereOrdreExist = cb.exists(ordreInfoSubquery);
+
             return cb.and(whereSociete, whereOrdreExist, whereUser,
                     whereModificationDate);
         };
