@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.persistance.entity.FunctionResult;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.repository.ordres.GeoFunctionOrdreRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreLogistiqueRepository;
+import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.OrdreLigneService;
 import fr.microtec.geo2.service.OrdreService;
 import fr.microtec.geo2.service.security.SecurityService;
@@ -26,18 +29,22 @@ public class GeoFunctionsOrdreGraphQLService {
 
     private final GeoFunctionOrdreRepository repository;
     private final OrdreService ordreService;
+    private final GeoOrdreRepository ordreRepo;
     private final OrdreLigneService ordreLigneService;
-    private final SecurityService securityService;
+    private final GeoOrdreLogistiqueRepository logistiqueRepo;
 
     public GeoFunctionsOrdreGraphQLService(
             GeoFunctionOrdreRepository repository,
             OrdreLigneService ordreLigneService,
+            GeoOrdreRepository ordreRepo,
             OrdreService ordreService,
+            GeoOrdreLogistiqueRepository logistiqueRepo,
             SecurityService securityService) {
         this.repository = repository;
         this.ordreService = ordreService;
+        this.ordreRepo = ordreRepo;
         this.ordreLigneService = ordreLigneService;
-        this.securityService = securityService;
+        this.logistiqueRepo = logistiqueRepo;
     }
 
     @GraphQLQuery
@@ -643,6 +650,29 @@ public class GeoFunctionsOrdreGraphQLService {
             String cenRef,
             String username) {
         return this.repository.fCreateEdiEsp(ediOrdreRef, socCode, cliRef, cenRef, username);
+    }
+
+    @GraphQLQuery
+    public FunctionResult clotureSP(@GraphQLArgument(name = "ordresRef") List<String> ordresRef) {
+        AtomicReference<FunctionResult> res = new AtomicReference<FunctionResult>(
+                new FunctionResult(FunctionResult.RESULT_OK, "Rien à traiter", null, null));
+
+        ordresRef.forEach(ordreRef -> {
+            this.ordreRepo.findById(ordreRef).ifPresent(ordre -> {
+                ordre.getLogistiques().forEach(logistique -> {
+                    logistique.getLignes().forEach(ligne -> {
+                        res.set(this.repository.fDetailsExpOnClickAuto(ligne.getId()));
+                        if (!res.get().getRes().equals(FunctionResult.RESULT_OK))
+                            return;
+                    });
+                    logistique.setExpedieStation(true);
+                    this.logistiqueRepo.save(logistique);
+                });
+            });
+        });
+
+        return res.get();
+
     }
 
 }
