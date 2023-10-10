@@ -863,6 +863,7 @@ public class ProgramService {
 
                 String ls_load_reference;
                 try {
+                    CURRENT_COL = COL_LOAD_REFERENCE;
                     ls_load_reference = row.getCell(COL_LOAD_REFERENCE).getStringCellValue();
                     if (ls_load_reference.isBlank())
                         break;
@@ -873,6 +874,7 @@ public class ProgramService {
                 Character ls_create_ligne = 'N';
                 pRow.setLoadRef(ls_load_reference);
                 String ls_programme = ls_load_reference.split("/")[0];
+                // CURRENT_COL = COL_TPND;
                 // val ls_tpnd = row.getCell(COL_TPND).getStringCellValue();
                 CURRENT_COL = COL_DEPOT_NAME;
                 String ls_depot_name = row.getCell(COL_DEPOT_NAME).getStringCellValue().toUpperCase().trim();
@@ -953,6 +955,7 @@ public class ProgramService {
                 // Doit être renseigné dnas le fichier Excel
                 String ls_dluo;
                 try {
+                    CURRENT_COL = COL_BB_DATE;
                     ls_dluo = row.getCell(COL_BB_DATE).getLocalDateTimeCellValue().toString();
                 } catch (Exception e) {
                     ls_dluo = "/";
@@ -1021,6 +1024,7 @@ public class ProgramService {
 
                 List<String> ls_array_art;
                 try {
+                    CURRENT_COL = COL_ARTS_REF;
                     ls_array_art = List.of(row.getCell(COL_ARTS_REF).getStringCellValue().trim().split("-"));
                 } catch (Exception e) {
                     ls_array_art = List
@@ -1201,6 +1205,7 @@ public class ProgramService {
 
                 String ls_a_traite;
                 try {
+                    CURRENT_COL = COL_ENTREPOT;
                     ls_a_traite = row.getCell(COL_ENTREPOT).getStringCellValue().trim();
                     if (ls_a_traite.isBlank())
                         break;
@@ -1269,12 +1274,14 @@ public class ProgramService {
                     String ls_commercial = row.getCell(COL_CIAL).getStringCellValue().toUpperCase().trim();
                     Double ld_prix_achat;
                     try {
+                        CURRENT_COL = COL_PRIX_ACHAT;
                         ld_prix_achat = row.getCell(COL_PRIX_ACHAT).getNumericCellValue();
                     } catch (Exception e) {
                         ld_prix_achat = 0d;
                     }
                     final AtomicReference<String> ls_unite_achat = new AtomicReference<>("");
                     try {
+                        CURRENT_COL = COL_UNITE_ACHAT;
                         ls_unite_achat.set(row.getCell(COL_UNITE_ACHAT).getStringCellValue().toUpperCase().trim());
                     } catch (Exception e) {
                         ls_unite_achat.set("");
@@ -1294,12 +1301,14 @@ public class ProgramService {
                     }
                     Double ld_prix_vente;
                     try {
+                        CURRENT_COL = COL_PRIX_VENTE;
                         ld_prix_vente = row.getCell(COL_PRIX_VENTE).getNumericCellValue();
                     } catch (Exception e) {
                         ld_prix_vente = 0d;
                     }
                     final AtomicReference<String> ls_unite_vente = new AtomicReference<>("");
                     try {
+                        CURRENT_COL = COL_UNITE_VENTE;
                         ls_unite_vente.set(row.getCell(COL_UNITE_VENTE).getStringCellValue().toUpperCase().trim());
                     } catch (Exception e) {
                         ls_unite_vente.set("");
