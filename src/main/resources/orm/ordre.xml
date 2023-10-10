@@ -646,7 +646,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_article_colis.pdnet_client,
             geo_ordre.trp_code,
             geo_ordre.comm_interne,
-            geo_article_colis.ori_desc
+            geo_article_colis.ori_desc,
+            geo_ordlig.gtin_colis_kit
         FROM
             geo_ordlig,
             geo_ordlog,
@@ -729,7 +730,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_article_colis.pdnet_client,
             geo_ordre.trp_code,
             geo_ordre.comm_interne,
-            geo_article_colis.ori_desc
+            geo_article_colis.ori_desc,
+            geo_ordlig.gtin_colis_kit
         ORDER BY
             to_char(geo_ordlog.datdep_fou_p, 'yyyymmdd') ASC,
             geo_ordre.pay_code ASC,
