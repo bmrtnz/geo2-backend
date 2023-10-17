@@ -1018,4 +1018,12 @@ public class OrdreFunctionTest {
         Assertions.assertNotNull(result);
     }
 
+    @Test
+    public void testSupprLignesNonExped() {
+        FunctionResult result = this.functionOrdreRepository.supprLignesNonExped("2200197");
+
+        // On teste juste l'execution,
+        Assertions.assertNotNull(result);
+    }
+
 }
