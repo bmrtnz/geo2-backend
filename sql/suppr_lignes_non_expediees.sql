@@ -1,8 +1,8 @@
-CREATE OR REPLACE PROCEDURE GEO_ADMIN.SUPPR_LIGNES_NON_EXPEDIEES " (
+CREATE OR REPLACE PROCEDURE SUPPR_LIGNES_NON_EXPEDIEES (
     is_cur_ord_ref in GEO_ORDRE.ORD_REF%TYPE,
     res IN OUT number,
     msg IN OUT varchar2
-    ) AS
+) AS
     ll_cnt number;
 
 BEGIN
@@ -36,7 +36,7 @@ BEGIN
                         geo_ordlig L
                    WHERE G.ord_ref = L.ord_ref
                      AND G.fou_code = L.fou_code
-                     AND L.ord_ref = :is_cur_ord_ref
+                     AND L.ord_ref = is_cur_ord_ref
                      AND G.FLAG_EXPED_FOURNNI = 'O'
                      AND L.EXP_NB_COL = 0
                      AND L.EXP_PDS_NET = 0
@@ -51,10 +51,9 @@ BEGIN
         commit;
     END IF;
 
-    msg := string(ll_cnt) || ' ligne(s) supprimée(s)';
+    msg := ll_cnt || ' ligne(s) supprimée(s)';
     res := 1;
     return;
 
 END;
 /
-
