@@ -675,4 +675,9 @@ public class GeoFunctionsOrdreGraphQLService {
 
     }
 
+    @GraphQLQuery
+    public FunctionResult supprLignesNonExped(@GraphQLArgument(name = "ordreRef") String ordreRef) {
+        return this.repository.supprLignesNonExped(ordreRef);
+    }
+
 }

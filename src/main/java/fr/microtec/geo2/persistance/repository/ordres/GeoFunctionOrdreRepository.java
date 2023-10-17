@@ -389,4 +389,5 @@ public interface GeoFunctionOrdreRepository {
             String arg_cen_ref,
             String arg_username);
 
+    FunctionResult supprLignesNonExped(String is_cur_ord_ref);
 }

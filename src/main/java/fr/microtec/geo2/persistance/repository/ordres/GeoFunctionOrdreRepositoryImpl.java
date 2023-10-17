@@ -1208,4 +1208,13 @@ public class GeoFunctionOrdreRepositoryImpl extends AbstractFunctionsRepositoryI
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult supprLignesNonExped(String is_cur_ord_ref) {
+        FunctionQuery query = this.build("SUPPR_LIGNES_NON_EXPEDIEES");
+
+        query.attachInput("is_cur_ord_ref", String.class, is_cur_ord_ref);
+
+        return query.fetch();
+    }
+
 }
