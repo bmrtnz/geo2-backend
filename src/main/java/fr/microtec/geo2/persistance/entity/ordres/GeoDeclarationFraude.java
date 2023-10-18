@@ -116,4 +116,6 @@ public class GeoDeclarationFraude {
     @Column(name = "gtin_colis_kit")
     private String gtinColis;
 
+    @Column(name = "cam_code")
+    private String campagne;
 }
