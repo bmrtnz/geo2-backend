@@ -144,6 +144,7 @@ BEGIN
                         else
                             res := 1;
                             found_stock := true;
+                            EXIT when arg_recherche = 'S';
                         end if;
                     end;
 				end if;
