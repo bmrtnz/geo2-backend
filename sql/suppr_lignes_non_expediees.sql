@@ -17,7 +17,7 @@ BEGIN
     WHERE G.ord_ref = L.ord_ref
       AND G.fou_code = L.fou_code
       AND L.ord_ref = is_cur_ord_ref
-      AND G.FLAG_EXPED_FOURNNI = 'N'
+      AND G.FLAG_EXPED_FOURNNI = 'O'
       AND L.EXP_NB_COL = 0
       AND L.EXP_PDS_NET = 0
       AND L.ESP_CODE <> 'EMBALC';
@@ -37,7 +37,7 @@ BEGIN
                    WHERE G.ord_ref = L.ord_ref
                      AND G.fou_code = L.fou_code
                      AND L.ord_ref = is_cur_ord_ref
-                     AND G.FLAG_EXPED_FOURNNI = 'N'
+                     AND G.FLAG_EXPED_FOURNNI = 'O'
                      AND L.EXP_NB_COL = 0
                      AND L.EXP_PDS_NET = 0
                      AND L.ESP_CODE <> 'EMBALC');
