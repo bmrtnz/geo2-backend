@@ -102,4 +102,6 @@ public class GeoDeclarationFraude {
     @Column(name = "ori_desc")
     private String origineDescription;
 
+    @Column(name = "cam_code")
+    private String campagne;
 }
