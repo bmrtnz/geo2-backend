@@ -129,6 +129,15 @@ public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDet
     @Column(name = "ind_report_pal")
     private Boolean reportTypePalette;
 
+    @Column(name = "ind_bar_def_ht")
+    private Boolean barreDefilementHaut;
+
+    @Column(name = "ind_bar_def_bs")
+    private Boolean barreDefilementBas;
+
+    @Column(name = "ind_plandp_dif_exp")
+    private Boolean diffSurExpedition;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "nomUtilisateur")
     private List<GeoParamUserClientRestriction> restrictions;
 
