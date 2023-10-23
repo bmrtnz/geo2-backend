@@ -236,7 +236,7 @@ BEGIN
 	CASE ls_day 
 		WHEN 'LUNDI' THEN ldate_dep := ldate_creation + 2;
 		WHEN 'MARDI' THEN ldate_dep := ldate_creation + 2;
-		WHEN 'MERCREDI' THEN ldate_dep := ldate_creation + 3;
+		WHEN 'MERCREDI' THEN ldate_dep := ldate_creation + 2;
 		WHEN 'JEUDI' THEN  ldate_dep := ldate_creation + 2;
 		WHEN 'VENDREDI' THEN ldate_dep := ldate_creation + 3;
 		WHEN 'SAMEDI' THEN ldate_dep := ldate_creation + 3;
@@ -246,8 +246,8 @@ BEGIN
 	CASE ls_day 
 		WHEN 'LUNDI' THEN ldate_liv := ldate_creation + 3;
 		WHEN 'MARDI' THEN ldate_liv := ldate_creation + 3;
-		WHEN 'MERCREDI' THEN ldate_liv := ldate_creation + 4;
-		WHEN 'JEUDI' THEN  ldate_liv := ldate_creation + 4;
+		WHEN 'MERCREDI' THEN ldate_liv := ldate_creation + 3;
+		WHEN 'JEUDI' THEN  ldate_liv := ldate_creation + 3;
 		WHEN 'VENDREDI' THEN ldate_liv := ldate_creation + 4;
 		WHEN 'SAMEDI' THEN ldate_liv := ldate_creation + 4;
 		ELSE ldate_liv := ldate_creation + 3;
@@ -311,6 +311,7 @@ BEGIN
 			rollback;
             return;
         end;
+		
     exception when others then
         msg := '%%% Erreur à la création de l~''ordre : ' || SQLERRM;
         return;

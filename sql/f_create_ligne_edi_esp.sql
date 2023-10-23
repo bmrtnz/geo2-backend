@@ -196,15 +196,6 @@ BEGIN
         return;
     end;
 
-
-    if ll_pal_nb_col is not null and ll_pal_nb_col > 0 then
-        ll_cde_nb_pal := ROUND( ll_qte_art_cde / ll_pal_nb_col, 0);
-
-        if ll_cde_nb_pal = 0 then
-            ll_cde_nb_pal := 1;
-        end if;
-    end if;
-
 	-- Déterminer si l'entrepôt nécessite une palette intermédiaire uniquement pour UCSAC de 1.5kg
 	ll_pal_nb_palinter := 0;
 	if ls_gem_code = 'UCSAC' and ld_uc_pdnet_garanti = 1.5 then
@@ -215,6 +206,13 @@ BEGIN
 		end if;
 	end if;
 
+	if ll_pal_nb_col is not null and ll_pal_nb_col > 0 then
+        ll_cde_nb_pal := ROUND( (ll_qte_art_cde / ll_pal_nb_col) + 0.5, 0);
+
+        if ll_cde_nb_pal = 0 then
+            ll_cde_nb_pal := 1;
+        end if;
+    end if;
 
     ld_pds_net := round(ld_pdnet_client * ll_qte_art_cde, 0);
     ld_pds_brut := round(ld_pds_net + (ld_col_tare * ll_qte_art_cde), 0);
@@ -231,7 +229,10 @@ BEGIN
 	END CASE;
 	--FIN NEW
 	
+	-- MERCADONA tjs ACHAT et VENTE au KILO
+	ls_vte_bta_code := 'KILO';
 	ls_ach_bta_code := ls_vte_bta_code;
+	
 	ll_ach_pu := arg_ach_pu;
 	ls_ach_dev_pu	:= ll_ach_pu;
 	ls_ach_dev_code	:= 'EUR';

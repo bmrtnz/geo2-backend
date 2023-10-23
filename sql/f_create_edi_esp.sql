@@ -20,7 +20,7 @@ AS
         from GEO_EDI_LIGNE
         where ref_edi_ordre = edi_ordre
 		order by num_ligne;
-
+		
     CURSOR C_EDI_ART_CLI (client GEO_EDI_ART_CLI.cli_ref%TYPE, gtin_art GEO_EDI_ART_CLI.GTIN_COLIS_CLIENT%TYPE, code_art_client GEO_EDI_ART_CLI.ART_REF_CLIENT%TYPE) IS
         select art_ref, priorite, fou_code, vte_pu, ach_pu
         from GEO_EDI_ART_CLI
@@ -48,7 +48,7 @@ BEGIN
 	for l in C_EDI_LIGNE(arg_edi_ordre)
 	loop
 		for s in C_EDI_ART_CLI(arg_cli_ref, l.ean_prod_client, l.code_interne_prod_client)
-		loop
+		loop	
 				i := i +1;
 				F_CREATE_LIGNE_EDI_ESP(l.ref_edi_ligne, ls_ord_ref, arg_cli_ref, arg_cen_ref, s.art_ref, s.priorite, s.fou_code, s.vte_pu, s.ach_pu, l.quantite_colis, l.ean_prod_client, arg_soc_code, arg_username, i, res, msg);
 				if (res <> 1) then
@@ -57,7 +57,7 @@ BEGIN
 				end if;
 		end loop;
 	end loop;
-
+	
 	tab_ordre_cree.extend();
 	ordre_cree_idx := ordre_cree_idx + 1;
 	tab_ordre_cree(ordre_cree_idx) := ls_ord_ref;
@@ -65,10 +65,21 @@ BEGIN
 	select nordre into ls_nordre from geo_ordre where ord_ref = ls_ord_ref;
 	ls_nordre_tot := ls_nordre_tot || ls_nordre || ',';
 
-    if ls_nordre_tot is not null and ls_nordre_tot <> '' then
+    if ls_nordre_tot is not null then
         update GEO_EDI_ORDRE SET STATUS_GEO = 'T' WHERE REF_EDI_ORDRE = arg_edi_ordre;
 		update GEO_ORDRE set list_nordre = ls_nordre_tot, list_ord_ref = ls_ord_ref where ord_ref = ls_ord_ref;
 		commit;
+		F_VERIF_LOGISTIQUE_ORDRE(ls_ord_ref, res, msg);
+		if (res <> 1) then
+			msg := 'Erreur lors de la création de la logistique: ' || msg;
+			return;
+		end if;
+		
+		F_CALCUL_MARGE(ls_ord_ref, res, msg);
+		if (res <> 1) then
+			msg := 'Erreur lors du calcul de la marge : ' || msg;
+			return;
+		end if;
     end if;
 
     res := 1;
