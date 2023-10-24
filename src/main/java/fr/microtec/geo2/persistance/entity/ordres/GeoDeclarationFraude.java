@@ -118,4 +118,7 @@ public class GeoDeclarationFraude {
 
     @Column(name = "cam_code")
     private String campagne;
+
+    @Column(name = "flannul")
+    private Boolean ordreAnnule;
 }

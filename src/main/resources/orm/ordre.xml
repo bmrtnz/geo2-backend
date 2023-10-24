@@ -649,7 +649,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre.comm_interne,
             geo_article_colis.ori_desc,
             geo_ordre.cam_code,
-            geo_ordlig.GTIN_COLIS_KIT
+            geo_ordlig.GTIN_COLIS_KIT,
+            geo_ordre.flannul
         FROM
             geo_ordlig,
             geo_ordlog,
@@ -734,7 +735,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre.comm_interne,
             geo_article_colis.ori_desc,
             geo_ordre.cam_code,
-            geo_ordlig.GTIN_COLIS_KIT
+            geo_ordlig.GTIN_COLIS_KIT,
+            geo_ordre.flannul
         ORDER BY
             to_char(geo_ordlog.datdep_fou_p, 'yyyymmdd') ASC,
             geo_ordre.pay_code ASC,
