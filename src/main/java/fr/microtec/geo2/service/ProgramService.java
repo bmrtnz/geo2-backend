@@ -561,7 +561,7 @@ public class ProgramService {
                                         ls_qty_pallets,
                                         ls_qty_case,
                                         ld_prix_vte,
-                                        0d,
+                                        ld_prix_mini_sa,
                                         ls_prog,
                                         ls_dluo);
 
