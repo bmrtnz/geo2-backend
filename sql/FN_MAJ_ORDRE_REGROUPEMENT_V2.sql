@@ -596,9 +596,9 @@ BEGIN
 
         /*Calcul des frais de douane*/
         delete  GEO_ORDFRA where ORD_REF =arg_ord_ref_origine and FRA_CODE ='DEDIMP';
-		
-		select sum(CDE_NB_PAL) into li_cde_nb_pal_orig from GEO_ORDLIG where ORD_REF =arg_ord_ref_origine;
-		
+        
+        select sum(CDE_NB_PAL) into li_cde_nb_pal_orig from GEO_ORDLIG where ORD_REF =arg_ord_ref_origine;
+        
         begin
         select (GEO_FRAIS_TYP.ACH_DEV_PU /26)* li_cde_nb_pal_orig,GEO_FRAIS_TYP.ACH_DEV_CODE,GEO_DEVISE_REF.DEV_TX,(GEO_FRAIS_TYP.ACH_DEV_PU /26)* li_cde_nb_pal_orig*GEO_DEVISE_REF.DEV_TX
         into ld_doua_pu_tot_new_dev, ls_doua_dev_code,ld_doua_dev_tx,ld_doua_pu_tot_new
@@ -640,16 +640,16 @@ BEGIN
                 where   O_OR.ORD_REF =arg_ord_ref_origine and
                             O_OR.ORD_REF = OL_OR.ORD_REF and
                         O_OR.CLI_REF =  O_CL.CLI_REf;*/
-				cursor C_marge_pu is
+                cursor C_marge_pu is
                 select OL_OR.ORL_REF,OL_OR.VTE_PU*O_CL.TAUX_MARGE*D.DEV_TX as marge_pu,OL_OR.VTE_PU*D.DEV_TX*O_CL.rem_sf_tx/100 as rist_sf,OL_OR.VTE_PU*D.DEV_TX*O_CL.rem_hf_tx/100 as rist_hf
                 from GEO_ORDRE O_OR, GEO_ORDLIG OL_OR, GEO_CLIENT O_CL, GEO_DEVISE_REF D
                 where   O_OR.ORD_REF =arg_ord_ref_origine and
                             O_OR.ORD_REF = OL_OR.ORD_REF  and
                             O_OR.CLI_REF =  O_CL.CLI_REf  and 
-							D.DEV_CODE_REF = 'GBP' 		  and
-							D.DEV_CODE = O_ORD.DEV_CODE;
-						
-						
+                            D.DEV_CODE_REF = 'GBP'           and
+                            D.DEV_CODE = O_OR.DEV_CODE;
+                        
+                        
         begin
             for mp in C_marge_pu loop
                 ld_marg_pu := mp.marge_pu;
@@ -681,13 +681,13 @@ BEGIN
             ld_fra_tot :=0;
         end;
 
-		IF ld_fra_tot is NULL  THEN 
-			ld_fra_tot :=0;
-		END IF;
+        IF ld_fra_tot is NULL  THEN 
+            ld_fra_tot :=0;
+        END IF;
 
-		IF ld_doua_pu_tot_new is NULL  THEN 
-			ld_doua_pu_tot_new :=0;
-		END IF;
+        IF ld_doua_pu_tot_new is NULL  THEN 
+            ld_doua_pu_tot_new :=0;
+        END IF;
 
         declare
             /*cursor C_info_pu is
@@ -699,19 +699,20 @@ BEGIN
                         R.ORL_REF_ORIG = OL.ORL_REF and
                         OL.ART_REF = A.ART_REF and
                        OL.CDE_NB_COL > 0;*/
-					   
-			cursor C_info_pu is
-                select  OL.VTE_PU*D.DEV_TX,MARG_PU ,RIST_PU,OL.VTE_BTA_CODE, OL.ORL_REF, A.COL_PDNET,CDE_NB_PAL,GRP_ORIG,OL.PAL_NB_COL,CDE_NB_COL
-                from GEO_ARTICLE_COLIS A,GEO_ORDLIG OL,GEO_GEST_REGROUP R,GEO_DEVISE_REF D
+                       
+            cursor C_info_pu is
+                select  OL.VTE_PU*D.DEV_TX "VTE_PU",MARG_PU ,RIST_PU,OL.VTE_BTA_CODE, OL.ORL_REF, A.COL_PDNET,CDE_NB_PAL,GRP_ORIG,OL.PAL_NB_COL,CDE_NB_COL
+                from GEO_ARTICLE_COLIS A,GEO_ORDLIG OL,GEO_GEST_REGROUP R,GEO_DEVISE_REF D,GEO_ORDRE O_OR
                 where OL.ORD_REF = arg_ord_ref_origine and
                         R.ORD_REF_RGP = ls_ord_ref_regroup and
                         R.ORD_REF_ORIG = arg_ord_ref_origine and
                         R.ORL_REF_ORIG = OL.ORL_REF and
                         OL.ART_REF = A.ART_REF and
                         OL.CDE_NB_COL > 0 and 
-					    D.DEV_CODE_REF = 'GBP' and
-						D.DEV_CODE = O_ORD.DEV_CODE;
-					   
+                        O_OR.ORD_REF = R.ORD_REF_ORIG and
+                        D.DEV_CODE_REF = 'GBP' and
+                        D.DEV_CODE = O_OR.DEV_CODE;
+                       
             ld_doua_pu_tot number := 0;
         begin
 
@@ -777,8 +778,8 @@ BEGIN
                 Else
 
                     ls_ach_dev_taux_tmp := ld_dev_tx_ordre_orig;
-					ld_ach_pu_tmp := ld_ach_pu;
-	                ls_ach_dev_pu_tmp := ld_ach_pu / ls_ach_dev_taux_tmp;
+                    ld_ach_pu_tmp := ld_ach_pu;
+                    ls_ach_dev_pu_tmp := ld_ach_pu / ls_ach_dev_taux_tmp;
                 End If;
 
                 update GEO_ORDLIG set ACH_DEV_PU = ls_ach_dev_pu_tmp,
@@ -793,7 +794,7 @@ BEGIN
                                                 DOUA_PU = ld_doua_pu,
                                                 PRES_COURT_PU= ld_crt_pu,
                                                 MARK_PU = ld_mark_pu,
-												FRA_PU =ld_fra_pu
+                                                FRA_PU =ld_fra_pu
                 where ORD_REF =arg_ord_ref_origine and
                         exists (select 1
                                 from GEO_GEST_REGROUP R
@@ -824,11 +825,11 @@ BEGIN
                            --- CASE WHEN (L.FOU_CODE ='STEFLEMANS' or 'O' =ls_ind_grossiste)  THEN NULL ELSE L.ACH_PU END as ACH_PU,
                            ---CASE WHEN (L.FOU_CODE ='STEFLEMANS' or 'O' =ls_ind_grossiste)  THEN NULL ELSE L.ACH_BTA_CODE END as ACH_BTA_CODE,
                            --- CASE WHEN (L.FOU_CODE ='STEFLEMANS' or 'O' =ls_ind_grossiste)  THEN NULL ELSE L.ACH_DEV_PU END as ACH_DEV_PU,
-							NULL AS VTE_PUD,
-							NULL AS VTE_BTA_CODE,
-							NULL AS ACH_PU,
-							NULL AS ACH_BTA_CODE,
-							NULL AS ACH_DEV_PU,
+                            NULL AS VTE_PUD,
+                            NULL AS VTE_BTA_CODE,
+                            NULL AS ACH_PU,
+                            NULL AS ACH_BTA_CODE,
+                            NULL AS ACH_DEV_PU,
                             L.ACH_DEV_CODE,
                             L.ACH_DEV_TAUX,
                             L.LIB_DLV,
@@ -1136,7 +1137,7 @@ BEGIN
                     L.PROPR_CODE,
                     L.PAL_CODE,
                     --CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE  L.ACH_DEV_PU  END as f1,
-					NULL as f1,
+                    NULL as f1,
                     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE L.VTE_BTA_CODE END as f2,
                     NULL as f3,
                     NULL as f4,
@@ -1171,7 +1172,7 @@ BEGIN
                     L.PROPR_CODE,
                     L.PAL_CODE,
                     --CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE  L.ACH_DEV_PU  END ,
-					NULL,
+                    NULL,
                     CASE WHEN (L.FOU_CODE ='STEFLEMANS' or RGP.CEN_CODE ='GROSSISTE') THEN NULL ELSE L.VTE_BTA_CODE END,
                     NULL,
                     NULL,
