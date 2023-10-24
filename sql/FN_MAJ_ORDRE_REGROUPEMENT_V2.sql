@@ -634,12 +634,22 @@ BEGIN
 
         /* Frais marge + ristourne */
         declare
-            cursor C_marge_pu is
+            /*cursor C_marge_pu is
                 select OL_OR.ORL_REF,OL_OR.VTE_PU*O_CL.TAUX_MARGE as marge_pu,OL_OR.VTE_PU*O_CL.rem_sf_tx/100 as rist_sf,OL_OR.VTE_PU*O_CL.rem_hf_tx/100 as rist_hf
                 from GEO_ORDRE O_OR, GEO_ORDLIG OL_OR, GEO_CLIENT O_CL
                 where   O_OR.ORD_REF =arg_ord_ref_origine and
                             O_OR.ORD_REF = OL_OR.ORD_REF and
-                        O_OR.CLI_REF =  O_CL.CLI_REf;
+                        O_OR.CLI_REF =  O_CL.CLI_REf;*/
+				cursor C_marge_pu is
+                select OL_OR.ORL_REF,OL_OR.VTE_PU*O_CL.TAUX_MARGE*D.DEV_TX as marge_pu,OL_OR.VTE_PU*D.DEV_TX*O_CL.rem_sf_tx/100 as rist_sf,OL_OR.VTE_PU*D.DEV_TX*O_CL.rem_hf_tx/100 as rist_hf
+                from GEO_ORDRE O_OR, GEO_ORDLIG OL_OR, GEO_CLIENT O_CL, GEO_DEVISE_REF D
+                where   O_OR.ORD_REF =arg_ord_ref_origine and
+                            O_OR.ORD_REF = OL_OR.ORD_REF  and
+                            O_OR.CLI_REF =  O_CL.CLI_REf  and 
+							D.DEV_CODE_REF = 'GBP' 		  and
+							D.DEV_CODE = O_ORD.DEV_CODE;
+						
+						
         begin
             for mp in C_marge_pu loop
                 ld_marg_pu := mp.marge_pu;
@@ -680,7 +690,7 @@ BEGIN
 		END IF;
 
         declare
-            cursor C_info_pu is
+            /*cursor C_info_pu is
                 select  OL.VTE_PU,MARG_PU ,RIST_PU,OL.VTE_BTA_CODE, OL.ORL_REF, A.COL_PDNET,CDE_NB_PAL,GRP_ORIG,OL.PAL_NB_COL,CDE_NB_COL
                 from GEO_ARTICLE_COLIS A,GEO_ORDLIG OL,GEO_GEST_REGROUP R
                 where OL.ORD_REF = arg_ord_ref_origine and
@@ -688,7 +698,20 @@ BEGIN
                         R.ORD_REF_ORIG = arg_ord_ref_origine and
                         R.ORL_REF_ORIG = OL.ORL_REF and
                         OL.ART_REF = A.ART_REF and
-                        OL.CDE_NB_COL > 0;
+                       OL.CDE_NB_COL > 0;*/
+					   
+			cursor C_info_pu is
+                select  OL.VTE_PU*D.DEV_TX,MARG_PU ,RIST_PU,OL.VTE_BTA_CODE, OL.ORL_REF, A.COL_PDNET,CDE_NB_PAL,GRP_ORIG,OL.PAL_NB_COL,CDE_NB_COL
+                from GEO_ARTICLE_COLIS A,GEO_ORDLIG OL,GEO_GEST_REGROUP R,GEO_DEVISE_REF D
+                where OL.ORD_REF = arg_ord_ref_origine and
+                        R.ORD_REF_RGP = ls_ord_ref_regroup and
+                        R.ORD_REF_ORIG = arg_ord_ref_origine and
+                        R.ORL_REF_ORIG = OL.ORL_REF and
+                        OL.ART_REF = A.ART_REF and
+                        OL.CDE_NB_COL > 0 and 
+					    D.DEV_CODE_REF = 'GBP' and
+						D.DEV_CODE = O_ORD.DEV_CODE;
+					   
             ld_doua_pu_tot number := 0;
         begin
 
@@ -754,8 +777,8 @@ BEGIN
                 Else
 
                     ls_ach_dev_taux_tmp := ld_dev_tx_ordre_orig;
-                    ls_ach_dev_pu_tmp := ld_ach_pu;
-                    ld_ach_pu_tmp := ls_ach_dev_taux_tmp*ls_ach_dev_pu_tmp;
+					ld_ach_pu_tmp := ld_ach_pu;
+	                ls_ach_dev_pu_tmp := ld_ach_pu / ls_ach_dev_taux_tmp;
                 End If;
 
                 update GEO_ORDLIG set ACH_DEV_PU = ls_ach_dev_pu_tmp,
@@ -1084,9 +1107,9 @@ BEGIN
                             GEO_GEST_REGROUP.ORL_REF_ORIG =      GEO_ORDLIG.ORL_REF;
 
             update GEO_ORDLIG set ACH_DEV_PU = ls_ach_dev_pu_tmp,
-                                    ACH_PU          = ld_ach_pu_tmp,
+                                    ACH_PU   = ld_ach_pu_tmp,
                                     ACH_BTA_CODE =ls_vte_bta_code_tmp,
-                                      ACH_DEV_CODE=ls_dev_code_orig,
+                                    ACH_DEV_CODE=ls_dev_code_orig,
                                     ACH_DEV_TAUX =ls_ach_dev_taux_tmp,
                                     MARG_PU =ld_marg_pu,
                                     RIST_PU=ld_rist_pu,

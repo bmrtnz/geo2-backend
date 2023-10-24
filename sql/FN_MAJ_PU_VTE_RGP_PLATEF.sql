@@ -17,7 +17,10 @@ AS
     ldc_ach_dev_taux_GBP number;
     ld_mont_ach_pu_gbp number;
     ld_mont_ach_pu_tot_gbp number;
+	ld_mont_ach_pu_gbp_dev number;
+    ld_mont_ach_pu_tot_gbp_dev number;
     ld_ach_pu_rgp_gbp number;
+	ld_ach_pu_rgp_gbp_dev number;
     ld_ach_pu_rgp number;
 
     ls_col_code varchar2(50);
@@ -50,7 +53,7 @@ AS
     order by R.GRP_RGP;
 
     cursor C_orig_pu_vente(rgp GEO_GEST_REGROUP.GRP_RGP%TYPE) is
-    select    distinct L.orl_ref, L.art_ref, L.cde_nb_pal, L.cde_nb_col, L.vte_bta_code, X.u_par_colis, X.pdnet_client, C.col_tare,L.VTE_PU*O.DEV_TX as pu_gbp,L.ach_bta_code,L.ACH_PU
+    select    distinct L.orl_ref, L.art_ref, L.cde_nb_pal, L.cde_nb_col, L.vte_bta_code, X.u_par_colis, X.pdnet_client, C.col_tare,L.VTE_PU*O.DEV_TX as pu_gbp,L.ach_bta_code,L.ACH_PU, L.ACH_DEV_PU
     from     		GEO_GEST_REGROUP R, geo_ordlig L, geo_article X, geo_colis C,geo_ORDRE O
     where	    R.ORD_REF_RGP =arg_ord_ref_grp and
                     R.GRP_RGP = rgp and
@@ -70,6 +73,7 @@ BEGIN
 
         ld_mont_pu_tot_gbp := 0;
         ld_mont_ach_pu_tot_gbp := 0;
+		ld_mont_ach_pu_tot_gbp_dev := 0;
 
         -- v.GRP_RGP
         for h in C_orig_pu_vente(v.GRP_RGP) loop
@@ -128,9 +132,15 @@ BEGIN
             If h.ach_pu is null Then
                 h.ach_pu := 0;
             end if;
-
+			
+            If h.ach_dev_pu is null Then
+                h.ach_dev_pu := 0;
+            end if;
             ld_mont_ach_pu_gbp := ld_ach_qte * h.ach_pu;
-            ld_mont_ach_pu_tot_gbp := ld_mont_ach_pu_tot_gbp + ld_mont_ach_pu_gbp;
+			ld_mont_ach_pu_tot_gbp := ld_mont_ach_pu_tot_gbp + ld_mont_ach_pu_gbp;			
+			
+			ld_mont_ach_pu_gbp_dev := ld_ach_qte * h.ach_dev_pu;
+			ld_mont_ach_pu_tot_gbp_dev := ld_mont_ach_pu_tot_gbp_dev + ld_mont_ach_pu_gbp_dev;
 
             ls_art_ref_sav := h.art_ref;
 
@@ -146,26 +156,25 @@ BEGIN
             ENd IF;
         End IF;
 
-   
+
             IF v.CDE_NB_COL > 0  Then
                 ld_ach_pu_rgp_gbp := ld_mont_ach_pu_tot_gbp / v.CDE_NB_COL;
+				ld_ach_pu_rgp_gbp_dev := ld_mont_ach_pu_tot_gbp_dev / v.CDE_NB_COL;
+				
             Else
                 IF v.nb_col > 0  Then
                     ld_ach_pu_rgp_gbp := ld_mont_ach_pu_tot_gbp / v.nb_col;
+					ld_ach_pu_rgp_gbp_dev := ld_mont_ach_pu_tot_gbp_dev / v.nb_col;
                 Else
                     ld_ach_pu_rgp_gbp := null;
+					ld_ach_pu_rgp_gbp_dev := null;
                 ENd IF;
             End IF;
 
             If v.dev_code = 'GBP' Then
                 ld_vte_pu_rgp := ld_ach_pu_rgp_gbp;
             ELse
-                select dev_tx into ldc_vte_dev_taux_GBP
-                from geo_devise_ref
-                where dev_code = 'GBP' and
-                dev_code_ref ='EUR';
-
-                ld_vte_pu_rgp := ld_ach_pu_rgp_gbp * ldc_vte_dev_taux_GBP;
+				ld_vte_pu_rgp := ld_ach_pu_rgp_gbp_dev;
             End If;
 
         select O.tvt_code, O.sco_code into ls_tvt_code,ls_sco_code from geo_ordre O where O.ord_ref = arg_ord_ref_grp;
@@ -196,29 +205,29 @@ BEGIN
         update GEO_ORDLIG
         set 	VTE_PU = ld_vte_pu_rgp,
                 VTE_BTA_CODE ='COLIS'
-        where ORD_REF =arg_ord_ref_grp and				
+        where ORD_REF =arg_ord_ref_grp and
 		exists (select 1
 				from GEO_GEST_REGROUP G1,GEO_GEST_REGROUP G2
-				where  G1.ORD_REF_RGP = arg_ord_ref_grp and 
-						G1.ORD_REF_RGP = G2.ORD_REF_RGP and 
-					   G1.GRP_RGP = G2.GRP_RGP and 
+				where  G1.ORD_REF_RGP = arg_ord_ref_grp and
+						G1.ORD_REF_RGP = G2.ORD_REF_RGP and
+					   G1.GRP_RGP = G2.GRP_RGP and
 					   G1.ORL_REF_RGP = ORL_REF and
 					   G2.ORL_REF_RGP = v.ORL_REF);
-					   
+
 		update GEO_ORDLIG
-        set 
+        set
                 ACH_PU = ld_ach_pu_rgp,
                 ACH_BTA_CODE ='KILO',
                 ACH_DEV_CODE ='EUR',
                 ACH_DEV_PU = ld_ach_pu_rgp,
                 ACH_DEV_TAUX = 1
         where ORD_REF =arg_ord_ref_grp and
-			  (ACH_PU IS NULL  OR  ACH_PU =0) and 
+			  (ACH_PU IS NULL  OR  ACH_PU =0) and
 		exists (select 1
 				from GEO_GEST_REGROUP G1,GEO_GEST_REGROUP G2
-				where  G1.ORD_REF_RGP = arg_ord_ref_grp and 
-					   G1.ORD_REF_RGP = G2.ORD_REF_RGP and 
-					   G1.GRP_RGP = G2.GRP_RGP and 
+				where  G1.ORD_REF_RGP = arg_ord_ref_grp and
+					   G1.ORD_REF_RGP = G2.ORD_REF_RGP and
+					   G1.GRP_RGP = G2.GRP_RGP and
 					   G1.ORL_REF_RGP = ORL_REF and
 					   G2.ORL_REF_RGP = v.ORL_REF);
 
