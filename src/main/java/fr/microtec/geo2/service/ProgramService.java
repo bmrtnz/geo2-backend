@@ -743,16 +743,13 @@ public class ProgramService {
                                     cb.equal(root.get("ordre").get("societe").get("id"), "SA"),
                                     cb.or(cb.isNull(root.get("achatPrixUnitaire")),
                                             cb.equal(root.get("achatPrixUnitaire"), 0)),
-                                    cb.isNull(root.get("achatUnite").get("id")),
                                     cb.equal(root.get("ordre").get("campagne"),
                                             root.get("ordre").get("societe").get("campagne"))));
 
-                            if (!lignes.isEmpty())
+                            if (!lignes.isEmpty()) {
                                 ls_ord_ref_sa.set(lignes.get(0).getOrdre().getId());
-
-                            for (GeoOrdreLigne ligne : lignes) {
-                                ls_array_art_sa.add(ligne.getArticle().getId());
-                                // ll_ind++;
+                                for (GeoOrdreLigne ligne : lignes)
+                                    ls_array_art_sa.add(ligne.getArticle().getId());
                             }
                         }
 
