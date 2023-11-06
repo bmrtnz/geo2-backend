@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_CREE_ORDRE_REGULARISATION(
+CREATE OR REPLACE PROCEDURE F_CREE_ORDRE_REGULARISATION(
     arg_ord_ref IN GEO_ORDRE.ORD_REF%TYPE,
     arg_soc_code IN GEO_SOCIETE.SOC_CODE%TYPE,
     arg_lca_code IN GEO_LITCAU.LCA_CODE%TYPE,
@@ -17,6 +17,10 @@ AS
     ls_nordre_regul GEO_ORDRE.ORD_REF%TYPE;
     ls_list_ordre_regul GEO_ORDRE.LIST_NORDRE_REGUL%TYPE;
     ls_ret_lig GEO_ORDLIG.ORL_REF%TYPE;
+
+    achat_devise_pu GEO_ORDLIG.ach_dev_pu%TYPE;
+    achat_qte GEO_ORDLIG.ach_qte%TYPE;
+
 BEGIN
     -- correspond à f_cree_ordre_regularisation.pbl
     res := 0;
@@ -53,33 +57,28 @@ BEGIN
             loop
                 f_cree_ordre_regul_ligne(arg_ord_ref,arg_list_orl_ref(i),arg_soc_code, ls_ord_ref_regul,arg_ind_detail, res, msg, ls_ret_lig);
 
-                    If arg_ind_detail = 'O' THEN
-                        DECLARE
-                            prix_achat_pu NUMBER(12,2);
-                            achat_qte NUMBER(10,3);
-                        BEGIN
-                            SELECT
-                                ach_dev_pu,
-                                ACH_QTE
-                            INTO
-                                prix_achat_pu,
-                                achat_qte
-                            FROM geo_ordlig
-                            WHERE ord_ref = arg_ord_ref;
-
-                            UPDATE geo_ordlig
-                            SET
-                                ACH_DEV_PU = prix_achat_pu,
-                                ACH_QTE = achat_qte
-                            WHERE
-                                ord_ref = ls_ord_ref_regul;
-                        END;
-                    End if;
-
                 If substr(msg, 1, 3) = '%%%' Then
                     return;
                 End If;
+
+                If arg_ind_detail = 'O' Then
+
+                    select ach_dev_pu, ach_qte into achat_devise_pu, achat_qte
+                    from GEO_ORDLIG where orl_ref = to_char(arg_list_orl_ref(i));
+
+                    update GEO_ORDLIG
+                    set
+                        ach_dev_pu = achat_devise_pu,
+                        ach_qte = achat_qte
+                    where
+                            orl_ref = ls_ret_lig;
+                    commit;
+
+                end if;
             end loop;
+
+        msg := 'Updates done';
+        return;
     Else
         msg := 'Veuillez selectionner au moins un article';
         return;
@@ -109,8 +108,4 @@ BEGIN
     res := 1;
 
 end F_CREE_ORDRE_REGULARISATION;
-
-DECLARE
-
-
-
+/
