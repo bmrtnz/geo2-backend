@@ -124,6 +124,7 @@ http://xmlngeo_stock.jcp.org/xml/ns/persistence/orm_2_1.xsd">
         AND avi_art_emballage.col_code LIKE :arg_emballage
         AND geo_fourni.bac_code LIKE :arg_bureau_achat
         AND geo_colis.gem_code LIKE :arg_groupe_emballage
+        AND geo_article.ESP_CODE =  geo_colis.ESP_CODE
       GROUP BY
         geo_stock.art_ref,
         geo2_art_desc.art_desc_long_ref,
