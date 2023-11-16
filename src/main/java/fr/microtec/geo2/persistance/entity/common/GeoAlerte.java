@@ -1,13 +1,6 @@
 package fr.microtec.geo2.persistance.entity.common;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
-import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.EqualsAndHashCode;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -23,15 +16,21 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
+import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "GEO_ALERT")
+@Table(name = "geo_alert")
 public class GeoAlerte extends ValidateAndModifiedEntity {
 
     @Id
-    @Column(name = "K_ALERT")
+    @Column(name = "k_alert")
     @GeneratedValue(generator = "GeoAlertGenerator")
     @GenericGenerator(name = "GeoAlertGenerator", strategy = "fr.microtec.geo2.persistance.GeoSequenceGenerator", parameters = {
             @org.hibernate.annotations.Parameter(name = "sequenceName", value = "SEQ_K_ALERT"),
@@ -39,17 +38,17 @@ public class GeoAlerte extends ValidateAndModifiedEntity {
     })
     private BigDecimal id;
 
-    @Column(name = "COD_TYP_ALERT")
+    @Column(name = "cod_typ_alert")
     private Character type;
 
-    @Column(name = "IND_DEROUL")
+    @Column(name = "ind_deroul")
     private Boolean deroulant;
 
-    @Column(name = "DAT_DEBUT")
-    private LocalDate dateDebut;
+    @Column(name = "dat_debut")
+    private LocalDateTime dateDebut;
 
     @Column(name = "dat_fin")
-    private LocalDate dateFin;
+    private LocalDateTime dateFin;
 
     @Column(name = "message")
     private String message;
