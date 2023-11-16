@@ -13,8 +13,8 @@ AS
 
 
 
-    
-    
+
+
 BEGIN
     res := 0;
     msg := '';
@@ -28,9 +28,9 @@ BEGIN
 
             If ls_typ_ordre <> 'ORI' and ls_ind_mod_liv ='S' and ls_cli_ref ='007396' Then
                 FN_DECL_FRAIS_DOUA_MANU(arg_ord_ref,arg_soc_code,res,msg);
-			 
+
             End If;
-    
+
         when 'SA' then
 
             select O.CLI_REF, O.CEN_REF,O.TYP_ORDRE into ls_cli_ref,ls_cen_ref,ls_typ_ordre
@@ -38,9 +38,9 @@ BEGIN
             where O.ORD_REF = arg_ord_ref ;
 
          If ls_typ_ordre ='ORD' and  ls_cli_ref ='007488' and ls_cen_ref ='015461'  Then
-                FN_DECL_FRAIS_DOUA_MANU(arg_ord_ref,arg_soc_code,res,msg);         
+                FN_DECL_FRAIS_DOUA_MANU(arg_ord_ref,arg_soc_code,res,msg);
          end IF;
-		else 
+		else
 			NULL;
     end case;
 
