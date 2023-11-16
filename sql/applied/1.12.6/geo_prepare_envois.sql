@@ -57,8 +57,7 @@ BEGIN
 		WHEN 'RESLIT' THEN
 			of_genere_envois_litige(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 		WHEN 'DETAIM' THEN
-			-- of_genere_envoi_detaim; TODO MICROTEC
-			return; -- à retirer après
+			of_genere_envoi_detaim(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
 		WHEN 'PROFOR' THEN
 			-- of_genere_envois_proform; TODO MICROTEC
 			return; --à retirer après
