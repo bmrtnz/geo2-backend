@@ -68,25 +68,6 @@ begin
                 fetch C_ARTICLE into ls_art_ref;
                 loop
 
-                    /*
-                    if arg_stock_type = 'S' then
-                        declare
-                            count_res number;
-                        begin
-                            select count(*) into count_res
-                            from geo_stock_art_edi_bassin
-                            where edi_ord = arg_num_cde_edi
-                            and art_ref = ls_art_ref;
-                            if count_res > 0 then
-                                res := 0;
-                                msg := 'COUCOU';
-                                return;
-                                goto continue_label;
-                            end if;
-                        end;
-                    end if;
-                    */
-
                     -- Nous avons des articles avec ce GTIN client
                     ls_planif 			:= ls_null;
                     array_bws_ecris 	:=  ls_null;
