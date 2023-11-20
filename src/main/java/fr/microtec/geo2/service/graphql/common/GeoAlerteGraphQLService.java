@@ -43,6 +43,11 @@ public class GeoAlerteGraphQLService extends GeoAbstractGraphQLService<GeoAlerte
         return this.getOne(id);
     }
 
+    @GraphQLQuery(description = "Search for the most urgent alert, might be none")
+    public Optional<GeoAlerte> fetchAlerte() {
+        return ((GeoAlerteRepository) this.repository).findTopByOrderByDateCreationDesc();
+    }
+
     @GraphQLMutation
     public GeoAlerte saveAlerte(GeoAlerte alerte,
             @GraphQLEnvironment ResolutionEnvironment env) {
