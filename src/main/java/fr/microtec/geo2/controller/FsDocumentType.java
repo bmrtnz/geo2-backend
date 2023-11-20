@@ -16,6 +16,7 @@ public enum FsDocumentType implements StringEnum {
     CQ("cq", Maddog2FileSystemService.PATH_KEY.GEO_CQ),
     CQDOC("cqdoc", Maddog2FileSystemService.PATH_KEY.GEO_CQ_PDF),
     CQPHOTOS("cqphotos", Maddog2FileSystemService.PATH_KEY.GEO_CQ_PHOTOS),
+    CMR("cmr", Maddog2FileSystemService.PATH_KEY.GEO_RETOUR_PALOX),
     IMAGE("image", Maddog2FileSystemService.PATH_KEY.GEO_IMG);
 
     private final String key;
