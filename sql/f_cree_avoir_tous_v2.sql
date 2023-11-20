@@ -17,7 +17,7 @@ CREATE OR REPLACE PROCEDURE F_CREE_AVOIR_TOUS_V2 (
 AS
     ls_tyt_code varchar2(50);
     ls_ret varchar2(50);
-    ls_ref_cli varchar2(50);
+    ls_ref_cli varchar2(70);
     ls_pk_ordlig varchar2(50);
     ls_ordlig_orl_ref varchar2(50);
     ls_ordlig_ord_ref varchar2(50);
@@ -77,6 +77,9 @@ AS
     lnb_frais_annexes number;
     ldc_remhf_tx number;
     ldc_remsf_tx number;
+
+    ls_list_certifs varchar2(30);
+    ls_cert_origine varchar2(30);
 
     ld_datdep_fou_p timestamp;
     ld_datdep_fou_r timestamp;
@@ -173,7 +176,8 @@ BEGIN
             select ORL.orl_lig,	ORL.pal_code,ORL.pan_code,LIL.cli_nb_pal * -1,	LIL.cli_nb_col * -1,	LIL.cli_nb_pal * -1,	LIL.cli_nb_col * -1,
                     LIL.cli_pds_net * -1,LIL.cli_pds_net * -1,LIL.res_pu,	LIL.res_dev_code,LIL.res_bta_code,	LIL.res_qte * -1,
                     LIL.cli_pu,	LIL.cli_bta_code,	LIL.cli_qte * -1,	ORL.fou_code,	ORL.grp_code, 	ORL.trp_code,	ORL.valide,	ORL.lib_dlv,
-                    ORL.pca_ref,ORL.pde_ref, ORL.art_ref,LIL.tie_code,ORL.propr_code, LIL.tyt_code,LIL.lcq_code, LIL.res_dev_pu,ORL.var_ristourne,ORL.remhf_tx,ORL.remsf_tx
+                    ORL.pca_ref,ORL.pde_ref, ORL.art_ref,LIL.tie_code,ORL.propr_code, LIL.tyt_code,LIL.lcq_code, LIL.res_dev_pu,ORL.var_ristourne,ORL.remhf_tx,ORL.remsf_tx,
+                    ORL.list_certifs,ORL.cert_origine
             from geo_admin.geo_ordlig ORL, geo_admin.geo_litlig LIL
             where ORL.orl_ref = LIL.orl_ref
             and  (LIL.cli_qte <> 0 or ((LIL.lcq_code ='A' OR LIL.lcq_code ='B' OR LIL.lcq_code ='F'  OR LIL.tyt_code = 'F') and LIL.res_qte <> 0))
@@ -187,7 +191,7 @@ BEGIN
                 ldc_ordlig_exp_pds_net, ldc_ordlig_ach_pu,ls_ordlig_ach_dev_code, ls_ordlig_ach_bta_code,ldc_ordlig_ach_qte,
                 ldc_ordlig_vte_pu,ls_ordlig_vte_bta_code, ldc_ordlig_vte_qte,ls_ordlig_fou_code, ls_ordlig_grp_code,
                 ls_ordlig_trp_code, ls_ordlig_valide, ls_ordlig_lib_dlv, ls_ordlig_pca_ref, ls_ordlig_pde_ref, ls_ordlig_art_ref,
-                ls_ordlig_tie_code,ls_ordlig_propr_code,ls_tyt_code,ls_lcq_code, ldc_ach_dev_pu, ls_var_ristourne,ldc_remhf_tx,ldc_remsf_tx;
+                ls_ordlig_tie_code,ls_ordlig_propr_code,ls_tyt_code,ls_lcq_code, ldc_ach_dev_pu, ls_var_ristourne,ldc_remhf_tx,ldc_remsf_tx,ls_list_certifs,ls_cert_origine;
             exit when C_ordlig_lit%notfound;
 
             CASE ls_tyt_code
@@ -220,13 +224,13 @@ BEGIN
             cde_nb_col, exp_nb_pal, exp_nb_col, exp_pds_brut,
             exp_pds_net, ach_pu, ach_dev_code, ach_bta_code,
             ach_qte, vte_pu, vte_bta_code, vte_qte,
-            fou_code, grp_code, trp_code, valide, lib_dlv, pca_ref, pde_ref, art_ref,propr_code,ach_dev_pu,var_ristourne,remhf_tx,remsf_tx,frais_pu, mod_user)
+            fou_code, grp_code, trp_code, valide, lib_dlv, pca_ref, pde_ref, art_ref,propr_code,ach_dev_pu,var_ristourne,remhf_tx,remsf_tx,frais_pu, mod_user,list_certifs,cert_origine)
             VALUES (F_SEQ_ORL_SEQ, ar_new_ord_ref, ls_ordlig_orl_lig, ls_ordlig_pal_code, ls_ordlig_pan_code,
                     ll_ordlig_cde_nb_pal, ll_ordlig_cde_nb_col, ll_ordlig_exp_nb_pal, ll_ordlig_exp_nb_col,ll_ordlig_exp_pds_brut,
                     ldc_ordlig_exp_pds_net, ldc_ordlig_ach_pu,ls_ordlig_ach_dev_code, ls_ordlig_ach_bta_code,ldc_ordlig_ach_qte,
                     ldc_ordlig_vte_pu,ls_ordlig_vte_bta_code, ldc_ordlig_vte_qte,ls_ordlig_fou_code, ls_ordlig_grp_code,
                     ls_ordlig_trp_code, ls_ordlig_valide, ls_ordlig_lib_dlv, ls_ordlig_pca_ref, ls_ordlig_pde_ref, ls_ordlig_art_ref,
-                    ls_ordlig_propr_code, ldc_ach_dev_pu,ls_var_ristourne,ldc_remhf_tx,ldc_remsf_tx,li_frais_pu, arg_username);
+                    ls_ordlig_propr_code, ldc_ach_dev_pu,ls_var_ristourne,ldc_remhf_tx,ldc_remsf_tx,li_frais_pu, arg_username,ls_list_certifs,ls_cert_origine);
 
 
         end LOOP;
@@ -339,3 +343,4 @@ BEGIN
     res := 1;
 END;
 /
+

@@ -22,7 +22,7 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_CREE_AVOIR_CLIENT (
 AS
     ls_tyt_code varchar2(50);
     ls_ret varchar2(50);
-    ls_ref_cli varchar2(50);
+    ls_ref_cli varchar2(70);
     ls_comm_interne clob;
     ls_nordre varchar2(50);
     ls_fou_code varchar2(50);
@@ -88,41 +88,6 @@ BEGIN
     end;
 
         --on crée occurence geo_ordre
-    /*
-    insert
-    into geo_ordre ins_tbl
-    (ord_ref, soc_code, cam_code, nordre,
-    per_codeass, per_codecom, cli_ref, cli_code,
-    ref_cli, cen_ref, cen_code, sco_code,
-    pay_code, dev_code, dev_tx, inc_code,
-    inc_lieu, trp_code, trp_bta_code, trp_pu,
-    trp_prix_visible, ref_logistique, ref_document, trs_code,
-    trs_bta_code, trs_pu, trs_prix_visible, trs_ville,
-    crt_code, crt_bta_code, crt_pu, crt_prix_visible,
-    depdatp, livdatp, tvt_code,
-    tvr_code, mpm_code, bpm_code, ent_echnbj,
-    ent_echle, cov_code, remsf_tx, remhf_tx, rem_sf_tx_mdd,
-    ord_ref_pere, ent_factcom, instructions_logistique,
-    valide, ttr_code,
-    lib_dlv, facture_avoir, comm_interne)
-    select
-    :ar_new_ord_ref, soc_code, cam_code, :ar_new_nordre,
-    per_codeass, per_codecom, cli_ref, cli_code,
-    ref_cli, cen_ref, cen_code, sco_code,
-    pay_code, dev_code, dev_tx, inc_code,
-    inc_lieu, trp_code, trp_bta_code, 0,
-    trp_prix_visible, ref_logistique, ref_document, trs_code,
-    trs_bta_code, 0, trs_prix_visible, trs_ville,
-    crt_code, crt_bta_code, 0, crt_prix_visible,
-    depdatp, livdatp, tvt_code,
-    tvr_code, mpm_code, bpm_code, ent_echnbj,
-    ent_echle, cov_code, remsf_tx, remhf_tx, rem_sf_tx_mdd,
-    :ar_old_ord_ref, ent_factcom, instructions_logistique,
-    valide, ttr_code,
-    lib_dlv, 'A', :ls_comm_interne || nordre
-    from geo_ordre sel_tbl
-    where sel_tbl.ord_ref = :ar_old_ord_ref;
-    */
     begin
         insert
         into geo_ordre
@@ -169,26 +134,27 @@ BEGIN
         insert
         into geo_admin.geo_ordlig ins_tbl
         (orl_ref, ord_ref, orl_lig,
-        pal_code, pan_code, cde_nb_pal,
-        cde_nb_col, exp_nb_pal, exp_nb_col, exp_pds_brut,
-        exp_pds_net, ach_pu, ach_dev_code, ach_bta_code,
-        ach_qte, vte_pu, vte_bta_code, vte_qte,
-        fou_code, grp_code, trp_code, valide, lib_dlv, pca_ref, pde_ref, art_ref,propr_code,var_ristourne,remhf_tx,remsf_tx,frais_pu,mod_user)
+         pal_code, pan_code, cde_nb_pal,
+         cde_nb_col, exp_nb_pal, exp_nb_col, exp_pds_brut,
+         exp_pds_net, ach_pu, ach_dev_code, ach_bta_code,
+         ach_qte, vte_pu, vte_bta_code, vte_qte,
+         fou_code, grp_code, trp_code, valide, lib_dlv, pca_ref, pde_ref, art_ref,propr_code,var_ristourne,remhf_tx,remsf_tx,frais_pu,mod_user,list_certifs,cert_origine)
         select
-        F_SEQ_ORL_SEQ, ar_new_ord_ref, ORL.orl_lig,
-        ORL.pal_code, ORL.pan_code, LIL.cli_nb_pal * -1,
-        LIL.cli_nb_col * -1, LIL.cli_nb_pal * -1, LIL.cli_nb_col * -1, LIL.cli_pds_net * -1,
-        LIL.cli_pds_net * -1, 0, '', '',
-        0, LIL.cli_pu, LIL.cli_bta_code, LIL.cli_qte * -1,
-        ORL.fou_code, ORL.grp_code, ORL.trp_code, ORL.valide, ORL.lib_dlv, ORL.pca_ref, ORL.pde_ref, ORL.art_ref,ORL.propr_code,ORL.var_ristourne,ORL.remhf_tx,ORL.remsf_tx,li_frais_pu,arg_username
+            F_SEQ_ORL_SEQ, ar_new_ord_ref, ORL.orl_lig,
+            ORL.pal_code, ORL.pan_code, LIL.cli_nb_pal * -1,
+            LIL.cli_nb_col * -1, LIL.cli_nb_pal * -1, LIL.cli_nb_col * -1, LIL.cli_pds_net * -1,
+            LIL.cli_pds_net * -1, 0, '', '',
+            0, LIL.cli_pu, LIL.cli_bta_code, LIL.cli_qte * -1,
+            ORL.fou_code, ORL.grp_code, ORL.trp_code, ORL.valide, ORL.lib_dlv, ORL.pca_ref, ORL.pde_ref, ORL.art_ref,ORL.propr_code,ORL.var_ristourne,ORL.remhf_tx,ORL.remsf_tx,li_frais_pu,arg_username,
+            ORL.list_certifs,ORL.cert_origine
         from geo_admin.geo_ordlig ORL, geo_admin.geo_litlig LIL
         where ORL.orl_ref = LIL.orl_ref
-        and (LIL.cli_qte is not null and LIL.cli_qte <> 0)
-        and LIL.lit_ref = ar_lit_ref;
+          and (LIL.cli_qte is not null and LIL.cli_qte <> 0)
+          and LIL.lit_ref = ar_lit_ref;
     exception when others then
-            msg	:=  '%%% litige ' || ar_lit_ref || ' pb sur insertion geo_ordlig erreur ' || to_char(SQLCODE) || ' ' || SQLERRM;
-            rollback;
-            return;
+        msg    :=  '%%% litige ' || ar_lit_ref || ' pb sur insertion geo_ordlig erreur ' || to_char(SQLCODE) || ' ' || SQLERRM;
+        rollback;
+        return;
     end;
 
     DECLARE
