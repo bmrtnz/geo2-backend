@@ -62,7 +62,7 @@ public class GeoAlerte extends ValidateAndModifiedEntity {
     private String userCreation;
 
     @CreatedDate
-    @Column(name = "cre_date")
+    @Column(name = "cre_dat")
     private LocalDateTime dateCreation;
 
 }
