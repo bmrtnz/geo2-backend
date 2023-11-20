@@ -1,0 +1,20 @@
+CREATE OR REPLACE TRIGGER GEO_ADMIN.TRG_INS_ALERT
+BEFORE INSERT
+ON GEO_ADMIN.GEO_ALERT
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+DECLARE
+    x_num NUMBER;
+    x_user  VARCHAR2(35);
+BEGIN
+    SELECT sys_context('USERENV','OS_USER') INTO x_user FROM dual;
+    SELECT SEQ_K_ALERT.NEXTVAL INTO x_num FROM dual;
+    IF (:NEW.CRE_user IS null) then
+        :NEW.CRE_user := x_user;
+    END IF;
+    IF (:NEW.K_ALERT IS null) then
+        :NEW.K_ALERT  :=x_num;
+    END IF;
+END;
+/
+
