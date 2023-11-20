@@ -16,7 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
-import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.ValidateEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_alert")
-public class GeoAlerte extends ValidateAndModifiedEntity {
+public class GeoAlerte extends ValidateEntity {
 
     @Id
     @Column(name = "k_alert")
