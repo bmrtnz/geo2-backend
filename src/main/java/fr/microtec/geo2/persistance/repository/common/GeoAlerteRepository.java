@@ -13,4 +13,6 @@ import fr.microtec.geo2.persistance.repository.GeoRepository;
 public interface GeoAlerteRepository extends GeoRepository<GeoAlerte, BigDecimal> {
     @Query(value = "SELECT * FROM GEO_ALERT WHERE k_alert = GET_ID_ALERT('F')", nativeQuery = true)
     Optional<GeoAlerte> findTopAlert();
+
+    Optional<GeoAlerte> findTopByOrderByDateCreationDesc();
 }
