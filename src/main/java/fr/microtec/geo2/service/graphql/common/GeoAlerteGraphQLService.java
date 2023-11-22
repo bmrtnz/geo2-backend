@@ -45,7 +45,7 @@ public class GeoAlerteGraphQLService extends GeoAbstractGraphQLService<GeoAlerte
 
     @GraphQLQuery(description = "Search for the most urgent alert, might be none")
     public Optional<GeoAlerte> fetchAlerte() {
-        return ((GeoAlerteRepository) this.repository).findTopAlert();
+        return ((GeoAlerteRepository) this.repository).findTopByOrderByDateCreationDesc();
     }
 
     @GraphQLMutation
