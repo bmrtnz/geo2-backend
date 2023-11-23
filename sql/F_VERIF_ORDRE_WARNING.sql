@@ -113,6 +113,8 @@ AS
 
 
 	ls_ind_mod_liv varchar2(50);
+	ls_soc_code GEO_SOCIETE.SOC_CODE%TYPE;
+	ls_cam_code GEO_CAMPAG.CAM_CODE%TYPE;
 
     CURSOR C2 (ref_ordre GEO_ORDRE.ORD_REF%type)
     IS
@@ -155,8 +157,8 @@ BEGIN
         ELSE 1 -- déclenchera warnings intempestifs pour obliger ajuster cette valeur
     end;
     begin
-        select geo_ordre.inc_code, geo_ordre.trp_code, geo_ordre.tottrp, geo_incote.inc_rd, geo_ordre.flbaf, geo_ordre. facture_avoir, geo_ordre.ref_cli, geo_ordre.cli_code, geo_ordre.livdatp,geo_ordre.cen_ref,geo_ordre.trp_pu,geo_ordre.depdatp, geo_ordre.totfad,geo_ordre.cli_ref,geo_ordre.sco_code,geo_ordre.vente_commission,geo_ordre.typ_ordre,geo_ordre.trp_bta_code, geo_ordre.cen_code
-        into ls_inc_code, ls_trp_code, ld_tottrp, ls_inc_rd, ls_flbaf, ls_facture_avoir, ls_ref_cli, ls_cli_code, ldt_livdatp,ls_cen_ref,ld_trp_pu,ldt_depdatp,ld_totfad,ls_cli_ref,ls_sco_code,ls_vente_commission,ls_typ_ordre,ls_trp_bta_code, ls_cen_code
+        select geo_ordre.inc_code, geo_ordre.trp_code, geo_ordre.tottrp, geo_incote.inc_rd, geo_ordre.flbaf, geo_ordre. facture_avoir, geo_ordre.ref_cli, geo_ordre.cli_code, geo_ordre.livdatp,geo_ordre.cen_ref,geo_ordre.trp_pu,geo_ordre.depdatp, geo_ordre.totfad,geo_ordre.cli_ref,geo_ordre.sco_code,geo_ordre.vente_commission,geo_ordre.typ_ordre,geo_ordre.trp_bta_code, geo_ordre.cen_code, geo_ordre.soc_code, geo_ordre.cam_code, geo_ordre.nordre
+        into ls_inc_code, ls_trp_code, ld_tottrp, ls_inc_rd, ls_flbaf, ls_facture_avoir, ls_ref_cli, ls_cli_code, ldt_livdatp,ls_cen_ref,ld_trp_pu,ldt_depdatp,ld_totfad,ls_cli_ref,ls_sco_code,ls_vente_commission,ls_typ_ordre,ls_trp_bta_code, ls_cen_code, ls_soc_code, ls_cam_code, ls_nordre
         from geo_ordre, geo_incote
         where geo_ordre.ord_ref = arg_ord_ref and geo_incote.inc_code = geo_ordre.inc_code;
     exception when no_data_found then
@@ -213,6 +215,23 @@ BEGIN
 
     if (ld_trp_pu is null OR ls_trp_bta_code is null) AND (ls_trp_code <> 'CLIENT' AND ls_trp_code <> 'STATIO') then
         ls_rc := ls_rc || '(T) %%% le coût et l''unité de transport doivent être renseignés' || ls_crlf;
+    end if;
+
+    if (ls_typ_ordre = 'RPR' OR ls_typ_ordre = 'RPO') then
+        declare
+            parent_ordre_flbaf GEO_ORDRE.FLBAF%TYPE;
+        begin
+            SELECT coalesce(flbaf,'N')
+            INTO parent_ordre_flbaf
+            FROM GEO_ORDRE
+            WHERE LIST_NORDRE_REGUL LIKE '%'||ls_nordre||'%'
+            AND SOC_CODE = ls_soc_code
+            AND CAM_CODE = ls_cam_code;
+
+            if parent_ordre_flbaf = 'N' then
+                ls_rc := ls_rc || '(A) %%% l''ordre initial doit être bon à facturer' || ls_crlf;
+            end if;
+        end;
     end if;
 
     If ls_ind_usage_interne = 'O' Then
