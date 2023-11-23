@@ -806,7 +806,7 @@ public class ProgramService {
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             var throwable = new RuntimeException(exception.getMessage());
-            log.error("Program import has failed: ", throwable);
+            log.error("Program import has failed: {}", throwable);
             String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
             if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
                 throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
@@ -1148,7 +1148,7 @@ public class ProgramService {
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
-            log.error("Program import has failed: ", exception.getMessage());
+            log.error("Program import has failed: {}", exception.getMessage());
             if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
                 throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
             } else {
@@ -1212,7 +1212,12 @@ public class ProgramService {
 
                 String ls_create_ligne = "N";
                 CURRENT_COL = COL_ORD_CREATE;
-                Integer ord_ref_create = ((Double) row.getCell(COL_ORD_CREATE).getNumericCellValue()).intValue();
+                Integer ord_ref_create;
+                try {
+                    ord_ref_create = ((Double) row.getCell(COL_ORD_CREATE).getNumericCellValue()).intValue();
+                } catch (Exception e) {
+                    ord_ref_create = Integer.parseInt(row.getCell(COL_ORD_CREATE).getStringCellValue().trim());
+                }
                 String ls_value = ord_ref_create == 0 ? "" : StringUtils.padLeft(ord_ref_create.toString(), "0", 6);
                 CURRENT_COL = COL_ENTREPOT;
                 String ls_depot_name = row.getCell(COL_ENTREPOT).getStringCellValue().toUpperCase().trim();
@@ -1498,7 +1503,7 @@ public class ProgramService {
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
-            log.error("Program import has failed: ", exception.getMessage());
+            log.error("Program import has failed: {}", exception.getMessage());
             if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
                 throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
             } else {
