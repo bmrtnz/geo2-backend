@@ -252,8 +252,9 @@ public class OrdreLigneService extends GeoAbstractGraphQLService<GeoOrdreLigne, 
             t.setAchatDevisePrixUnitaire(original.getAchatDevisePrixUnitaire());
             t.setTypePalette(original.getTypePalette());
             t.setPaletteInter(original.getPaletteInter());
-            t.setFraisPrixUnitaire(original.getFraisPrixUnitaire());
-            t.setFraisUnite(original.getFraisUnite());
+            // Issue #23409 - Do not take "frais" from history
+            // t.setFraisPrixUnitaire(original.getFraisPrixUnitaire());
+            // t.setFraisUnite(original.getFraisUnite());
             t.setFraisCommentaires(original.getFraisCommentaires());
             // Issue #21744 - Do not take discount from history
             // t.setTauxRemiseSurFacture(original.getTauxRemiseSurFacture());
