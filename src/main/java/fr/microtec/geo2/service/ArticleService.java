@@ -136,8 +136,9 @@ public class ArticleService {
         if (clone) {
             this.entityManager.detach(merged);
             merged = merged.duplicate();
-            merged.setValide(false);
-            merged.setPreSaisie(true);
+            // #23378 - Léa: la préSaisie pour les articles n'est pas encore "à la mode"
+            merged.setValide(true);
+            merged.setPreSaisie(false);
         }
 
         GeoArticle saved = this.articleRepository.save(merged);
