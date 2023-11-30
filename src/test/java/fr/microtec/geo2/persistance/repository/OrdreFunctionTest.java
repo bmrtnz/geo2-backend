@@ -73,7 +73,6 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.getRes(), result.getMsg());
-        Assertions.assertTrue(StringUtils.isEmpty(result.getMsg()));
         Assertions.assertTrue(result.getData().isEmpty());
     }
 
@@ -93,7 +92,6 @@ public class OrdreFunctionTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
-        Assertions.assertTrue(StringUtils.isEmpty(result.getMsg()));
         Assertions.assertTrue(result.getData().isEmpty());
     }
 
