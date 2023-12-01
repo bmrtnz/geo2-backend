@@ -336,3 +336,4 @@ BEGIN
     res := 1;
 end OF_GENERE_ENVOIS_LITIGE;
 /
+
