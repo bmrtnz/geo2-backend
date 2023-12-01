@@ -321,12 +321,12 @@ BEGIN
         ) VALUES (
          ls_ORL_REF, arg_ord_ref, ls_num_ligne , ls_PAL_CODE, ll_pal_nb_col ,ll_cde_nb_pal, ll_qte_art_cde, 0, 0,0, 0, ll_ach_pu, ls_ach_dev_code, ls_ach_bta_code, ld_ACH_QTE, ld_prix_vente,
          ls_vte_bta_code, ld_vte_qte, ls_fou_code, ld_pds_brut, ld_pds_net, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0, 'N', 'N', 'N', 'N', 'N', 'O', ld_frais_pu, 'N', 'N',ls_BAC_CODE, 0, 0, ls_art_ref,
-         ls_ESP_CODE, 0, ll_ach_dev_taux, ls_ach_dev_pu, ls_art_ref, ls_gtin_colis_kit, ll_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
+         ls_ESP_CODE, 0, ll_ach_dev_taux, ld_ACH_DEV_PU, ls_art_ref, ls_gtin_colis_kit, ll_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
         );
 
         -- Mise à jour du référentiel EDI table GEO_STOCK_ART_EDI_BASSIN
         update GEO_STOCK_ART_EDI_BASSIN
-        set ach_pu = ll_ach_pu, ach_dev_pu = ls_ach_dev_pu, ach_bta_code = ls_ach_bta_code, ach_dev_code = ls_ach_dev_code, ach_dev_taux = ll_ach_dev_taux,
+        set ach_pu = ll_ach_pu, ach_dev_pu = ld_ACH_DEV_PU, ach_bta_code = ls_ach_bta_code, ach_dev_code = ls_ach_dev_code, ach_dev_taux = ll_ach_dev_taux,
             vte_pu_net = ld_vte_pu_net, vte_pu = ld_prix_vente
         where k_stock_art_edi_bassin = arg_k_stock_art_edi_bassin
         and cam_code = ls_cam_code;
@@ -436,7 +436,7 @@ BEGIN
                     ) VALUES (
                         ls_ORL_REF, arg_ord_ref, ls_num_ligne , ls_PAL_CODE, ll_pal_nb_col ,ll_cde_nb_pal, ll_qte_art_cde, 0, 0,0, 0, ll_ach_pu, ls_ach_dev_code, ls_ach_bta_code, ld_ACH_QTE, ld_prix_vente,
                         ls_vte_bta_code, ld_vte_qte, ls_fou_code, ld_pds_brut, ld_pds_net, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0, 'N', 'N', 'N', 'N', 'N', 'O', ld_frais_pu, 'N', 'N',ls_BAC_CODE, 0, 0, ls_art_ref_ouverture,
-                        ls_ESP_CODE, 0, ll_ach_dev_taux, ls_ach_dev_pu, ls_art_ref_ouverture, ls_gtin_colis_kit, ll_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
+                        ls_ESP_CODE, 0, ll_ach_dev_taux, ld_ACH_DEV_PU, ls_art_ref_ouverture, ls_gtin_colis_kit, ll_ref_edi_ligne, ls_frais_unite, ls_PROP_CODE, ls_indbloq_ach_dev_pu,'', ld_vte_pu_net
                     );
                 end LOOP;
                 CLOSE C_ART_OUVERTURE;
