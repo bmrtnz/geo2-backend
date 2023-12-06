@@ -671,7 +671,14 @@ public class OrdreFunctionTest {
     @Test
     public void testFCreeOrdreEdi() {
         FunctionResult result = this.functionOrdreRepository.fCreateOrdresEdi(
-                "16689", "21", SOCIETE_SA, "005548", "001316", "93044872115", "28/02/2022", "STEPHANE");
+                "27344",
+                "23",
+                SOCIETE_SA,
+                "000446",
+                "015887",
+                "70055655",
+                "2023-01-07",
+                "BRUNO");
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getRes(), result.getMsg());
