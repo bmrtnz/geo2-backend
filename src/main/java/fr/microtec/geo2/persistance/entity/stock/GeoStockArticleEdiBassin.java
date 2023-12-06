@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -30,6 +32,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "geo_stock_art_edi_bassin")
+@DynamicInsert
+@DynamicUpdate
 public class GeoStockArticleEdiBassin {
 
     @Id
