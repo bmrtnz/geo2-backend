@@ -11,13 +11,9 @@ BEGIN
     res := 0;
     msg := '';
 
-    declare
-        cc_previ_result number;
-    begin
-        f_calcul_marge_previ(arg_ord_ref, arg_soc_code, cc_previ_result, res, msg);
-        if res <> 1 then return; end if;
-        li_ret := res;
-    end;
+    f_calcul_marge(arg_ord_ref, res, msg);
+    if res <> 1 then return; end if;
+    li_ret := res;
 
     -- Deja lancé par le frontend
     -- f_verif_ordre_warning(arg_ord_ref, arg_soc_code, res, msg);
