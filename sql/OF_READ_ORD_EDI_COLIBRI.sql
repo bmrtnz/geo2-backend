@@ -45,8 +45,8 @@ begin
 		where O.ref_edi_ordre = arg_num_cde_edi
 		and L.ref_edi_ordre = O.ref_edi_ordre
 		and L.status <> 'D'
-		and (L.ean_prod_client not in (select distinct E.gtin_colis_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O')  
-			or L.code_interne_prod_client not in (select distinct E.art_ref_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O') 
+		and (L.ean_prod_client not in (select distinct E.gtin_colis_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O')
+			or L.code_interne_prod_client not in (select distinct E.art_ref_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O')
 			);
 	begin
 		i := 0;
@@ -58,17 +58,18 @@ begin
 				msg := '%%%ERREUR aucune référence(s) article(s) BW';
 			end if;
 			msg := msg || ' pour le GTIN article client : ' || ls_ean_prod_client || ' et code article client: ' || ls_art_ref_client;
-		fetch C_CONTROLE_GTIN into ls_ean_prod_client, ls_art_ref_client;
+            fetch C_CONTROLE_GTIN into ls_ean_prod_client, ls_art_ref_client;
+            EXIT WHEN C_CONTROLE_GTIN%notfound;
 		end loop;
 		close C_CONTROLE_GTIN;
-		
+
 		if msg <> '' then
 			delete from GEO_STOCK_ART_EDI_BASSIN where edi_ord = arg_num_cde_edi;
 			commit;
 			res := 0;
 			return;
 		end if;
-			
+
     end;
 	-- Fin vérification
 
@@ -203,7 +204,7 @@ begin
                     end if;
 
                     <<continue_label>> null;
-					
+
             fetch C_LIG_EDI_L into ll_ref_edi_ligne, ll_num_ligne, ls_ean_prod_client, ll_quantite_colis, ld_prix_vente_edi, ls_cli_ref, ls_cen_ref, ls_art_ref_client, ls_inc_code, ls_region_pref, ls_art_ref;
             EXIT WHEN C_LIG_EDI_L%notfound;
         end loop;
