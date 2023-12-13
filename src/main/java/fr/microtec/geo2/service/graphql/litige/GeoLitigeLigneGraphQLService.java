@@ -2,6 +2,7 @@ package fr.microtec.geo2.service.graphql.litige;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.Predicate;
 
@@ -126,6 +127,21 @@ public class GeoLitigeLigneGraphQLService extends GeoAbstractGraphQLService<GeoL
     public List<GeoLitigeLigne> saveAllLitigeLigne(List<GeoLitigeLigne> allLitigeLigne,
             @GraphQLEnvironment ResolutionEnvironment env) {
         return this.saveAllEntities(allLitigeLigne, env);
+    }
+
+    @GraphQLMutation
+    public List<GeoLitigeLigne> saveLot(
+            List<String> lot,
+            GeoLitigeLigne litigeLigne,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+
+        List<GeoLitigeLigne> lignes = ((GeoLitigeLigneRepository) this.repository)
+                .findAllByLitigeIdAndNumeroGroupementLitige(lot.get(0), lot.get(1))
+                .stream()
+                .map(ll -> this.merge(litigeLigne, ll, env.arguments))
+                .collect(Collectors.toList());
+
+        return this.repository.saveAll(lignes);
     }
 
 }
