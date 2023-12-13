@@ -323,7 +323,7 @@ public class ProgramService {
                     } else if (ls_array_load[1].startsWith("BWXD")) {
                         ls_ind_mod_liv.set("X");
                         ls_concat = ' ' + ls_ind_mod_liv.get() + "%";
-                        ls_ref_cli = ls_array_load[0] + '/' + "TEYNHAM";
+                        ls_ref_cli = ls_array_load[0] + '/' + "AYLESFORD";
                     } else {
                         pRow.pushErreur("Erreur préfixe Load reference DIRECT ou XDOC");
                         res.pushRow(pRow);
