@@ -82,8 +82,6 @@ AS
     ls_nb_colis GEO_ORDRE.TOTCOL%TYPE := '0';
     ls_pds GEO_ORDRE.TOTPDSNET%TYPE := '0';
     ls_trp_bac_code GEO_ORDRE.TRP_BAC_CODE%TYPE := '';
-    ls_dept_entrep varchar2(2);
-    ll_dept_ent number;
     
 BEGIN
     -- correspond à f_create_ordre_v3.pbl
@@ -212,36 +210,6 @@ BEGIN
     end if;
 
     ld_trp_dev_pu := ld_trp_pu / ld_trp_dev_taux;
-    
-    --DEB
-    select substr(zip,1,2) into ls_dept_entrep from geo_entrep where cen_ref = arg_cen_ref;
-	begin
-		ll_dept_ent := to_number(ls_dept_entrep);
-		if ll_dept_ent < 10 then
-			ls_dept_entrep := to_char(ll_dept_ent);
-		end if;
-		
-		 begin
-        select D.bac_code into ls_trp_bac_code 
-        from geo_dept D
-        where D.num_dept = ls_dept_entrep;
-		exception when others then
-			msg := '%%%ERREUR récupération département entrepôt: ' || arg_cen_ref;
-			return;
-		end;
-
-		
-		EXCEPTION  WHEN value_error
-		THEN
-		ls_dept_entrep :=null;
-		
-		
-	end;
-   
-    if ls_trp_bac_code = 'INDIVIS' then 
-        ls_trp_bac_code := '';
-    end if;
-    --FIN
 
     ls_inst_log := substr(coalesce(ls_instr_logist_client, ' ') || ' ' || coalesce(ls_instr_logist_entrep, ' '), 1, 280);
     ldate_dep := SYSDATE;
@@ -251,7 +219,6 @@ BEGIN
     begin
         if arg_dat_dep is not null then
             ldate_dep := to_date(arg_dat_dep, 'yyyy-mm-dd hh24:mi:ss');
-            -- ldate_liv = datetime(RelativeDate(Date(arg_datedep),1))
         end if;
         if arg_dat_liv is not null then
             ldate_liv := to_date(arg_dat_liv, 'yyyy-mm-dd hh24:mi:ss');

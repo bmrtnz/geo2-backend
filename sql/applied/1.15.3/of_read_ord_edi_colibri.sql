@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE "OF_READ_ORD_EDI_COLIBRI" (
+CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."OF_READ_ORD_EDI_COLIBRI" (
     arg_num_cde_edi IN number,
     arg_cam_code IN GEO_ORDRE.CAM_CODE%TYPE,
     arg_stock_type IN char,
