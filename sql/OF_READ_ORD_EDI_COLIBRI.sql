@@ -33,10 +33,12 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN."OF_READ_ORD_EDI_COLIBRI" (
     ls_retour_sauve varchar2(50);
     ls_stock_station varchar2(50);
     ls_bw_stock varchar2(50);
+	LS varchar2(20);
 	i number;
 begin
     msg := '';
     res := 0;
+	LS := '~r~n';
 	-- Vérification si l'ensemble des GTIN sont présents dans GEO_EDI_ART_CLI
 	declare
 	cursor C_CONTROLE_GTIN IS
@@ -53,13 +55,14 @@ begin
 		open C_CONTROLE_GTIN;
 		fetch C_CONTROLE_GTIN into ls_ean_prod_client, ls_art_ref_client;
 		loop
+			EXIT WHEN C_CONTROLE_GTIN%notfound;
 			i := i + 1;
 			if i = 1 then
-				msg := '%%%ERREUR aucune référence(s) article(s) BW';
+				msg := '%%%ERREUR aucune référence(s) article(s) BW' || LS;
 			end if;
-			msg := msg || ' pour le GTIN article client : ' || ls_ean_prod_client || ' et code article client: ' || ls_art_ref_client;
-            fetch C_CONTROLE_GTIN into ls_ean_prod_client, ls_art_ref_client;
-            EXIT WHEN C_CONTROLE_GTIN%notfound;
+			msg := msg || ' pour le GTIN article client : ' || ls_ean_prod_client || ' et code article client: ' || ls_art_ref_client || LS;
+		fetch C_CONTROLE_GTIN into ls_ean_prod_client, ls_art_ref_client;
+
 		end loop;
 		close C_CONTROLE_GTIN;
 
