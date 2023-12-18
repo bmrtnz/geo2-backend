@@ -11,6 +11,14 @@ BEGIN
     res := 0;
     msg := '';
 
+    declare
+        cc_previ_result number;
+    begin
+        f_calcul_marge_previ(arg_ord_ref, arg_soc_code, cc_previ_result, res, msg);
+        if res <> 1 then return; end if;
+        li_ret := res;
+    end;
+
     F_VERIF_ORDRE_WARNING(arg_ord_ref, arg_soc_code, res, msg);
     if (msg <> 'OK') then
         if (instr(msg, '%%%') <> 0) then
