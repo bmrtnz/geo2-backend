@@ -237,7 +237,7 @@ begin
 
 			--fin marketing
 
-			If arg_soc_code = 'BWS' THen
+			If arg_soc_code = 'BWS' or ls_sco_code ='RET' THen
 				ld_frais_pu := 0;
 				ls_frais_unite := null;
 			End If;
