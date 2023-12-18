@@ -16,6 +16,17 @@ BEGIN
     msg := '';
     res := 0;
 
+    -- Nettoyage des envois temporaires
+    begin
+        DELETE FROM geo_envois ge
+        WHERE ge.TRAIT_EXP = 'A'
+        AND ge.flu_code <> 'ORD'
+        AND ge.ORD_REF = is_ord_ref
+        AND ge.mod_user = arg_nom_utilisateur;
+    exception when others then
+        null;
+    end;
+
 	IF (mode_auto = 'O') THEN
 		if is_flu_code = 'INCLIT' or is_flu_code = 'RESLIT' THEN
 			of_genere_envois_litige_autom(is_ord_ref, is_flu_code, mode_auto, arg_nom_utilisateur, res, msg);
