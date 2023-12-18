@@ -24,7 +24,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -186,7 +185,7 @@ public class ProgramService {
     }
 
     public ProgramResponse importTesco(MultipartFile chunks, String societe, String utilisateur, Boolean generic)
-            throws IOException {
+            throws Exception {
         val res = new ProgramResponse();
 
         // Position des colonnes qui nous interressent dans le tableau Excel
@@ -805,20 +804,13 @@ public class ProgramService {
 
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
-            var throwable = new RuntimeException(exception.getMessage());
-            log.error("Program import has failed: {}", throwable);
-            String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
-            if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
-                throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
-            } else {
-                throw throwable;
-            }
+            throw new Exception(gen_exception_message(exception, CURRENT_COL, CURRENT_ROW), exception);
         }
 
         return res;
     }
 
-    public ProgramResponse importOrchard(MultipartFile chunks, String utilisateur) throws IOException {
+    public ProgramResponse importOrchard(MultipartFile chunks, String utilisateur) throws Exception {
 
         val res = new ProgramResponse();
 
@@ -1147,18 +1139,12 @@ public class ProgramService {
             workbook.close();
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
-            String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
-            log.error("Program import has failed: {}", exception.getMessage());
-            if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
-                throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
-            } else {
-                throw new RuntimeException(exception.getMessage());
-            }
+            throw new Exception(gen_exception_message(exception, CURRENT_COL, CURRENT_ROW), exception);
         }
         return res;
     }
 
-    public ProgramResponse importPreordre(MultipartFile chunks, String utilisateur) throws IOException {
+    public ProgramResponse importPreordre(MultipartFile chunks, String utilisateur) throws Exception {
 
         val res = new ProgramResponse();
 
@@ -1502,13 +1488,7 @@ public class ProgramService {
             workbook.close();
         } catch (Exception exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
-            String errorCell = new CellReference(CURRENT_ROW, CURRENT_COL).formatAsString();
-            log.error("Program import has failed: {}", exception.getMessage());
-            if (exception.getStackTrace()[0].getMethodName().equals("typeMismatch")) {
-                throw new RuntimeException("Erreur lors de la lecture de la cellule (" + errorCell + ")");
-            } else {
-                throw new RuntimeException(exception.getMessage());
-            }
+            throw new Exception(gen_exception_message(exception, CURRENT_COL, CURRENT_ROW), exception);
         }
         return res;
     }
@@ -1553,16 +1533,30 @@ public class ProgramService {
 
     /** Get XLX or XLSX workbook */
     private static <F extends Workbook> F loadFile(MultipartFile chunks) throws IOException {
+        F workbook;
         switch (chunks.getContentType()) {
             case XLSX_MIME:
-                return (F) new XSSFWorkbook(chunks.getInputStream());
+                workbook = (F) new XSSFWorkbook(chunks.getInputStream());
+                break;
 
             case XLS_MIME:
-                return (F) new HSSFWorkbook(chunks.getInputStream());
+                workbook = (F) new HSSFWorkbook(chunks.getInputStream());
+                break;
 
             default:
                 throw new RuntimeException("Unhandled document type");
         }
+        workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
+        return workbook;
+    }
+
+    private static String gen_exception_message(Exception exception, int col, int row) {
+        char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        return "Current cell is "
+                + alphabet[col]
+                + Integer.toString(row + 1)
+                + " -> "
+                + exception.getMessage();
     }
 
 }

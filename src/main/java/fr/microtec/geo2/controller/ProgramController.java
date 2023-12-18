@@ -1,7 +1,6 @@
 package fr.microtec.geo2.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class ProgramController {
             @RequestParam(name = "societe", required = false) String societe,
             @RequestParam(name = "utilisateur", required = false) String utilisateur,
             @RequestParam(name = "genericEntrepot", required = false) Boolean generic)
-            throws IOException {
+            throws Exception {
 
         this.service.archive(societe, utilisateur, chunk);
 
