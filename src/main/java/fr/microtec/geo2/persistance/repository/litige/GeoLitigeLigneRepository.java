@@ -48,6 +48,8 @@ public interface GeoLitigeLigneRepository extends GeoRepository<GeoLitigeLigne, 
     List<GeoLitigeLigneForfait> allLitigeLigneForfait(
             @Param("arg_lit_ref") String litRef);
 
+    List<GeoLitigeLigne> findAllByLitigeIdAndNumeroGroupementLitige(String litigeId, String numeroGroupementLitige);
+
     @Transactional
     @Modifying
     void deleteAllByIdIn(List<String> id);
