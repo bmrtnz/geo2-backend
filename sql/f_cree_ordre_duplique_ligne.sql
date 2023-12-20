@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE "F_CREE_ORDRE_DUPLIQUE_LIGNE" (
+CREATE OR REPLACE PROCEDURE "GEO_ADMIN"."F_CREE_ORDRE_DUPLIQUE_LIGNE" (
     arg_ord_ref_ori IN GEO_ORDRE.ORD_REF%TYPE,
     arg_ord_ref_dupliq IN GEO_ORDRE.ORD_REF%TYPE,
     arg_station IN char,
@@ -144,13 +144,13 @@ begin
                 CDE_PDS_BRUT, CDE_PDS_NET, TOTVTE, TOTREM, TOTRES, TOTFRD, TOTACH, TOTMOB, TOTTRP, TOTTRS, TOTCRT,
                 FLEXP, FLLIV, FLBAF, FLFAC, FOU_FLVER, VAR_RISTOURNE, FRAIS_PU, FLVERFOU, FLVERTRP, BAC_CODE, REMSF_TX,
                 REMHF_TX, ART_REF, ESP_CODE, TOTFAD, ACH_DEV_TAUX, ACH_DEV_PU,PROPR_CODE,PAL_NB_PALINTER,LIB_DLV,
-                ART_REF_KIT,GTIN_COLIS_KIT,FRAIS_UNITE, LIST_CERTIFS, CERT_ORIGINE)
+                FRAIS_UNITE, LIST_CERTIFS, CERT_ORIGINE)
             VALUES (
                 ls_orl_ref, arg_ord_ref_dupliq, ls_orl_lig,ls_pal_code_ori,ll_nb_col, ls_CDE_NB_PAL, ls_CDE_NB_COL, ls_EXP_NB_PAL, ls_EXP_NB_COL, ls_EXP_PDS_BRUT,
                 ls_EXP_PDS_NET, ls_ACH_PU, ls_ACH_DEV_CODE,ls_ACH_BTA_CODE, ld_ACH_QTE, ls_VTE_PU,ls_VTE_BTA_CODE, ld_VTE_QTE, ls_FOU_CODE,
                 0, 0, ls_TOTVTE, 0, 0, 0, ls_TOTACH, ls_TOTMOB, 0, 0, 0,
                 'N', 'N', 'N', 'N', 'N', ls_var_ristourne, ldc_frais_pu_ori, 'N', 'N', ls_bac_code,ldc_remsf_tx, ldc_remhf_tx, ls_ART_REF_ori , ls_ESP_CODE, 0, ld_ACH_DEV_TAUX, ls_ACH_DEV_PU,ls_PROPR_CODE,ll_pal_nb_inter_ori,ls_lib_dlv,
-                ls_art_ref_kit, ls_gtin_colis_kit,ls_frais_unite,ls_list_certifs,ls_cert_origine);
+                ls_frais_unite,ls_list_certifs,ls_cert_origine);
         exception when others then
             msg := 'erreur creation ' || SQLERRM;
             rollback;
@@ -164,3 +164,4 @@ begin
 
 end;
 /
+
