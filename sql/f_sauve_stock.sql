@@ -6,8 +6,9 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_SAUVE_STOCK(
 	arg_cam_code IN GEO_ORDRE.CAM_CODE%TYPE,
 	arg_type_recherche IN varchar2,
 	arg_bws_ecris  IN OUT P_STR_TAB_TYPE,
-	ls_entrep_pal_code IN GEO_ENTREP.PAL_CODE%TYPE,
+	arg_pal_code IN GEO_ENTREP.PAL_CODE%TYPE,
 	ls_alerte_pal IN CHAR,
+	ls_alerte_pal_mess IN varchar2,
     res OUT number,
     msg OUT varchar2
 )
@@ -37,12 +38,10 @@ AS
 	ls_gem_code GEO_ARTICLE_COLIS.GEM_CODE%TYPE;
 	ls_art_ref_client GEO_EDI_LIGNE.CODE_INTERNE_PROD_CLIENT%TYPE;
 	ls_code_prod_client varchar2(20);
-	ls_pal_code GEO_ENTREP.PAL_CODE%TYPE;
 	ls_bac_code_entrep GEO_DEPT.BAC_CODE%TYPE;
 	ls_dept_entrep varchar2(2);
 	ll_dept_entrep number;
 	ls_cen_ref_client GEO_EDI_ORDRE.CEN_REF%TYPE;
-	ls_pal_code_entrep GEO_ENTREP.PAL_CODE%TYPE;
 	ls_enr_bws_ecris varchar2(150);
 	ls_art_ref GEO_ARTICLE_COLIS.ART_REF%TYPE;
 	ll_key number;
@@ -96,8 +95,8 @@ BEGIN
 	end if;
 
 	begin
-		select S.age, S.qte_ini - S.qte_res, S.fou_code, S.prop_code, F.bac_code, S.pal_code
-		into ls_age, ll_qte_restant_stock, ls_fou_code, ls_prop_code, ls_bac_code_station, ls_pal_code
+		select S.age, S.qte_ini - S.qte_res, S.fou_code, S.prop_code, F.bac_code
+		into ls_age, ll_qte_restant_stock, ls_fou_code, ls_prop_code, ls_bac_code_station
 		from geo_stock S, geo_fourni F
 		where sto_ref = arg_sto_ref
 		and S.fou_code = F.fou_code;
@@ -169,30 +168,14 @@ BEGIN
 		END CASE;
 	end if;
 
-	/* if ls_pal_code = '' or ls_pal_code is null then
-		begin
-			select pal_code
-			into ls_pal_code_entrep
-			from geo_entrep
-			where cen_ref = ls_cen_ref
-			and valide = 'O';
-		exception when others then
-			ls_pal_code := '-';
-		end;
-
-		if length(ls_pal_code_entrep) > 0 and ls_pal_code_entrep is not null then
-			ls_pal_code := ls_pal_code_entrep;
-		end if;
-	end if; */
-
     BEGIN
         insert into GEO_STOCK_ART_EDI_BASSIN (
 			EDI_ORD, EDI_LIG, CLI_REF, CAM_CODE, ART_REF, GTIN, FOU_CODE, BAC_CODE, QTE_RES, AGE, PROP_CODE, ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, VTE_PU_NET,
-			ACH_DEV_TAUX, FLAG_HORS_BASSIN, PAL_CODE, STO_REF, ALERTE_PAL
+			ACH_DEV_TAUX, FLAG_HORS_BASSIN, PAL_CODE, STO_REF, ALERTE_PAL, ALERT_PAL_MESS
 		)
 		values(
 			arg_ref_edi_ordre, arg_ref_edi_ligne, ls_cli_ref, arg_cam_code, arg_art_ref, ls_code_prod_client, ls_fou_code, ls_bac_code_station, ll_qte_restant_stock, ls_age, ls_prop_code, ls_ACH_BTA_CODE,
-			ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ld_ach_dev_taux, ls_flag_hors_bassin, ls_pal_code_entrep, arg_sto_ref, ls_alerte_pal
+			ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ld_ach_dev_taux, ls_flag_hors_bassin, arg_pal_code, arg_sto_ref, ls_alerte_pal, ls_alerte_pal_mess
 		);
     exception when others then
          msg := '%%%ERREUR f_sauve_stock insert GEO_STOCK_ART_EDI_BASSIN ref_edi_ordre: ' || to_char(arg_ref_edi_ordre) || ' ref_edi_ligne: ' || to_char(arg_ref_edi_ligne) || ' art_ref: ' || arg_art_ref || ' ' || SQLERRM;

@@ -200,7 +200,7 @@ begin
 
                     -- On a pas trouvé de stock pour le GTIN client. On insére une ligne sans fournisseur
                     if ls_ya_stock = 'N' then
-                        f_sauve_stock('', arg_num_cde_edi, ll_ref_edi_ligne, ls_art_ref, arg_cam_code, 'SANS_STOCK', array_bws_ecris,'?', 'N', res, msg);
+                        f_sauve_stock('', arg_num_cde_edi, ll_ref_edi_ligne, ls_art_ref, arg_cam_code, 'SANS_STOCK', array_bws_ecris,'', 'N', '', res, msg);
                         if res = 0 then
                             close C_LIG_EDI_L;
                             return;
