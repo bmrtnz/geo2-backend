@@ -38,11 +38,8 @@ import fr.microtec.geo2.persistance.entity.litige.GeoLitigeLigneTotaux;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFactureAvoir;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
-import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
-import fr.microtec.geo2.persistance.entity.ordres.GeoTracabiliteDetailPalette;
+import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.common.GeoCampagneRepository;
@@ -241,64 +238,6 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         }
 
         return ordresBaf;
-    }
-
-    public GeoOrdreStatut fetchStatut(String ordreID) {
-
-        if (ordreID == null)
-            throw new RuntimeException("Ordre ID is needed to fetch statut");
-
-        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-
-        CriteriaQuery<GeoOrdre> ordreQuery = criteriaBuilder.createQuery(GeoOrdre.class);
-        Root<GeoOrdre> ordreRoot = ordreQuery.from(GeoOrdre.class);
-        final GeoOrdre ordre = this.entityManager
-                .createQuery(
-                        ordreQuery.multiselect(
-                                ordreRoot.get("flagPublication"),
-                                ordreRoot.get("expedieAuComplet"),
-                                ordreRoot.get("bonAFacturer"),
-                                ordreRoot.get("facture"),
-                                ordreRoot.get("flagAnnule"))
-                                .where(criteriaBuilder.equal(ordreRoot.get("id"), ordreID)))
-                .getSingleResult();
-
-        CriteriaQuery<Long> tdpQuery = criteriaBuilder.createQuery(Long.class);
-        Root<GeoTracabiliteDetailPalette> tdpRoot = tdpQuery.from(GeoTracabiliteDetailPalette.class);
-        final Long tdpCount = this.entityManager
-                .createQuery(
-                        tdpQuery
-                                .multiselect(criteriaBuilder.count(tdpRoot))
-                                .where(criteriaBuilder.equal(tdpRoot.get("ordre").get("id"), ordreID)))
-                .getSingleResult();
-
-        CriteriaQuery<Long> olQuery = criteriaBuilder.createQuery(Long.class);
-        Root<GeoOrdreLigne> olRoot = olQuery.from(GeoOrdreLigne.class);
-        final Long lignesCount = this.entityManager
-                .createQuery(
-                        olQuery
-                                .multiselect(criteriaBuilder.count(olRoot))
-                                .where(criteriaBuilder.equal(olRoot.get("ordre").get("id"), ordreID)))
-                .getSingleResult();
-
-        // resolve ordre statut
-        GeoOrdreStatut statut = GeoOrdreStatut.NON_CONFIRME;
-        if (ordre.getFlagPublication())
-            statut = GeoOrdreStatut.CONFIRME;
-        if (tdpCount > 0)
-            statut = GeoOrdreStatut.EN_PREPARATION;
-        if (lignesCount > 0 && ordre.getExpedieAuComplet())
-            statut = GeoOrdreStatut.EXPEDIE;
-        if (ordre.getBonAFacturer())
-            statut = GeoOrdreStatut.A_FACTURER;
-        if (ordre.getFacture())
-            statut = GeoOrdreStatut.FACTURE;
-        if (Optional.ofNullable(ordre.getFactureEDI()).orElse(false))
-            statut = GeoOrdreStatut.FACTURE_EDI;
-        if (ordre.getFlagAnnule())
-            statut = GeoOrdreStatut.ANNULE;
-
-        return statut;
     }
 
     /**

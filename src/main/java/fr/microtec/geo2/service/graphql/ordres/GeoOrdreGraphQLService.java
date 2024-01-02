@@ -12,11 +12,10 @@ import org.springframework.stereotype.Service;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreStatut;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.repository.ordres.GeoOrdreRepository;
 import fr.microtec.geo2.service.DocumentService;
 import fr.microtec.geo2.service.OrdreService;
@@ -186,11 +185,6 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     public long countOrdre(
             @GraphQLArgument(name = "search") String search) {
         return this.count(search);
-    }
-
-    @GraphQLQuery
-    public GeoOrdreStatut statut(@GraphQLContext GeoOrdre ordre) {
-        return this.ordreService.fetchStatut(ordre.getId());
     }
 
     @GraphQLQuery
