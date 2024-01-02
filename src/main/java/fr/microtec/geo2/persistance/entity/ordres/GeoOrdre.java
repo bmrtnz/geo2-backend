@@ -1,31 +1,63 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Where;
+
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.common.GeoTypeVente;
 import fr.microtec.geo2.persistance.entity.document.GeoAsCMR;
-import fr.microtec.geo2.persistance.entity.logistique.GeoPort;
-import fr.microtec.geo2.persistance.entity.tiers.*;
 import fr.microtec.geo2.persistance.entity.document.GeoAsFacture;
 import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.litige.GeoLitige;
+import fr.microtec.geo2.persistance.entity.logistique.GeoPort;
+import fr.microtec.geo2.persistance.entity.tiers.GeoBasePaiement;
+import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
+import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
+import fr.microtec.geo2.persistance.entity.tiers.GeoConditionVente;
+import fr.microtec.geo2.persistance.entity.tiers.GeoCourtier;
+import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
+import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
+import fr.microtec.geo2.persistance.entity.tiers.GeoMoyenPaiement;
+import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
+import fr.microtec.geo2.persistance.entity.tiers.GeoPersonne;
+import fr.microtec.geo2.persistance.entity.tiers.GeoRegimeTva;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransitaire;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
+import fr.microtec.geo2.persistance.entity.tiers.GeoTypeCamion;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -491,7 +523,7 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Transient
     private Float pourcentageMargeBrut;
 
-    @Transient
+    @Formula("GEO_ORDRE_STATUT(ord_ref)")
     private GeoOrdreStatut statut;
 
     @Transient
@@ -567,4 +599,5 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
         fields.add("societe.id");
         fields.add("numeroFacture");
     }
+
 }
