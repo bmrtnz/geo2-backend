@@ -56,6 +56,11 @@ public class GeoLitigeGraphQLService extends GeoAbstractGraphQLService<GeoLitige
         return this.saveEntity(litige, env);
     }
 
+    @GraphQLMutation
+    public void deleteLitige(String id) {
+        this.delete(id);
+    }
+
     @GraphQLQuery
     public List<GeoLitigeSupervision> allSupervisionLitige(String type, String code) {
         return ((GeoLitigeRepository) super.repository).allSupervisionLitige(type, code);
