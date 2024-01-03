@@ -151,4 +151,16 @@ public class GeoFunctionLitigeRepositoryImpl extends AbstractFunctionsRepository
         return query.fetch();
     }
 
+    @Override
+    public FunctionResult genereLitigeAutom(
+            String is_ord_ref,
+            String prompt_continue) {
+        FunctionQuery query = this.build("GENERE_LITIGE_AUTOM");
+
+        query.attachInput("is_ord_ref", String.class, is_ord_ref);
+        query.attachInput("prompt_continue", String.class, prompt_continue);
+
+        return query.fetch();
+    }
+
 }

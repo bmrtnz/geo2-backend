@@ -90,4 +90,12 @@ public class LitigeFunctionTest {
         this.functionLitigeRepository.fCreateLitigeLinkedOrders("2089876");
     }
 
+    @Test
+    public void testGenereLitigeAutom() {
+        FunctionResult result = this.functionLitigeRepository
+                .genereLitigeAutom("2045252", "");
+
+        Assertions.assertNotNull(result);
+    }
+
 }

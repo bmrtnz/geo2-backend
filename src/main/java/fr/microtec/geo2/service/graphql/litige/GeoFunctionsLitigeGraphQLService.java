@@ -125,4 +125,13 @@ public class GeoFunctionsLitigeGraphQLService {
         return this.repository.fCreateLitigeLinkedOrders(ordreID);
     }
 
+    @GraphQLQuery
+    public FunctionResult genereLitigeAutom(
+            String ordRef,
+            Boolean promptContinue) {
+        return this.repository.genereLitigeAutom(
+                ordRef,
+                promptContinue != null ? (promptContinue ? "O" : "N") : "");
+    }
+
 }

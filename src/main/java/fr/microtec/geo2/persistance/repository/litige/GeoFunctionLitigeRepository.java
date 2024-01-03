@@ -55,4 +55,7 @@ public interface GeoFunctionLitigeRepository {
 
     FunctionResult fCreateLitigeLinkedOrders(String is_ord_ref);
 
+    FunctionResult genereLitigeAutom(
+            String is_ord_ref,
+            String prompt_continue);
 }
