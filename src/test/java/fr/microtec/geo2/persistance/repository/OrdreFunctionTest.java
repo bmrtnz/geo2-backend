@@ -155,12 +155,6 @@ public class OrdreFunctionTest {
                 "", "");
 
         List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
-        for (GeoOrdreBaf baf : ordresBaf) {
-            FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(), SOCIETE_SA);
-
-            baf.setControlData(controlResult.getData());
-        }
-
         Assertions.assertNotNull(ordresBaf);
     }
 

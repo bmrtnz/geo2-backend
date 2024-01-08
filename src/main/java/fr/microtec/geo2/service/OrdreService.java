@@ -232,15 +232,7 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
         FunctionResult result = this.functionOrdreRepository.fAfficheOrdreBaf(societeCode, secteurCode, clientCode,
                 entrepotCode, dateMin, dateMax, codeAssistante, codeCommercial);
 
-        List<GeoOrdreBaf> ordresBaf = result.getCursorDataAs(GeoOrdreBaf.class);
-        for (GeoOrdreBaf baf : ordresBaf) {
-            FunctionResult controlResult = this.functionOrdreRepository.fControlOrdreBaf(baf.getOrdreRef(),
-                    societeCode);
-
-            baf.setControlData(controlResult.getData());
-        }
-
-        return ordresBaf;
+        return result.getCursorDataAs(GeoOrdreBaf.class);
     }
 
     public GeoOrdreStatut fetchStatut(String ordreID) {
