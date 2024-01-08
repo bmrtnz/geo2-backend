@@ -1,6 +1,5 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -25,9 +25,9 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoGroupage;
 import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.val;
 
@@ -36,7 +36,7 @@ import lombok.val;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordlog")
 @Entity
-public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Serializable {
+public class GeoOrdreLogistique extends ValidateAndModifiedEntity {
 
     @Id
     @GeneratedValue(generator = "GeoOrdreLogistiqueGenerator")
@@ -59,6 +59,7 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
     @Column(name = "fou_code")
     private String codeFournisseur;
 
+    @NotNull
     @Column(name = "flag_exped_fournni")
     private Boolean expedieStation;
 
@@ -160,6 +161,10 @@ public class GeoOrdreLogistique extends ValidateAndModifiedEntity implements Ser
 
     @Transient
     private String okStation;
+
+    @NotNull
+    @Column(name = "valide")
+    private Boolean valide;
 
     @PostLoad
     public void postLoad() {
