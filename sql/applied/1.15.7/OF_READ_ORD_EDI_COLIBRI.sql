@@ -47,8 +47,8 @@ begin
 		where O.ref_edi_ordre = arg_num_cde_edi
 		and L.ref_edi_ordre = O.ref_edi_ordre
 		and L.status <> 'D'
-		and (L.ean_prod_client not in (select distinct E.gtin_colis_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O')  
-			or L.code_interne_prod_client not in (select distinct E.art_ref_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O') 
+		and (L.ean_prod_client not in (select distinct E.gtin_colis_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O')
+			or L.code_interne_prod_client not in (select distinct E.art_ref_client from  GEO_EDI_ART_CLI E, GEO_ARTICLE_COLIS A where E.cli_ref = O.cli_ref and E.art_ref = A.art_ref and A.valide = 'O' and E.valide ='O')
 			);
 	begin
 		i := 0;
@@ -62,17 +62,17 @@ begin
 			end if;
 			msg := msg || ' pour le GTIN article client : ' || ls_ean_prod_client || ' et code article client: ' || ls_art_ref_client || LS;
 		fetch C_CONTROLE_GTIN into ls_ean_prod_client, ls_art_ref_client;
-		
+
 		end loop;
 		close C_CONTROLE_GTIN;
-		
+
 		if msg <> '' then
 			delete from GEO_STOCK_ART_EDI_BASSIN where edi_ord = arg_num_cde_edi;
 			commit;
 			res := 0;
 			return;
 		end if;
-			
+
     end;
 	-- Fin vérification
 
@@ -208,7 +208,7 @@ begin
                     end if;
 
                     <<continue_label>> null;
-					
+
             fetch C_LIG_EDI_L into ll_ref_edi_ligne, ll_num_ligne, ls_ean_prod_client, ll_quantite_colis, ld_prix_vente_edi, ls_cli_ref, ls_cen_ref, ls_art_ref_client, ls_inc_code, ls_region_pref, ls_art_ref;
             EXIT WHEN C_LIG_EDI_L%notfound;
         end loop;
@@ -217,6 +217,47 @@ begin
         close C_LIG_EDI_L;
         res := 0;
         msg := '%%%ERREUR lecture commande EDI: ' || arg_num_cde_edi;
+        return;
+    end;
+
+    -- En mode simplifié, on ne propose que les stocks les plus anciens
+    declare
+        cursor current_rows is
+            select *
+            from GEO_STOCK_ART_EDI_BASSIN
+            where edi_ord = arg_num_cde_edi;
+        cursor older(
+            target_edi_lig GEO_STOCK_ART_EDI_BASSIN.edi_lig%TYPE,
+            target_art_ref GEO_STOCK_ART_EDI_BASSIN.art_ref%TYPE,
+            target_age GEO_STOCK_ART_EDI_BASSIN.age%TYPE,
+            target_fou_code GEO_STOCK_ART_EDI_BASSIN.fou_code%TYPE,
+            target_prop_code GEO_STOCK_ART_EDI_BASSIN.prop_code%TYPE,
+            target_bac_code GEO_STOCK_ART_EDI_BASSIN.bac_code%TYPE
+            ) is
+            select count(k_stock_art_edi_bassin)
+            from GEO_STOCK_ART_EDI_BASSIN
+            where edi_lig = target_edi_lig
+            and art_ref = target_art_ref
+            and fou_code = target_fou_code
+            and prop_code = target_prop_code
+            and bac_code = target_bac_code
+            and age > target_age;
+        older_count number;
+    begin
+        if arg_stock_type = 'S' then
+            for r in current_rows loop
+                open older(r.edi_lig,r.art_ref,r.age,r.fou_code,r.prop_code,r.bac_code);
+                fetch older into older_count;
+                if older_count > 0 then
+                    delete from GEO_STOCK_ART_EDI_BASSIN
+                    where k_stock_art_edi_bassin = r.k_stock_art_edi_bassin;
+                end if;
+                close older;
+            end loop;
+        end if;
+    exception when others then
+        msg := 'Erreur lors du filtrage par âge des articles en stock -> ' || SQLERRM;
+        res := 0;
         return;
     end;
 
