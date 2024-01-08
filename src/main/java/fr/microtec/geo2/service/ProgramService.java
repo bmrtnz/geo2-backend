@@ -619,6 +619,8 @@ public class ProgramService {
                                         ordlog.setTypeLieuDepart('F');
                                         ordlog.setDateLivraisonLieuGroupage(ls_DATLIV_GRP);
                                         ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
+                                        ordlog.setValide(true);
+                                        ordlog.setExpedieStation(false);
                                         ordlog = this.ordreLogistiqueRepo.save(ordlog);
                                     } catch (Exception e) {
                                         pRow.pushErreur(
@@ -1115,6 +1117,8 @@ public class ProgramService {
                                     ordlog.setTypeLieuDepart('F');
                                     ordlog.setDateLivraisonLieuGroupage(ls_DATLIV_GRP);
                                     ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
+                                    ordlog.setValide(true);
+                                    ordlog.setExpedieStation(false);
                                     ordlog = this.ordreLogistiqueRepo.save(ordlog);
                                 } catch (Exception e) {
                                     pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " + ls_ord_ref
@@ -1455,6 +1459,8 @@ public class ProgramService {
                                         ordlog.setTypeLieuGroupageArrivee('G');
                                         ordlog.setTypeLieuDepart('F');
                                         ordlog.setDateDepartPrevueGroupage(ls_datdep_grp_p);
+                                        ordlog.setValide(true);
+                                        ordlog.setExpedieStation(false);
                                         ordlog = this.ordreLogistiqueRepo.save(ordlog);
                                     } catch (Exception e) {
                                         pRow.pushErreur("Erreur création transport d'approche pour ORD_REF: " +
