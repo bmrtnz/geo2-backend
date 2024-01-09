@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import fr.microtec.geo2.common.CustomUtils;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -65,6 +66,14 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
                 societeCode,
                 transporteurCode,
                 bureauAchatCode);
+    }
+
+    @GraphQLQuery
+    public RelayPage<GeoOrdre> allOrdreNonConfirmes(
+            String search,
+            Pageable pageable,
+            @GraphQLEnvironment ResolutionEnvironment env) {
+        return this.ordreService.allOrdreNonConfirmes(search, pageable, CustomUtils.parseSelectFromPagedEnv(env));
     }
 
     @GraphQLQuery
