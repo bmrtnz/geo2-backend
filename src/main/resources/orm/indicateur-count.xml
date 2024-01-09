@@ -50,12 +50,12 @@ WHERE (:arg_by_user <> 'N'
     >
         <query>
         <![CDATA[
-            SELECT count(rownum)
-            FROM geo_ordre o
-            WHERE o.facture_avoir = 'A'
+            SELECT count(DISTINCT o.ORD_REF)
+            FROM geo_ordre o, GEO_ENVOIS e
+            WHERE o.ORD_REF = e.ORD_REF(+)
+            AND (e.TRAIT_EXP IS NULL OR e.TRAIT_EXP NOT IN ('N', 'O'))
+            AND (e.FLU_CODE IS NULL OR e.FLU_CODE = 'ORDRE')
             AND o.credat >= CURRENT_DATE
-            AND o.flbaf = 'N'
-            AND o.version_ordre is null
             AND o.valide = 'O'
             AND o.soc_code = :arg_soc_code
             AND o.sco_code like :arg_sco_code
