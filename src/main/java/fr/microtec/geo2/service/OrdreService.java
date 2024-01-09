@@ -15,7 +15,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -166,6 +169,41 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
                 .findAllWithPagination(spec, pageable, GeoOrdre.class, fields);
 
         return PageFactory.asRelayPage(page);
+    }
+
+    public RelayPage<GeoOrdre> allOrdreNonConfirmes(
+            String search,
+            Pageable pageable,
+            Set<String> fields) {
+
+        Specification<GeoOrdre> innerSpec = (rt, cq, cb) -> {
+            Subquery<GeoOrdre> subQuery = cq.subquery(GeoOrdre.class);
+            Root<GeoOrdre> r = subQuery.from(GeoOrdre.class);
+            Join<?, ?> envois = r.join("envois", JoinType.LEFT);
+
+            subQuery
+                    .select(r.get("id"))
+                    .distinct(true)
+                    .where(
+                            cb.or(
+                                    cb.not(envois.get("traite").in('N', 'O')),
+                                    cb.isNull(envois.get("traite"))),
+                            cb.or(
+                                    cb.equal(envois.get("flux").get("id"), "ORDRE"),
+                                    cb.isNull(envois.get("flux").get("id"))),
+                            cb.equal(r.get("factureAvoir"), GeoFactureAvoir.FACTURE),
+                            this.parseSearch(search).toPredicate(r, cq, cb));
+
+            return cb
+                    .in(rt.get("id"))
+                    .value(subQuery);
+        };
+
+        Page<GeoOrdre> page = this.repository
+                .findAllWithPagination(innerSpec, pageable, GeoOrdre.class, fields);
+
+        return PageFactory.asRelayPage(page);
+
     }
 
     public Optional<GeoLitigeLigneTotaux> fetchLitigeLignesTotaux(String litigeID) {
