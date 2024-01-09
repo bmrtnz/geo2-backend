@@ -184,13 +184,14 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
             subQuery
                     .select(r.get("id"))
                     .distinct(true)
-                    .where(cb.and(
+                    .where(
                             cb.or(
                                     cb.not(envois.get("traite").in('N', 'O')),
                                     cb.isNull(envois.get("traite"))),
                             cb.or(
                                     cb.equal(envois.get("flux").get("id"), "ORDRE"),
-                                    cb.isNull(envois.get("flux").get("id")))),
+                                    cb.isNull(envois.get("flux").get("id"))),
+                            cb.equal(r.get("factureAvoir"), GeoFactureAvoir.FACTURE),
                             this.parseSearch(search).toPredicate(r, cq, cb));
 
             return cb
