@@ -43,6 +43,7 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoConditionVente;
 import fr.microtec.geo2.persistance.entity.tiers.GeoCourtier;
 import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
 import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.entity.tiers.GeoIncoterm;
 import fr.microtec.geo2.persistance.entity.tiers.GeoMoyenPaiement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoPays;
@@ -107,6 +108,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sco_code")
     private GeoSecteur secteurCommercial;
+
+    @Column(name = "sco_code", insertable = false, updatable = false)
+    private String secteurCommercialId;
 
     @Column(name = "sco_code", insertable = false, updatable = false)
     private String secteurCode;
@@ -231,6 +235,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cam_code")
     private GeoCampagne campagne;
+
+    @Column(name = "cam_code", insertable = false, updatable = false)
+    private String campagneId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trp_bta_code")
@@ -360,6 +367,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "typ_ordre", nullable = false)
     private GeoTypeOrdre type;
+
+    @Column(name = "typ_ordre", nullable = false, insertable = false, updatable = false)
+    private String typeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pay_code")
@@ -573,6 +583,11 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     public Integer getCqLignesCount() {
         return this.getCqLignes().size();
     }
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ordre")
+    // @Where(clause = "trait_exp = 'N' or trait_exp = 'O'")
+    private Set<GeoEnvois> envois;
 
     public Boolean getHasLitige() {
         return this.getLitige() != null;
