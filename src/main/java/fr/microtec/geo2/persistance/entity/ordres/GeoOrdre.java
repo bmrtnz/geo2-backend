@@ -110,9 +110,6 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     private GeoSecteur secteurCommercial;
 
     @Column(name = "sco_code", insertable = false, updatable = false)
-    private String secteurCommercialId;
-
-    @Column(name = "sco_code", insertable = false, updatable = false)
     private String secteurCode;
 
     @NotNull
