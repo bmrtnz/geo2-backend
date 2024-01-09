@@ -120,6 +120,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @JoinColumn(name = "trp_code", nullable = false)
     private GeoTransporteur transporteur;
 
+    @Column(name = "trp_code", insertable = false, updatable = false)
+    private String transporteurId;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cli_ref", nullable = false)
     private GeoClient client;
