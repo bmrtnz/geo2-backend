@@ -72,8 +72,7 @@ WHERE (:arg_by_user <> 'N'
             select count(rownum)
             from geo_ordre o, geo_ordlog olg
             where o.ord_ref = olg.ord_ref
-            and olg.datdep_fou_p <= CURRENT_DATE
-            and olg.datdep_fou_p >= CURRENT_DATE - 1
+            and olg.datdep_fou_p BETWEEN :arg_date_min AND :arg_date_max
             and o.valide = 'O'
             AND o.soc_code = :arg_soc_code
             AND o.sco_code like :arg_sco_code

@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.microtec.geo2.persistance.entity.common.GeoCampagne;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningDepart;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningMaritime;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
-import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.GeoRepository;
 
@@ -48,12 +50,13 @@ public interface GeoOrdreRepository extends GeoRepository<GeoOrdre, String> {
             @Param("arg_date_min") LocalDateTime dateMin,
             @Param("arg_date_max") LocalDateTime dateMax);
 
-    @Query(name = "Ordre.allPlanningDepart", nativeQuery = true)
-    List<GeoPlanningDepart> allPlanningDepart(
+    @Query(name = "Ordre.allPlanningDepart", countName = "Indicateur.countPlanningDepart", nativeQuery = true)
+    Page<GeoPlanningDepart> allPlanningDepart(
             @Param("arg_soc_code") String societeCode,
             @Param("arg_sco_code") String secteurCode,
             @Param("arg_date_min") LocalDateTime dateMin,
-            @Param("arg_date_max") LocalDateTime dateMax);
+            @Param("arg_date_max") LocalDateTime dateMax,
+            Pageable pageable);
 
     @Query(name = "Ordre.createChargement", nativeQuery = true)
     @Modifying

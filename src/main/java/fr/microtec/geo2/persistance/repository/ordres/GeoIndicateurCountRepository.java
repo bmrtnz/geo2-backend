@@ -1,6 +1,7 @@
 package fr.microtec.geo2.persistance.repository.ordres;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +33,8 @@ public class GeoIndicateurCountRepository {
                 .createNamedQuery("Indicateur.countOrdresNonConfirmes")
                 .setParameter("arg_sco_code", secteurCode)
                 .setParameter("arg_soc_code", societeCode)
+                .setParameter("arg_date_min", LocalDate.now().minusDays(1))
+                .setParameter("arg_date_max", LocalDate.now())
                 .getSingleResult();
     }
 

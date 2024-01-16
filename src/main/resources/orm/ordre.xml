@@ -500,31 +500,10 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             SUM(GEO_ORDLIG.cde_nb_col) as sum_cde_nb_col,
             SUM(GEO_ORDLIG.exp_nb_col) as sum_exp_nb_col,
             GEO_ORDLOG.orx_ref
-            /* native query fields
-            GEO_ORDRE.ord_ref,
-            GEO_ORDRE.version_detail,
-            GEO_ORDLOG.fou_code,
-            GEO_ORDRE.nordre,
-            GEO_ORDRE.cli_code,
-            GEO_ORDRE.cen_code,
-            GEO_ORDLOG.datdep_fou_p,
-            GEO_ORDLOG.fou_ref_doc,
-            GEO_ORDLOG.flag_exped_fournni,
-            GEO_ORDLOG.datdep_fou_r,
-            GEO_ORDRE.per_codecom,
-            GEO_ORDRE.per_codeass,
-            GEO_ORDRE.TRP_CODE,
-            GEO_ORDRE.LIVDATP,
-            GEO_ORDLOG.TOT_EXP_NB_PAL,
-            GEO_ORDLOG.PAL_NB_SOL,
-            GEO_ORDLOG.PAL_NB_PB100X120,
-            GEO_ORDLOG.PAL_NB_PB60X80,
-            GEO_ORDLOG.PAL_NB_PB80X120
-            */
         FROM
             GEO_ORDLOG,
             GEO_ORDRE,
-            GEO_ORDLIG ,
+            GEO_ORDLIG,
             GEO_CLIENT
         WHERE
             ( GEO_ORDLOG.ord_ref = GEO_ORDRE.ord_ref )
@@ -544,27 +523,6 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
                 geo_client.ind_usint = 'N'
         GROUP BY
             GEO_ORDLOG.orx_ref
-            /*
-            GEO_ORDRE.ord_ref,
-            GEO_ORDRE.version_detail,
-            GEO_ORDLOG.fou_code,
-            GEO_ORDRE.nordre,
-            GEO_ORDRE.cli_code,
-            GEO_ORDRE.cen_code,
-            GEO_ORDLOG.datdep_fou_p,
-            GEO_ORDLOG.fou_ref_doc,
-            GEO_ORDLOG.flag_exped_fournni,
-            GEO_ORDLOG.datdep_fou_r,
-            GEO_ORDRE.per_codecom,
-            GEO_ORDRE.per_codeass,
-            GEO_ORDRE.TRP_CODE,
-            GEO_ORDRE.LIVDATP,
-            GEO_ORDLOG.TOT_EXP_NB_PAL,
-            GEO_ORDLOG.PAL_NB_SOL,
-            GEO_ORDLOG.PAL_NB_PB100X120,
-            GEO_ORDLOG.PAL_NB_PB60X80,
-            GEO_ORDLOG.PAL_NB_PB80X120
-            */
       ) rest
     ]]>
     </query>

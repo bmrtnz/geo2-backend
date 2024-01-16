@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
 
 import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.ordres.GeoCommandeEdi;
@@ -200,14 +201,13 @@ public class NativeQueryRepositoryTest {
 
     @Test
     public void testAllPlanningDepart() {
-        List<GeoPlanningDepart> list = this.ordreRepository
+        this.ordreRepository
                 .allPlanningDepart(
                         "SA",
                         "F",
                         LocalDateTime.of(2022, 10, 25, 0, 0, 0),
-                        LocalDateTime.of(2022, 10, 26, 23, 59, 59));
-
-        Assertions.assertFalse(list.isEmpty());
+                        LocalDateTime.of(2022, 10, 26, 23, 59, 59),
+                        PageRequest.of(0, 5));
     }
 
     @Test

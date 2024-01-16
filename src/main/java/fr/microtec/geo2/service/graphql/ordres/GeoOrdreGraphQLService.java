@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import fr.microtec.geo2.common.CustomUtils;
+import fr.microtec.geo2.configuration.graphql.PageFactory;
 import fr.microtec.geo2.configuration.graphql.RelayPage;
 import fr.microtec.geo2.persistance.entity.ordres.GeoDeclarationFraude;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
@@ -99,16 +101,19 @@ public class GeoOrdreGraphQLService extends GeoAbstractGraphQLService<GeoOrdre, 
     }
 
     @GraphQLQuery
-    public List<GeoPlanningDepart> allPlanningDepart(
+    public RelayPage<GeoPlanningDepart> allPlanningDepart(
             String societeCode,
             String secteurCode,
             LocalDateTime dateMin,
-            LocalDateTime dateMax) {
-        return ((GeoOrdreRepository) this.repository).allPlanningDepart(
+            LocalDateTime dateMax,
+            Pageable pageable) {
+        Page<GeoPlanningDepart> page = ((GeoOrdreRepository) this.repository).allPlanningDepart(
                 societeCode,
                 secteurCode,
                 dateMin,
-                dateMax);
+                dateMax,
+                pageable);
+        return PageFactory.asRelayPage(page);
     }
 
     @GraphQLQuery
