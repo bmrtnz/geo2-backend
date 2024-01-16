@@ -64,11 +64,12 @@ public class GeoGraphQLServiceAspect {
         stopWatch.stop();
 
         String user = this.securityService.getUser().getNomUtilisateur();
-        String call = String.format("%s.%s(%s)", className, methodName, callArgs);
+        String request = String.format("%s.%s(%s)", className, methodName, callArgs);
         long duration = Duration.ofMillis(stopWatch.getLastTaskTimeMillis()).toSeconds();
         int activeDbConnections = this.datasource.getHikariPoolMXBean().getActiveConnections();
 
-        log.info(String.format(" %d  %s  %dsec  %s", activeDbConnections, user, duration, call));
+        log.info(String.format(" %d  %s  %dsec  %s  %s",
+                activeDbConnections, user, duration, request, result));
 
         return result;
     }

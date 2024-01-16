@@ -31,7 +31,7 @@
         </rollingPolicy>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <fileHeader>stamp  connections  user  duration  call</fileHeader>
+                <fileHeader>stamp  connections  user  duration  request  response</fileHeader>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss} %msg%n</pattern>
             </layout>
         </encoder>
