@@ -20,6 +20,27 @@
         </encoder>
     </appender>
 
+    <appender name="APIBENCHMARK" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/geo2_api_benchmark.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archived/geo2_api_benchmark.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>5MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <fileHeader>stamp  connections  user  duration  call</fileHeader>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} %msg%n</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <logger name="fr.microtec.geo2.aspect.GeoGraphQLServiceAspect" level="info" additivity="false">
+        <appender-ref ref="APIBENCHMARK" />
+    </logger>
+
     <logger name="fr.microtec.geo2" level="debug" additivity="false">
         <appender-ref ref="FILE" />
         <appender-ref ref="CONSOLE" />
