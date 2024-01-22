@@ -264,6 +264,8 @@ public class ProgramService {
                 String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
                 CURRENT_COL = COL_DEPART_DATE;
                 LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+                if (ls_depart_date == null)
+                    throw new IllegalStateException("La colonne date depart doit être renseignée");
                 pRow.setDateDepart(ls_depart_date);
                 ls_depart_date_ordre = ls_depart_date;
                 CURRENT_COL = COL_DELIVERY_DATE;
@@ -804,9 +806,12 @@ public class ProgramService {
             this.writeOutput(out, chunks);
             workbook.close();
 
-        } catch (Exception exception) {
+        } catch (IllegalStateException | NumberFormatException exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             throw new Exception(gen_exception_message(exception, CURRENT_COL, CURRENT_ROW), exception);
+        } catch (Exception exception) {
+            addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
+            throw exception;
         }
 
         return res;
@@ -874,6 +879,8 @@ public class ProgramService {
                 String ls_packhouse = row.getCell(COL_PACKHOUSE).getStringCellValue().trim();
                 CURRENT_COL = COL_DEPART_DATE;
                 LocalDateTime ls_depart_date = row.getCell(COL_DEPART_DATE).getLocalDateTimeCellValue();
+                if (ls_depart_date == null)
+                    throw new IllegalStateException("La colonne date depart doit être renseignée");
                 pRow.setDateDepart(ls_depart_date);
                 CURRENT_COL = COL_DELIVERY_DATE;
                 LocalDateTime ls_delivery_date = row.getCell(COL_DELIVERY_DATE).getLocalDateTimeCellValue();
@@ -1141,9 +1148,12 @@ public class ProgramService {
             workbook.write(out);
             this.writeOutput(out, chunks);
             workbook.close();
-        } catch (Exception exception) {
+        } catch (IllegalStateException | NumberFormatException exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             throw new Exception(gen_exception_message(exception, CURRENT_COL, CURRENT_ROW), exception);
+        } catch (Exception exception) {
+            addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
+            throw exception;
         }
         return res;
     }
@@ -1492,9 +1502,12 @@ public class ProgramService {
             workbook.write(out);
             this.writeOutput(out, chunks);
             workbook.close();
-        } catch (Exception exception) {
+        } catch (IllegalStateException | NumberFormatException exception) {
             addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
             throw new Exception(gen_exception_message(exception, CURRENT_COL, CURRENT_ROW), exception);
+        } catch (Exception exception) {
+            addedOrdreRefs.forEach(id -> this.ordreRepo.deleteById(id));
+            throw exception;
         }
         return res;
     }
