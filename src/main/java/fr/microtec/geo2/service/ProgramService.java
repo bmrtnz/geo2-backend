@@ -676,7 +676,7 @@ public class ProgramService {
                             Row row = sheet.getRow(ll_row - 1);
                             CURRENT_COL = COL_ORD_CREATE;
                             String ls_value = row.getCell(COL_ORD_CREATE).getStringCellValue();
-                            while (!ls_value.isBlank()) {
+                            while (row.getCell(COL_LOAD_REFERENCE) != null) {
                                 // do while not IsNull(ls_value) and ls_value <> ""
                                 if (ls_value.equals(ls_nordre_))
                                     row.getCell(COL_ORD_PERE_SA, MissingCellPolicy.CREATE_NULL_AS_BLANK)
