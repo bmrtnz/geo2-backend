@@ -1,21 +1,19 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class GeoMRUEntrepotKey implements Serializable {
 
-	protected String utilisateur;
-	protected String entrepot;
+    protected String utilisateur;
+    protected String entrepot;
 
 }

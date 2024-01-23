@@ -30,12 +30,10 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
 import fr.microtec.geo2.service.security.GeoSecurityRoles;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 import lombok.val;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_user")
 @Entity
 public class GeoUtilisateur extends ValidateAndModifiedEntity implements UserDetails {

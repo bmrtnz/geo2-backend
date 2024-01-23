@@ -7,11 +7,9 @@ import javax.persistence.Id;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Entity
 public class GeoLigneReservation extends ValidateAndModifiedEntity {
 

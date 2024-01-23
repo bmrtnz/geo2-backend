@@ -17,11 +17,9 @@ import fr.microtec.geo2.persistance.entity.produits.GeoArticle;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_cliref")
 @Entity
 public class GeoReferenceClient extends ValidateAndModifiedEntity {

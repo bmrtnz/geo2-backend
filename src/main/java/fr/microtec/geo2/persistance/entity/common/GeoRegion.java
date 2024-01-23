@@ -8,20 +8,18 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_region")
 public class GeoRegion extends ModifiedEntity {
 
-	@Id
-	@Column(name = "k_region")
-	private Integer id;
+    @Id
+    @Column(name = "k_region")
+    private Integer id;
 
-	@Column(name = "lib_region")
-	private String libelle;
+    @Column(name = "lib_region")
+    private String libelle;
 
 }

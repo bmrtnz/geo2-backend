@@ -14,27 +14,25 @@ import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_typtie")
 public class GeoTypeTiers extends ValidateAndModifiedEntity {
 
-  @Id
-  @Column(name = "tyt_code")
-  private Character id;
+    @Id
+    @Column(name = "tyt_code")
+    private Character id;
 
-  @Column(name = "tyt_desc")
-  private String description;
+    @Column(name = "tyt_desc")
+    private String description;
 
-  @Column(name = "resp_litige")
-  private Boolean responsableLitige;
+    @Column(name = "resp_litige")
+    private Boolean responsableLitige;
 
-  @OneToMany(mappedBy = "typeTiers")
-  @Where(clause = "typ_tiers = '" + GeoClient.TYPE_TIERS + "'")
-  private List<GeoClient> clients;
+    @OneToMany(mappedBy = "typeTiers")
+    @Where(clause = "typ_tiers = '" + GeoClient.TYPE_TIERS + "'")
+    private List<GeoClient> clients;
 
 }

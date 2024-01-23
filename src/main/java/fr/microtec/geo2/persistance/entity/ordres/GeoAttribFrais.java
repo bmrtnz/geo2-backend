@@ -9,13 +9,11 @@ import javax.persistence.Table;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoBaseTarif;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_attrib_frais")
 @Entity
 public class GeoAttribFrais extends ValidateAndModifiedEntity {

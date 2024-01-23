@@ -16,11 +16,9 @@ import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.ordres.GeoFrais;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordfra_litige")
 @Entity
 public class GeoFraisLitige extends ModifiedEntity {

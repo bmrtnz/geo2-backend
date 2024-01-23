@@ -1,30 +1,30 @@
 package fr.microtec.geo2.persistance.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class ValidateCreatedAndModifiedEntity extends ValidateAndModifiedEntity {
 
-	@CreatedBy
-	@Column(name = "cre_user")
-	private String userCreation;
+    @CreatedBy
+    @Column(name = "cre_user")
+    private String userCreation;
 
-	@CreatedDate
-	@Column(name = "cre_date")
-	private LocalDateTime dateCreation;
+    @CreatedDate
+    @Column(name = "cre_date")
+    private LocalDateTime dateCreation;
 
 }

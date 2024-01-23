@@ -12,11 +12,9 @@ import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreLigne;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_litlig")
 @Entity
 public class GeoLitigeLigne extends ValidateAndModifiedEntity {
