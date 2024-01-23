@@ -8,20 +8,18 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_litcon")
 @Entity
 public class GeoLitigeConsequence extends ValidateAndModifiedEntity {
 
-	@Id
-	@Column(name = "lcq_code")
-	private String id;
+    @Id
+    @Column(name = "lcq_code")
+    private String id;
 
-	@Column(name = "lcq_desc")
-	private String description;
+    @Column(name = "lcq_desc")
+    private String description;
 
 }

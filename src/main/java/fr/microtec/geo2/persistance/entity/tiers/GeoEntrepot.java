@@ -1,6 +1,5 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -27,17 +26,15 @@ import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_entrep")
 @Entity
 @DynamicInsert
 @DynamicUpdate
-public class GeoEntrepot extends ValidateModifiedPrewrittedEntity implements Serializable {
+public class GeoEntrepot extends ValidateModifiedPrewrittedEntity {
 
     @Id
     @Column(name = "cen_ref")

@@ -1,18 +1,23 @@
 package fr.microtec.geo2.persistance.entity.ordres;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_comm_ordre")
 // Id-class doesn't work with generated value, also comment @IdClass and @Id on
 // ordre field.

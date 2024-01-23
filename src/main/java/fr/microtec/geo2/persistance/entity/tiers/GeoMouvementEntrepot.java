@@ -7,11 +7,9 @@ import javax.persistence.Entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
 @Entity
 public class GeoMouvementEntrepot extends GeoSupervisionPalox {
 

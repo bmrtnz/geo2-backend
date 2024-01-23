@@ -55,14 +55,12 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoTransitaire;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoTypeCamion;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_ordre")
 @DynamicInsert
 @DynamicUpdate

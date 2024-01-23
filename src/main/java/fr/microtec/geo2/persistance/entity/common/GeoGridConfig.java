@@ -16,11 +16,9 @@ import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "geo_grid_config")
 @IdClass(GeoGridConfigKey.class)
 @Entity

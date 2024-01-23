@@ -11,11 +11,9 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_histo_ordlog_declo")
 @Entity
 public class GeoHistoriqueLogistique extends ModifiedEntity {

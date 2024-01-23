@@ -9,21 +9,19 @@ import javax.validation.constraints.NotNull;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_frais")
 @Entity
 public class GeoFrais extends ValidateAndModifiedEntity {
 
-	@Id
-	@Column(name = "fra_code")
-	private String id;
+    @Id
+    @Column(name = "fra_code")
+    private String id;
 
-	@NotNull
-	@Column(name = "fra_desc", nullable = false)
-	private String description;
+    @NotNull
+    @Column(name = "fra_desc", nullable = false)
+    private String description;
 
 }

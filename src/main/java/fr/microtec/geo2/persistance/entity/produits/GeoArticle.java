@@ -3,11 +3,18 @@ package fr.microtec.geo2.persistance.entity.produits;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
-import fr.microtec.geo2.persistance.entity.document.GeoDocument;
-import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
@@ -15,15 +22,16 @@ import org.hibernate.annotations.Parameter;
 
 import fr.microtec.geo2.persistance.entity.Duplicable;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
+import fr.microtec.geo2.persistance.entity.document.GeoAsDocument;
+import fr.microtec.geo2.persistance.entity.document.GeoDocument;
 import fr.microtec.geo2.persistance.entity.historique.GeoHistoriqueArticle;
 import fr.microtec.geo2.persistance.entity.ordres.GeoReferenceClient;
+import fr.microtec.geo2.service.fs.Maddog2FileSystemService;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "avi_art_gestion")
 @DynamicUpdate

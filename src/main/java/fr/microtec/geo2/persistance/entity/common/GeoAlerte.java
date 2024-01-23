@@ -22,13 +22,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import fr.microtec.geo2.persistance.entity.ValidateEntity;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSecteur;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "geo_alert")
 @DynamicInsert

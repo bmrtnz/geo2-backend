@@ -5,11 +5,9 @@ import javax.persistence.MappedSuperclass;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 public class ValidateModifiedPrewrittedEntity extends ValidateAndModifiedEntity {
 

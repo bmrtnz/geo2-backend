@@ -1,17 +1,22 @@
 package fr.microtec.geo2.persistance.entity.tiers;
 
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
-
-import java.util.List;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_burach")
 @Entity
 public class GeoBureauAchat extends ValidateAndModifiedEntity {

@@ -1,9 +1,5 @@
 package fr.microtec.geo2.persistance.entity.stock;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,10 +11,11 @@ import javax.persistence.Table;
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
 import fr.microtec.geo2.persistance.entity.produits.GeoEspece;
 import fr.microtec.geo2.persistance.entity.tiers.GeoFournisseur;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_stodem")
 @Entity
 public class GeoStockDemain extends ValidateAndModifiedEntity {

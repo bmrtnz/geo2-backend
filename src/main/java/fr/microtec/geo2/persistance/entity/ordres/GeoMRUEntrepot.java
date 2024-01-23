@@ -17,31 +17,29 @@ import fr.microtec.geo2.persistance.entity.tiers.GeoEntrepot;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.EqualsAndHashCode;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "geo_mru_entrep")
 @IdClass(GeoMRUEntrepotKey.class)
 @Entity
 public class GeoMRUEntrepot extends ModifiedEntity implements Serializable {
 
-	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cen_ref")
-	private GeoEntrepot entrepot;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cen_ref")
+    private GeoEntrepot entrepot;
 
-	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "nom_utilisateur")
-	private GeoUtilisateur utilisateur;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nom_utilisateur")
+    private GeoUtilisateur utilisateur;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "soc_code")
-	private GeoSociete societe;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "soc_code")
+    private GeoSociete societe;
 
-	@Column(name = "cen_code")
-	private String codeEntrepot;
+    @Column(name = "cen_code")
+    private String codeEntrepot;
 
 }
