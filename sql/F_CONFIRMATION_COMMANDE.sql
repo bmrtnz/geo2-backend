@@ -26,7 +26,7 @@ AS
 
     ls_sco_code GEO_SECCOM.SCO_CODE%TYPE;
 BEGIN
-    -- correspond à f_confirmation_commande.pbl
+    -- correspond ï¿½ f_confirmation_commande.pbl
     msg := '';
     res := 0;
 
@@ -54,7 +54,7 @@ BEGIN
     select TYP_ORDRE into ls_typ_ordre from GEO_ORDRE
     where ORD_REF = is_ord_ref;
 
-    -- on verifie qu'il n'y a pas de lignes fantômes
+    -- on verifie qu'il n'y a pas de lignes fantï¿½mes
     select count(orl_ref) into ll_count from geo_ordlig where ord_ref = is_ord_ref and (art_ref is null or fou_code is null);
     if ll_count > 0 then
         delete from geo_ordlig where ord_ref = is_ord_ref and (art_ref is null or fou_code is null);
@@ -69,17 +69,18 @@ BEGIN
         idw_lig_cde.Retrieve(is_cur_ord_ref,ls_bloque)*/
     end if;
 
-    -- Verification des régimes de TVA
+    -- Verification des rï¿½gimes de TVA
     f_calcul_regime_tva(is_ord_ref,ls_tvr_code_entrepot, ls_regime_tva, msg);
     if msg is not null then
-        msg := 'validation refusée:' || msg || '~nveuillez faire les modifications nécessaires';
+        res := 0;
+        msg := 'validation refusï¿½e:' || msg || '~nveuillez faire les modifications nï¿½cessaires';
         return;
     end if;
 
     -- on s'assure de la synchro avec la logistique
     f_verif_logistique_ordre(is_ord_ref, res, msg);
     if (msg <> 'OK') then
-        msg := 'validation refusée' || msg || '~nveuillez faire les modifications si nécessaires';
+        msg := 'validation refusï¿½e' || msg || '~nveuillez faire les modifications si nï¿½cessaires';
         return;
     end if;
 
@@ -100,30 +101,30 @@ BEGIN
             update geo_article set bwstock = 'O' where art_ref = ls_art_ref;
         end loop;
 		close lc_art_ref;
-        msg := msg || 'ne sont pas référencés pour BWSTOC - veuillez les avertir';
+        msg := msg || 'ne sont pas rï¿½fï¿½rencï¿½s pour BWSTOC - veuillez les avertir';
     end if;
 
     of_verif_palette_chep(is_ord_ref, is_soc_code, ls_cur_cen_code, res, msg_verif_pal);
     if msg_verif_pal is not null then
-        msg := 'validation refusée ' || msg_verif_pal || ' - veuillez faire les modifications nécessaires';
+        msg := 'validation refusï¿½e ' || msg_verif_pal || ' - veuillez faire les modifications nï¿½cessaires';
         res := 0;
         return;
     ELSE
         of_verif_palette(is_ord_ref, is_soc_code, ls_cur_cen_code, res, msg_verif_pal);
         if msg_verif_pal is not null then
-            msg := 'validation refusée ' || msg_verif_pal || ' - veuillez faire les modifications nécessaires';
+            msg := 'validation refusï¿½e ' || msg_verif_pal || ' - veuillez faire les modifications nï¿½cessaires';
             res := 0;
             return;
         end if;
     End IF;
 
-    -- LLEF: Blocage si article IFCO et entrepôt n'est pas IFCO
+    -- LLEF: Blocage si article IFCO et entrepï¿½t n'est pas IFCO
     -- Uniquement sur la SA et pas pour les PREORDRE
     if is_soc_code = 'SA' and substr(ls_cur_cen_code, 1, 6) <> 'PREORD' then
         of_verif_article_ifco(is_ord_ref, res, msg_verif_art);
 
         if msg_verif_art is not null then
-            msg := msg_verif_art || '- veuillez faire les modifications nécessaires';
+            msg := msg_verif_art || '- veuillez faire les modifications nï¿½cessaires';
             res := 0;
             return;
         end if;
