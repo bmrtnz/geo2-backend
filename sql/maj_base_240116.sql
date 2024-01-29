@@ -1,0 +1,5 @@
+ALTER TABLE GEO_ORDRE ADD ORD_REF_DUPLIQ VARCHAR2(8);
+commit;
+COMMENT ON COLUMN GEO_ORDRE.ORD_REF_DUPLIQ IS 'Ordre d origine qui a été dupliqué';
+commit;
+/
