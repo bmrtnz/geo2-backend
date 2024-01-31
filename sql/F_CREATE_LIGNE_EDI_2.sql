@@ -361,7 +361,7 @@ BEGIN
         -- FIN TRANSPORT PAR DEFAUT
         -- résa stock
         --if ls_FOU_CODE is not null and ls_fou_code <> '' then
-        if length(ls_FOU_CODE) > 0 and ls_FOU_CODE is not null then   
+        if length(ls_FOU_CODE) > 0 and ls_FOU_CODE is not null then
 		   --Pour les lignes rajoutées manuellement, il n'y a pas de résa de stock !!
             if ls_sto_ref is not null then
                 begin
@@ -372,7 +372,7 @@ BEGIN
                     select seq_stm_num.nextval into ll_stm_ref from dual;
                     select nordre, cli_code into ls_nordre, ls_cli_code from GEO_ORDRE WHERE ORD_REF = arg_ord_ref;
 
-                    ls_stm_ref    := to_char(ll_stm_ref,'000000');
+                    ls_stm_ref    := to_char(ll_stm_ref, 'FM099999');
                     ls_desc :=  'ordre ' || ls_nordre || '/' || ls_cli_code;
                     -- voir trigger GEO_STOMVT_BEF_INS qui actualise aussi geo_stock ainsi que les champs manquant de stomvt
                     begin
