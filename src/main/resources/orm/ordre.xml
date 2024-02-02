@@ -732,6 +732,7 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_article_colis.col_prepese,
             geo_ORDRE.INC_CODE,
             geo_article_colis.pdnet_client,
+            geo_article_colis.pdnet_colis,
             geo_ordre.trp_code,
             geo_ordre.comm_interne,
             geo_article_colis.ori_desc,
@@ -744,7 +745,8 @@ http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd">
             geo_ordre.nordre ASC,
             geo_ordlog.fou_code ASC,
             geo_article_colis.var_code ASC,
-            geo_article_colis.pdnet_client ASC
+            geo_article_colis.pdnet_client ASC,
+            geo_article_colis.pdnet_colis ASC
         ) rest
     ]]>
     </query>
