@@ -137,12 +137,13 @@ begin
                     attrib_frais geo_attrib_frais%rowtype;
                 begin
                     f_recup_frais(ls_var_code, ls_cat_code, ls_sco_code, ls_tvt_code, ll_mode_culture, ls_ori_code, key_frais, msg_frais);
-                    select * into attrib_frais from geo_attrib_frais where k_frais = key_frais and valide = 'O';
-                    if attrib_frais.perequation = 'O' then
+                    select * into attrib_frais from geo_attrib_frais where k_frais = key_frais and valide = 'O' and perequation = 'O';
+                    -- VR : Fix pour passer dans le bloc exception quand perequation = N
+                    --if attrib_frais.perequation = 'O' then
                         ls_ACH_DEV_PU 	:= attrib_frais.accompte * ld_dev_tx;
                         ls_ACH_PU 			:=  attrib_frais.accompte;
                         ls_ach_bta_code  	:=  attrib_frais.FRAIS_UNITE;
-                    end if;
+                    --end if;
                 EXCEPTION WHEN NO_DATA_FOUND THEN
                     ls_ACH_DEV_PU 	:=  null;
                     ls_ACH_PU 			:=  null;
