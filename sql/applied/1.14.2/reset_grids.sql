@@ -1,1 +1,0 @@
-DELETE FROM GEO_GRID_CONFIG WHERE GRID = 'lignes-commandes'

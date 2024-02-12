@@ -1,3 +1,0 @@
-DELETE FROM GEO_GRID_CONFIG ggc WHERE GRID = 'ordre-stock';
-/
-
