@@ -2,7 +2,7 @@
 
 # compile SQL modified since specified revision
 # exemple usage:
-# ./sql/compile.sh tags/1.18.2
+# ./sql/compile tags/1.18.2
 
 OUT=sql/output.sql
 
