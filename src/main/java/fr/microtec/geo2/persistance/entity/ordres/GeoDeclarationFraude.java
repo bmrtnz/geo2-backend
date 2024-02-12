@@ -104,6 +104,9 @@ public class GeoDeclarationFraude {
     @Column(name = "pdnet_client")
     private Float poidsNetClient;
 
+    @Column(name = "pdnet_colis")
+    private Float poidsNetColis;
+
     @Column(name = "trp_code")
     private String transporteurCode;
 

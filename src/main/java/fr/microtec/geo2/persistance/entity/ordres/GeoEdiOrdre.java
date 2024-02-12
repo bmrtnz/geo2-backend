@@ -38,7 +38,7 @@ public class GeoEdiOrdre {
 
     @NotNull
     @Column(name = "ref_cmd_cli")
-    private Integer referenceCommandeClient;
+    private String referenceCommandeClient;
 
     @NotNull
     @Column(name = "date_doc")
