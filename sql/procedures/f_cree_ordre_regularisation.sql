@@ -40,7 +40,7 @@ BEGIN
                 ls_flag_exped_fournni := 'N';
             end;
 
-            If ls_flag_exped_fournni <> 'O'	 THEN
+            If ls_flag_exped_fournni <> 'O'     THEN
                 msg := 'La station '  || ls_fou_code || ' n''a pas clôturé, la régularisation n''est pas possible.';
                 return;
             End If;
@@ -58,7 +58,7 @@ BEGIN
                 f_cree_ordre_regul_ligne(arg_ord_ref,arg_list_orl_ref(i),arg_soc_code, ls_ord_ref_regul,arg_ind_detail, res, msg, ls_ret_lig);
 
                 If substr(msg, 1, 3) = '%%%' Then
-					delete GEO_ORDRE where ORD_REF =ls_ord_ref_regul;
+                    delete GEO_ORDRE where ORD_REF =ls_ord_ref_regul;
                     return;
                 End If;
 
@@ -70,6 +70,7 @@ BEGIN
                     update GEO_ORDLIG
                     set
                         ach_dev_pu = achat_devise_pu,
+						ach_pu = achat_devise_pu * ach_dev_taux,
                         ach_qte = achat_qte
                     where
                             orl_ref = ls_ret_lig;
