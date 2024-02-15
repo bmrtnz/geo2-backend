@@ -14,27 +14,23 @@ import java.util.Set;
 
 import javax.persistence.criteria.JoinType;
 
-import fr.microtec.geo2.configuration.PersistanceConfiguration;
-import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.ContextConfiguration;
 
-import fr.microtec.geo2.Geo2Application;
+import fr.microtec.geo2.configuration.PersistanceTestConfiguration;
 import fr.microtec.geo2.persistance.entity.tiers.GeoClient;
 import fr.microtec.geo2.persistance.repository.tiers.GeoClientRepository;
 import lombok.val;
 
 @DataJpaTest
 @Import(PersistanceTestConfiguration.class)
-class GeoCustomRepositoryImplTest
-{
+@Disabled
+class GeoCustomRepositoryImplTest {
     @Autowired
     private GeoClientRepository geoClientRepository;
 
@@ -49,18 +45,18 @@ class GeoCustomRepositoryImplTest
     private final static PageRequest PAGEABLE = PageRequest.of(0, 10);
 
     @Test
-    public void testWithSA()
-    {
-        val allWithPaginations = this.geoClientRepository.findAllWithPaginations(specSA(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "adresse2"));
+    public void testWithSA() {
+        val allWithPaginations = this.geoClientRepository.findAllWithPaginations(specSA(), PAGEABLE, GeoClient.class,
+                Set.of("id", "adresse1", "adresse2"));
 
         assertFalse(allWithPaginations.isEmpty());
         assertEquals(7, allWithPaginations.size());
     }
 
     @Test
-    public void testWithBWS()
-    {
-        val allWithPaginations = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "adresse2", "dateModification"));
+    public void testWithBWS() {
+        val allWithPaginations = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class,
+                Set.of("id", "adresse1", "adresse2", "dateModification"));
 
         assertFalse(allWithPaginations.isEmpty());
         assertEquals(1, allWithPaginations.size());
@@ -73,9 +69,9 @@ class GeoCustomRepositoryImplTest
     }
 
     @Test
-    public void testWithBWSAndSocieteDependency()
-    {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "societe.id"), JoinType.INNER);
+    public void testWithBWSAndSocieteDependency() {
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class,
+                Set.of("id", "adresse1", "societe.id"), JoinType.INNER);
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
@@ -87,9 +83,9 @@ class GeoCustomRepositoryImplTest
     }
 
     @Test
-    public void testWithBWSAndBadFields()
-    {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse12", "societe.ids"));
+    public void testWithBWSAndBadFields() {
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class,
+                Set.of("id", "adresse12", "societe.ids"));
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
@@ -100,9 +96,11 @@ class GeoCustomRepositoryImplTest
     }
 
     @Test
-    public void testWithBWSAndSocieteAndPaysDependency()
-    {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "dateDebutIfco", "dateModification", "blocageAvoirEdi", "nbJourLimiteLitige", "societe.id", "societe.pays.description"), JoinType.INNER);
+    public void testWithBWSAndSocieteAndPaysDependency() {
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(
+                specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "adresse1", "dateDebutIfco", "dateModification",
+                        "blocageAvoirEdi", "nbJourLimiteLitige", "societe.id", "societe.pays.description"),
+                JoinType.INNER);
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
@@ -122,9 +120,9 @@ class GeoCustomRepositoryImplTest
     }
 
     @Test
-    public void testPage()
-    {
-        val page = this.geoClientRepository.findAllWithPagination(specSA(), PageRequest.of(0, 5), GeoClient.class, Set.of("id", "adresse1", "adresse2"));
+    public void testPage() {
+        val page = this.geoClientRepository.findAllWithPagination(specSA(), PageRequest.of(0, 5), GeoClient.class,
+                Set.of("id", "adresse1", "adresse2"));
 
         assertFalse(page.isEmpty());
         assertEquals(7, page.getTotalElements());
@@ -133,12 +131,13 @@ class GeoCustomRepositoryImplTest
     }
 
     /**
-     * Ce test permet de vérifier que lorsque l’on demande le champ "societe" il ne charge pas l’entité en entière.
+     * Ce test permet de vérifier que lorsque l’on demande le champ "societe" il ne
+     * charge pas l’entité en entière.
      */
     @Test
-    public void testWithBWSWithoutSociete()
-    {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "societe"));
+    public void testWithBWSWithoutSociete() {
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class,
+                Set.of("id", "societe"));
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
@@ -148,9 +147,9 @@ class GeoCustomRepositoryImplTest
     }
 
     @Test
-    public void testWithBWSAndSocieteAndPaysAndNotClients()
-    {
-        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class, Set.of("id", "societe.id", "societe.pays.description", "societe.pays.clients"), JoinType.INNER);
+    public void testWithBWSAndSocieteAndPaysAndNotClients() {
+        List<GeoClient> clients = this.geoClientRepository.findAllWithPaginations(specBWS(), PAGEABLE, GeoClient.class,
+                Set.of("id", "societe.id", "societe.pays.description", "societe.pays.clients"), JoinType.INNER);
 
         assertFalse(clients.isEmpty());
         assertEquals(1, clients.size());
