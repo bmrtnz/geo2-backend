@@ -2,23 +2,38 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_VERIF_BWS (
     arg_ref_edi_ordre IN GEO_EDI_ORDRE.REF_EDI_ORDRE%TYPE,
     arg_ref_edi_ligne IN GEO_EDI_LIGNE.REF_EDI_LIGNE%TYPE,
     arg_art_ref IN GEO_ARTICLE_COLIS.ART_REF%TYPE,
+	arg_cli_code IN GEO_CLIENT.CLI_CODE%TYPE,
+	arg_cen_code IN GEO_ENTREP.CEN_CODE%TYPE,
+	arg_esp_code IN	GEO_ARTICLE_COLIS.ESP_CODE%TYPE,
+	arg_var_code IN GEO_ARTICLE_COLIS.VAR_CODE%TYPE,
     res IN OUT number,
     msg IN OUT varchar2,
     ls_plateforme OUT GEO_EDI_BWS.PLAT_CODE%TYPE
 )
 AS
 
-	ls_cli_code GEO_CLIENT.CLI_CODE%TYPE;
-	ls_cen_code GEO_ENTREP.CEN_CODE%TYPE;
-	ls_esp_code GEO_ARTICLE_COLIS.ESP_CODE%TYPE;
-	ls_var_code GEO_ARTICLE_COLIS.VAR_CODE%TYPE;
 
 BEGIN
     -- correspond à of_verif_bws.pbl
     res := 0;
     msg := '';
 
-    begin
+
+
+	if arg_cli_code = '' or arg_cen_code = '' then
+		msg := '%%%ERREUR récupération client/entrepôt f_verif_bws : ' || to_char(arg_ref_edi_ordre) || ' edi_ligne: ' || to_char(arg_ref_edi_ligne);
+		res := 0;
+		return;
+	end if;
+
+	if arg_esp_code ='' or arg_var_code = '' then
+		msg := '%%%ERREUR récupération article of_verif_bws art_ref: ' || arg_art_ref || ' edi_ordre: ' + to_char(arg_ref_edi_ordre) + ' edi_ligne: ' + to_char(arg_ref_edi_ligne);
+		res := 0;
+		return;
+	end if;
+
+	/*
+	begin
         select C.cli_code, E.cen_code
 		into ls_cli_code, ls_cen_code
 		from geo_edi_ordre O, geo_client C, geo_entrep E
@@ -34,6 +49,7 @@ BEGIN
         return;
     end;
 
+
     begin
         select esp_code, var_code
 		into ls_esp_code, ls_var_code
@@ -41,19 +57,20 @@ BEGIN
 		where art_ref = arg_art_ref
 		and valide = 'O';
     exception when others then
-        msg := '%%%ERREUR récupération article of_verif_bws art_ref: ' || arg_art_ref || ' edi_ordre: ' || to_char(arg_ref_edi_ordre) || ' edi_ligne: ' || to_char(arg_ref_edi_ligne);
+        msg := '%%%ERREUR récupération article of_verif_bws art_ref: ' || arg_art_ref || ' edi_ordre: ' + to_char(arg_ref_edi_ordre) + ' edi_ligne: ' + to_char(arg_ref_edi_ligne);
 	    res := 0;
         return;
     end;
+*/
 
 	begin
-        select plat_code
+        select /*+ optimizer_features_enable('8.1.7) */ plat_code
 		into ls_plateforme
 		from geo_edi_bws
-		where cli_code = ls_cli_code
-		and cen_code = ls_cen_code
-		and esp_code = ls_esp_code
-		and (var_code = ls_var_code or var_code = '%');
+		where cli_code = arg_cli_code
+		and cen_code = arg_cen_code
+		and esp_code = arg_esp_code
+		and (var_code = arg_var_code or var_code = '%');
 	exception when NO_DATA_FOUND then
 		ls_plateforme := '';
     end;

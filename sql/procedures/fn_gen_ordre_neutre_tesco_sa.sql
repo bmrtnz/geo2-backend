@@ -25,14 +25,13 @@ BEGIN
     msg := '';
 
     begin
-        select C.CLI_REF,C.CLI_CODE,E.CEN_REF,E.CEN_CODE,OBS.ORD_REF_SA
+        select P.SA_N_CLI_REF,C.CLI_CODE,P.SA_N_CEN_REF,P.SA_N_CEN_CODE,OBS.ORD_REF_SA
         into  ls_sa_cli_ref,ls_sa_cli_code,ls_sa_cen_ref,ls_sa_cen_code,ls_ord_ref_sa
-        FROM GEO_ENTREP E, GEO_CLIENT C, GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE O
-        where E.CLI_REF ='007657' and
-                C.CLI_REF =  E.CLI_REF and
-                OBS.ORD_REF_BUK  =arg_ord_ref_buk and
-                OBS.ORD_REF_SA  = O.ORD_REF and
-                (O.CEN_CODE||'2' = E.CEN_CODE OR substr(O.CEN_CODE,1,17)||'2'= E.CEN_CODE);
+        FROM GEO_ORDRE_BUK_SA OBS,  GEO_ORDRE O,GEO_PARAM_ENTREP_PAIEM P, GEO_CLIENT C
+        where 	OBS.ORD_REF_BUK  =arg_ord_ref_buk and
+                OBS.ORD_REF_BUK  = O.ORD_REF and
+                P.BUK_CEN_REF = O.CEN_REF  and
+				P.SA_N_CLI_REF = C.CLI_REF;
     exception when no_data_found then
         null;
     end;
@@ -97,4 +96,3 @@ BEGIN
     res := 1;
 END;
 /
-

@@ -2,17 +2,11 @@ package fr.microtec.geo2.persistance.entity.tiers;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import fr.microtec.geo2.persistance.entity.ValidateAndModifiedEntity;
+import fr.microtec.geo2.persistance.entity.traductions.GeoPaysTraduction;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,5 +33,8 @@ public class GeoPays extends ValidateAndModifiedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sco_code", nullable = false)
     private GeoSecteur secteur;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pays")
+    private List<GeoPaysTraduction> traductions;
 
 }

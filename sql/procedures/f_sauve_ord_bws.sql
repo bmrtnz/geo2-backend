@@ -6,6 +6,16 @@ CREATE OR REPLACE PROCEDURE GEO_ADMIN.F_SAUVE_ORD_BWS (
     arg_art_ref IN GEO_ARTICLE_COLIS.ART_REF%TYPE,
 	arg_cam_code IN GEO_ORDRE.CAM_CODE%TYPE,
 	arg_bws_ecris  IN  OUT P_STR_TAB_TYPE,
+
+	arg_cli_ref GEO_CLIENT.CLI_REF%TYPE,
+	arg_cen_ref IN GEO_ENTREP.CEN_REF%TYPE,
+	arg_ean_prod_client GEO_EDI_LIGNE.EAN_PROD_CLIENT%TYPE,
+	arg_vte_pu GEO_ORDLIG.VTE_PU%TYPE,
+	arg_vte_bta_code GEO_ORDLIG.VTE_BTA_CODE%TYPE,
+	arg_canal_cde GEO_EDI_ORDRE.CANAL_CDE%TYPE,
+	arg_art_ref_client GEO_EDI_LIGNE.CODE_INTERNE_PROD_CLIENT%TYPE,
+	arg_pal_code_entrep GEO_ENTREP.PAL_CODE%TYPE,
+
     res IN OUT number,
     msg IN OUT varchar2
 )
@@ -13,34 +23,34 @@ AS
 
 	ls_ACH_BTA_CODE GEO_ORDLIG.ACH_BTA_CODE%TYPE;
 	ls_ACH_DEV_CODE GEO_ORDLIG.ACH_DEV_CODE%TYPE;
-	ls_VTE_BTA_CODE GEO_ORDLIG.VTE_BTA_CODE%TYPE;
+	ls_vte_bta_code GEO_ORDLIG.VTE_BTA_CODE%TYPE;
 	ls_histo_VTE_BTA_CODE GEO_ORDLIG.VTE_BTA_CODE%TYPE;
 	ld_ACH_DEV_PU GEO_ORDLIG.ACH_DEV_PU%TYPE;
 	ld_ACH_PU GEO_ORDLIG.ACH_PU%TYPE;
-	ld_VTE_PU GEO_ORDLIG.VTE_PU%TYPE;
-	ld_VTE_PU_NET GEO_ORDLIG.VTE_PU_NET%TYPE;
+	--arg_vte_pu GEO_ORDLIG.VTE_PU%TYPE;
+	ld_vte_pu_net GEO_ORDLIG.VTE_PU_NET%TYPE;
 	ld_ach_dev_taux GEO_ORDLIG.ACH_DEV_TAUX%TYPE;
 	ld_histo_VTE_PU GEO_ORDLIG.VTE_PU%TYPE;
 	ld_histo_VTE_PU_NET GEO_ORDLIG.VTE_PU_NET%TYPE;
-	ls_cli_ref GEO_CLIENT.CLI_REF%TYPE;
+	--arg_cli_ref GEO_CLIENT.CLI_REF%TYPE;
 	ls_fou_code GEO_FOURNI.FOU_CODE%TYPE;
 	ls_prop_code GEO_FOURNI.FOU_CODE%TYPE;
-	ls_cen_ref GEO_ENTREP.CEN_REF%TYPE;
-	ls_ean_prod_client GEO_EDI_LIGNE.EAN_PROD_CLIENT%TYPE;
+	--arg_cen_ref GEO_ENTREP.CEN_REF%TYPE;
+	--arg_ean_prod_client GEO_EDI_LIGNE.EAN_PROD_CLIENT%TYPE;
 	ls_age GEO_STOCK.AGE%TYPE;
 	ll_qte_restant_stock number;
 	ls_flag_hors_bassin GEO_STOCK_ART_EDI_BASSIN.FLAG_HORS_BASSIN%TYPE;
 	ls_sauve_stock varchar2(2);
-	ls_canal_cde GEO_EDI_ORDRE.CANAL_CDE%TYPE;
+	--arg_canal_cde GEO_EDI_ORDRE.CANAL_CDE%TYPE;
 	ls_gem_code GEO_ARTICLE_COLIS.GEM_CODE%TYPE;
-	ls_art_ref_client GEO_EDI_LIGNE.CODE_INTERNE_PROD_CLIENT%TYPE;
+	--arg_art_ref_client GEO_EDI_LIGNE.CODE_INTERNE_PROD_CLIENT%TYPE;
 	ls_code_prod_client varchar2(20);
 	ls_pal_code GEO_ENTREP.PAL_CODE%TYPE;
 	ls_bac_code_entrep varchar2(12);
 	ls_dept_entrep varchar2(2);
 	ll_dept_entrep number;
-	ls_cen_ref_client GEO_EDI_ORDRE.CEN_REF%TYPE;
-	ls_pal_code_entrep GEO_ENTREP.PAL_CODE%TYPE;
+	--arg_cen_ref_client GEO_EDI_ORDRE.CEN_REF%TYPE;
+	--arg_pal_code_entrep GEO_ENTREP.PAL_CODE%TYPE;
 	ls_enr_bws_ecris varchar2(150);
 
 
@@ -49,15 +59,17 @@ BEGIN
     res := 0;
     msg := '';
 	arg_bws_ecris := p_str_tab_type();
+
 	-- Init. avec les valeurs de base
 	ls_sauve_stock := 'KO';
-	ls_VTE_BTA_CODE := 'KILO';
-	ls_flag_hors_bassin 	:= 'ABS'; --Attendu BwStock
+	ls_vte_bta_code := arg_vte_bta_code;
+	ls_flag_hors_bassin := 'ABS'; --Attendu BwStock
 	ls_enr_bws_ecris	:= '';
 
+/*
     begin
         select cli_ref, cen_ref, ean_prod_client, prix_vente, unite_qtt, canal_cde, code_interne_prod_client
-		into ls_cli_ref, ls_cen_ref, ls_ean_prod_client, ld_VTE_PU, ls_VTE_BTA_CODE, ls_canal_cde, ls_art_ref_client
+		into arg_cli_ref, arg_cen_ref, arg_ean_prod_client, arg_vte_pu, arg_vte_bta_code, arg_canal_cde, arg_art_ref_client
 		from geo_edi_ordre O, geo_edi_ligne L
 		where O.ref_edi_ordre = arg_ref_edi_ordre
 		and L.ref_edi_ordre = O.ref_edi_ordre
@@ -67,19 +79,20 @@ BEGIN
 		res := 0;
         return;
     end;
+*/
 
-	ld_VTE_PU_NET := ld_VTE_PU;
+	ld_vte_pu_net := arg_vte_pu;
 	ls_age := '';
 	ll_qte_restant_stock := 0;
 
-	if ls_ean_prod_client is null or ls_ean_prod_client = '' then
-		ls_code_prod_client := ls_art_ref_client;
+	if arg_ean_prod_client is null or arg_ean_prod_client = '' then
+		ls_code_prod_client := arg_art_ref_client;
 	else
-		ls_code_prod_client := ls_ean_prod_client;
+		ls_code_prod_client := arg_ean_prod_client;
 	end if;
 
     begin
-        select
+        select /*+ optimizer_features_enable('8.1.7) */
 		case O.cli_code when 'BWSTOCK' then 'BWSTOC' END,
 		case O.cen_code when 'ENTREPOT PCHANTEGR' then 'CHANTEPRES'
 		when 'ENTREPOT MOISSACDV' then 'MOISPRESCDV'
@@ -98,11 +111,11 @@ BEGIN
         return;
     end;
 
-	--F_RECUP_REGION_ENTREP(ls_cen_ref, res, msg, ls_bac_code_entrep);
-	
+	--F_RECUP_REGION_ENTREP(arg_cen_ref, res, msg, ls_bac_code_entrep);
+
 	begin
-		select bac_code into ls_bac_code_entrep
-		from geo_dept 
+		select /*+ optimizer_features_enable('8.1.7) */ bac_code into ls_bac_code_entrep
+		from geo_dept
 		where num_dept = ls_dept_entrep;
 	exception when others then
         msg := '%%%ERREUR of_sauve_ord_bws read GEO_DEPT: ' || ls_dept_entrep || ' ,ref_edi_ordre: ' || to_char(arg_ref_edi_ordre) || 'ref_edi_ligne: ' || to_char(arg_ref_edi_ligne) || ' ' || SQLERRM;
@@ -112,11 +125,12 @@ BEGIN
 
 	begin
 		--Récupération des informations d'achats de la précédente commande
-		select *  into ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_histo_VTE_BTA_CODE, ld_histo_VTE_PU, ld_ach_dev_taux from (
-			select ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, ACH_DEV_TAUX
+		select /*+ optimizer_features_enable('8.1.7) */  *
+		into ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_histo_VTE_BTA_CODE, ld_histo_VTE_PU, ld_ach_dev_taux from (
+			select /*+ optimizer_features_enable('8.1.7) */   ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, ACH_DEV_TAUX
 			from geo_ordre O, geo_ordlig L
-			where O.cli_ref = ls_cli_ref
-			and O.cen_ref = ls_cen_ref
+			where O.cli_ref = arg_cli_ref
+			and O.cen_ref = arg_cen_ref
 			and O.ord_ref = L.ord_ref
 			and L.art_ref = arg_art_ref
 			-- Suite Réunion du 20/12/2023 avec F. GAY, SLAM ne plus filter sur emballeur/expediteur
@@ -128,6 +142,18 @@ BEGIN
 			order by O.CREDAT desc
 		)
 		where rownum = 1;
+
+		--select /*+ optimizer_features_enable('8.1.7) */  *
+		--into ls_ACH_BTA_CODE, ls_ACH_DEV_CODE, ld_ACH_DEV_PU, ld_ACH_PU, ls_histo_VTE_BTA_CODE, ld_histo_VTE_PU, ld_ach_dev_taux from (
+		--	select /*+ optimizer_features_enable('8.1.7) */ ACH_BTA_CODE, ACH_DEV_CODE, ACH_DEV_PU, ACH_PU, VTE_BTA_CODE, VTE_PU, ACH_DEV_TAUX
+		--	from VIEW_EDI_LIGNE_ORDRE
+		--	where cli_ref = arg_cli_ref
+		--	and cen_ref = arg_cen_ref
+		--	and art_ref = arg_art_ref
+		--	order by CREDAT desc
+		--)
+		--where rownum = 1;
+
 	exception when NO_DATA_FOUND then
 		ls_ACH_BTA_CODE := 'KILO';
 		ls_ACH_DEV_CODE := 'EUR';
@@ -139,8 +165,8 @@ BEGIN
 	--    res := 0;
         --return;
     end;
-	if ls_canal_cde = 'EDI' then
-		if ld_histo_VTE_PU <> ld_VTE_PU and ld_histo_VTE_PU is not null then
+	if arg_canal_cde = 'EDI' then
+		if ld_histo_VTE_PU <> arg_vte_pu and ld_histo_VTE_PU is not null then
 			update geo_edi_ligne
 			set alert_prix = 'Attention Prix Précédent = ' || ld_histo_VTE_PU
 			where ref_edi_ordre = arg_ref_edi_ordre
@@ -148,7 +174,7 @@ BEGIN
 			commit;
 		end if;
 		begin
-			select AC.GEM_CODE
+			select /*+ optimizer_features_enable('8.1.7) */ AC.GEM_CODE
 			into ls_gem_code
 			FROM GEO_ARTICLE_COLIS AC
 			where AC.ART_REF = arg_art_ref
@@ -170,6 +196,7 @@ BEGIN
 	end if;
 
 	ls_pal_code := '-';
+	/*
 	begin
 		select O.cen_ref, E.pal_code
 		into ls_cen_ref_client, ls_pal_code_entrep
@@ -182,9 +209,10 @@ BEGIN
 		res := 0;
 		return;
 	end;
+	*/
 
-	if  length(ls_pal_code_entrep) > 0 and ls_pal_code_entrep is not null then
-		ls_pal_code := ls_pal_code_entrep;
+	if  length(arg_pal_code_entrep) > 0 and arg_pal_code_entrep is not null then
+		ls_pal_code := arg_pal_code_entrep;
 	end if;
 
 	begin
@@ -193,8 +221,8 @@ BEGIN
 		FLAG_HORS_BASSIN, PAL_CODE, STO_REF
 		)
 		values(
-		arg_ref_edi_ordre, arg_ref_edi_ligne, ls_cli_ref, arg_cam_code, arg_art_ref, ls_code_prod_client, ls_fou_code, ls_bac_code_entrep, ll_qte_restant_stock, ls_age, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE,
-		ld_ACH_DEV_PU, ld_ACH_PU, ls_VTE_BTA_CODE, ld_VTE_PU, ld_VTE_PU_NET, ld_ach_dev_taux, ls_flag_hors_bassin, ls_pal_code, ''
+		arg_ref_edi_ordre, arg_ref_edi_ligne, arg_cli_ref, arg_cam_code, arg_art_ref, ls_code_prod_client, ls_fou_code, ls_bac_code_entrep, ll_qte_restant_stock, ls_age, ls_prop_code, ls_ACH_BTA_CODE, ls_ACH_DEV_CODE,
+		ld_ACH_DEV_PU, ld_ACH_PU, ls_vte_bta_code, arg_vte_pu, ld_vte_pu_NET, ld_ach_dev_taux, ls_flag_hors_bassin, ls_pal_code, ''
 		);
 	exception when others then
         msg := '%%%ERREUR f_sauve_ord_bws insert GEO_STOCK_ART_EDI_BASSIN ref_edi_ordre: ' || to_char(arg_ref_edi_ordre) || ' ref_edi_ligne: ' || to_char(arg_ref_edi_ligne) || ' art_ref: ' || arg_art_ref || ' ' || SQLERRM;

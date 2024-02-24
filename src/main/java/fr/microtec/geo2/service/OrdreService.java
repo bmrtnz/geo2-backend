@@ -15,8 +15,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -44,6 +42,7 @@ import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreBaf;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdreRegroupement;
 import fr.microtec.geo2.persistance.entity.ordres.GeoPlanningTransporteur;
 import fr.microtec.geo2.persistance.entity.tiers.GeoDevise;
+import fr.microtec.geo2.persistance.entity.tiers.GeoEnvois;
 import fr.microtec.geo2.persistance.entity.tiers.GeoSociete;
 import fr.microtec.geo2.persistance.repository.common.GeoCampagneRepository;
 import fr.microtec.geo2.persistance.repository.litige.GeoLitigeLigneRepository;
@@ -176,31 +175,23 @@ public class OrdreService extends GeoAbstractGraphQLService<GeoOrdre, String> {
             Pageable pageable,
             Set<String> fields) {
 
-        Specification<GeoOrdre> innerSpec = (rt, cq, cb) -> {
-            Subquery<GeoOrdre> subQuery = cq.subquery(GeoOrdre.class);
-            Root<GeoOrdre> r = subQuery.from(GeoOrdre.class);
-            Join<?, ?> envois = r.join("envois", JoinType.LEFT);
+        Specification<GeoOrdre> innerSpec = (ro, cq, cb) -> {
+            Subquery<GeoEnvois> subQuery = cq.subquery(GeoEnvois.class);
+            Root<GeoEnvois> re = subQuery.from(GeoEnvois.class);
 
             subQuery
-                    .select(r.get("id"))
-                    .distinct(true)
+                    .select(re.get("id"))
                     .where(
-                            cb.or(
-                                    cb.not(envois.get("traite").in('N', 'O')),
-                                    cb.isNull(envois.get("traite"))),
-                            cb.or(
-                                    cb.equal(envois.get("flux").get("id"), "ORDRE"),
-                                    cb.isNull(envois.get("flux").get("id"))),
-                            cb.equal(r.get("factureAvoir"), GeoFactureAvoir.FACTURE),
-                            this.parseSearch(search).toPredicate(r, cq, cb));
+                            cb.equal(ro.get("id"), re.get("ordre").get("id")),
+                            re.get("traite").in('N', 'O'),
+                            cb.equal(re.get("flux").get("id"), "ORDRE"));
 
-            return cb
-                    .in(rt.get("id"))
-                    .value(subQuery);
+            cq.where(cb.equal(ro.get("factureAvoir"), GeoFactureAvoir.FACTURE));
+            return cb.not(cb.exists(subQuery));
         };
 
         Page<GeoOrdre> page = this.repository
-                .findAllWithPagination(innerSpec, pageable, GeoOrdre.class, fields);
+                .findAllWithPagination(innerSpec.and(this.parseSearch(search)), pageable, GeoOrdre.class, fields);
 
         return PageFactory.asRelayPage(page);
 

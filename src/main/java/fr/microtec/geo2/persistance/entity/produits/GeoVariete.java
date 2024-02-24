@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import fr.microtec.geo2.persistance.entity.traductions.GeoVarieteTraduction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
@@ -90,5 +93,9 @@ public class GeoVariete extends ValidateAndModifiedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "variete")
     private List<GeoStockArticleAge> stocksAge;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "variete")
+    @Fetch(FetchMode.SELECT)
+    private List<GeoVarieteTraduction> traductions;
 
 }

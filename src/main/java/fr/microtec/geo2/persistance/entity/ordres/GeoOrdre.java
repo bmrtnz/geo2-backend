@@ -160,6 +160,9 @@ public class GeoOrdre extends ValidateAndModifiedEntity implements Duplicable<Ge
     @Column(name = "depdatp")
     private LocalDateTime dateDepartPrevue;
 
+    @Column(name = "depdatp_asc")
+    private String dateDepartPrevueBrute;
+
     @Column(name = "livdatp")
     private LocalDateTime dateLivraisonPrevue;
 

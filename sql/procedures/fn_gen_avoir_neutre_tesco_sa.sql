@@ -24,14 +24,14 @@ BEGIN
     res := 0;
     msg := '';
 
-    select C.CLI_REF,C.CLI_CODE,E.CEN_REF,E.CEN_CODE,ABS.ORD_REF_SA
+    select P.SA_N_CLI_REF,C.CLI_CODE,P.SA_N_CEN_REF,P.SA_N_CEN_CODE,ABS.ORD_REF_SA
     into  ls_sa_cli_ref,ls_sa_cli_code,ls_sa_cen_ref,ls_sa_cen_code,ls_ord_ref_sa
-    FROM GEO_ENTREP E, GEO_CLIENT C, GEO_AVOIR_BUK_SA ABS,  GEO_ORDRE O
-    where E.CLI_REF ='007657' and
-           C.CLI_REF =  E.CLI_REF and
-           ABS.ORD_REF_BUK  =arg_ord_ref_buk and
-           ABS.ORD_REF_SA  = O.ORD_REF and
-           (O.CEN_CODE||'2' = E.CEN_CODE OR substr(O.CEN_CODE,1,17)||'2'= E.CEN_CODE);
+    FROM GEO_PARAM_ENTREP_PAIEM P, GEO_CLIENT C, GEO_AVOIR_BUK_SA ABS,  GEO_ORDRE O
+    where 	 ABS.ORD_REF_BUK  =arg_ord_ref_buk and
+			 ABS.ORD_REF_BUK  = O.ORD_REF and
+			 P.BUK_CEN_REF = O.CEN_REF  and
+			 P.SA_N_CLI_REF = C.CLI_REF;
+
 
 
     select  DEV_TX into ldc_dev_taux_GBP from GEO_DEVISE_REF
@@ -93,4 +93,3 @@ BEGIN
     res := 1;
 END;
 /
-

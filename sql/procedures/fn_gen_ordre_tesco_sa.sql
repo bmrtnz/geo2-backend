@@ -25,14 +25,13 @@ BEGIN
     where DEV_CODE_REF ='EUR' and DEV_CODE ='GBP';
 
     begin
-        select GEO_ORDRE.ORD_REF,TMP_ENTREP.SA_CLI_REF,SA_CEN_REF  INTO ls_ord_ref_buk,ls_sa_cli_ref, ls_sa_cen_ref
-        from GEO_ORDRE ,TMP_ENTREP
+        select GEO_ORDRE.ORD_REF,GEO_PARAM_ENTREP_PAIEM.SA_CLI_REF,GEO_PARAM_ENTREP_PAIEM.SA_CEN_REF  INTO ls_ord_ref_buk,ls_sa_cli_ref, ls_sa_cen_ref
+        from GEO_ORDRE ,GEO_PARAM_ENTREP_PAIEM
         where 	GEO_ORDRE.SOC_CODE ='BUK' and
-                    GEO_ORDRE.CLI_REF  ='007396'  and
+                    GEO_ORDRE.CLI_REF  =GEO_PARAM_ENTREP_PAIEM.BUK_CLI_REF  and
                     GEO_ORDRE.REF_CLI like 'LM%' and
                     GEO_ORDRE.ORD_REF =arg_ord_ref_buk and
-                    GEO_ORDRE.CLI_REF =TMP_ENTREP.SPA_CLI_REF and
-                    GEO_ORDRE.CEN_REF =TMP_ENTREP.SPA_CEN_REF and
+                    GEO_ORDRE.CEN_REF =GEO_PARAM_ENTREP_PAIEM.BUK_CEN_REF and
                     not exists    (select 1
                                     from GEO_ORDRE_BUK_SA
                                     where  GEO_ORDRE_BUK_SA.ORD_REF_BUK = GEO_ORDRE.ORD_REF) and
@@ -169,4 +168,3 @@ BEGIN
     res := 1;
 END;
 /
-

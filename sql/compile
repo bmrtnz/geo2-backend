@@ -11,6 +11,12 @@ get_diff_from() {
     git diff $1 HEAD --name-only | grep **/*.sql
 }
 
+# checking that arg is present
+if [[ -z $1 ]]; then
+    echo "Revision argument is missing"
+    exit 1
+fi
+
 # delete output file if it exists
 [[ -f $OUT ]] && rm $OUT
 echo cleared output file

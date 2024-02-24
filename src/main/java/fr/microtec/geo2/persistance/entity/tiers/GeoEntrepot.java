@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.Where;
 import fr.microtec.geo2.persistance.entity.ValidateModifiedPrewrittedEntity;
 import fr.microtec.geo2.persistance.entity.common.GeoModification;
 import fr.microtec.geo2.persistance.entity.ordres.GeoOrdre;
+import fr.microtec.geo2.persistance.entity.traductions.GeoPaysTraduction;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -91,6 +93,13 @@ public class GeoEntrepot extends ValidateModifiedPrewrittedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lan_code", nullable = false)
     private GeoPays langue;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "lan_code", insertable = false, updatable = false),
+            @JoinColumn(name = "pay_code", insertable = false, updatable = false)
+    })
+    private GeoPaysTraduction paysTraduction;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inc_code")
